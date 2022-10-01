@@ -23,7 +23,7 @@ public class BasicInfoController : Controller
     }
 
 
-    [HttpGet("Get")]
+    [HttpGet]
     public async Task<ActionResult<List<BasicInfoListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllBasicInfoQuery() { DTO = dto });

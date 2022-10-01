@@ -11,6 +11,6 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Requests.Command
 {
     public class EditDrugIntractionCommand : IRequest<BaseCommandResponse>
     {
-        public DrugIntractionDTO DTO { get; set; } = new DrugIntractionDTO();
+        public UpdateDrugIntractionDTO DTO { get; set; } = new UpdateDrugIntractionDTO();
     }
 }

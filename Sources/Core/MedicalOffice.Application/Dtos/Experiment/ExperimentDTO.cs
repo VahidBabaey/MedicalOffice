@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Experiment
 {
-    public class ExperimentDTO : BaseDto<Guid>
+    public class ExperimentDTO
     {
         /// <summary>
         /// نام آزمایش

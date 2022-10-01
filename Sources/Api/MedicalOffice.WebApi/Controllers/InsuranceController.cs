@@ -24,10 +24,7 @@ public class InsuranceController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("CreateInsurance")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesDefaultResponseType]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] InsuranceDTO dto)
     {
         var response = await _mediator.Send(new AddInsuranceCommand() { DTO = dto });
@@ -35,24 +32,21 @@ public class InsuranceController : Controller
         return Ok(response);
     }
 
-    [HttpDelete("DeleteInsurance")]
+    [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeleteInsuranceCommand() { InsuranceID = id });
 
         return Ok(response);
     }
-    [HttpPost("UpdateInsurance")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesDefaultResponseType]
-    public async Task<ActionResult<Guid>> Update([FromBody] InsuranceDTO dto)
+    [HttpPatch]
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateInsuranceDTO dto)
     {
         var response = await _mediator.Send(new EditInsuranceCommand() { DTO = dto });
 
         return Ok(response);
     }
-    [HttpGet("GetAllInsurances")]
+    [HttpGet]
     public async Task<ActionResult<List<InsuranceListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllInsuranceQuery() { Dto = dto });

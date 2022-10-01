@@ -35,43 +35,29 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
         {
             BaseCommandResponse response = new();
 
-            AddDrugValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            try
+            {
+                var drug = _mapper.Map<Drug>(request.DTO);
 
-            if (!validationResult.IsValid)
+                await _repository.Update(drug);
+
+                response.Success = true;
+                response.Message = $"{_requestTitle} succeded";
+                response.Data.Add(new { Id = drug.Id });
+
+                log.Type = LogType.Success;
+            }
+            catch (Exception error)
             {
                 response.Success = false;
                 response.Message = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+                response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
-            else
-            {
-                try
-                {
-                    var drug = _mapper.Map<Drug>(request.DTO);
 
-                    await _repository.Update(drug);
-
-                    response.Success = true;
-                    response.Message = $"{_requestTitle} succeded";
-                    response.Data.Add(new { Id = drug.Id });
-
-                    log.Type = LogType.Success;
-                }
-                catch (Exception error)
-                {
-                    response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
-                }
-            }
 
             log.Header = response.Message;
             log.Messages = response.Errors;

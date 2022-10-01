@@ -20,43 +20,50 @@ public class PatientController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("Create")]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] PazireshDTO dto)
     {
         var response = await _mediator.Send(new AddPatientCommand() { Dto = dto });
 
         return Ok(response);
     }
+    [HttpPatch]
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateAddPatientDto dto)
+    {
+        var response = await _mediator.Send(new EditPatientCommand() { Dto = dto });
 
-    [HttpGet("GetAllPatients")]
+        return Ok(response);
+    }
+
+    [HttpGet]
     public async Task<ActionResult<List<PatientListDto>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllPatientsQuery() { Dto = dto });
 
         return Ok(response);
     }
-    [HttpGet("GetAllPatientsByFileNumber")]
+    [HttpGet("filenumber")]
     public async Task<ActionResult<List<PatientListDto>>> GetAllByFileNumber([FromQuery] ListDto dto, string filenumber)
     {
         var response = await _mediator.Send(new GetPatientByFileNumberQuery() { Dto = dto, FileNumber = filenumber });
 
         return Ok(response);
     }
-    [HttpGet("GetAllPatientsByNationalCode")]
+    [HttpGet("nationalcode")]
     public async Task<ActionResult<List<PatientListDto>>> GetAllByNationalCode([FromQuery] ListDto dto, string nationalcode)
     {
         var response = await _mediator.Send(new GetPatientByNationalCodeQuery() { Dto = dto, NationalCode = nationalcode });
 
         return Ok(response);
     }
-    [HttpGet("GetAllPatientsByPhoneNumber")]
+    [HttpGet("phonenumber")]
     public async Task<ActionResult<List<PatientListDto>>> GetAllByPhoneNumber([FromQuery] ListDto dto, string phonenumber)
     {
         var response = await _mediator.Send(new GetPatientByPhoneNumberQuery() { Dto = dto, PhoneNumber = phonenumber });
 
         return Ok(response);
     }
-    [HttpGet("GetAllPatientsByGenderIntrucerAcquaintedWay")]
+    [HttpGet("genderintruceracquaintedWay")]
     public async Task<ActionResult<List<PatientListDto>>> GetAllByGenderIntrucerAcquaintedWay([FromQuery] ListDto dto, int gender, int intrucer, int acquaintedway)
     {
         var response = await _mediator.Send(new GetAllPatientsByGenderIntrucerAcquaintedWayQuery() { Dto = dto, gender = gender, intrucer = intrucer , acquaintedway = acquaintedway });

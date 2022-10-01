@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.Service;
 
-public class ServiceDTO : BaseDto<Guid>
+public class ServiceDTO 
 {
 
     /// <summary>

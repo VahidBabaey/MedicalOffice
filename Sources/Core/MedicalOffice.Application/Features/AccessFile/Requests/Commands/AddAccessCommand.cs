@@ -13,5 +13,6 @@ namespace MedicalOffice.Application.Features.AccessFile.Requests.Commands
     {
         public string userid { get; set; } = string.Empty;
         public AccessDTO DTO { get; set; } = new AccessDTO();
+        public UpdateAccessDTO DTOUp { get; set; } = new UpdateAccessDTO();
     }
 }

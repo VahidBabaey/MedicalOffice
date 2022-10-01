@@ -27,28 +27,28 @@ public class DrugIntractionController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("Create")]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] DrugIntractionDTO dto)
     {
         var response = await _mediator.Send(new AddDrugIntractionCommand() { DTO = dto});
 
         return Ok(response);
     }
-    [HttpDelete("DeleteDrugIntraction")]
+    [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeleteDrugIntractionCommand() { DrugIntractionID = id });
 
         return Ok(response);
     }
-    [HttpPost("UpdateDrugIntraction")]
-    public async Task<ActionResult<Guid>> Update([FromBody] DrugIntractionDTO dto)
+    [HttpPatch]
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateDrugIntractionDTO dto)
     {
         var response = await _mediator.Send(new EditDrugIntractionCommand() { DTO = dto });
 
         return Ok(response);
     }
-    [HttpGet("GetDrugIntractionList")]
+    [HttpGet]
     public async Task<ActionResult<List<DrugIntractionListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllDrugIntraction() { DTO = dto });

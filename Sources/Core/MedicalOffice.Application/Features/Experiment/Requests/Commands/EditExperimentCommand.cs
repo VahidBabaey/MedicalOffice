@@ -11,6 +11,6 @@ namespace MedicalOffice.Application.Features.Experiment.Requests.Commands
 {
     public class EditExperimentCommand : IRequest<BaseCommandResponse>
     {
-        public ExperimentDTO DTO { get; set; } = new ExperimentDTO();
+        public UpdateExperimentDTO DTO { get; set; } = new UpdateExperimentDTO();
     }
 }

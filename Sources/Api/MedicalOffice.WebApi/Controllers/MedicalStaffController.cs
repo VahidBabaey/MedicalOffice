@@ -23,28 +23,28 @@ public class MedicalStaffController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("Create")]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto)
     {
         var response = await _mediator.Send(new AddMedicalStaffCommand() { DTO = dto });
 
         return Ok(response);
     }
-    [HttpPost("Update")]
-    public async Task<ActionResult<Guid>> UpdateUser([FromBody] MedicalStaffDTO dto)
+    [HttpPatch]
+    public async Task<ActionResult<Guid>> UpdateUser([FromBody] UpdateMedicalStaffDTO dto)
     {
         var response = await _mediator.Send(new EditMedicalStaffCommand() { DTO = dto });
 
         return Ok(response);
     }
-    [HttpDelete("Delete")]
+    [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeleteMedicalStaffCommand() { MedicalStaffId = id });
 
         return Ok(response);
     }
-    [HttpGet("GetMedicallStaffs")]
+    [HttpGet]
     public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllMedicalStaffs() { DTO = dto });

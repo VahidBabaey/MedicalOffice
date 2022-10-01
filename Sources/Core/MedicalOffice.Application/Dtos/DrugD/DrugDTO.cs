@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.DrugD
 {
-    public class DrugDTO : BaseDto<Guid>
+    public class DrugDTO
     {
         /// <summary>
         /// نام دارو

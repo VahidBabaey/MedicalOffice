@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.AccessDTO
 {
-    public class AccessDTO : BaseDto<Guid>
+    public class AccessDTO
     
     {
         /// <summary>

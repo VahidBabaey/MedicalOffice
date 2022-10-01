@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.DrugIntractionD
 {
-    public class DrugIntractionDTO : BaseDto<Guid>
+    public class DrugIntractionDTO
     {
         /// <summary>
         /// نام گروه1

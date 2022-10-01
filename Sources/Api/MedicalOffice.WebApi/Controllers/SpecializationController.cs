@@ -22,7 +22,7 @@ public class SpecializationController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("Create")]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] SpecializationDTO dto)
     {
         var response = await _mediator.Send(new AddSpecializationCommand() { DTO = dto });
@@ -30,7 +30,7 @@ public class SpecializationController : Controller
         return Ok(response);
     }
 
-    [HttpGet("GetSpecializations")]
+    [HttpGet]
     public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllSpecializationsQuery() { DTO = dto });

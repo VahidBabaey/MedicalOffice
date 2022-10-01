@@ -21,10 +21,7 @@ public class ServiceController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("create")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesDefaultResponseType]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] ServiceDTO dto)
     {
         var response = await _mediator.Send(new AddServiceCommand() { Dto = dto });
@@ -32,22 +29,22 @@ public class ServiceController : Controller
         return Ok(response);
     }
 
-    [HttpDelete("DeleteService")]
+    [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeleteServiceCommand() { ServiceId = id });
 
         return Ok(response);
     }
-    [HttpPost("UpdateService")]
-    public async Task<ActionResult<Guid>> Update([FromBody] ServiceDTO dto)
+    [HttpPatch]
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateServiceDTO dto)
     {
         var response = await _mediator.Send(new EditServiceCommand() { DTO = dto });
 
         return Ok(response);
     }
 
-    [HttpGet("GetServices")]
+    [HttpGet]
     public async Task<ActionResult<List<ServiceListDTO>>> GetAll([FromQuery] ListDto dto, Guid sectionId)
     {
         var response = await _mediator.Send(new GetAllServicesBySectionIDQuery() { DTO = dto, SectionId = sectionId });

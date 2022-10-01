@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.Section;
 
-public class SectionDTO : BaseDto<Guid>
+public class SectionDTO 
 {
     /// <summary>
     /// آیدی مطب

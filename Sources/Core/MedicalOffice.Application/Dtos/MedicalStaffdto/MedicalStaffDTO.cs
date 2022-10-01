@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.MedicalStaffdto
 {
-    public class MedicalStaffDTO : BaseDto<Guid>
+    public class MedicalStaffDTO
     {
         /// <summary>
         /// آیدی مطب

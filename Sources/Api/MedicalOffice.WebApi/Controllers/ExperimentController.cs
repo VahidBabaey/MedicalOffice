@@ -23,29 +23,29 @@ public class ExperimentController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("Create")]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] ExperimentDTO dto)
     {
         var response = await _mediator.Send(new AddExperimentCommand() { DTO = dto });
 
         return Ok(response);
     }
-    [HttpDelete("DeleteExperiment")]
+    [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeleteExperimentCommand() { ExperimentID = id });
 
         return Ok(response);
     }
-    [HttpPost("UpdateExperiment")]
-    public async Task<ActionResult<Guid>> Update([FromBody] ExperimentDTO dto)
+    [HttpPatch]
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateExperimentDTO dto)
     {
         var response = await _mediator.Send(new EditExperimentCommand() { DTO = dto });
 
         return Ok(response);
     }
 
-    [HttpGet("GetExperiment")]
+    [HttpGet]
     public async Task<ActionResult<List<ExperimentListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllExperimentQuery() { DTO = dto });

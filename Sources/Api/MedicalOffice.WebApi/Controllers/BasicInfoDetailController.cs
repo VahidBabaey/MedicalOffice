@@ -26,29 +26,32 @@ public class BasicInfoDetailController : Controller
     }
 
 
-    [HttpPost("Create")]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] BasicInfoDetailDTO dto)
     {
         var response = await _mediator.Send(new AddBasicInfoDetailCommand() { DTO = dto });
 
         return Ok(response);
     }
-    [HttpGet("Get")]
+
+    [HttpGet]
     public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, Guid basicinfoId)
     {
         var response = await _mediator.Send(new GetAllBasicInfoDetailQuery() { DTO = dto, BasicInfoId = basicinfoId });
 
         return Ok(response);
     }
-    [HttpDelete("Delete")]
+
+    [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeleteBasicInfoDetailCommand() { BasicInfoDetailId = id });
 
         return Ok(response);
     }
-    [HttpPost("Update")]
-    public async Task<ActionResult<Guid>> Update([FromBody] BasicInfoDetailDTO dto)
+
+    [HttpPatch]
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateBasicInfoDetailDTO dto)
     {
         var response = await _mediator.Send(new EditBasicInfoDetailCommand() { DTO = dto });
 

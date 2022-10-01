@@ -23,7 +23,7 @@ public class RoleController : Controller
     }
 
 
-    [HttpGet("GetRoles")]
+    [HttpGet]
     public async Task<ActionResult<List<RoleListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllRolesQuery() { Dto = dto });

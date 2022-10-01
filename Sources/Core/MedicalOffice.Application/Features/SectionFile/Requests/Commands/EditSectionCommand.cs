@@ -6,5 +6,5 @@ namespace MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 
 public class EditSectionCommand : IRequest<BaseCommandResponse>
 {
-    public SectionDTO Dto { get; set; } = new SectionDTO();
+    public UpdateSectionDTO Dto { get; set; } = new UpdateSectionDTO();
 }

@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.Insurance;
 
-public class InsuranceDTO : BaseDto<Guid>
+public class InsuranceDTO
 {
     /// <summary>
     /// آیدی مطب

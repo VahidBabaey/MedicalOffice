@@ -3,7 +3,7 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.Patient;
 
-public class PazireshDTO : BaseDto<Guid>
+public class PazireshDTO
 {
     /// <summary>
     /// آیدی مطب

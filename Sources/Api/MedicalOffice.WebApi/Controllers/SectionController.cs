@@ -20,29 +20,29 @@ public class SectionController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("Create")]
+     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] SectionDTO dto)
     {
         var response = await _mediator.Send(new AddSectionCommand() { Dto = dto });
 
         return Ok(response);
     }
-    [HttpDelete("DeleteSection")]
+    [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeleteSectionCommand() { SectionId = id });
 
         return Ok(response);
     }
-    [HttpPost("UpdateSection")]
-    public async Task<ActionResult<Guid>> Update([FromBody] SectionDTO dto)
+    [HttpPatch]
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateSectionDTO dto)
     {
         var response = await _mediator.Send(new EditSectionCommand() { Dto = dto });
 
         return Ok(response);
     }
 
-    [HttpGet("GetSections")]
+    [HttpGet]
     public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllSectionQuery() { Dto = dto });

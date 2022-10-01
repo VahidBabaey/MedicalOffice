@@ -22,28 +22,28 @@ public class ShiftController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("Create")]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] ShiftDTO dto)
     {
         var response = await _mediator.Send(new AddShiftCommand() { DTO = dto });
 
         return Ok(response);
     }
-    [HttpDelete("DeleteShift")]
+    [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeleteShiftCommand() { ShiftID = id });
 
         return Ok(response);
     }
-    [HttpPost("UpdateService")]
-    public async Task<ActionResult<Guid>> Update([FromBody] ShiftDTO dto)
+    [HttpPatch]
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateShiftDTO dto)
     {
         var response = await _mediator.Send(new EditShiftCommand() { DTO = dto });
 
         return Ok(response);
     }
-    [HttpGet("GetShifts")]
+    [HttpGet]
     public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllShiftsQuery() { DTO = dto });

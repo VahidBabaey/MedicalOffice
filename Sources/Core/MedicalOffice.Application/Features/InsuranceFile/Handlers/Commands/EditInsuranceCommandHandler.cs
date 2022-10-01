@@ -35,22 +35,11 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
         {
             BaseCommandResponse response = new();
 
-            AddInsuranceValidator validator = new();
+
 
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
 
-            if (!validationResult.IsValid)
-            {
-                response.Success = false;
-                response.Message = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                log.Type = LogType.Error;
-            }
-            else
-            {
                 try
                 {
                     var insurance = _mapper.Map<Insurance>(request.DTO);
@@ -71,7 +60,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 
                     log.Type = LogType.Error;
                 }
-            }
+            
 
             log.Header = response.Message;
             log.Messages = response.Errors;

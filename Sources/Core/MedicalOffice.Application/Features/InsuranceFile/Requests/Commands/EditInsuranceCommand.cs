@@ -12,5 +12,5 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 
 public class EditInsuranceCommand : IRequest<BaseCommandResponse>
 {
-    public InsuranceDTO DTO { get; set; } = new InsuranceDTO();
+    public UpdateInsuranceDTO DTO { get; set; } = new UpdateInsuranceDTO();
 }

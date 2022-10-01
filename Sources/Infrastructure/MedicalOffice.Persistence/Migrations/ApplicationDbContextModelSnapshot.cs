@@ -1047,6 +1047,41 @@ namespace MedicalOffice.Persistence.Migrations
                     b.ToTable("FDO");
                 });
 
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.FormCommitment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("FormCommitments");
+                });
+
             modelBuilder.Entity("MedicalOffice.Domain.Entities.GeneralExamination", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3134,6 +3169,17 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("Patient");
                 });
 
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.FormCommitment", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.Patient", "Patient")
+                        .WithMany("FormCommitments")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("MedicalOffice.Domain.Entities.GeneralExamination", b =>
                 {
                     b.HasOne("MedicalOffice.Domain.Entities.ICD11", "ICD11")
@@ -3828,6 +3874,8 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("DrugAbuses");
 
                     b.Navigation("DrugPrescriptions");
+
+                    b.Navigation("FormCommitments");
 
                     b.Navigation("GeneralExaminations");
 

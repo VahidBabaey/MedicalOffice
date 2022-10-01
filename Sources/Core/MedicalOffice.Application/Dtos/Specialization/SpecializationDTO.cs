@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.Specialization;
 
-public class SpecializationDTO : BaseDto<Guid>
+public class SpecializationDTO 
 {
 
     /// <summary>

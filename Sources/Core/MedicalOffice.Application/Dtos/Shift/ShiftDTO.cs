@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Shift
 {
-     public class ShiftDTO : BaseDto<Guid>
+     public class ShiftDTO
     {
         /// <summary>
         /// آیدی مطب

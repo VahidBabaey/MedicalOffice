@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<BasicInfoDetail> BasicInfoDetail => Set<BasicInfoDetail>();
     public DbSet<Diagnose> Diagnoses => Set<Diagnose>();
     public DbSet<DiscountType> DiscountTypes => Set<DiscountType>();
+    public DbSet<FormCommitment> FormCommitments => Set<FormCommitment>();
     public DbSet<Drug> Drugs => Set<Drug>();
     public DbSet<DrugIntraction> DrugIntractions => Set<DrugIntraction>();
     public DbSet<DrugConsumption> DrugConsumptions => Set<DrugConsumption>();

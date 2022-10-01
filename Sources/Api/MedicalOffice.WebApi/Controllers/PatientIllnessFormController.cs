@@ -24,28 +24,28 @@ public class PatientIllnessFormController : Controller
     {
         _mediator = mediator;
     }
-    [HttpGet("GetPatientIllnessReasons")]
+    [HttpGet("illnessReasons")]
     public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetPatientIllnessReasons()
     {
         var response = await _mediator.Send(new GetAlliillnessReasonsQuery());
 
         return Ok(response);
     }
-    [HttpPost("Create")]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] PatientIllnessFormDTO dto)
     {
         var response = await _mediator.Send(new AddPatientIllnessFormCommand() { DTO = dto });
 
         return Ok(response);
     }
-    [HttpGet("Get")]
+    [HttpGet]
     public async Task<ActionResult<List<PatientIllnessFormListDTO>>> GetAll([FromQuery] ListDto dto, Guid patientid)
     {
         var response = await _mediator.Send(new GetAllPatientIllnessFormQuery() { DTO = dto, PatientId = patientid });
 
         return Ok(response);
     }
-    [HttpDelete("Delete")]
+    [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeletePatientIllnessFormCommand() { PatientIllnessFormId = id });
