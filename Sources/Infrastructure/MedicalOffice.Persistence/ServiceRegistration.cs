@@ -1,5 +1,6 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Domain.Entities;
 using MedicalOffice.Infrastructure.Crypto;
 using MedicalOffice.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,7 @@ public static class ServiceRegistration
         services.AddScoped<ISpecializationRepository, SpecializationRepository>();
         services.AddScoped<IShiftRepository, ShiftRepository>();
         services.AddScoped<IMembershipRepository, MembershipRepository>();
+        services.AddScoped<IMembershipServiceRepository, MemberShipServiceRepository>();
         services.AddScoped<IDrugRepository, DrugRepository>();
         services.AddScoped<IDrugShapeRepository, DrugShapeRepository>();
         services.AddScoped<IDrugSectionRepository, DrugSectionRepository>();

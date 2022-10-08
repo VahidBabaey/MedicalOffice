@@ -73,11 +73,8 @@ public class Service : BaseDomainEntity<Guid>
     /// </summary>
     public ICollection<AppointmentService>? AppointmentServices { get; set; }
     /// <summary>
-    /// عضویت
+    /// از این مدل برای برقراری ارتباط یک به چند بین عضویت-سرویس استفاده می شود
     /// </summary>
-    public Membership? Membership { get; set; }
-    /// <summary>
-    /// آیدی عضویت
-    /// </summary>
-    public Guid? MembershipId { get; set; }
+    public ICollection<MemberShipService>? MemberShipServices { get; set; }
+
 }

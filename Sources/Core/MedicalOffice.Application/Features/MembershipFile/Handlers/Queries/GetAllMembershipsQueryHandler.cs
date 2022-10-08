@@ -2,21 +2,23 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.Membership;
 using MedicalOffice.Application.Dtos.Service;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Queries;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Queries;
 using MedicalOffice.Application.Models;
+using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Queries;
 
-public class GetAllServicesQueryHandler : IRequestHandler<GetAllServices, List<ServiceListNameDTO>>
+public class GetAllMembershipsQueryHandler : IRequestHandler<GetAllMemberships, List<MembershipListDTO>>
 {
-    private readonly IServiceRepository _repository;
+    private readonly IMembershipRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetAllServicesQueryHandler(IServiceRepository repository, IMapper mapper, ILogger logger)
+    public GetAllMembershipsQueryHandler(IMembershipRepository repository, IMapper mapper, ILogger logger)
     {
         _repository = repository;
         _mapper = mapper;
@@ -24,17 +26,15 @@ public class GetAllServicesQueryHandler : IRequestHandler<GetAllServices, List<S
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
-    public async Task<List<ServiceListNameDTO>> Handle(GetAllServices request, CancellationToken cancellationToken)
+    public async Task<List<MembershipListDTO>> Handle(GetAllMemberships request, CancellationToken cancellationToken)
     {
-        List<ServiceListNameDTO> result = new();
+        List<MembershipListDTO> result = new();
 
         Log log = new();
 
         try
         {
-            var services = await _repository.GetAll();
-
-            result = _mapper.Map<List<ServiceListNameDTO>>(services);
+            result = await _repository.GetMembership();
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

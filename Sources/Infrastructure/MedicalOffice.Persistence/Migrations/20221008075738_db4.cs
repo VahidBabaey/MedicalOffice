@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MedicalOffice.Persistence.Migrations
 {
-    public partial class db3 : Migration
+    public partial class db4 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -653,6 +653,46 @@ namespace MedicalOffice.Persistence.Migrations
                         name: "FK_KMultiplierDetails_KMultipliers_KMultiplierId",
                         column: x => x.KMultiplierId,
                         principalTable: "KMultipliers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceType = table.Column<int>(type: "int", nullable: true),
+                    SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GenericCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SpecializationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    HasTariff = table.Column<bool>(type: "bit", nullable: false),
+                    IsPractical = table.Column<bool>(type: "bit", nullable: false),
+                    IsConsumingMaterials = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Services_Offices_OfficeId",
+                        column: x => x.OfficeId,
+                        principalTable: "Offices",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Services_Sections_SectionId",
+                        column: x => x.SectionId,
+                        principalTable: "Sections",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Services_Specializations_SpecializationId",
+                        column: x => x.SpecializationId,
+                        principalTable: "Specializations",
                         principalColumn: "Id");
                 });
 
@@ -1375,6 +1415,53 @@ namespace MedicalOffice.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tariffs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    InsuranceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UseKMultiplier = table.Column<bool>(type: "bit", nullable: false),
+                    KMultiplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TariffValue = table.Column<float>(type: "real", nullable: false),
+                    InternalTariffValue = table.Column<float>(type: "real", nullable: false),
+                    Difference = table.Column<float>(type: "real", nullable: false),
+                    Discount = table.Column<float>(type: "real", nullable: false),
+                    InsurancePercent = table.Column<float>(type: "real", nullable: false),
+                    AdjunctPrice = table.Column<float>(type: "real", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tariffs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tariffs_Insurances_InsuranceId",
+                        column: x => x.InsuranceId,
+                        principalTable: "Insurances",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Tariffs_KMultipliers_KMultiplierId",
+                        column: x => x.KMultiplierId,
+                        principalTable: "KMultipliers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Tariffs_Offices_OfficeId",
+                        column: x => x.OfficeId,
+                        principalTable: "Offices",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Tariffs_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Accesses",
                 columns: table => new
                 {
@@ -1465,6 +1552,48 @@ namespace MedicalOffice.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserServiceSharePercents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserOfficeRoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ShiftId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SharePercent = table.Column<float>(type: "real", nullable: false),
+                    ShareAmount = table.Column<float>(type: "real", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserServiceSharePercents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserServiceSharePercents_Sections_SectionId",
+                        column: x => x.SectionId,
+                        principalTable: "Sections",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserServiceSharePercents_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserServiceSharePercents_Shifts_ShiftId",
+                        column: x => x.ShiftId,
+                        principalTable: "Shifts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserServiceSharePercents_UserOfficeRoles_UserOfficeRoleId",
+                        column: x => x.UserOfficeRoleId,
+                        principalTable: "UserOfficeRoles",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppointmentServices",
                 columns: table => new
                 {
@@ -1485,76 +1614,10 @@ namespace MedicalOffice.Persistence.Migrations
                         column: x => x.AppointmentId,
                         principalTable: "Appointments",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Membership",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ReceptionDiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LastUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Membership", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Membership_Offices_OfficeId",
-                        column: x => x.OfficeId,
-                        principalTable: "Offices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Services",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceType = table.Column<int>(type: "int", nullable: true),
-                    SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GenericCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SpecializationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    HasTariff = table.Column<bool>(type: "bit", nullable: false),
-                    IsPractical = table.Column<bool>(type: "bit", nullable: false),
-                    IsConsumingMaterials = table.Column<bool>(type: "bit", nullable: false),
-                    MembershipId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LastUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Services", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Services_Membership_MembershipId",
-                        column: x => x.MembershipId,
-                        principalTable: "Membership",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Services_Offices_OfficeId",
-                        column: x => x.OfficeId,
-                        principalTable: "Offices",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Services_Sections_SectionId",
-                        column: x => x.SectionId,
-                        principalTable: "Sections",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Services_Specializations_SpecializationId",
-                        column: x => x.SpecializationId,
-                        principalTable: "Specializations",
+                        name: "FK_AppointmentServices_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
                         principalColumn: "Id");
                 });
 
@@ -1600,95 +1663,6 @@ namespace MedicalOffice.Persistence.Migrations
                         name: "FK_ReceptionDetails_Services_ServiceId",
                         column: x => x.ServiceId,
                         principalTable: "Services",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tariffs",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    InsuranceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UseKMultiplier = table.Column<bool>(type: "bit", nullable: false),
-                    KMultiplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TariffValue = table.Column<float>(type: "real", nullable: false),
-                    InternalTariffValue = table.Column<float>(type: "real", nullable: false),
-                    Difference = table.Column<float>(type: "real", nullable: false),
-                    Discount = table.Column<float>(type: "real", nullable: false),
-                    InsurancePercent = table.Column<float>(type: "real", nullable: false),
-                    AdjunctPrice = table.Column<float>(type: "real", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LastUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tariffs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tariffs_Insurances_InsuranceId",
-                        column: x => x.InsuranceId,
-                        principalTable: "Insurances",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Tariffs_KMultipliers_KMultiplierId",
-                        column: x => x.KMultiplierId,
-                        principalTable: "KMultipliers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Tariffs_Offices_OfficeId",
-                        column: x => x.OfficeId,
-                        principalTable: "Offices",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Tariffs_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserServiceSharePercents",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserOfficeRoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ShiftId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SharePercent = table.Column<float>(type: "real", nullable: false),
-                    ShareAmount = table.Column<float>(type: "real", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LastUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserServiceSharePercents", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserServiceSharePercents_Sections_SectionId",
-                        column: x => x.SectionId,
-                        principalTable: "Sections",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserServiceSharePercents_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserServiceSharePercents_Shifts_ShiftId",
-                        column: x => x.ShiftId,
-                        principalTable: "Shifts",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserServiceSharePercents_UserOfficeRoles_UserOfficeRoleId",
-                        column: x => x.UserOfficeRoleId,
-                        principalTable: "UserOfficeRoles",
                         principalColumn: "Id");
                 });
 
@@ -1752,6 +1726,64 @@ namespace MedicalOffice.Persistence.Migrations
                         name: "FK_ReceptionUsers_UserServiceSharePercents_UserServiceSharePercentId",
                         column: x => x.UserServiceSharePercentId,
                         principalTable: "UserServiceSharePercents",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Memberships",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ReceptionDiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Memberships", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Memberships_Offices_OfficeId",
+                        column: x => x.OfficeId,
+                        principalTable: "Offices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Memberships_ReceptionDiscounts_ReceptionDiscountId",
+                        column: x => x.ReceptionDiscountId,
+                        principalTable: "ReceptionDiscounts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MemberShipServices",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MembershipId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MemberShipServices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MemberShipServices_Memberships_MembershipId",
+                        column: x => x.MembershipId,
+                        principalTable: "Memberships",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MemberShipServices_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
                         principalColumn: "Id");
                 });
 
@@ -1936,14 +1968,24 @@ namespace MedicalOffice.Persistence.Migrations
                 column: "MedicalStaffId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Membership_OfficeId",
-                table: "Membership",
+                name: "IX_Memberships_OfficeId",
+                table: "Memberships",
                 column: "OfficeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Membership_ReceptionDiscountId",
-                table: "Membership",
+                name: "IX_Memberships_ReceptionDiscountId",
+                table: "Memberships",
                 column: "ReceptionDiscountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MemberShipServices_MembershipId",
+                table: "MemberShipServices",
+                column: "MembershipId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MemberShipServices_ServiceId",
+                table: "MemberShipServices",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PatientAddresses_PatientId",
@@ -2091,11 +2133,6 @@ namespace MedicalOffice.Persistence.Migrations
                 column: "OfficeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Services_MembershipId",
-                table: "Services",
-                column: "MembershipId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Services_OfficeId",
                 table: "Services",
                 column: "OfficeId");
@@ -2194,40 +2231,10 @@ namespace MedicalOffice.Persistence.Migrations
                 name: "IX_UserServiceSharePercents_UserOfficeRoleId",
                 table: "UserServiceSharePercents",
                 column: "UserOfficeRoleId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AppointmentServices_Services_ServiceId",
-                table: "AppointmentServices",
-                column: "ServiceId",
-                principalTable: "Services",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Membership_ReceptionDiscounts_ReceptionDiscountId",
-                table: "Membership",
-                column: "ReceptionDiscountId",
-                principalTable: "ReceptionDiscounts",
-                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Receptions_Patients_PatientId",
-                table: "Receptions");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_ReceptionDetails_Insurances_AdditionalInsuranceId",
-                table: "ReceptionDetails");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Receptions_Users_LoggedInUserId",
-                table: "Receptions");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_ReceptionDetails_Services_ServiceId",
-                table: "ReceptionDetails");
-
             migrationBuilder.DropTable(
                 name: "Accesses");
 
@@ -2269,6 +2276,9 @@ namespace MedicalOffice.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "MedicalStaffWorkHourPrograms");
+
+            migrationBuilder.DropTable(
+                name: "MemberShipServices");
 
             migrationBuilder.DropTable(
                 name: "PatientAddresses");
@@ -2331,6 +2341,9 @@ namespace MedicalOffice.Persistence.Migrations
                 name: "RVU3");
 
             migrationBuilder.DropTable(
+                name: "Memberships");
+
+            migrationBuilder.DropTable(
                 name: "UserServiceSharePercents");
 
             migrationBuilder.DropTable(
@@ -2358,37 +2371,10 @@ namespace MedicalOffice.Persistence.Migrations
                 name: "DrugUsages");
 
             migrationBuilder.DropTable(
-                name: "UserOfficeRoles");
-
-            migrationBuilder.DropTable(
-                name: "MedicalStaffs");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
-
-            migrationBuilder.DropTable(
-                name: "Patients");
-
-            migrationBuilder.DropTable(
-                name: "Insurances");
-
-            migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Services");
-
-            migrationBuilder.DropTable(
-                name: "Membership");
-
-            migrationBuilder.DropTable(
-                name: "Sections");
-
-            migrationBuilder.DropTable(
-                name: "Specializations");
-
-            migrationBuilder.DropTable(
                 name: "ReceptionDiscounts");
+
+            migrationBuilder.DropTable(
+                name: "UserOfficeRoles");
 
             migrationBuilder.DropTable(
                 name: "DiscountTypes");
@@ -2397,10 +2383,34 @@ namespace MedicalOffice.Persistence.Migrations
                 name: "ReceptionDetails");
 
             migrationBuilder.DropTable(
+                name: "MedicalStaffs");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
                 name: "Receptions");
 
             migrationBuilder.DropTable(
+                name: "Services");
+
+            migrationBuilder.DropTable(
+                name: "Patients");
+
+            migrationBuilder.DropTable(
                 name: "Shifts");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Sections");
+
+            migrationBuilder.DropTable(
+                name: "Specializations");
+
+            migrationBuilder.DropTable(
+                name: "Insurances");
 
             migrationBuilder.DropTable(
                 name: "Offices");

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalOffice.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221001102515_db3")]
-    partial class db3
+    [Migration("20221008075738_db4")]
+    partial class db4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1522,7 +1522,43 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.HasIndex("ReceptionDiscountId");
 
-                    b.ToTable("Membership");
+                    b.ToTable("Memberships");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MemberShipService", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("MembershipId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ServiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MembershipId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("MemberShipServices");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Office", b =>
@@ -2508,9 +2544,6 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("MembershipId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2528,8 +2561,6 @@ namespace MedicalOffice.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MembershipId");
 
                     b.HasIndex("OfficeId");
 
@@ -3296,6 +3327,21 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("ReceptionDiscount");
                 });
 
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MemberShipService", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.Membership", "MemberShip")
+                        .WithMany("MemberShipServices")
+                        .HasForeignKey("MembershipId");
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Service", "Service")
+                        .WithMany("MemberShipServices")
+                        .HasForeignKey("ServiceId");
+
+                    b.Navigation("MemberShip");
+
+                    b.Navigation("Service");
+                });
+
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Patient", b =>
                 {
                     b.HasOne("MedicalOffice.Domain.Entities.Insurance", "Insurance")
@@ -3566,10 +3612,6 @@ namespace MedicalOffice.Persistence.Migrations
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Service", b =>
                 {
-                    b.HasOne("MedicalOffice.Domain.Entities.Membership", "Membership")
-                        .WithMany("Services")
-                        .HasForeignKey("MembershipId");
-
                     b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
                         .WithMany("Services")
                         .HasForeignKey("OfficeId")
@@ -3585,8 +3627,6 @@ namespace MedicalOffice.Persistence.Migrations
                         .WithMany("Services")
                         .HasForeignKey("SpecializationId")
                         .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("Membership");
 
                     b.Navigation("Office");
 
@@ -3663,7 +3703,7 @@ namespace MedicalOffice.Persistence.Migrations
             modelBuilder.Entity("MedicalOffice.Domain.Entities.UserOfficeRole", b =>
                 {
                     b.HasOne("MedicalOffice.Domain.Entities.MedicalStaff", "MedicalStaff")
-                        .WithMany()
+                        .WithMany("UserOfficeRoles")
                         .HasForeignKey("MedicalStaffId");
 
                     b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
@@ -3831,11 +3871,13 @@ namespace MedicalOffice.Persistence.Migrations
             modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaff", b =>
                 {
                     b.Navigation("MedicalStaffWorkHourPrograms");
+
+                    b.Navigation("UserOfficeRoles");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Membership", b =>
                 {
-                    b.Navigation("Services");
+                    b.Navigation("MemberShipServices");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Office", b =>
@@ -3947,6 +3989,8 @@ namespace MedicalOffice.Persistence.Migrations
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Service", b =>
                 {
                     b.Navigation("AppointmentServices");
+
+                    b.Navigation("MemberShipServices");
 
                     b.Navigation("ReceptionDetails");
 

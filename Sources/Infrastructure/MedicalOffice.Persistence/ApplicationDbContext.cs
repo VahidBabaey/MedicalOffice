@@ -34,6 +34,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<MedicalAction> MedicalActions => Set<MedicalAction>();
     public DbSet<MedicalStaff> MedicalStaffs => Set<MedicalStaff>();
     public DbSet<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms => Set<MedicalStaffWorkHourProgram>();
+    public DbSet<Membership> Memberships => Set<Membership>();
+    public DbSet<MemberShipService> MemberShipServices => Set<MemberShipService>();
     public DbSet<Office> Offices => Set<Office>();
     public DbSet<Patient> Patients => Set<Patient>();
     public DbSet<PatientCommitmentForm> PatientCommitmentForms => Set<PatientCommitmentForm>();

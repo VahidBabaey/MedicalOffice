@@ -32,6 +32,7 @@ public class MappingProfile : Profile
         CreateMap<Patient, PatientListDto>().ReverseMap();
         CreateMap<User, PazireshDTO>().ReverseMap();
         CreateMap<Section, SectionDTO>().ReverseMap();
+        CreateMap<Section, SectionListDTO>().ReverseMap();
         CreateMap<Section, UpdateSectionDTO>().ReverseMap();
         CreateMap<Service, ServiceDTO>().ReverseMap();
         CreateMap<Service, UpdateServiceDTO>().ReverseMap();
@@ -46,6 +47,7 @@ public class MappingProfile : Profile
         CreateMap<Shift, UpdateShiftDTO>().ReverseMap();
         CreateMap<Shift, ShiftListDTO>().ReverseMap();
         CreateMap<Membership, MembershipDTO>().ReverseMap();
+        CreateMap<Membership, MembershipListDTO>().ReverseMap();
         CreateMap<Membership, UpdateMembershipDTO>().ReverseMap();
         CreateMap<DrugShape, DrugShapeListDTO>().ReverseMap();
         CreateMap<DrugSection, DrugSectionListDTO>().ReverseMap();

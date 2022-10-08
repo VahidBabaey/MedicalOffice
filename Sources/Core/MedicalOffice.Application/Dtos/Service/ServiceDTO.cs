@@ -14,10 +14,7 @@ public class ServiceDTO
     /// آیدی بخش
     /// </summary>
     public Guid? SectionId { get; set; }
-    /// <summary>
-    /// آیدی عضویت
-    /// </summary>
-    public Guid? MembershipId { get; set; }
+
     /// <summary>
     /// نام خدمت
     /// </summa?ry>

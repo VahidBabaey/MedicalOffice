@@ -66,5 +66,9 @@ namespace MedicalOffice.Domain.Entities
         /// برنامه کادر درمان
         /// </summary>
         public ICollection<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms { get; set; } = new List<MedicalStaffWorkHourProgram>();
+        /// <summary>
+        /// از این مدل برای برقراری ارتباط یک به چند بین نقش و کاربر-مطب-نقش استفاده می شود
+        /// </summary>
+        public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
     }
 }

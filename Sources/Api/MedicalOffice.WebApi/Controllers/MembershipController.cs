@@ -32,10 +32,10 @@ public class MembershipController : Controller
 
         return Ok(response);
     }
-    [HttpGet("services")]
-    public async Task<ActionResult<List<ServiceListNameDTO>>> GetAll([FromQuery] ListDto dto)
+    [HttpGet]
+    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllServices() { DTO = dto});
+        var response = await _mediator.Send(new GetAllMemberships() { DTO = dto});
 
         return Ok(response);
     }

@@ -36,8 +36,8 @@ namespace MedicalOffice.Application.Features.MdicalStaffFile.Handler.Commands
 
             try
             {
-                await _repository.Delete(request.MedicalStaffId);
                 await _repository.DeleteUserOfficeRoleAsync(request.MedicalStaffId);
+                await _repository.Delete(request.MedicalStaffId);
                 response.Success = true;
                 response.Message = $"{_requestTitle} succeded";
                 response.Data.Add(new { Id = request.MedicalStaffId });
