@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace MedicalOffice.Persistence.Configurations.Common
+namespace MedicalOffice.Identity.Configurations.Common
 {
     public abstract class BaseEntityTypeConfiguration<DomainEntity, IdType> : IEntityTypeConfiguration<DomainEntity>
         where IdType : struct

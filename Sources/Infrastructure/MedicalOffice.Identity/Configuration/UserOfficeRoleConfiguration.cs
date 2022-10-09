@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Domain.Entities;
-using MedicalOffice.Persistence.Configurations.Common;
+using MedicalOffice.Identity.Configurations.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

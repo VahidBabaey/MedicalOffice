@@ -1,9 +1,9 @@
 ﻿using MedicalOffice.Domain.Entities;
-using MedicalOffice.Persistence.Configurations.Common;
+using MedicalOffice.Identity.Configurations.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace MedicalOffice.Persistence.Configurations.Entities
+namespace MedicalOffice.Identity.Configurations.Entities
 {
     public class UserConfiguration : BaseEntityTypeConfiguration<User, Guid>
     {
