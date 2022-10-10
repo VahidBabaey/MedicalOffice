@@ -20,7 +20,6 @@ namespace Identity.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtSettings _jwtSettings;
-        private object id;
 
         public AuthService(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<ApplicationUser> signInManager)
         {
@@ -31,18 +30,18 @@ namespace Identity.Services
 
         public async Task<AuthResponse> Login(AuthRequest request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _userManager.FindByNameAsync(request.UserName);
 
             if (user == null)
             {
-                throw new Exception($"User with {request.Email} isn't exist");
+                throw new Exception($"User with {request.UserName} isn't exist");
             }
 
             var result = await _signInManager.PasswordSignInAsync(user.Username, request.Password, false, lockoutOnFailure: false);
 
             if (!result.Succeeded)
             {
-                throw new Exception($"credencial for {request.Email} are'nt valid");
+                throw new Exception($"credencial for {request.UserName} are'nt valid");
             }
 
             JwtSecurityToken JwtSecurityToken = await GenerateToken(user);
@@ -75,8 +74,7 @@ namespace Identity.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                //new Claim(CustomClaimTypes.Uid, user.Id)
+                new Claim(JwtRegisteredClaimNames.Email, user.Email)
             }
             .Union(userClaims)
             .Union(roleClaims);
@@ -129,7 +127,7 @@ namespace Identity.Services
             }
             else
             {
-                throw new Exception($"Email {request.Email} already exists.");
+                throw new Exception($"UserName {request.Email} already exists.");
             }
         }
     }

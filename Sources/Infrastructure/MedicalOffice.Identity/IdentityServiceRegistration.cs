@@ -2,25 +2,19 @@
 using Identity.Services;
 using MedicalOffice.Application.Contracts.Identity;
 using MedicalOffice.Application.Models.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using IdentityRole = Microsoft.AspNet.Identity.EntityFramework.IdentityRole;
 
 namespace Identity
 {
     public static class IdentityServiceRegistration
     {
-        public static IServiceCollection ConfigureIdentityServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 

@@ -14,16 +14,16 @@ namespace Identity.Configuration
             //    .WithMany(user => user.UserOfficeRoles)
             //    .HasForeignKey(userOfficeRole => userOfficeRole.UserId)
             //    .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .HasOne(userOfficeRole => userOfficeRole.Office)
-                .WithMany(office => office.UserOfficeRoles)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .HasOne(userOfficeRole => userOfficeRole.Role)
-                .WithMany(role => role.UserOfficeRoles)
-                .HasForeignKey(userOfficeRole => userOfficeRole.RoleId)
-                .OnDelete(DeleteBehavior.NoAction);
+            //builder
+            //    .HasOne(userOfficeRole => userOfficeRole.Office)
+            //    .WithMany(office => office.UserOfficeRoles)
+            //    .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+            //    .OnDelete(DeleteBehavior.NoAction);
+            //builder
+            //    .HasOne(userOfficeRole => userOfficeRole.Role)
+            //    .WithMany(role => role.UserOfficeRoles)
+            //    .HasForeignKey(userOfficeRole => userOfficeRole.RoleId)
+            //    .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

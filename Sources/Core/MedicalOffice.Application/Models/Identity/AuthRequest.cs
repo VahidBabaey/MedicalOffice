@@ -10,7 +10,7 @@ namespace MedicalOffice.Application.Models.Identity
     public class AuthRequest
     {
         [Required]
-        public string Email { get; set; }
+        public string UserName { get; set; }
         
         [Required] 
         public string Password { get; set; }
