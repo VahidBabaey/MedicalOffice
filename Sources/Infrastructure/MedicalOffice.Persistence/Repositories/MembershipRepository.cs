@@ -14,8 +14,7 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
     private readonly IMembershipServiceRepository _repository;
     private readonly IGenericRepository<Membership, Guid> _repositorymembership;
     private readonly ApplicationDbContext _dbContext;
-    private MembershipListDTO membershipListDTO = null;
-    private List<MembershipListDTO> ListmembershipDTO = null;
+    public List<MembershipListDTO> ListmembershipDTO = null;
     string nameservice;
 
     public MembershipRepository(IGenericRepository<Membership, Guid> repositorymembership, IMembershipServiceRepository repository, ApplicationDbContext dbContext) : base(dbContext)
@@ -23,7 +22,6 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
         _repositorymembership = repositorymembership;
         _repository = repository;
         _dbContext = dbContext;
-        membershipListDTO = new MembershipListDTO();
         ListmembershipDTO = new List<MembershipListDTO>();
         nameservice = "";
     }
@@ -82,12 +80,14 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
             {
                 nameservice += _dbContext.Services.Where(ser => ser.Id == item1.ServiceId).SingleOrDefault().Name + " ، ";
             }
-            membershipListDTO.Name = item.Name;
-            membershipListDTO.NameServices = nameservice;
-            ListmembershipDTO.Add(membershipListDTO);
+            var q = new MembershipListDTO()
+            {
+                 
+                Name = item.Name,
+                NameServices = nameservice
+            };
+            ListmembershipDTO.Add(q);
             nameservice = "";
-
-
         }
         return ListmembershipDTO;
     }
