@@ -17,7 +17,7 @@ namespace MedicalOffice.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.1")
+                .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -1905,40 +1905,6 @@ namespace MedicalOffice.Persistence.Migrations
                     b.ToTable("PatientIllnessForms");
                 });
 
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.PatientPicture", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte[]>("Picture")
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("PatientPictures");
-                });
-
             modelBuilder.Entity("MedicalOffice.Domain.Entities.PatientReferralForm", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2091,6 +2057,50 @@ namespace MedicalOffice.Persistence.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("PhysicalExams");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.Picture", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OfficeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("VirtualPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Pictures");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.PMH", b =>
@@ -3406,15 +3416,6 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.PatientPicture", b =>
-                {
-                    b.HasOne("MedicalOffice.Domain.Entities.Patient", "Patient")
-                        .WithMany("PatientPictures")
-                        .HasForeignKey("PatientId");
-
-                    b.Navigation("Patient");
-                });
-
             modelBuilder.Entity("MedicalOffice.Domain.Entities.PatientReferralForm", b =>
                 {
                     b.HasOne("MedicalOffice.Domain.Entities.Patient", "Patient")
@@ -3442,6 +3443,25 @@ namespace MedicalOffice.Persistence.Migrations
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.Picture", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
+                        .WithMany("Picture")
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Patient", "Patient")
+                        .WithMany("Pictures")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Office");
 
                     b.Navigation("Patient");
                 });
@@ -3890,6 +3910,8 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.Navigation("Patients");
 
+                    b.Navigation("Picture");
+
                     b.Navigation("ReceptionDetails");
 
                     b.Navigation("Receptions");
@@ -3935,13 +3957,13 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.Navigation("PatientIllnessForms");
 
-                    b.Navigation("PatientPictures");
-
                     b.Navigation("PatientReferralForms");
 
                     b.Navigation("PatientTags");
 
                     b.Navigation("PhysicalExams");
+
+                    b.Navigation("Pictures");
 
                     b.Navigation("Receptions");
 

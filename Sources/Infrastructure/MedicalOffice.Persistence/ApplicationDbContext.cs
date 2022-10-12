@@ -38,10 +38,10 @@ public class ApplicationDbContext : DbContext
     public DbSet<MemberShipService> MemberShipServices => Set<MemberShipService>();
     public DbSet<Office> Offices => Set<Office>();
     public DbSet<Patient> Patients => Set<Patient>();
+    public DbSet<Picture> Pictures => Set<Picture>();
     public DbSet<PatientCommitmentForm> PatientCommitmentForms => Set<PatientCommitmentForm>();
     public DbSet<PatientFiles> PatientFiless => Set<PatientFiles>();
     public DbSet<PatientIllnessForm> PatientIllnessForms => Set<PatientIllnessForm>();
-    public DbSet<PatientPicture> PatientPictures => Set<PatientPicture>();
     public DbSet<PatientReferralForm> PatientReferralForms => Set<PatientReferralForm>();
     public DbSet<PatientAddress> PatientAddresses => Set<PatientAddress>();
     public DbSet<PatientContact> PatientContacts => Set<PatientContact>();

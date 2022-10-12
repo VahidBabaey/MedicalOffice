@@ -82,9 +82,10 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
             }
             var q = new MembershipListDTO()
             {
-                 
+                Id = item.Id, 
                 Name = item.Name,
-                NameServices = nameservice
+                NameServices = nameservice,
+                
             };
             ListmembershipDTO.Add(q);
             nameservice = "";

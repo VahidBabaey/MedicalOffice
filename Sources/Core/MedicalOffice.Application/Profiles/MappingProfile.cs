@@ -14,6 +14,7 @@ using MedicalOffice.Application.Dtos.Patient;
 using MedicalOffice.Application.Dtos.PatientIllnessFormDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormListDTO;
 using MedicalOffice.Application.Dtos.PatientReferralFormDTO;
+using MedicalOffice.Application.Dtos.PictureDTO;
 using MedicalOffice.Application.Dtos.Roledto;
 using MedicalOffice.Application.Dtos.Section;
 using MedicalOffice.Application.Dtos.Service;
@@ -83,5 +84,8 @@ public class MappingProfile : Profile
         CreateMap<FormCommitment, FormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, UpdateFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, FormCommitmentListDTO>().ReverseMap();
+        CreateMap<Picture, PictureUploadDTO>().ReverseMap();
+        CreateMap<Picture, AddPictureDTO>().ReverseMap();
+        CreateMap<Picture, PatientPicturesDTO>().ReverseMap();
     }
 }

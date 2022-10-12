@@ -165,10 +165,6 @@ public class Patient : BaseDomainEntity<Guid>
     /// </summary>
     public ICollection<MedicalAction> MedicalActions { get; set; } = new List<MedicalAction>();
     /// <summary>
-    /// لیست عکس
-    /// </summary>
-    public ICollection<PatientPicture> PatientPictures { get; set; } = new List<PatientPicture>();
-    /// <summary>
     /// لیست فایل
     /// </summary>
     public ICollection<PatientFiles> PatientFiless { get; set; } = new List<PatientFiles>();
@@ -184,4 +180,8 @@ public class Patient : BaseDomainEntity<Guid>
     /// لیست فرم تعهدنامه
     /// </summary>
     public ICollection<PatientCommitmentForm> PatientCommitmentForms { get; set; } = new List<PatientCommitmentForm>();
+    /// <summary>
+    /// لیست عکس ها
+    /// </summary>
+    public ICollection<Picture>? Pictures { get; set; }
 }

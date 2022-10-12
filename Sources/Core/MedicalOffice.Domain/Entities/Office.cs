@@ -67,4 +67,8 @@ public class Office : BaseDomainEntity<Guid>
     /// دسترسی ها
     /// </summary>
     public ICollection<Access>? Accesses { get; set; }
+    /// <summary>
+    /// دسترسی ها
+    /// </summary>
+    public ICollection<Picture>? Picture { get; set; }
 }
