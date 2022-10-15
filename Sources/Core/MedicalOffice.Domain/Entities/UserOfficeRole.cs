@@ -48,4 +48,8 @@ public class UserOfficeRole : BaseDomainEntity<Guid>
     /// دسترسی ها
     /// </summary>
     public ICollection<Access>? Accesses { get; set; }
+    /// <summary>
+    /// کاربران پذیرش
+    /// </summary>
+    public ICollection<ReceptionUser> ReceptionUsers { get; set; } = new List<ReceptionUser>();
 }

@@ -55,31 +55,31 @@ public class Reception : BaseDomainEntity<Guid>
     /// <summary>
     /// شماره فاکتور
     /// </summary>
-    public uint FactorNo { get; set; }
+    public int FactorNo { get; set; }
     /// <summary>
     /// شماره فاکتور روز
     /// </summary>
-    public uint FactorNoToday { get; set; }
+    public int FactorNoToday { get; set; }
     /// <summary>
     /// جزئیات پذیرش
     /// </summary>
-    public ICollection<ReceptionDetail>? ReceptionDetails { get; set; }
+    public ICollection<ReceptionDetail> ReceptionDetails { get; set; } = new List<ReceptionDetail>();
     /// <summary>
     /// جمع کلی هزینه
     /// </summary>
-    public float TotalReceptionCost { get; set; }
+    public decimal TotalReceptionCost { get; set; }
     /// <summary>
     /// جمع کلی دریافتی
     /// </summary>
-    public float TotalReceived { get; set; }
+    public decimal TotalReceived { get; set; }
     /// <summary>
     /// جمع کلی بدهی
     /// </summary>
-    public float TotalDebt { get; set; }
+    public decimal TotalDebt { get; set; }
     /// <summary>
     /// جمع کلی مبلغ امانی
     /// </summary>
-    public float TotalDeposit { get; set; }
+    public decimal TotalDeposit { get; set; }
     /// <summary>
     /// عدم مراجعه
     /// </summary>

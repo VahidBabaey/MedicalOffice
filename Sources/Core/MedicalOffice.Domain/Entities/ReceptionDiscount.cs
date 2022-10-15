@@ -14,11 +14,11 @@ public class ReceptionDiscount : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی نوع تخفیف
     /// </summary>
-    public Guid? DiscountTypeId { get; set; }
+    public Guid DiscountTypeId { get; set; }
     /// <summary>
     /// مبلغ تخفیف
     /// </summary>
-    public float Amount { get; set; }
+    public long Amount { get; set; }
     /// <summary>
     /// جزئیات پذیرش
     /// </summary>

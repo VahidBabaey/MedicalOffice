@@ -10,14 +10,9 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public override void ConfigureEntity(EntityTypeBuilder<ReceptionUser> builder)
         {
             builder
-                .HasOne(e => e.User)
+                .HasOne(e => e.UserOfficeRole)
                 .WithMany(e => e.ReceptionUsers)
-                .HasForeignKey(e => e.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .HasOne(e => e.UserServiceSharePercent)
-                .WithMany(e => e.ReceptionUsers)
-                .HasForeignKey(e => e.UserServiceSharePercentId)
+                .HasForeignKey(e => e.UserOfficeRoleId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasOne(e => e.ReceptionDetail)

@@ -44,10 +44,10 @@ public class User : BaseDomainEntity<Guid>
     /// پذیرش ها
     /// </summary>
     public ICollection<Reception>? Receptions { get; set; }
-    /// <summary>
-    /// کاربران پذیرش
-    /// </summary>
-    public ICollection<ReceptionUser>? ReceptionUsers { get; set; }
+    ///// <summary>
+    ///// کاربران پذیرش
+    ///// </summary>
+    //public ICollection<ReceptionUser>? ReceptionUsers { get; set; }
     /// <summary>
     /// وقت دهی ها
     /// </summary>
