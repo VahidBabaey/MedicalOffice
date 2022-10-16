@@ -9,11 +9,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
     {
         public override void ConfigureEntity(EntityTypeBuilder<UserOfficeRole> builder)
         {
-            //builder
-            //    .HasOne(userOfficeRole => userOfficeRole.User)
-            //    .WithMany(user => user.UserOfficeRoles)
-            //    .HasForeignKey(userOfficeRole => userOfficeRole.UserId)
-            //    .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasOne(userOfficeRole => userOfficeRole.Office)
                 .WithMany(office => office.UserOfficeRoles)

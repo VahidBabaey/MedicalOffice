@@ -8,22 +8,6 @@ namespace MedicalOffice.Domain.Entities;
 public class ReceptionUser : BaseDomainEntity<Guid>
 {
     /// <summary>
-    /// درصد و سهم پزشک
-    /// </summary>
-    public UserServiceSharePercent? UserServiceSharePercent { get; set; }
-    /// <summary>
-    /// آیدی درصد و سهم پزشک
-    /// </summary>
-    public Guid UserServiceSharePercentId { get; set; }
-    /// <summary>
-    /// کاربر لاگین شده
-    /// </summary>
-    public User? User { get; set; }
-    /// <summary>
-    /// آیدی کاربر لاگین شده
-    /// </summary>
-    public Guid UserId { get; set; }
-    /// <summary>
     /// جزئیات پذیرش
     /// </summary>
     public ReceptionDetail? ReceptionDetail { get; set; }
@@ -31,4 +15,21 @@ public class ReceptionUser : BaseDomainEntity<Guid>
     /// آیدی جزئیات پذیرش
     /// </summary>
     public Guid ReceptionDetailId { get; set; }
+    /// <summary>
+    /// نفش کادر درمان
+    /// </summary>
+    public UserOfficeRole UserOfficeRole { get; set; } = new();
+    /// <summary>
+    /// آیدی نقش کادر درمان
+    /// </summary>
+    public Guid UserOfficeRoleId { get; set; }
+    /// <summary>
+    /// مبلغ سهم
+    /// </summary>
+    public decimal SharePrice { get; set; }
+    /// <summary>
+    /// درصد سهم
+    /// </summary>
+    public float SharePercent { get; set; }
+
 }
