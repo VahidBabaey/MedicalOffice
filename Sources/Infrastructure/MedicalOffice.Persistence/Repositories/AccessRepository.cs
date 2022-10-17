@@ -22,7 +22,6 @@ public class AccessRepository : GenericRepository<Access, Guid>, IAccessReposito
     }
     public bool SearchUser(Guid searchid)
     {
-
         var idsearchuser = _dbContext.Accesses.Where(p => p.UserOfficeRoleId == searchid).FirstOrDefault();
         if(idsearchuser != null)
         {
@@ -32,9 +31,8 @@ public class AccessRepository : GenericRepository<Access, Guid>, IAccessReposito
         {
             return false;
         }
-
-
     }
+
     public async Task<IReadOnlyList<Access>> GetAccessDetailsByUserID(Guid Id)
     {
 

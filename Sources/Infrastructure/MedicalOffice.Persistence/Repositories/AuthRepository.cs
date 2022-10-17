@@ -23,7 +23,7 @@ namespace MedicalOffice.Persistence.Repositories
 
         public User? GetByNationalID(string NationalID)
         {
-            var user= _dbContext.Users.Where(p => p.NationalID == NationalID).FirstOrDefault();
+            var user = _dbContext.Users.Where(p => p.NationalID == NationalID).FirstOrDefault();
 
             if (user != null) return user;
             else return null;
@@ -31,13 +31,20 @@ namespace MedicalOffice.Persistence.Repositories
 
         public User? GetByMobilePhone(string MobilePhone)
         {
-            var user = _dbContext.Users.Where(p=>p.MobilePhone==MobilePhone).FirstOrDefault();
+            var user = _dbContext.Users.Where(p => p.MobilePhone == MobilePhone).FirstOrDefault();
 
             if (user != null) return user;
             else return null;
         }
 
+        public User? GetByNationalIdAndPassword(string NationalID, string password)
+        {
+            var user = _dbContext.Users.Where(p =>
+            p.NationalID == NationalID &&
+            p.PasswordHash == password).FirstOrDefault();
 
-        
+            if (user != null) return user;
+            else return null;
+        }
     }
 }

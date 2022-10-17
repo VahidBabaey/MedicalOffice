@@ -1,5 +1,6 @@
 ﻿using Identity.Models;
 using MedicalOffice.Application.Contracts.Identity;
+using MedicalOffice.Application.Dtos.LoginDTO;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Models.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -129,6 +130,26 @@ namespace Identity.Services
             {
                 throw new Exception($"UserName {request.Email} already exists.");
             }
+        }
+
+        public Task<LoginResponseDTO> LoginByMobilePhone(LoginByMobilePhoneDTO request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<LoginResponseDTO> LoginByNationalCode(LoginByNationalIdDTO request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<UserExistenceResponseDTO> UserExistenceByMobilePhone(MobilePhoneExistenceRequestDTO request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<UserExistenceResponseDTO> UserExistenceByNationalCode(NationalIDExistenceRequestDTO request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

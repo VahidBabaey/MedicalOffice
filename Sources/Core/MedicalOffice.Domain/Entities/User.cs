@@ -8,6 +8,7 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class User : BaseDomainEntity<Guid>
 {
+    public string MobilePhone{ get; set; }=String.Empty;
     /// <summary>
     /// نام
     /// </summary>
