@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Application.Models.Identity;
+﻿using MedicalOffice.Application.Dtos.LoginDTO;
+using MedicalOffice.Application.Models.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,10 @@ namespace MedicalOffice.Application.Contracts.Identity
 {
     public interface IAuthService
     {
-        Task<AuthResponse> Login(AuthRequest request);
+        Task<LoginResponseDTO> LoginByMobilePhone(LoginByMobilePhoneDTO request);
+        Task<LoginResponseDTO> LoginByNationalCode(LoginByNationalIdDTO request);
+        Task<UserExistenceResponseDTO> UserExistenceByMobilePhone(MobilePhoneExistenceRequestDTO request);
+        Task<UserExistenceResponseDTO> UserExistenceByNationalCode(NationalIDExistenceRequestDTO request);
         Task<RegistrationResponse> Register(RegistrationRequest request);
     }
 }

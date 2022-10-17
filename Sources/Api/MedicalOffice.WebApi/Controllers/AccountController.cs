@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Identity;
+using MedicalOffice.Application.Dtos.LoginDTO;
 using MedicalOffice.Application.Models.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,28 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             _authenticationService = authenticationService;
         }
 
-        [HttpPost("login")]
-        public async Task<ActionResult<AuthResponse>> Login(AuthRequest request)
+        [HttpPost("user-exist/mobile-phone")]
+        public async Task<ActionResult<UserExistenceResponseDTO>> UserExistenceByMobilePhone(MobilePhoneExistenceRequestDTO request)
         {
-            return Ok(await _authenticationService.Login(request));
+            return Ok(await _authenticationService.UserExistenceByMobilePhone(request));
+        }
+
+        [HttpPost("user-exist/national-code")]
+        public async Task<ActionResult<UserExistenceResponseDTO>> UserExistenceByNationalCode(NationalIDExistenceRequestDTO request)
+        {
+            return Ok(await _authenticationService.UserExistenceByNationalCode(request));
+        }
+
+        [HttpPost("login/mobile-phone")]
+        public async Task<ActionResult<LoginResponseDTO>> LoginByMobilePhone(LoginByMobilePhoneDTO request)
+        {
+            return Ok(await _authenticationService.LoginByMobilePhone(request));
+        }
+
+        [HttpPost("login/national-code")]
+        public async Task<ActionResult<LoginResponseDTO>> LoginByNationalCode(LoginByNationalIdDTO request)
+        {
+            return Ok(await _authenticationService.LoginByNationalCode(request));
         }
 
         [HttpPost("register")]

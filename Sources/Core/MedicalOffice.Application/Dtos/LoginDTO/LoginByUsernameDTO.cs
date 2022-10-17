@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Models.Identity
+namespace MedicalOffice.Application.Dtos.LoginDTO
 {
-    public class AuthRequest
+    public class LoginByNationalIdDTO
     {
         [Required]
-        public string? UserName { get; set; }
-        
-        [Required] 
+        public string? Username { get; set; }
+
+        [Required]
         public string? Password { get; set; }
     }
 }

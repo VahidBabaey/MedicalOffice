@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\MedicalOffice.Application\Application.csproj" />
+    <ProjectReference Include="..\MedicalOffice.Identity\Identity.csproj" />
     <ProjectReference Include="..\MedicalOffice.Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
