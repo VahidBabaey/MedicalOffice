@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.AccessFile.Requests.Queries
 {
-    public class GetAccessDetailsofMedicalStaff : IRequest<List<AccessListDTO>>
+    public class GetAccessDetailsofUser : IRequest<List<AccessListDTO>>
     {
         public Guid UserOfficeRoleId { get; set; }
     }

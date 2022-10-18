@@ -15,7 +15,7 @@ public class AccessRepository : GenericRepository<Access, Guid>, IAccessReposito
     public string GetId (Guid id)
     {
 
-        string iduser = _dbContext.UserOfficeRoles.Where(p => p.MedicalStaffId == id).FirstOrDefault().Id.ToString();
+        string iduser = _dbContext.UserOfficeRoles.Where(p => p.UserId == id).FirstOrDefault().Id.ToString();
         return iduser;
 
 

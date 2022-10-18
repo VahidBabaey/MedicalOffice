@@ -65,15 +65,23 @@ public class UpdateAddPatientDto : BaseDto<Guid>
     /// <summary>
     /// آدرس
     /// </summary>
-    public string Address { get; set; } = string.Empty;
+    public string[]? Address { get; set; }
     /// <summary>
     /// شماره ثابت
     /// </summary>
-    public string Tel { get; set; } = string.Empty;
+    public string[]? Tel { get; set; } 
     /// <summary>
     /// شماره همراه
     /// </summary>
-    public string Mobile { get; set; } = string.Empty;
+    public string[]? Mobile { get; set; }
+    /// <summary>
+    /// برچسب
+    /// </summary>
+    public string[]? Tag { get; set; }
+    /// <summary>
+    /// آیدی بیمه
+    /// </summary>
+    public Guid InsuranceId { get; set; }
     /// <summary>
     /// آیدی معرف
     /// </summary>

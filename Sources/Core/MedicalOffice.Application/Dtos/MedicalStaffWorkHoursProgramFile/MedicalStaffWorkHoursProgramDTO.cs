@@ -1,11 +1,11 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Domain.Enums;
 
-namespace MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFile;
+namespace MedicalOffice.Application.Dtos.UserWorkHoursProgramFile;
 
-public class MedicalStaffWorkHoursProgramDTO 
+public class UserWorkHoursProgramDTO 
 {
-    public MedicalStaffWorkHoursProgramDTO()
+    public UserWorkHoursProgramDTO()
     {
     }
 

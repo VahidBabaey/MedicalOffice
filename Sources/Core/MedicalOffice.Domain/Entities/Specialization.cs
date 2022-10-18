@@ -22,5 +22,5 @@ public class Specialization : BaseDomainEntity<Guid>
     /// <summary>
     /// پزشکان
     /// </summary>
-    public ICollection<MedicalStaff>? Doctors { get; set; }
+    public ICollection<User>? Doctors { get; set; }
 }

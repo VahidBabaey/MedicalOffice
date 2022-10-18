@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.AccessDTO;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.MedicalStaffdto;
+using MedicalOffice.Application.Dtos.Userdto;
 using MedicalOffice.Application.Dtos.Membership;
 using MedicalOffice.Application.Dtos.Section;
 using MedicalOffice.Application.Features.AccessFile.Requests.Commands;
@@ -40,18 +40,18 @@ public class AccessController : Controller
 
         return Ok(response);
     }
-    [HttpGet("medicalstaffs")]
-    public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetAll()
+    [HttpGet("Users")]
+    public async Task<ActionResult<List<UserNameListDTO>>> GetAll()
     {
-        var response = await _mediator.Send(new GetAllMedicalStaffsName());
+        var response = await _mediator.Send(new GetAllUsersName());
 
         return Ok(response);
     }
     [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetAccessDetails(Guid id)
+    public async Task<ActionResult<List<UserNameListDTO>>> GetAccessDetails(Guid id)
     {
         //id = Guid.Parse("b3002898-600c-42fb-e7f2-08da9b0eeca9");
-        var response = await _mediator.Send(new GetAccessDetailsofMedicalStaff() { UserOfficeRoleId = id});
+        var response = await _mediator.Send(new GetAccessDetailsofUser() { UserOfficeRoleId = id});
 
         return Ok(response);
     }

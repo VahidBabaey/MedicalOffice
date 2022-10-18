@@ -1,6 +1,8 @@
-﻿namespace MedicalOffice.Application.Dtos.Patient;
+﻿using MedicalOffice.Application.Dtos.Common;
 
-public class PatientListDto
+namespace MedicalOffice.Application.Dtos.Patient;
+
+public class PatientListDto : BaseDto<Guid>
 {
     /// <summary>
     /// شماره پرونده
@@ -27,15 +29,8 @@ public class PatientListDto
     /// </summary>
     public string BirthDate { get; set; } = string.Empty;
     /// <summary>
-    /// 
+    /// آیدی بیمه
     /// </summary>
-    public int? Gender { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
-    public int? IntroducerType { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
-    public int? AcquaintedWay { get; set; }
+    public Guid InsuranceId { get; set; }
+
 }

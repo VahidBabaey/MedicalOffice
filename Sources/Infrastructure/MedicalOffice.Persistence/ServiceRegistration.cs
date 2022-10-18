@@ -20,7 +20,10 @@ public static class ServiceRegistration
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
         services.AddScoped<IOfficeRepository, OfficeRepository>();
-        services.AddScoped<IPatientRepository, PatientRepository>();
+        services.AddScoped<IPatientRepository,PatientRepository>();
+        services.AddScoped<IPatientAddressRepository, PatientAddressRepository>();
+        services.AddScoped<IPatientContactRepository, PatientContactRepository>();
+        services.AddScoped<IPatientTagRepository, PatientTagRepository>();
         services.AddScoped<ISectionRepository, SectionRepository>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<IInsuranceRepository, InsuranceRepository>();
@@ -37,10 +40,10 @@ public static class ServiceRegistration
         services.AddScoped<IExperimentRepository, ExperimentRepository>();
         services.AddScoped<IDrugIntractionRepository, DrugIntractionRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
-        services.AddScoped<IMedicalStaffRepository, MedicalStaffRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserOfficeRoleRepository, UserOfficeRoleRepository>();
         services.AddScoped<ICryptoServiceProvider, CryptoServiceProvider>();
-        services.AddScoped<IMedicalStaffWorkHourProgramRepository, MedicalStaffWorkHourProgramRepository>();
+        services.AddScoped<IUserWorkHourProgramRepository, UserWorkHourProgramRepository>();
         services.AddScoped<IBasicInfoRepository, BasicInfoRepository>();
         services.AddScoped<IBasicInfoDetailRepository, BasicInfoDetailRepository>();
         services.AddScoped<IPatientIllnessFormRepository, PatientIllnessFormRepository>();

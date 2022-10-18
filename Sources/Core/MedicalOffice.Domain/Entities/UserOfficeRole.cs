@@ -19,11 +19,11 @@ public class UserOfficeRole : BaseDomainEntity<Guid>
     /// <summary>
     /// کاربر
     /// </summary>
-    public MedicalStaff? MedicalStaff { get; set; }
+    public User? User { get; set; }
     /// <summary>
     /// آیدی کاربر
     /// </summary>
-    public Guid? MedicalStaffId { get; set; }
+    public Guid? UserId { get; set; }
     /// <summary>
     /// مطب - مرکز درمانی
     /// </summary>

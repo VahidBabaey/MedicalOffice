@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.MedicalStaffdto
+namespace MedicalOffice.Application.Dtos.Userdto
 {
-    public class UpdateMedicalStaffDTO : BaseDto<Guid>
+    public class UpdateUserDTO : BaseDto<Guid>
     {
         /// <summary>
         /// آیدی مطب

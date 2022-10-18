@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.MedicalStaffdto
+namespace MedicalOffice.Application.Dtos.Userdto
 {
-    public class MedicalStaffListDTO : BaseDto<Guid>
+    public class UserListDTO : BaseDto<Guid>
     {
         /// <summary>
         /// عکس کادر درمان

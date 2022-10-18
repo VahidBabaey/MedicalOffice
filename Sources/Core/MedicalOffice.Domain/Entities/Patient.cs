@@ -91,7 +91,7 @@ public class Patient : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی بیمه
     /// </summary>
-    public Guid? InsuranceId { get; set; }
+    public Guid InsuranceId { get; set; }
     /// <summary>
     /// آدرس ها
     /// </summary>

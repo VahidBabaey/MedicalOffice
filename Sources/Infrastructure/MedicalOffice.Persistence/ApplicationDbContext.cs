@@ -32,8 +32,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<KMultiplier> KMultipliers => Set<KMultiplier>();
     public DbSet<KMultiplierDetail> KMultiplierDetails => Set<KMultiplierDetail>();
     public DbSet<MedicalAction> MedicalActions => Set<MedicalAction>();
-    public DbSet<MedicalStaff> MedicalStaffs => Set<MedicalStaff>();
-    public DbSet<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms => Set<MedicalStaffWorkHourProgram>();
+    public DbSet<User> Users => Set<User>();
+    public DbSet<UserWorkHourProgram> UserWorkHourPrograms => Set<UserWorkHourProgram>();
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<MemberShipService> MemberShipServices => Set<MemberShipService>();
     public DbSet<Office> Offices => Set<Office>();
@@ -62,7 +62,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<SocialHistory> SocialHistories => Set<SocialHistory>();
     public DbSet<Specialization> Specializations => Set<Specialization>();
     public DbSet<Tariff> Tariffs => Set<Tariff>();
-    public DbSet<User> Users => Set<User>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
     public DbSet<UserOfficeSpecialization> UserOfficeSpecializations => Set<UserOfficeSpecialization>();
     public DbSet<UserServiceSharePercent> UserServiceSharePercents => Set<UserServiceSharePercent>();

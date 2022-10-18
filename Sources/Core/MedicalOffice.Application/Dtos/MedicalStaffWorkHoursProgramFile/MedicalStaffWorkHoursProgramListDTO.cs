@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFile
+namespace MedicalOffice.Application.Dtos.UserWorkHoursProgramFile
 {
-    public class MedicalStaffWorkHoursProgramListDTO
+    public class UserWorkHoursProgramListDTO
     {
-        public Guid MedicalStaffId { get; set; }
+        public Guid UserId { get; set; }
         public int MaxAppointmentCount { get; set; }
         public string MorningStart { get; set; } = string.Empty;
         public string MorningEnd { get; set; } = string.Empty;

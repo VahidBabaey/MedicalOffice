@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFile.Validators
+namespace MedicalOffice.Application.Dtos.UserWorkHoursProgramFile.Validators
 {
-    public class AddMedicalStaffWorkHoursProgramValidator : AbstractValidator<MedicalStaffWorkHoursProgramDTO>
+    public class AddUserWorkHoursProgramValidator : AbstractValidator<UserWorkHoursProgramDTO>
     {
-        public AddMedicalStaffWorkHoursProgramValidator()
+        public AddUserWorkHoursProgramValidator()
         {
         }
     }

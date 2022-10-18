@@ -10,12 +10,18 @@ namespace MedicalOffice.Application.Features.PatientFile.Handlers.Commands;
 public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand, BaseCommandResponse>
 {
     private readonly IPatientRepository _repository;
+    private readonly IPatientContactRepository _repositorycontact;
+    private readonly IPatientAddressRepository _repositoryaddress;
+    private readonly IPatientTagRepository _repositorytag;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeletePatientCommandHandler(IPatientRepository repository, ILogger logger)
+    public DeletePatientCommandHandler(IPatientContactRepository repositorycontact, IPatientAddressRepository repositoryaddress, IPatientTagRepository repositorytag, IPatientRepository repository, ILogger logger)
     {
         _repository = repository;
+        _repositorycontact = repositorycontact;
+        _repositoryaddress = repositoryaddress;
+        _repositorytag = repositorytag;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
@@ -28,7 +34,9 @@ public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand,
         try
         {
             await _repository.Delete(request.PatientId);
-
+            await _repositorycontact.Delete(request.PatientId);
+            await _repositoryaddress.Delete(request.PatientId);
+            await _repositorytag.Delete(request.PatientId);
             response.Success = true;
             response.Message = $"{_requestTitle} succeded";
             response.Data.Add(new { Id = request.PatientId });

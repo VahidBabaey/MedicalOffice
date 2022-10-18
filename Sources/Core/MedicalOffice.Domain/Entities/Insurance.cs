@@ -51,5 +51,9 @@ public class Insurance : BaseDomainEntity<Guid>
     /// تعرفه ها
     /// </summary>
     public ICollection<Tariff>? Tariffs { get; set; }
+    /// <summary>
+    /// بیماران
+    /// </summary>
+    public ICollection<Patient>? Patients { get; set; }
 
 }

@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.AccessFile.Handlers.Queries
 {
 
-    public class GetAccessDetailsofMedicalStaffQueryHandler : IRequestHandler<GetAccessDetailsofMedicalStaff, List<AccessListDTO>>
+    public class GetAccessDetailsofUserQueryHandler : IRequestHandler<GetAccessDetailsofUser, List<AccessListDTO>>
     {
         private readonly IAccessRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAccessDetailsofMedicalStaffQueryHandler(IAccessRepository repository, IMapper mapper, ILogger logger)
+        public GetAccessDetailsofUserQueryHandler(IAccessRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -29,7 +29,7 @@ namespace MedicalOffice.Application.Features.AccessFile.Handlers.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<AccessListDTO>> Handle(GetAccessDetailsofMedicalStaff request, CancellationToken cancellationToken)
+        public async Task<List<AccessListDTO>> Handle(GetAccessDetailsofUser request, CancellationToken cancellationToken)
         {
             List<AccessListDTO> result = new();
             Log log = new();
