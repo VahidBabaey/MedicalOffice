@@ -16,9 +16,9 @@ public class PatientReferralFormRepository : GenericRepository<PatientReferralFo
     {
         return await _dbContext.BasicInfoDetail.Where(srv => srv.basicInfoId == Guid.Parse("01ebc675-fd48-4273-9d7b-13804e4c490c")).ToListAsync();
     }
-    public async Task<IReadOnlyList<PatientReferralForm>> GetByPatientId(Guid patientid)
+    public async Task<IReadOnlyList<PatientReferralForm>> GetByPatientId(Guid patientId)
     {
-        return await _dbContext.PatientReferralForms.Where(srv => srv.PatientId == patientid).ToListAsync();
+        return await _dbContext.PatientReferralForms.Where(srv => srv.PatientId == patientId).ToListAsync();
     }
 
 }

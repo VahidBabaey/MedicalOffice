@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Membership;
+using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormListDTO;
-using MedicalOffice.Application.Dtos.Section;
+using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Command;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;

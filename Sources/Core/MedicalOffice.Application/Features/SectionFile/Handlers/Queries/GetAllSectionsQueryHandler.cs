@@ -2,8 +2,8 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Membership;
-using MedicalOffice.Application.Dtos.Section;
+using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 
@@ -33,7 +33,6 @@ public class GetAllSectionsQueryHandler : IRequestHandler<GetAllSectionQuery, Li
         try
         {
             var Section = await _repository.GetAllWithPaggination(request.Dto.Skip, request.Dto.Take);
-            //var Section = await _repository.GetAlllist();
 
             result = _mapper.Map<List<SectionListDTO>>(Section);
 

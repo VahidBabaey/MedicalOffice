@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.AccessDTO.Validators
+namespace MedicalOffice.Application.Dtos.PermissionDTO.Validators
 {
-    public class AddAccessValidator : AbstractValidator<AccessDTO>
+    public class AddPermissionValidator : AbstractValidator<PermissionDTO>
     {
-        public AddAccessValidator()
+        public AddPermissionValidator()
         {
 
         }

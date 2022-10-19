@@ -34,10 +34,7 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
         {
             BaseCommandResponse response = new();
 
-
-
             Log log = new();
-
 
             try
             {

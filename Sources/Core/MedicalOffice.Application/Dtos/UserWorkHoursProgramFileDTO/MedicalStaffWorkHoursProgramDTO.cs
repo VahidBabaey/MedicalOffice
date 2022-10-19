@@ -1,0 +1,25 @@
+﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Domain.Enums;
+
+namespace MedicalOffice.Application.Dtos.UserWorkHoursProgramFileDTO;
+
+public class UserWorkHoursProgramDTO 
+{
+    public UserWorkHoursProgramDTO()
+    {
+    }
+
+    public Guid UserId { get; set; }
+    public int MaxAppointmentCount { get; set; }
+    public List<UserWorkHour> StaffWorkHours { get; set; } = new();
+}
+
+public class UserWorkHour
+{
+    public WeekDay Day { get; set; }
+    public string MorningStart { get; set; } = string.Empty;
+    public string MorningEnd { get; set; } = string.Empty;
+    public string EveningStart { get; set; } = string.Empty;
+    public string EveningEnd { get; set; } = string.Empty;
+}
+

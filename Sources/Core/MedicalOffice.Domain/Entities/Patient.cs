@@ -33,10 +33,6 @@ public class Patient : BaseDomainEntity<Guid>
     /// </summary>
     public Guid OfficeId { get; set; }
     /// <summary>
-    /// عکس بیمار
-    /// </summary>
-    //public byte[]? ProfilePicture { get; set; }
-    /// <summary>
     /// نام
     /// </summary>
     public string FirstName { get; set; } = string.Empty;
@@ -91,7 +87,7 @@ public class Patient : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی بیمه
     /// </summary>
-    public Guid? InsuranceId { get; set; }
+    public Guid InsuranceId { get; set; }
     /// <summary>
     /// آدرس ها
     /// </summary>
@@ -165,10 +161,6 @@ public class Patient : BaseDomainEntity<Guid>
     /// </summary>
     public ICollection<MedicalAction> MedicalActions { get; set; } = new List<MedicalAction>();
     /// <summary>
-    /// لیست عکس
-    /// </summary>
-    public ICollection<PatientPicture> PatientPictures { get; set; } = new List<PatientPicture>();
-    /// <summary>
     /// لیست فایل
     /// </summary>
     public ICollection<PatientFiles> PatientFiless { get; set; } = new List<PatientFiles>();
@@ -184,4 +176,8 @@ public class Patient : BaseDomainEntity<Guid>
     /// لیست فرم تعهدنامه
     /// </summary>
     public ICollection<PatientCommitmentForm> PatientCommitmentForms { get; set; } = new List<PatientCommitmentForm>();
+    /// <summary>
+    /// لیست عکس ها
+    /// </summary>
+    public ICollection<Picture>? Pictures { get; set; }
 }

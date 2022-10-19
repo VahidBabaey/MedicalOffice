@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -13,42 +14,59 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
     {
         _dbContext = dbContext;
     }
-
-    public async Task<Patient?> GetByFileNumber(string fileNumber)
+    public async Task<PatientContact> InsertContactValueofPatientAsync(Guid patientid, string contactnumber)
     {
-        return await _dbContext.Patients.SingleOrDefaultAsync(p => p.FileNumber.Equals(fileNumber));
+        PatientContact patientContact = new PatientContact();
+
+        if (patientContact == null)
+            throw new Exception();
+
+        patientContact.PatientId = patientid;
+        patientContact.ContactValue = contactnumber;
+
+        if (patientContact.ContactValue.StartsWith("09"))
+            patientContact.ContactType = (ContactType)1;
+        else
+            patientContact.ContactType = (ContactType)2;
+
+        await _dbContext.PatientContacts.AddAsync(patientContact);
+
+        return patientContact;
     }
-    public async Task<IReadOnlyList<Patient>> GetPatientsByFileNumber(string fileNumber)
+    public async Task<PatientAddress> InsertAddressofPatientAsync(Guid patientid, string address)
     {
-        return await _dbContext.Patients.Where(srv => srv.FileNumber == fileNumber).ToListAsync();
+        PatientAddress patientAddress = new PatientAddress();
+
+        if (patientAddress == null)
+            throw new Exception();
+
+        patientAddress.PatientId = patientid;
+        patientAddress.AddressValue = address;
+
+        await _dbContext.PatientAddresses.AddAsync(patientAddress);
+
+        return patientAddress;
     }
-    public async Task<IReadOnlyList<Patient>> GetPatientsByNationalCode(string nationalid)
+    public async Task<PatientTag> InsertTagofPatientAsync(Guid patientid, string tag)
     {
-        return await _dbContext.Patients.Where(srv => srv.NationalID == nationalid).ToListAsync();
+        PatientTag patientTag = new PatientTag();
+
+        if (patientTag == null)
+            throw new Exception();
+
+        patientTag.PatientId = patientid;
+        patientTag.Tag = tag;
+
+        await _dbContext.PatientTags.AddAsync(patientTag);
+
+        return patientTag;
     }
-    public async Task<IReadOnlyList<Patient>> GetPatientsByPhoneNumber(string phonenumber)
+    public async Task<IReadOnlyList<PatientListDto>> SearchPateint(string nationalCode, string phoneNumber, string fileNumber, string fullname)
     {
-        return await _dbContext.Patients.Where(srv => srv.Mobile == phonenumber).ToListAsync();
+        List<PatientListDto> result = new();
+        var list =  _dbContext.Patients.Where(p => p.NationalID.StartsWith(nationalCode) && p.FileNumber.StartsWith(fileNumber) && (p.FirstName + " " + p.LastName).Contains(fullname))
+            .Include(q => q.PatientContacts).Where(q => q.PatientContacts.Any(z => z.ContactValue.Contains(phoneNumber)));
+            
+        return (IReadOnlyList<PatientListDto>)list;
     }
-
-
-    public async Task<Patient?> GetByNationalCode(string nationalCode)
-    {
-        return await _dbContext.Patients.SingleOrDefaultAsync(p => p.NationalID.Equals(nationalCode));
-    }
-
-    public async Task<Patient?> GetByPhoneNumber(string phoneNumber)
-    {
-        
-
-        var result = await (from patient in _dbContext.Patients
-                      join contact in _dbContext.PatientContacts
-                      on patient.Id equals contact.PatientId
-                      where contact.ContactValue.Equals(phoneNumber)
-                      select patient).SingleOrDefaultAsync();
-
-        return result;
-    }
-
-
 }

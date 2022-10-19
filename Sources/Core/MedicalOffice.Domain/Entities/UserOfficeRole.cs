@@ -8,22 +8,11 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class UserOfficeRole : BaseDomainEntity<Guid>
 {
-    ///// <summary>
-    ///// کاربر
-    ///// </summary>
-    //public User? User { get; set; }
-    ///// <summary>
-    ///// آیدی کاربر
-    ///// </summary>
-    //public Guid? UserId { get; set; }
-    /// <summary>
-    /// کاربر
-    /// </summary>
-    public MedicalStaff? MedicalStaff { get; set; }
+    public User? User { get; set; }
     /// <summary>
     /// آیدی کاربر
     /// </summary>
-    public Guid? MedicalStaffId { get; set; }
+    public Guid? UserId { get; set; }
     /// <summary>
     /// مطب - مرکز درمانی
     /// </summary>
@@ -47,5 +36,5 @@ public class UserOfficeRole : BaseDomainEntity<Guid>
     /// <summary>
     /// دسترسی ها
     /// </summary>
-    public ICollection<Access>? Accesses { get; set; }
+    public ICollection<Permission>? Permissiones { get; set; }
 }

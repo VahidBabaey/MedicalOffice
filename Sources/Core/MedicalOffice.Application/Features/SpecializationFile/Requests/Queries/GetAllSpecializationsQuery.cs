@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Specialization;
+using MedicalOffice.Application.Dtos.SpecializationDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

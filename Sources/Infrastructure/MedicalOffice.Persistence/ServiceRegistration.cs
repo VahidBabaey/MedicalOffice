@@ -1,5 +1,6 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Domain.Entities;
 using MedicalOffice.Infrastructure.Crypto;
 using MedicalOffice.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -19,13 +20,17 @@ public static class ServiceRegistration
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
         services.AddScoped<IOfficeRepository, OfficeRepository>();
-        services.AddScoped<IPatientRepository, PatientRepository>();
+        services.AddScoped<IPatientRepository,PatientRepository>();
+        services.AddScoped<IPatientAddressRepository, PatientAddressRepository>();
+        services.AddScoped<IPatientContactRepository, PatientContactRepository>();
+        services.AddScoped<IPatientTagRepository, PatientTagRepository>();
         services.AddScoped<ISectionRepository, SectionRepository>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<IInsuranceRepository, InsuranceRepository>();
         services.AddScoped<ISpecializationRepository, SpecializationRepository>();
         services.AddScoped<IShiftRepository, ShiftRepository>();
         services.AddScoped<IMembershipRepository, MembershipRepository>();
+        services.AddScoped<IMembershipServiceRepository, MemberShipServiceRepository>();
         services.AddScoped<IDrugRepository, DrugRepository>();
         services.AddScoped<IDrugShapeRepository, DrugShapeRepository>();
         services.AddScoped<IDrugSectionRepository, DrugSectionRepository>();
@@ -35,16 +40,17 @@ public static class ServiceRegistration
         services.AddScoped<IExperimentRepository, ExperimentRepository>();
         services.AddScoped<IDrugIntractionRepository, DrugIntractionRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
-        services.AddScoped<IMedicalStaffRepository, MedicalStaffRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserOfficeRoleRepository, UserOfficeRoleRepository>();
         services.AddScoped<ICryptoServiceProvider, CryptoServiceProvider>();
-        services.AddScoped<IMedicalStaffWorkHourProgramRepository, MedicalStaffWorkHourProgramRepository>();
+        services.AddScoped<IUserWorkHourProgramRepository, UserWorkHourProgramRepository>();
         services.AddScoped<IBasicInfoRepository, BasicInfoRepository>();
         services.AddScoped<IBasicInfoDetailRepository, BasicInfoDetailRepository>();
         services.AddScoped<IPatientIllnessFormRepository, PatientIllnessFormRepository>();
         services.AddScoped<IPatientReferralFormRepository, PatientReferralFormRepository>();
-        services.AddScoped<IAccessRepository, AccessRepository>();
+        services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IFormCommitmentRepository, FormCommitmentRepository>();
+        services.AddScoped<IPictureRepository, PictureRepository>();
 
         return services;
     }

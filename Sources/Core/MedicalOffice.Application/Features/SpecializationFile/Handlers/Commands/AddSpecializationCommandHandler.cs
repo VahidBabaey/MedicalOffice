@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Specialization.Validators;
+using MedicalOffice.Application.Dtos.SpecializationDTO.Validators;
 using MedicalOffice.Application.Features.SpecializationFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;

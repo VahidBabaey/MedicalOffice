@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.DrugD;
+using MedicalOffice.Application.Dtos.DrugDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,15 +8,13 @@ namespace MedicalOffice.Persistence.Repositories;
 public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly IGenericRepository<Drug, Guid> _repositoryDrug;
-    public DrugRepository(IGenericRepository<Drug, Guid> repositoryDrug, ApplicationDbContext dbContext) : base(dbContext)
+    public DrugRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
-        _repositoryDrug = repositoryDrug;
         _dbContext = dbContext;
     }
     public async Task<IEnumerable<DrugListDTO>> GetAllDrugs()
     {
-        var _list = await _repositoryDrug.TableNoTracking.Select(p => new DrugListDTO
+        var _list = await _dbContext.Drugs.Select(p => new DrugListDTO
         {
             Id = p.Id,
             Name = p.Name,
@@ -34,8 +32,8 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
             Number = p.Number,
             IsShow = p.IsShow,
             IsHybrid = p.IsHybrid
-
         }).ToListAsync();
+
         return (IEnumerable<DrugListDTO>)_list;
     }
  }

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.AccessDTO
+namespace MedicalOffice.Application.Dtos.PermissionDTO
 {
-    public class UpdateAccessDTO : BaseDto<Guid>
+    public class UpdatePermissionDTO : BaseDto<Guid>
     
     {
         /// <summary>
@@ -24,7 +24,7 @@ namespace MedicalOffice.Application.Dtos.AccessDTO
         /// <summary>
         /// فعال یا غیرفعال بودن پذیرش
         /// </summary>
-        public bool IsReceptionAccessActive { get; set; } = false;
+        public bool IsReceptionPermissionActive { get; set; } = false;
         /// <summary>
         /// ویرایش پذیرش
         /// </summary>
@@ -55,7 +55,7 @@ namespace MedicalOffice.Application.Dtos.AccessDTO
         /// <summary>
         /// فعال یا غیرفعال پرونده
         /// </summary>
-        public bool IsFileAccessActive { get; set; } = false;
+        public bool IsFilePermissionActive { get; set; } = false;
         /// <summary>
         /// ویرایش پرونده
         /// </summary>
@@ -87,14 +87,14 @@ namespace MedicalOffice.Application.Dtos.AccessDTO
         /// <summary>
         /// عدم دسترسی به شماره تلفن بیمار
         /// </summary>
-        public bool FileAccessPatientNumber { get; set; } = false;
+        public bool FilePermissionPatientNumber { get; set; } = false;
 
 
 
         /// <summary>
         /// فعال یا غیرفعال پزشکان
         /// </summary>
-        public bool IsDoctorAccessActive { get; set; } = false;
+        public bool IsDoctorPermissionActive { get; set; } = false;
         /// <summary>
         /// ثبت ویزیت
         /// </summary>
@@ -110,19 +110,19 @@ namespace MedicalOffice.Application.Dtos.AccessDTO
         /// <summary>
         /// دسترسی به سوابق بیمار
         /// </summary>
-        public bool DoctorAccessPatientHistory { get; set; } = false;
+        public bool DoctorPermissionPatientHistory { get; set; } = false;
         /// <summary>
         /// دسترسی به قلم نوری
         /// </summary>
-        public bool DoctorAccessLightPen { get; set; } = false;
+        public bool DoctorPermissionLightPen { get; set; } = false;
         /// <summary>
         /// دسترسی به تصاویر
         /// </summary>
-        public bool DoctorAccessPictures { get; set; } = false;
+        public bool DoctorPermissionPictures { get; set; } = false;
         /// <summary>
         /// دسترسی به تعهدنامه ها
         /// </summary>
-        public bool DoctorAccessCommitments { get; set; } = false;
+        public bool DoctorPermissionCommitments { get; set; } = false;
         /// <summary>
         /// عدم تغییر در ویزیت های ثبت شده دیگران 
         /// </summary>
@@ -130,17 +130,17 @@ namespace MedicalOffice.Application.Dtos.AccessDTO
         /// <summary>
         /// دسترسی به فرم ها 
         /// </summary>
-        public bool DoctorAccessForms { get; set; } = false;
+        public bool DoctorPermissionForms { get; set; } = false;
         /// <summary>
         /// دسترسی به نسخه نویسی 
         /// </summary>
-        public bool DoctorAccessPrescription { get; set; } = false;
+        public bool DoctorPermissionPrescription { get; set; } = false;
 
 
         /// <summary>
         /// فعال یا غیرفعال گزارشات
         /// </summary>
-        public bool IsReportAccessActive { get; set; } = false;
+        public bool IsReportPermissionActive { get; set; } = false;
         /// <summary>
         /// صندوق روزانه
         /// </summary>
@@ -223,7 +223,7 @@ namespace MedicalOffice.Application.Dtos.AccessDTO
         /// <summary>
         /// فعال یا غیرفعال انبار
         /// </summary>
-        public bool IsStoreAccessActive { get; set; } = false;
+        public bool IsStorePermissionActive { get; set; } = false;
         /// <summary>
         /// تعریف کالا
         /// </summary>
@@ -253,7 +253,7 @@ namespace MedicalOffice.Application.Dtos.AccessDTO
         /// <summary>
         /// فعال یا غیرفعال وقتدهی
         /// </summary>
-        public bool IsTimingAccessActive { get; set; } = false;
+        public bool IsTimingPermissionActive { get; set; } = false;
         /// <summary>
         /// دسترسی به ثبت وقت
         /// </summary>
@@ -275,12 +275,12 @@ namespace MedicalOffice.Application.Dtos.AccessDTO
         /// <summary>
         /// فعال یا غیرفعال اطالعات پایه
         /// </summary>
-        public bool IsBasicInfoAccessActive { get; set; } = false;
+        public bool IsBasicInfoPermissionActive { get; set; } = false;
 
 
         /// <summary>
         /// فعال یا غیرفعال داشبورد
         /// </summary>
-        public bool IsDashboardAccessActive { get; set; } = false;
+        public bool IsDashboardPermissionActive { get; set; } = false;
     }
 }

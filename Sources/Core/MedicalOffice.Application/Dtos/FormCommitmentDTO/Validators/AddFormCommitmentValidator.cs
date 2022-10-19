@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using MedicalOffice.Application.Dtos.Insurance;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -24,10 +24,9 @@ public class Membership : BaseDomainEntity<Guid>
     /// نام عضویت
     /// </summary>
     public string Name { get; set; } = string.Empty;
-
     /// <summary>
-    /// خدمت های عضویت
+    /// از این مدل برای برقراری ارتباط یک به چند بین عضویت-سرویس استفاده می شود
     /// </summary>
-    public ICollection<Service>? Services { get; set; }
+    public ICollection<MemberShipService>? MemberShipServices { get; set; }
 
 }
