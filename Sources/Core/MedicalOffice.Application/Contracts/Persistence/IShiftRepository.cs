@@ -9,5 +9,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IShiftRepository : IGenericRepository<Shift, Guid>
     {
+
     }
 }

@@ -16,9 +16,9 @@ public class PatientIllnessFormRepository : GenericRepository<PatientIllnessForm
     {
         return await _dbContext.BasicInfoDetail.Where(srv => srv.basicInfoId == Guid.Parse("01ebc675-fd48-4273-9d7b-13804e4c490c")).ToListAsync();
     }
-    public async Task<IReadOnlyList<PatientIllnessForm>> GetByPatientId(Guid patientid)
+    public async Task<IReadOnlyList<PatientIllnessForm>> GetByPatientId(Guid patientId)
     {
-        return await _dbContext.PatientIllnessForms.Where(srv => srv.PatientId == patientid).ToListAsync();
+        return await _dbContext.PatientIllnessForms.Where(srv => srv.PatientId == patientId).ToListAsync();
     }
 
 }

@@ -50,38 +50,10 @@ public class PatientController : Controller
         return Ok(response);
     }
     [HttpGet("Search")]
-    public async Task<ActionResult<List<PatientListDto>>> GetBySearch([FromQuery] ListDto dto, string? nationalcode, string? filenumber, string? fullname, string? phonenumber)
+    public async Task<ActionResult<List<PatientListDto>>> GetBySearch([FromQuery] ListDto dto, string nationalcode, string filenumber, string fullname, string phonenumber)
     {
         var response = await _mediator.Send(new GetPatientBySearchQuery() { Dto = dto, nationalcode = nationalcode, phonenumber = phonenumber, filenumber = filenumber, fullname = fullname });
 
         return Ok(response);
     }
-    //[HttpGet("filenumber")]
-    //public async Task<ActionResult<List<PatientListDto>>> GetAllByFileNumber([FromQuery] ListDto dto, string filenumber)
-    //{
-    //    var response = await _mediator.Send(new GetPatientByFileNumberQuery() { Dto = dto, FileNumber = filenumber });
-
-    //    return Ok(response);
-    //}
-    //[HttpGet("nationalcode")]
-    //public async Task<ActionResult<List<PatientListDto>>> GetAllByNationalCode([FromQuery] ListDto dto, string nationalcode)
-    //{
-    //    var response = await _mediator.Send(new GetPatientByNationalCodeQuery() { Dto = dto, NationalCode = nationalcode });
-
-    //    return Ok(response);
-    //}
-    //[HttpGet("phonenumber")]
-    //public async Task<ActionResult<List<PatientListDto>>> GetAllByPhoneNumber([FromQuery] ListDto dto, string phonenumber)
-    //{
-    //    var response = await _mediator.Send(new GetPatientByPhoneNumberQuery() { Dto = dto, PhoneNumber = phonenumber });
-
-    //    return Ok(response);
-    //}
-    //[HttpGet("genderintruceracquaintedWay")]
-    //public async Task<ActionResult<List<PatientListDto>>> GetAllByGenderIntrucerAcquaintedWay([FromQuery] ListDto dto, int gender, int intrucer, int acquaintedway)
-    //{
-    //    var response = await _mediator.Send(new GetAllPatientsByGenderIntrucerAcquaintedWayQuery() { Dto = dto, gender = gender, intrucer = intrucer , acquaintedway = acquaintedway });
-
-    //    return Ok(response);
-    //}
 }

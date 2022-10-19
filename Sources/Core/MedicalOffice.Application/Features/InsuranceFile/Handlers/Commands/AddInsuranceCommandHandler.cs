@@ -15,9 +15,6 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 {
-
-
-
     public class AddInsuranceCommandHandler : IRequestHandler<AddInsuranceCommand, BaseCommandResponse>
     {
         private readonly IInsuranceRepository _repository;

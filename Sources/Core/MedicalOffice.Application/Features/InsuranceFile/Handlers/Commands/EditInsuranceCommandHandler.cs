@@ -35,10 +35,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
         {
             BaseCommandResponse response = new();
 
-
-
             Log log = new();
-
 
                 try
                 {

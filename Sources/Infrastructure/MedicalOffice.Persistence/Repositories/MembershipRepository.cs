@@ -11,85 +11,104 @@ namespace MedicalOffice.Persistence.Repositories;
 
 public class MembershipRepository : GenericRepository<Membership, Guid>, IMembershipRepository
 {
-    private readonly IMembershipServiceRepository _repository;
-    private readonly IGenericRepository<Membership, Guid> _repositorymembership;
     private readonly ApplicationDbContext _dbContext;
     public List<MembershipListDTO> ListmembershipDTO = null;
-    string nameservice;
+    string nameService;
 
-    public MembershipRepository(IGenericRepository<Membership, Guid> repositorymembership, IMembershipServiceRepository repository, ApplicationDbContext dbContext) : base(dbContext)
+    public MembershipRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
-        _repositorymembership = repositorymembership;
-        _repository = repository;
         _dbContext = dbContext;
         ListmembershipDTO = new List<MembershipListDTO>();
-        nameservice = "";
+        nameService = "";
     }
 
-    public async Task<MemberShipService> InsertMembershipIdofServiceAsync(Guid serviceId, Guid membershipId)
+    public async Task<MemberShipService> InsertMembershipIdofServiceAsync(Guid serviceId, Guid memberShipId)
     {
-        MemberShipService membershipservice = new MemberShipService();
-        membershipservice.ServiceId = serviceId;
-        membershipservice.MembershipId = membershipId;
-        if (membershipservice == null)
-            throw new Exception();
-        _repository.Add(membershipservice);
-        return membershipservice;
-    }
-    public async Task DeleteMembershipIdofServiceAsync(Guid membershipId)
-    {
-        var membership = await _dbContext.MemberShipServices.Where(ur => ur.MembershipId == membershipId).ToListAsync();
-        if (membership == null)
-            throw new Exception();
-        foreach (var item in membership)
+        MemberShipService memberShipService = new MemberShipService()
         {
-            _repository.Delete(item);
+        ServiceId = serviceId,
+        MembershipId = memberShipId
+        };
+
+        if (memberShipService == null)
+            throw new Exception();
+
+        await _dbContext.MemberShipServices.AddAsync(memberShipService);
+        return memberShipService;
+    }
+    public async Task DeleteMembershipIdofServiceAsync(Guid memberShipId)
+    {
+        var memberShip = await _dbContext.MemberShipServices.Where(ur => ur.MembershipId == memberShipId).ToListAsync();
+        if (memberShip == null)
+            throw new Exception();
+        foreach (var item in memberShip)
+        {
+            _dbContext.MemberShipServices.Remove(item);
         }
     }
-    public async Task UpdateMembershipIdofServiceAsync(Guid serviceId, Guid membershipId)
+    public async Task UpdateMembershipIdofServiceAsync(Guid serviceId, Guid memberShipId)
     {
-        var membership = await _dbContext.MemberShipServices.Where(ur => ur.MembershipId == membershipId).ToListAsync();
-        if (membership == null)
+        var memberShip = await _dbContext.MemberShipServices.Where(ur => ur.MembershipId == memberShipId).ToListAsync();
+
+        if (memberShip == null)
             throw new Exception();
-        foreach (var item in membership)
+
+        foreach (var item in memberShip)
         {
             item.ServiceId = serviceId;
-            _repository.Update(item);
+            _dbContext.MemberShipServices.Update(item);
         }
     }
     public async Task<string> SearchServicesforMemberShip(Guid memid)
     {
-        var membershipservice = await _dbContext.MemberShipServices.Where(ms => ms.MembershipId == memid).ToListAsync();
-        if (membershipservice == null)
+        var memberShipService = await _dbContext.MemberShipServices.Where(ms => ms.MembershipId == memid).ToListAsync();
+
+        if (memberShipService == null)
             throw new Exception();
-        foreach (var item in membershipservice)
+        foreach (var item in memberShipService)
         {
-            nameservice += _dbContext.Services.Where(ser => ser.Id == item.ServiceId).FirstOrDefault().Name + "، ".ToString();
+            var serviceName = _dbContext.Services.Where(ser => ser.Id == item.ServiceId).FirstOrDefault();
+
+            if (serviceName == null)
+                throw new NullReferenceException("Service not Found");
+
+            nameService += serviceName.Name + "، ".ToString();
         }
-        return nameservice;
+
+        return nameService;
     }
     public async Task<List<MembershipListDTO>> GetMembership()
     {
-        var membership = await _dbContext.Memberships.ToListAsync();
-        if (membership == null)
-            throw new Exception();
-        foreach (var item in membership)
+        var memberShip = await _dbContext.Memberships.ToListAsync();
+
+        if (memberShip == null)
+            throw new NullReferenceException("MemberShip not Found");
+
+        foreach (var item in memberShip)
         {
-            var membershipservice = await _dbContext.MemberShipServices.Where(ms => ms.MembershipId == item.Id).ToListAsync();
-            foreach (var item1 in membershipservice)
+            var memberShipService = await _dbContext.MemberShipServices.Where(ms => ms.MembershipId == item.Id).ToListAsync();
+
+            foreach (var item1 in memberShipService)
             {
-                nameservice += _dbContext.Services.Where(ser => ser.Id == item1.ServiceId).SingleOrDefault().Name + " ، ";
+                var serviceName = _dbContext.Services.Where(ser => ser.Id == item1.ServiceId).FirstOrDefault();
+
+                if (serviceName == null)
+                    throw new NullReferenceException("Service not Found");
+
+                nameService += serviceName.Name + " ، ";
             }
+
             var q = new MembershipListDTO()
             {
                 Id = item.Id, 
                 Name = item.Name,
-                NameServices = nameservice,
-                
+                NameServices = nameService,
             };
+
             ListmembershipDTO.Add(q);
-            nameservice = "";
+            nameService = "";
         }
+
         return ListmembershipDTO;
     }
 }

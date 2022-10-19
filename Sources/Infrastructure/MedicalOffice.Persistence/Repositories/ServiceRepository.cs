@@ -21,8 +21,6 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
     }
     public async Task<IReadOnlyList<Service>> GetServiceByID(Guid Id)
     {
-
         return (IReadOnlyList<Service>)await _dbContext.Services.Select(srv => new { srv.Id }).Where(srv => srv.Id == Id).ToListAsync();
-
     }
 }

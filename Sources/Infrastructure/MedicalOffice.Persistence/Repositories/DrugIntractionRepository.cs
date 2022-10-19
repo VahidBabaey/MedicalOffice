@@ -9,15 +9,13 @@ namespace MedicalOffice.Persistence.Repositories;
 public class DrugIntractionRepository : GenericRepository<DrugIntraction, Guid>, IDrugIntractionRepository
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly IGenericRepository<DrugIntraction, Guid> _repositoryDrug;
-    public DrugIntractionRepository(IGenericRepository<DrugIntraction, Guid> repositoryDrug, ApplicationDbContext dbContext) : base(dbContext)
+    public DrugIntractionRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
-        _repositoryDrug = repositoryDrug;
         _dbContext = dbContext;
     }
     public async Task<IEnumerable<DrugIntractionListDTO>> GetAllDrugIntractions()
     {
-        var _list = await _repositoryDrug.TableNoTracking.Select(p => new DrugIntractionListDTO
+        var _list = await _dbContext.DrugIntractions.Select(p => new DrugIntractionListDTO
         {
             Id = p.Id,
             Group1 = p.Group1,
@@ -31,6 +29,7 @@ public class DrugIntractionRepository : GenericRepository<DrugIntraction, Guid>,
             SDrugName = _dbContext.Drugs.Select(q => new { q.Id, q.Name }).Where(q => q.Id == p.SDrugId).FirstOrDefault().Name,
 
         }).ToListAsync();
+
         return (IEnumerable<DrugIntractionListDTO>)_list;
     }
 }

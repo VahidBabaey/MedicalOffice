@@ -14,8 +14,6 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 {
-
-
     public class EditMembershipCommandHandler : IRequestHandler<EditMembershipCommand, BaseCommandResponse>
     {
         private readonly IMembershipRepository _repository;

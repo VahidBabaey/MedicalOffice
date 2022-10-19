@@ -12,6 +12,5 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Requests.Command
     public class AddDrugIntractionCommand : IRequest<BaseCommandResponse>
     {
         public DrugIntractionDTO DTO { get; set; } = new DrugIntractionDTO();
-        //public Guid DrugIntractionId { get; set; }
     }
 }

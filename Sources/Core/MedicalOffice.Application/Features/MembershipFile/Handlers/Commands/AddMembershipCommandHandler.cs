@@ -94,9 +94,6 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
             await _logger.Log(log);
 
-
-
-
             return response;
         }
     }

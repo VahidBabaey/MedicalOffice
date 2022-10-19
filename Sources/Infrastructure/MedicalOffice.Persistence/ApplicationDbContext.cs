@@ -11,7 +11,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<AppointmentService> AppointmentServices => Set<AppointmentService>();
     public DbSet<AppointmentType> AppointmentTypes => Set<AppointmentType>();
     public DbSet<BasicInfo> BasicInfos => Set<BasicInfo>();
-    public DbSet<Access> Accesses => Set<Access>();
+    public DbSet<Permission> Permissiones => Set<Permission>();
     public DbSet<BasicInfoDetail> BasicInfoDetail => Set<BasicInfoDetail>();
     public DbSet<Diagnose> Diagnoses => Set<Diagnose>();
     public DbSet<DiscountType> DiscountTypes => Set<DiscountType>();
