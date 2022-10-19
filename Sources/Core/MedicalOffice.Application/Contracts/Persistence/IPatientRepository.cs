@@ -1,4 +1,4 @@
-﻿using MedicalOffice.Application.Dtos.Patient;
+﻿using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Contracts.Persistence

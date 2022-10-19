@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Service;
+using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Domain.Entities;
 
 

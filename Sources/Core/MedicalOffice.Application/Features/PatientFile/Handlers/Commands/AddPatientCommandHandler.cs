@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Patient.Validators;
+using MedicalOffice.Application.Dtos.PatientDTO.Validators;
 using MedicalOffice.Application.Features.PatientFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -29,7 +29,7 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseC
     {
         BaseCommandResponse response = new();
 
-        AddSectionValidator validator = new();
+        AddPatientValidator validator = new();
 
         Log log = new();
 

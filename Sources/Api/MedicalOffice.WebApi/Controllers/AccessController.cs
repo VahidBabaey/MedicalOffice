@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.AccessDTO;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Userdto;
-using MedicalOffice.Application.Dtos.Membership;
-using MedicalOffice.Application.Dtos.Section;
+using MedicalOffice.Application.Dtos.UserDTO;
+using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.AccessFile.Requests.Commands;
 using MedicalOffice.Application.Features.AccessFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;

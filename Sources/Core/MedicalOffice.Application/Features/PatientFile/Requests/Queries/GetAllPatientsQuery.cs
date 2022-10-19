@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Patient;
+using MedicalOffice.Application.Dtos.PatientDTO;
 
 namespace MedicalOffice.Application.Features.PatientFile.Requests.Queries;
 

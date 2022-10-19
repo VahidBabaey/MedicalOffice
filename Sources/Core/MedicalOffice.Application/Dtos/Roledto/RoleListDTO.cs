@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.Roledto
+namespace MedicalOffice.Application.Dtos.RoleDTO
 {
     public class RoleListDTO : BaseDto<Guid>
     {

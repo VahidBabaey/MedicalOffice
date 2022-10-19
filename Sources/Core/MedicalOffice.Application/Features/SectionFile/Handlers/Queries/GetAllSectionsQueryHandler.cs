@@ -2,8 +2,8 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Membership;
-using MedicalOffice.Application.Dtos.Section;
+using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 

@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Patient;
+using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using Microsoft.EntityFrameworkCore;

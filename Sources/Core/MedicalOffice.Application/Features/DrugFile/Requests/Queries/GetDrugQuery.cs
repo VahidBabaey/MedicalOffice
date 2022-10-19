@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.DrugD;
+using MedicalOffice.Application.Dtos.DrugDTO;
 using System.Collections.Generic;
 
 namespace MedicalOffice.Application.Features.DrugFile.Requests.Queries

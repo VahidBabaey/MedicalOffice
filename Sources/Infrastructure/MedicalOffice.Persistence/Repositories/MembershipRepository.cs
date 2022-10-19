@@ -1,9 +1,9 @@
 ﻿using EllipticCurve.Utils;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.DrugD;
-using MedicalOffice.Application.Dtos.DrugIntractionD;
-using MedicalOffice.Application.Dtos.Membership;
-using MedicalOffice.Application.Dtos.Service;
+using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.DrugIntractionDTO;
+using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

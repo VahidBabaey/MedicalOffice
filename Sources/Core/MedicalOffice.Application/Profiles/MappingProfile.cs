@@ -2,24 +2,24 @@
 using MedicalOffice.Application.Dtos.AccessDTO;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
 using MedicalOffice.Application.Dtos.BasicInfoListDTO;
-using MedicalOffice.Application.Dtos.DrugD;
-using MedicalOffice.Application.Dtos.DrugIntractionD;
-using MedicalOffice.Application.Dtos.Experiment;
+using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.DrugIntractionDTO;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Dtos.FormCommitmentDTO;
-using MedicalOffice.Application.Dtos.Insurance;
-using MedicalOffice.Application.Dtos.Userdto;
-using MedicalOffice.Application.Dtos.UserWorkHoursProgramFile;
-using MedicalOffice.Application.Dtos.Membership;
-using MedicalOffice.Application.Dtos.Patient;
+using MedicalOffice.Application.Dtos.InsuranceDTO;
+using MedicalOffice.Application.Dtos.UserDTO;
+using MedicalOffice.Application.Dtos.UserWorkHoursProgramFileDTO;
+using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormListDTO;
 using MedicalOffice.Application.Dtos.PatientReferralFormDTO;
 using MedicalOffice.Application.Dtos.PictureDTO;
-using MedicalOffice.Application.Dtos.Roledto;
-using MedicalOffice.Application.Dtos.Section;
-using MedicalOffice.Application.Dtos.Service;
-using MedicalOffice.Application.Dtos.Shift;
-using MedicalOffice.Application.Dtos.Specialization;
+using MedicalOffice.Application.Dtos.RoleDTO;
+using MedicalOffice.Application.Dtos.SectionDTO;
+using MedicalOffice.Application.Dtos.ServiceDTO;
+using MedicalOffice.Application.Dtos.ShiftDTO;
+using MedicalOffice.Application.Dtos.SpecializationDTO;
 using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Profiles;
@@ -28,10 +28,10 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Patient, PazireshDTO>().ReverseMap();
+        CreateMap<Patient, PatientDTO>().ReverseMap();
         CreateMap<Patient, UpdateAddPatientDto>().ReverseMap();
         CreateMap<Patient, PatientListDto>().ReverseMap();
-        CreateMap<User, PazireshDTO>().ReverseMap();
+        CreateMap<User, PatientDTO>().ReverseMap();
         CreateMap<Section, SectionDTO>().ReverseMap();
         CreateMap<Section, SectionListDTO>().ReverseMap();
         CreateMap<Section, UpdateSectionDTO>().ReverseMap();

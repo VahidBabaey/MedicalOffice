@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Membership;
-using MedicalOffice.Application.Dtos.Service;
+using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Dtos.ServiceDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

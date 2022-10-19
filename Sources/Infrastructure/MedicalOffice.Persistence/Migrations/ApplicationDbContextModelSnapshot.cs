@@ -1360,129 +1360,6 @@ namespace MedicalOffice.Persistence.Migrations
                     b.ToTable("MedicalActions");
                 });
 
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DoctorTopic")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("MedicalNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Mobile")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NationalID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("OfficeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<Guid?>("SpecializationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OfficeId");
-
-                    b.HasIndex("SpecializationId");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserWorkHourProgram", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EveningEnd")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EveningStart")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MaxAppointmentCount")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("MorningEnd")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MorningStart")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("WeekDay")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserWorkHourPrograms");
-                });
-
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Membership", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2080,15 +1957,15 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MimeType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("OfficeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PictureName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VirtualPath")
                         .IsRequired()
@@ -2812,7 +2689,7 @@ namespace MedicalOffice.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("BirthDate")
+                    b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -2822,12 +2699,12 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DoctorTopic")
+                        .HasColumnType("int");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Gender")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -2842,19 +2719,36 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("MedicalNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mobile")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NationalID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("OfficeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid?>("SpecializationId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("SpecializationId");
 
                     b.ToTable("Users");
                 });
@@ -2880,22 +2774,22 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("OfficeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("UserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("OfficeId");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserOfficeRoles");
                 });
@@ -2991,6 +2885,59 @@ namespace MedicalOffice.Persistence.Migrations
                     b.HasIndex("UserOfficeRoleId");
 
                     b.ToTable("UserServiceSharePercents");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserWorkHourProgram", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EveningEnd")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EveningStart")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MaxAppointmentCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MorningEnd")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MorningStart")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("WeekDay")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserWorkHourPrograms");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Access", b =>
@@ -3290,32 +3237,6 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("Patient");
 
                     b.Navigation("RVU3");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.User", b =>
-                {
-                    b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
-                        .WithMany()
-                        .HasForeignKey("OfficeId");
-
-                    b.HasOne("MedicalOffice.Domain.Entities.Specialization", "Specialization")
-                        .WithMany("Doctors")
-                        .HasForeignKey("SpecializationId");
-
-                    b.Navigation("Office");
-
-                    b.Navigation("Specialization");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserWorkHourProgram", b =>
-                {
-                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
-                        .WithMany("UserWorkHourPrograms")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Membership", b =>
@@ -3720,12 +3641,23 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.User", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
+                        .WithMany()
+                        .HasForeignKey("OfficeId");
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Specialization", "Specialization")
+                        .WithMany("Doctors")
+                        .HasForeignKey("SpecializationId");
+
+                    b.Navigation("Office");
+
+                    b.Navigation("Specialization");
+                });
+
             modelBuilder.Entity("MedicalOffice.Domain.Entities.UserOfficeRole", b =>
                 {
-                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
-                        .WithMany("UserOfficeRoles")
-                        .HasForeignKey("UserId");
-
                     b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
                         .WithMany("UserOfficeRoles")
                         .HasForeignKey("OfficeId")
@@ -3736,11 +3668,15 @@ namespace MedicalOffice.Persistence.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.Navigation("User");
+                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
+                        .WithMany("UserOfficeRoles")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Office");
 
                     b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.UserOfficeSpecialization", b =>
@@ -3803,6 +3739,17 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("Shift");
 
                     b.Navigation("UserOfficeRole");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserWorkHourProgram", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
+                        .WithMany("UserWorkHourPrograms")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Appointment", b =>
@@ -3888,13 +3835,6 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("KMultiplierDetails");
 
                     b.Navigation("Tariffs");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.User", b =>
-                {
-                    b.Navigation("UserWorkHourPrograms");
-
-                    b.Navigation("UserOfficeRoles");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Membership", b =>
@@ -4051,6 +3991,10 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("ReceptionUsers");
 
                     b.Navigation("Receptions");
+
+                    b.Navigation("UserOfficeRoles");
+
+                    b.Navigation("UserWorkHourPrograms");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.UserOfficeRole", b =>

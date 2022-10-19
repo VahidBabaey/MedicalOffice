@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.DrugD;
-using MedicalOffice.Application.Dtos.DrugIntractionD;
-using MedicalOffice.Application.Dtos.Membership;
-using MedicalOffice.Application.Dtos.Section;
+using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.DrugIntractionDTO;
+using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.DrugFile.Handlers.Queries;
 using MedicalOffice.Application.Features.DrugFile.Requests.Commands;
 using MedicalOffice.Application.Features.DrugFile.Requests.Queries;

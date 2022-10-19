@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Roledto;
+using MedicalOffice.Application.Dtos.RoleDTO;
 using MedicalOffice.Application.Models;
 using System;
 using System.Collections.Generic;

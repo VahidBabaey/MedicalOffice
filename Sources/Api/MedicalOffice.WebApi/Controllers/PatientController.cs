@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Patient;
+using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Features.PatientFile.Requests.Commands;
 using MedicalOffice.Application.Features.PatientFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
@@ -21,7 +21,7 @@ public class PatientController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] PazireshDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] PatientDTO dto)
     {
         var response = await _mediator.Send(new AddPatientCommand() { Dto = dto });
 

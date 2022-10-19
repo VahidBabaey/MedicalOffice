@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.DrugD;
+using MedicalOffice.Application.Dtos.DrugDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

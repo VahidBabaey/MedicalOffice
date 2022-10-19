@@ -33,10 +33,6 @@ public class Patient : BaseDomainEntity<Guid>
     /// </summary>
     public Guid OfficeId { get; set; }
     /// <summary>
-    /// عکس بیمار
-    /// </summary>
-    //public byte[]? ProfilePicture { get; set; }
-    /// <summary>
     /// نام
     /// </summary>
     public string FirstName { get; set; } = string.Empty;

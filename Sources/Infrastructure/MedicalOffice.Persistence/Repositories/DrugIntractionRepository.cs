@@ -1,7 +1,6 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.DrugD;
-using MedicalOffice.Application.Dtos.DrugIntractionD;
-using MedicalOffice.Application.Dtos.DrugPreDrugIntraction;
+using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.DrugIntractionDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

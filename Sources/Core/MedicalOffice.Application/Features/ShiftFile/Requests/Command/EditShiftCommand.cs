@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.Shift;
+using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.Userdto;
+using MedicalOffice.Application.Dtos.UserDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

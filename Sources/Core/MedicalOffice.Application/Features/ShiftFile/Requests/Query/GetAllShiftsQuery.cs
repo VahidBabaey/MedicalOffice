@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Shift;
+using MedicalOffice.Application.Dtos.ShiftDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -8,17 +8,6 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class UserOfficeRole : BaseDomainEntity<Guid>
 {
-    ///// <summary>
-    ///// کاربر
-    ///// </summary>
-    //public User? User { get; set; }
-    ///// <summary>
-    ///// آیدی کاربر
-    ///// </summary>
-    //public Guid? UserId { get; set; }
-    /// <summary>
-    /// کاربر
-    /// </summary>
     public User? User { get; set; }
     /// <summary>
     /// آیدی کاربر

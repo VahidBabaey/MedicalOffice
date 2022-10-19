@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.Membership;
+using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;

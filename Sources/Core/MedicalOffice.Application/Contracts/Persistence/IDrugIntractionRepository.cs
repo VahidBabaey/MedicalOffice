@@ -1,5 +1,4 @@
-﻿using MedicalOffice.Application.Dtos.DrugIntractionD;
-using MedicalOffice.Application.Dtos.DrugPreDrugIntraction;
+﻿using MedicalOffice.Application.Dtos.DrugIntractionDTO;
 using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Contracts.Persistence

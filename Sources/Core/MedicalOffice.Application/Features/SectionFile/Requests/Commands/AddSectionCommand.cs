@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.Section;
+using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.SectionFile.Requests.Commands;
