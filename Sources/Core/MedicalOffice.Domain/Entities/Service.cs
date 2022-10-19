@@ -51,7 +51,7 @@ public class Service : BaseDomainEntity<Guid>
     /// <summary>
     /// تعرفه های این خدمت
     /// </summary>
-    public ICollection<Tariff>? Tariffs { get; set; }
+    public ICollection<Tariff> Tariffs { get; set; } = new List<Tariff>();
     /// <summary>
     /// عملی هست یا نه
     /// </summary>

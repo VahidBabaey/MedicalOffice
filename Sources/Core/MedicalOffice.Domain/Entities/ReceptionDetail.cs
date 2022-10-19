@@ -26,7 +26,7 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// <summary>
     /// خدمت
     /// </summary>
-    public Service? Service { get; set; }
+    public Service Service { get; set; } = new();
     /// <summary>
     /// آیدی خدمت
     /// </summary>
@@ -34,7 +34,7 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// <summary>
     /// تعداد
     /// </summary>
-    public uint ServiceCount { get; set; }
+    public float ServiceCount { get; set; }
     /// <summary>
     /// بیمه - بیمه تکمیلی
     /// </summary>
@@ -50,25 +50,25 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// <summary>
     /// کاربران / پزشکان
     /// </summary>
-    public ICollection<ReceptionUser>? ReceptionUsers { get; set; }
+    public ICollection<ReceptionUser> ReceptionUsers { get; set; } = new List<ReceptionUser>();
     /// <summary>
     /// هزینه دریافتی
     /// </summary>
-    public float Cost { get; set; }
+    public long Cost { get; set; }
     /// <summary>
     /// اطلاعات تخفیف ها
     /// </summary>
-    public ICollection<ReceptionDiscount>? ReceptionDiscounts { get; set; }
+    public ICollection<ReceptionDiscount> ReceptionDiscounts { get; set; } = new List<ReceptionDiscount>();
     /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>
-    public float Deposit { get; set; }
+    public long Deposit { get; set; }
     /// <summary>
     /// بدهی
     /// </summary>
-    public float Debt { get; set; }
+    public long Debt { get; set; }
     /// <summary>
     /// جمع کل
     /// </summary>
-    public float Total { get; } //readonly
+    public long Received { get; set; }
 }
