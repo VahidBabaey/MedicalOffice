@@ -53,7 +53,8 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffdto
         /// <summary>
         /// پسورد
         /// </summary>
-        public string PasswordHash { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+
         public Guid[]? RoleIds { get; set; }
     }
 }
