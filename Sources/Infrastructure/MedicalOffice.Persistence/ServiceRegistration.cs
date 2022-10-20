@@ -1,9 +1,9 @@
-﻿using Identity.Models;
-using Identity.Services;
+﻿using Identity.Services;
 using MedicalOffice.Application.Contracts.Identity;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Models.Identity;
+using MedicalOffice.Domain.Entities;
 using MedicalOffice.Infrastructure.Crypto;
 using MedicalOffice.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,7 +25,7 @@ public static class ServiceRegistration
             options.UseSqlServer(configuration.GetConnectionString("MedicalOfficeConnectionString"))
         );
 
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentity<User, Role>()
         .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
         services.AddTransient<IAuthService, AuthService>();

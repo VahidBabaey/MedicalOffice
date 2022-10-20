@@ -1,14 +1,21 @@
 ﻿using MedicalOffice.Domain.Common;
 using MedicalOffice.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace MedicalOffice.Domain.Entities;
 
 /// <summary>
 /// کاربر
 /// </summary>
-public class User : BaseDomainEntity<Guid>
+public class User : IdentityUser<Guid> // BaseDomainEntity<Guid>
 {
-    public string MobilePhone{ get; set; }=String.Empty;
+    public User()
+    {
+        Id = Guid.NewGuid();
+        SecurityStamp = Guid.NewGuid().ToString();
+    }
+
+    //public string PhoneNumber { get; set; } = String.Empty;
     /// <summary>
     /// نام
     /// </summary>
@@ -32,11 +39,11 @@ public class User : BaseDomainEntity<Guid>
     /// <summary>
     /// نام کاربری
     /// </summary>
-    public string Username { get; set; } = string.Empty;
+    //public string UserName { get; set; } = string.Empty;
     /// <summary>
     /// هش رمز ورود
     /// </summary>
-    public string PasswordHash { get; set; } = string.Empty;
+    //public string PasswordHash { get; set; } = string.Empty;
     ///// <summary>
     ///// از این مدل برای برقراری ارتباط یک به چند بین کاربر و کاربر-مطب-نقش استفاده می شود
     ///// </summary>

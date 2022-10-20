@@ -1,10 +1,11 @@
 ﻿using MedicalOffice.Domain.Common;
 using MedicalOffice.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 {
     public DbSet<Allergy> Allergies => Set<Allergy>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
@@ -50,7 +51,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<ReceptionDetail> ReceptionDetails => Set<ReceptionDetail>();
     public DbSet<ReceptionDiscount> ReceptionDiscounts => Set<ReceptionDiscount>();
     public DbSet<ReceptionUser> ReceptionUsers => Set<ReceptionUser>();
-    public DbSet<Role> Roles => Set<Role>();
     public DbSet<RoutineMedication> RoutineMedications => Set<RoutineMedication>();
     public DbSet<RVU3> RVU3 => Set<RVU3>();
     public DbSet<Section> Sections => Set<Section>();
@@ -60,19 +60,28 @@ public class ApplicationDbContext : DbContext
     public DbSet<SocialHistory> SocialHistories => Set<SocialHistory>();
     public DbSet<Specialization> Specializations => Set<Specialization>();
     public DbSet<Tariff> Tariffs => Set<Tariff>();
-    public DbSet<User> Users => Set<User>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
     public DbSet<UserOfficeSpecialization> UserOfficeSpecializations => Set<UserOfficeSpecialization>();
     public DbSet<UserServiceSharePercent> UserServiceSharePercents => Set<UserServiceSharePercent>();
 
+    // Identity
+    //public DbSet<User> Users => Set<User>();
+    //public DbSet<Role> Roles => Set<Role>();
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    { }
+    {
+        //Database.EnsureDeleted();
+        Database.EnsureCreated();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // https://learn.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?source=recommendations&view=aspnetcore-6.0#customize-the-model
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<User>().ToTable("Users");
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
