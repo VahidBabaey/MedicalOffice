@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.LoginDTO
+namespace MedicalOffice.Application.Models.Identity
 {
-    public class LoginResponseDTO
+    public class SendOtpResponse
     {
     }
 }

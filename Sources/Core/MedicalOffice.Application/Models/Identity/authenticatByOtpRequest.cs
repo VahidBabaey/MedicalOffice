@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.LoginDTO
+namespace MedicalOffice.Application.Models.Identity
 {
-    public class LoginByNationalIdDTO
+    public class AuthenticateByOtpRequest
     {
         [Required]
-        public string? Username { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [Required]
-        public string? Password { get; set; }
+        public string? OTP { get; set; }
     }
 }

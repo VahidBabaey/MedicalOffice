@@ -1,9 +1,9 @@
-﻿using Identity.Models;
-using MedicalOffice.Application.Contracts.Identity;
-using MedicalOffice.Application.Dtos.LoginDTO;
-using MedicalOffice.Application.Models;
+﻿using MedicalOffice.Application.Contracts.Identity;
 using MedicalOffice.Application.Models.Identity;
+using MedicalOffice.Domain.Entities;
+using MedicalOffice.WebApi.WebApi.Controllers;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -18,11 +18,11 @@ namespace Identity.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly JwtSettings _jwtSettings;
 
-        public AuthService(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<ApplicationUser> signInManager)
+        public AuthService(UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -38,7 +38,7 @@ namespace Identity.Services
                 throw new Exception($"User with {request.UserName} isn't exist");
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user.Username, request.Password, false, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
 
             if (!result.Succeeded)
             {
@@ -49,17 +49,90 @@ namespace Identity.Services
 
             AuthResponse response = new AuthResponse
             {
-                Id = user.Id,
-                UserName = user.Username,
+                Id = user.Id.ToString(),
+                UserName = user.UserName,
                 Email = user.Email,
-                Role = user.Role,
+                //Role = user.Role,
                 Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken)
             };
 
             return response;
         }
 
-        private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
+
+        public async Task<RegistrationResponse> Register(RegistrationRequest request)
+        {
+            var existingUser = await _userManager.FindByNameAsync(request.UserName);
+
+            if (existingUser != null)
+            {
+                throw new Exception($"UserName '{request.UserName}' already exists.");
+            }
+
+            var user = new User
+            {
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                UserName = request.UserName,
+                EmailConfirmed = true
+            };
+
+            var existingEmail = await _userManager.FindByEmailAsync(request.Email);
+
+            if (existingEmail == null)
+            {
+                var result = await _userManager.CreateAsync(user, request.Password);
+
+                if (result.Succeeded)
+                {
+                    //await _userManager.AddToRoleAsync(user, "");
+                    return new RegistrationResponse();
+                }
+                else
+                {
+                    var errors = string.Join(",", result.Errors.Select(x => $"{x.Code} - {x.Description}"));
+                    throw new Exception(errors);
+                }
+            }
+            else
+            {
+                throw new Exception($"UserName {request.Email} already exists.");
+            }
+        }
+
+        public async Task<AuthenticateionResponse> AuthenticateByOtp(AuthenticateByOtpRequest request)
+        {
+            // How to generate token for that purpose?
+            // How to add a token provider?
+            // How to shit?
+
+            var user = _userManager.Users.SingleOrDefault(x => x.PhoneNumber == request.PhoneNumber);
+
+            if (user == null)
+                return await Task.FromResult(new AuthenticateionResponse { Success = false });
+
+            var tokenIsValid = _userManager.VerifyUserTokenAsync(user, "how-to-name?", "authenticate-by-phonenumber", request.OTP).Result;
+
+            return await Task.FromResult(new AuthenticateionResponse { Success = tokenIsValid });
+        }
+
+        public async Task<AuthenticateionResponse> AuthenticateByPassword(AuthenticateByPasswordRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<AccountSatusResponse> GetUserStatus(AccountStatusRequest resuest)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<SendOtpResponse> SendOtp(SendOtpRequest request)
+        {
+            throw new NotImplementedException();
+        }
+        
+        private async Task<JwtSecurityToken> GenerateToken(User user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
@@ -92,64 +165,5 @@ namespace Identity.Services
             return jwtSecurityToken;
         }
 
-        public async Task<RegistrationResponse> Register(RegistrationRequest request)
-        {
-            var existingUser = await _userManager.FindByNameAsync(request.UserName);
-
-            if (existingUser != null)
-            {
-                throw new Exception($"Username '{request.UserName}' already exists.");
-            }
-
-            var user = new ApplicationUser
-            {
-                Email = request.Email,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                UserName = request.UserName,
-                EmailConfirmed = true
-            };
-
-            var existingEmail = await _userManager.FindByEmailAsync(request.Email);
-
-            if (existingEmail == null)
-            {
-                var result = await _userManager.CreateAsync(user, request.Password);
-
-                if (result.Succeeded)
-                {
-                    //await _userManager.AddToRoleAsync(user, "");
-                    return new RegistrationResponse();
-                }
-                else
-                {
-                    throw new Exception($"{result.Errors}");
-                }
-            }
-            else
-            {
-                throw new Exception($"UserName {request.Email} already exists.");
-            }
-        }
-
-        public Task<LoginResponseDTO> LoginByMobilePhone(LoginByMobilePhoneDTO request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<LoginResponseDTO> LoginByNationalCode(LoginByNationalIdDTO request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UserExistenceResponseDTO> UserExistenceByMobilePhone(MobilePhoneExistenceRequestDTO request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UserExistenceResponseDTO> UserExistenceByNationalCode(NationalIDExistenceRequestDTO request)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

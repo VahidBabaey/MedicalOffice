@@ -1,5 +1,5 @@
-﻿using MedicalOffice.Application.Contracts.Identity;
-using MedicalOffice.Application.Dtos.LoginDTO;
+﻿using MediatR;
+using MedicalOffice.Application.Contracts.Identity;
 using MedicalOffice.Application.Models.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,34 +16,36 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             _authenticationService = authenticationService;
         }
 
-        [HttpPost("user-exist/mobile-phone")]
-        public async Task<ActionResult<UserExistenceResponseDTO>> UserExistenceByMobilePhone(MobilePhoneExistenceRequestDTO request)
-        {
-            return Ok(await _authenticationService.UserExistenceByMobilePhone(request));
-        }
-
-        [HttpPost("user-exist/national-code")]
-        public async Task<ActionResult<UserExistenceResponseDTO>> UserExistenceByNationalCode(NationalIDExistenceRequestDTO request)
-        {
-            return Ok(await _authenticationService.UserExistenceByNationalCode(request));
-        }
-
-        [HttpPost("login/mobile-phone")]
-        public async Task<ActionResult<LoginResponseDTO>> LoginByMobilePhone(LoginByMobilePhoneDTO request)
-        {
-            return Ok(await _authenticationService.LoginByMobilePhone(request));
-        }
-
-        [HttpPost("login/national-code")]
-        public async Task<ActionResult<LoginResponseDTO>> LoginByNationalCode(LoginByNationalIdDTO request)
-        {
-            return Ok(await _authenticationService.LoginByNationalCode(request));
-        }
-
         [HttpPost("register")]
         public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
         {
             return Ok(await _authenticationService.Register(request));
         }
+
+        [HttpGet("status")]
+        public async Task<ActionResult<AccountSatusResponse>> GetUserStatus(AccountStatusRequest request)
+        {
+            return Ok(await _authenticationService.GetUserStatus(request));
+        }
+
+        [HttpPost("send-otp")]
+        public async Task<ActionResult<string>> SendOtp(SendOtpRequest request) 
+        {
+            return Ok(await _authenticationService.SendOtp(request));
+        }
+
+        [HttpPost("authenticate/otp")]
+        public async Task<ActionResult<AuthenticateionResponse>> AuthenticateByOtp(AuthenticateByOtpRequest request)
+        {
+            return Ok(await _authenticationService.AuthenticateByOtp(request));
+        }
+
+        [HttpPost("authenticate/password")]
+        public async Task<ActionResult<AuthenticateionResponse>> AuthenticateByPassword(AuthenticateByPasswordRequest request)
+        {
+            return Ok(await _authenticationService.AuthenticateByPassword(request));
+        }
+
+        //[HttpPatch("reset-password")]
     }
 }
