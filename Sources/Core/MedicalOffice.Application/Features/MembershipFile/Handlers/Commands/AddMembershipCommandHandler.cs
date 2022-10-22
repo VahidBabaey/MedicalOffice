@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Membership.Validators;
+using MedicalOffice.Application.Dtos.MembershipDTO.Validators;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -31,9 +31,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
-            List<string> ServiceList = new List<string>();
-            ServiceList.Add("77b96928 - ed12 - 419f - 9c65 - 48fda2c01742");
-            ServiceList.Add("87b96928 - ed12 - 419f - 9c65 - 48fda2c01742");
+
         }
 
         public async Task<BaseCommandResponse> Handle(AddMembershipCommand request, CancellationToken cancellationToken)
@@ -95,9 +93,6 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
             log.Messages = response.Errors;
 
             await _logger.Log(log);
-
-
-
 
             return response;
         }

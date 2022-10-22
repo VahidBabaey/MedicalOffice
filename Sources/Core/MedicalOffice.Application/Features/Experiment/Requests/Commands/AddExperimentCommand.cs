@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.Experiment;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;

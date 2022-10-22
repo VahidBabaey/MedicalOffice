@@ -30,5 +30,5 @@ public class Section : BaseDomainEntity<Guid>
     /// <summary>
     /// درصد سهم پزشکان
     /// </summary>
-    public ICollection<UserServiceSharePercent>? UserServiceSharePercents { get; set; }
+    public ICollection<ServiceSharePercent>? UserServiceSharePercents { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Roledto;
+using MedicalOffice.Application.Dtos.RoleDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

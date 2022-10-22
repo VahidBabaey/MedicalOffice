@@ -3,7 +3,7 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.FormCommitmentDTO;
-using MedicalOffice.Application.Dtos.Insurance;
+using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Queries;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Models;

@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.DrugIntractionD;
+using MedicalOffice.Application.Dtos.DrugIntractionDTO;
 using MedicalOffice.Application.Features.DrugIntractionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using System;

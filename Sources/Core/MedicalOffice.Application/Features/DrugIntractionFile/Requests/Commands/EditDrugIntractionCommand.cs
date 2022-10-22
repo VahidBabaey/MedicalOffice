@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.DrugIntractionD;
+using MedicalOffice.Application.Dtos.DrugIntractionDTO;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;

@@ -10,7 +10,7 @@ public class UserOfficeSpecialization : BaseDomainEntity<Guid>
     /// <summary>
     /// کاربر
     /// </summary>
-    public User? User { get; set; }
+    public MedicalStaff? User { get; set; }
     /// <summary>
     /// آیدی کاربر
     /// </summary>

@@ -8,5 +8,6 @@ namespace MedicalOffice.Application.Models.Identity
 {
     public class SendOtpResponse
     {
+        public string? Message { get; set; }
     }
 }

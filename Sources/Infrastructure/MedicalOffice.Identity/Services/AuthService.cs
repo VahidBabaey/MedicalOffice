@@ -1,9 +1,11 @@
 ﻿using MedicalOffice.Application.Contracts.Identity;
 using MedicalOffice.Application.Models.Identity;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Identity.Model;
 using MedicalOffice.WebApi.WebApi.Controllers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -35,7 +37,7 @@ namespace Identity.Services
 
             if (user == null)
             {
-                throw new Exception($"User with {request.UserName} isn't exist");
+                throw new Exception($"MedicalStaff with {request.UserName} isn't exist");
             }
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
@@ -62,11 +64,14 @@ namespace Identity.Services
 
         public async Task<RegistrationResponse> Register(RegistrationRequest request)
         {
-            var existingUser = await _userManager.FindByNameAsync(request.UserName);
+            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
+            //var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
+
+            Console.WriteLine($"existing user is : {existingUser}");
             if (existingUser != null)
             {
-                throw new Exception($"UserName '{request.UserName}' already exists.");
+                throw new Exception($"PhoneNumber '{request.PhoneNumber}' already exists.");
             }
 
             var user = new User
@@ -131,7 +136,7 @@ namespace Identity.Services
         {
             throw new NotImplementedException();
         }
-        
+
         private async Task<JwtSecurityToken> GenerateToken(User user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);

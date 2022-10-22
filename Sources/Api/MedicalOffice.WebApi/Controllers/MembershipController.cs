@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Insurance;
-using MedicalOffice.Application.Dtos.Membership;
-using MedicalOffice.Application.Dtos.Section;
-using MedicalOffice.Application.Dtos.Service;
+using MedicalOffice.Application.Dtos.InsuranceDTO;
+using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Dtos.SectionDTO;
+using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Commands;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Queries;
@@ -32,10 +32,10 @@ public class MembershipController : Controller
 
         return Ok(response);
     }
-    [HttpGet("services")]
-    public async Task<ActionResult<List<ServiceListNameDTO>>> GetAll([FromQuery] ListDto dto)
+    [HttpGet]
+    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllServices() { DTO = dto});
+        var response = await _mediator.Send(new GetAllMemberships() { DTO = dto});
 
         return Ok(response);
     }

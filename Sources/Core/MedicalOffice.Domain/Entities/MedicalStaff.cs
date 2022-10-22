@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace MedicalOffice.Domain.Entities
 {
@@ -65,6 +66,22 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// برنامه کادر درمان
         /// </summary>
-        public ICollection<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms { get; set; } = new List<MedicalStaffWorkHourProgram>();
+        public ICollection<MedicalStaffWorkHourProgram> UserWorkHourPrograms { get; set; } = new List<MedicalStaffWorkHourProgram>();
+        /// <summary>
+        /// از این مدل برای برقراری ارتباط یک به چند بین نقش و کاربر-مطب-نقش استفاده می شود
+        /// </summary>
+        public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
+        /// <summary>
+        /// پذیرش ها
+        /// </summary>
+        public ICollection<Reception>? Receptions { get; set; }
+        /// <summary>
+        /// کاربران پذیرش
+        /// </summary>
+        public ICollection<ReceptionUser>? ReceptionUsers { get; set; }
+        /// <summary>
+        /// وقت دهی ها
+        /// </summary>
+        public ICollection<Appointment>? Appointments { get; set; }
     }
 }

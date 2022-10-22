@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Insurance.Validators;
+using MedicalOffice.Application.Dtos.InsuranceDTO.Validators;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -15,9 +15,6 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 {
-
-
-
     public class AddInsuranceCommandHandler : IRequestHandler<AddInsuranceCommand, BaseCommandResponse>
     {
         private readonly IInsuranceRepository _repository;

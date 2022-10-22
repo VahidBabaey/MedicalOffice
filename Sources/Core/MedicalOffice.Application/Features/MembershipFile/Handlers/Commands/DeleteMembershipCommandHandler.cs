@@ -36,6 +36,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
             try
             {
+                await _repository.DeleteMembershipIdofServiceAsync(request.MembershipId);
                 await _repository.Delete(request.MembershipId);
 
                 response.Success = true;
@@ -43,17 +44,6 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                 response.Data.Add(new { Id = request.MembershipId });
 
                 log.Type = LogType.Success;
-                if (request.ServiceIDs == null)
-                {
-
-                }
-                else
-                {
-                    foreach (var srvid in request.ServiceIDs)
-                    {
-                        await _repository.DeleteMembershipIdofServiceAsync(srvid, request.MembershipId);
-                    }
-                }
             }
             catch (Exception error)
             {

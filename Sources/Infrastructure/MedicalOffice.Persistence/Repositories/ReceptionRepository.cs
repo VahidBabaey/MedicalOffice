@@ -22,7 +22,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         var insurance = await _dbContext.Insurances.SingleAsync(i => i.Id == insuranceId);
         var additionalInsurance = await _dbContext.Insurances.SingleAsync(i => i.Id == additionalInsuranceId);
         var discountType = await _dbContext.DiscountTypes.SingleAsync(dt => dt.Id == discountTypeId);
-        var usersCheck = users.All(id => _dbContext.Users.Any(u => u.Id == id));
+        var usersCheck = users.All(id => _dbContext.MedicalStaffs.Any(u => u.Id == id));
         if (!usersCheck)
             throw new NullReferenceException();
 

@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Patient.Validators;
+using MedicalOffice.Application.Dtos.PatientDTO.Validators;
 using MedicalOffice.Application.Features.PatientFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -29,7 +29,7 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseC
     {
         BaseCommandResponse response = new();
 
-        AddSectionValidator validator = new();
+        AddPatientValidator validator = new();
 
         Log log = new();
 
@@ -54,7 +54,25 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseC
                 response.Success = true;
                 response.Message = $"{_requestTitle} succeded";
                 response.Data.Add(new { Id = patient.Id });
+                if (request.Dto.Mobile == null)
+                {
 
+                }
+                else
+                {
+                    foreach (var mobile in request.Dto.Mobile)
+                    {
+                        await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
+                    }
+                    foreach (var address in request.Dto.Address)
+                    {
+                        await _repository.InsertAddressofPatientAsync(patient.Id, address);
+                    }
+                    foreach (var tag in request.Dto.Tag)
+                    {
+                        await _repository.InsertTagofPatientAsync(patient.Id, tag);
+                    }
+                }
                 log.Type = LogType.Success;
             }
             catch (Exception error)

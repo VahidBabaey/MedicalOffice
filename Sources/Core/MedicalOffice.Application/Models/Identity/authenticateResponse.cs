@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MedicalOffice.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,20 @@ namespace MedicalOffice.Application.Models.Identity
 {
     public class AuthenticateionResponse
     {
-        public bool Success { get; set; }
+        public bool Success { get; set; } = false;
+
+        public string? Id { get; set; }
+
+        public string? UserName { get; set; }
+
+        public string? FirstName { get; set; }
+
+        public string? LastName { get; set; }
+
+        public string? Email { get; set; }
+
+        public Role? Role { get; set; }
+
+        public string? Token { get; set; }
     }
 }

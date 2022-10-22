@@ -16,7 +16,7 @@ public class ReceptionUserDTO : BaseDomainEntity<Guid>
     /// <summary>
     /// کاربر لاگین شده
     /// </summary>
-    public User? User { get; set; }
+    public MedicalStaff? User { get; set; }
     /// <summary>
     /// آیدی کاربر لاگین شده
     /// </summary>

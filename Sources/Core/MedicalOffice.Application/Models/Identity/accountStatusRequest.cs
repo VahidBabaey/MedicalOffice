@@ -8,5 +8,6 @@ namespace MedicalOffice.Application.Models.Identity
 {
     public class AccountStatusRequest
     {
+        public string? PhoneNember { get; set; }
     }
 }

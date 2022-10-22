@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Specialization;
+using MedicalOffice.Application.Dtos.SpecializationDTO;
 using MedicalOffice.Application.Features.SpecializationFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -39,7 +39,6 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Queries
             try
             {
                 var Section = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
-                //var Section = await _repository.GetAlllist();
 
                 result = _mapper.Map<List<SpecializationListDTO>>(Section);
 

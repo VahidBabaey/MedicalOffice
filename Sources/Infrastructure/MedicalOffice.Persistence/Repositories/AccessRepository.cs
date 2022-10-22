@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
 
-public class AccessRepository : GenericRepository<Access, Guid>, IAccessRepository
+public class AccessRepository : GenericRepository<Permission, Guid>, IPermissionRepository
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -15,14 +15,14 @@ public class AccessRepository : GenericRepository<Access, Guid>, IAccessReposito
     public string GetId (Guid id)
     {
 
-        string iduser = _dbContext.UserOfficeRoles.Where(p => p.MedicalStaffId == id).FirstOrDefault().Id.ToString();
+        string iduser = _dbContext.UserOfficeRoles.Where(p => p.UserId == id).FirstOrDefault().Id.ToString();
         return iduser;
 
 
     }
     public bool SearchUser(Guid searchid)
     {
-        var idsearchuser = _dbContext.Accesses.Where(p => p.UserOfficeRoleId == searchid).FirstOrDefault();
+        var idsearchuser = _dbContext.Permissiones.Where(p => p.UserOfficeRoleId == searchid).FirstOrDefault();
         if(idsearchuser != null)
         {
             return true;
@@ -33,11 +33,25 @@ public class AccessRepository : GenericRepository<Access, Guid>, IAccessReposito
         }
     }
 
-    public async Task<IReadOnlyList<Access>> GetAccessDetailsByUserID(Guid Id)
+    public async Task<IReadOnlyList<Permission>> GetAccessDetailsByUserID(Guid Id)
     {
 
-        return (IReadOnlyList<Access>)await _dbContext.Accesses.Where(srv => srv.UserOfficeRoleId == Id).ToListAsync();
+        return (IReadOnlyList<Permission>)await _dbContext.Permissiones.Where(srv => srv.UserOfficeRoleId == Id).ToListAsync();
 
     }
 
+    public Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<string> IPermissionRepository.GetId(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<bool> IPermissionRepository.SearchUser(Guid searchid)
+    {
+        throw new NotImplementedException();
+    }
 }

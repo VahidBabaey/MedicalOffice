@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Experiment;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Features.Experiment.Requests.Queries;
 using MedicalOffice.Application.Models;
 using System;
