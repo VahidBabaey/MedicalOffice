@@ -64,11 +64,9 @@ namespace Identity.Services
 
         public async Task<RegistrationResponse> Register(RegistrationRequest request)
         {
-            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
+            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p=>p.PhoneNumber == request.PhoneNumber); 
             //var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
-
-            Console.WriteLine($"existing user is : {existingUser}");
             if (existingUser != null)
             {
                 throw new Exception($"PhoneNumber '{request.PhoneNumber}' already exists.");
