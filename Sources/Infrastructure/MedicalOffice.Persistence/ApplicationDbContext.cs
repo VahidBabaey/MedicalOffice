@@ -73,7 +73,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        Database.EnsureDeleted();
+        //Database.EnsureDeleted();
         Database.EnsureCreated();
     }
 
@@ -84,7 +84,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-        modelBuilder.Entity<User>().ToTable("User");
+        modelBuilder.Entity<User>().ToTable("Users");
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

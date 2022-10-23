@@ -64,7 +64,7 @@ namespace Identity.Services
 
         public async Task<RegistrationResponse> Register(RegistrationRequest request)
         {
-            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p=>p.PhoneNumber == request.PhoneNumber); 
+            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
             //var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
             if (existingUser != null)
@@ -74,6 +74,7 @@ namespace Identity.Services
 
             var user = new User
             {
+                PhoneNumber = request.PhoneNumber,
                 Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
@@ -110,10 +111,11 @@ namespace Identity.Services
             // How to add a token provider?
             // How to shit?
 
-            var user = _userManager.Users.SingleOrDefault(x => x.PhoneNumber == request.PhoneNumber);
+            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
 
             if (user == null)
-                return await Task.FromResult(new AuthenticateionResponse { Success = false });
+                throw new Exception($"user with {request.PhoneNumber} isn't exist");
+            //return await Task.FromResult(new AuthenticateionResponse { Success = false });
 
             var tokenIsValid = _userManager.VerifyUserTokenAsync(user, "how-to-name?", "authenticate-by-phonenumber", request.OTP).Result;
 
