@@ -201,6 +201,15 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         return dto;
     }
 
+    public async Task<decimal> GetReceptionTotal(Guid id)
+    {
+        var totalDebt = await _dbContext.Receptions.Where(r => r.PatientId == id).SumAsync(r => r.TotalDebt);
+        var totalDeposit = await _dbContext.Receptions.Where(r => r.PatientId == id).SumAsync(r => r.TotalDeposit);
+        var balance = totalDeposit - totalDebt;
+
+        return balance;
+    }
+
     public async Task<Reception> SummarizeReception(Guid receptionId)
     {
         var reception = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.Id == receptionId);

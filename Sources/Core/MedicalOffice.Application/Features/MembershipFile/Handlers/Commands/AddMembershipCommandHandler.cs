@@ -72,7 +72,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                     {
                         foreach (var srvid in request.DTO.ServiceIDs)
                         {                   
-                        await _repository.InsertMembershipIdofServiceAsync(srvid, membership.Id);
+                        await _repository.InsertMembershipIdofServiceAsync(membership.Discount, srvid, membership.Id);
                         }
                     }
                     

@@ -16,11 +16,10 @@ public class MembershipDTO
     /// فعال یا غیرفعال
     /// </summary>
     public bool IsActive { get; set; }
-
     /// <summary>
-    /// آیدی تخفیف پذیرش
+    /// تخفیف
     /// </summary>
-    public Guid? ReceptionDiscountId { get; set; }
+    public string Discount { get; set; } = string.Empty;
     /// <summary>
     /// آیدی لیست سرویس ها
     /// </summary>

@@ -2,17 +2,21 @@
 using MedicalOffice.Application.Dtos.UserDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace MedicalOffice.Persistence.Repositories;
 
 public class UserRepository : GenericRepository<User, Guid>, IUserRepository
 {
+    private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
     private readonly ApplicationDbContext _dbContext;
 
-    public UserRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public UserRepository(IUserOfficeRoleRepository userOfficeRoleRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
+        _userOfficeRoleRepository = userOfficeRoleRepository;
     }
+
 
     public async Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId)
     {
@@ -25,7 +29,8 @@ public class UserRepository : GenericRepository<User, Guid>, IUserRepository
         if (userOfficeRole == null)
             throw new NullReferenceException(nameof(userOfficeRole));
 
-        await _dbContext.UserOfficeRoles.AddAsync(userOfficeRole);
+        //await _dbContext.UserOfficeRoles.AddAsync(userOfficeRole);
+        await _userOfficeRoleRepository.Add(userOfficeRole);
 
         return userOfficeRole;
     }

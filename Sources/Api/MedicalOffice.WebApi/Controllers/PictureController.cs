@@ -24,13 +24,14 @@ public class PictureController : Controller
         _mediator = mediator;
     }
 
-     [HttpPost]
+    [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromForm] PictureUploadDTO dto)
     {
         var response = await _mediator.Send(new AddPictureCommand() { DTO = dto });
         return Ok(response);
 
     }
+
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {

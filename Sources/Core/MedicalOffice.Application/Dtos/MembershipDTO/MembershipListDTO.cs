@@ -9,15 +9,11 @@ public class MembershipListDTO : BaseDto<Guid>
     /// </summary>
     public string Name { get; set; } = string.Empty;
     /// <summary>
-    /// نام سرویس ها
+    /// تخفیف
     /// </summary>
-    public string NameServices { get; set; } = string.Empty;
+    public string Discount { get; set; } = string.Empty;
     /// <summary>
     /// فعال یا غیرفعال
     /// </summary>
     public bool IsActive { get; set; }
-    /// <summary>
-    /// آیدی سرویس ها
-    /// </summary>
-    public Guid[]? ServicesId   { get; set; }
 }
