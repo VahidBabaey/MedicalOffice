@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
 
-public class UserRepository : GenericRepository<MedicalStaff, Guid>, IUserRepository
+public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IUserRepository
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public UserRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public MedicalStaffRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
     }
@@ -57,9 +57,9 @@ public class UserRepository : GenericRepository<MedicalStaff, Guid>, IUserReposi
         }
 
     }
-    public async Task<IEnumerable<UserListDTO>> GetAllUsers()
+    public async Task<IEnumerable<MedicalStaffListDTO>> GetAllUsers()
     {
-        var _list = await _dbContext.MedicalStaffs.Select(p => new UserListDTO
+        var _list = await _dbContext.MedicalStaffs.Select(p => new MedicalStaffListDTO
         {
             Id = p.Id,
             FirstName = p.FirstName,
@@ -70,18 +70,18 @@ public class UserRepository : GenericRepository<MedicalStaff, Guid>, IUserReposi
             SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Title }).Where(x => x.Id == p.SpecializationId).FirstOrDefault().Title
         }).ToListAsync();
 
-        return (IEnumerable<UserListDTO>)_list;
+        return (IEnumerable<MedicalStaffListDTO>)_list;
     }
-    public async Task<IEnumerable<UserNameListDTO>> GetAllUsersName()
+    public async Task<IEnumerable<MedicalStaffNameListDTO>> GetAllUsersName()
     {
-        var _list = await _dbContext.MedicalStaffs.Select(p => new UserNameListDTO
+        var _list = await _dbContext.MedicalStaffs.Select(p => new MedicalStaffNameListDTO
         {
             Id = p.Id,
             FirstName = p.FirstName,
             LastName = p.LastName
         }).ToListAsync();
 
-        return (IEnumerable<UserNameListDTO>)_list;
+        return (IEnumerable<MedicalStaffNameListDTO>)_list;
     }
 
 }

@@ -27,6 +27,7 @@ public static class ServiceRegistration
         );
 
         services.AddIdentity<User, Role>()
+        .AddRoles<Role>()
         .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
         //services.AddTransient<IAuthService, AuthService>();
@@ -74,7 +75,7 @@ public static class ServiceRegistration
         services.AddScoped<IExperimentRepository, ExperimentRepository>();
         services.AddScoped<IDrugIntractionRepository, DrugIntractionRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserRepository, MedicalStaffRepository>();
         services.AddScoped<IUserOfficeRoleRepository, UserOfficeRoleRepository>();
         services.AddScoped<ICryptoServiceProvider, CryptoServiceProvider>();
         services.AddScoped<IUserWorkHourProgramRepository, UserWorkHourProgramRepository>();

@@ -68,7 +68,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<ServiceSharePercent> ServiceSharePercents => Set<ServiceSharePercent>();
 
     // Identity
-    //public DbSet<MedicalStaff> MedicalStaffs => Set<MedicalStaff>();
+    //public DbSet<User> Users => Set<User>();
     //public DbSet<Role> Roles => Set<Role>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -85,6 +85,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
         modelBuilder.Entity<User>().ToTable("Users");
+        modelBuilder.Entity<Role>().ToTable("Roles");
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

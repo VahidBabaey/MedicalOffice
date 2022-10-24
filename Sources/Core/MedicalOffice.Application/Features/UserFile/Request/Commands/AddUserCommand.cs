@@ -11,6 +11,6 @@ namespace MedicalOffice.Application.Features.UserFile.Request.Commands
 {
     public class AddUserCommand : IRequest<BaseCommandResponse>
     {
-        public UserDTO DTO { get; set; } = new UserDTO();
+        public MedicalStaffDTO DTO { get; set; } = new MedicalStaffDTO();
     }
 }

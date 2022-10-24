@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.UserDTO
 {
-    public class UserDTO
+    public class UpdateMedicalStaffDTO : BaseDto<Guid>
     {
         /// <summary>
         /// آیدی مطب

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.UserDTO.Validators
 {
-    public class AddUserValidator : AbstractValidator<UserDTO>
+    public class AddUserValidator : AbstractValidator<MedicalStaffDTO>
     {
         public AddUserValidator()
         {

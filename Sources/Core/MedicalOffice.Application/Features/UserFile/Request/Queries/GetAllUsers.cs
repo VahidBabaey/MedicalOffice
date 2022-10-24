@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.UserFile.Request.Queries
 {
-    public class GetAllUsers : IRequest<List<UserListDTO>>
+    public class GetAllUsers : IRequest<List<MedicalStaffListDTO>>
     {
         public ListDto DTO { get; set; } = new ListDto();
     }

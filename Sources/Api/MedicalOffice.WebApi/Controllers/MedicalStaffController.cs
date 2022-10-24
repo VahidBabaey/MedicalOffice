@@ -14,24 +14,24 @@ namespace MedicalOffice.WebApi.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController : Controller
+public class MedicalStaffController : Controller
 {
     private readonly IMediator _mediator;
 
-    public UserController(IMediator mediator)
+    public MedicalStaffController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] UserDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto)
     {
         var response = await _mediator.Send(new AddUserCommand() { DTO = dto });
 
         return Ok(response);
     }
     [HttpPatch]
-    public async Task<ActionResult<Guid>> UpdateUser([FromBody] UpdateUserDTO dto)
+    public async Task<ActionResult<Guid>> UpdateUser([FromBody] UpdateMedicalStaffDTO dto)
     {
         var response = await _mediator.Send(new EditUserCommand() { DTO = dto });
 
@@ -45,7 +45,7 @@ public class UserController : Controller
         return Ok(response);
     }
     [HttpGet]
-    public async Task<ActionResult<List<UserListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllUsers() { DTO = dto });
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Models.Identity
+namespace MedicalOffice.Application.Dtos.Identity
 {
     public class AuthenticateByOtpRequest
     {

@@ -11,6 +11,6 @@ namespace MedicalOffice.Application.Features.UserFile.Request.Commands
 {
     public class EditUserCommand : IRequest<BaseCommandResponse>
     {
-        public UpdateUserDTO DTO { get; set; } = new UpdateUserDTO();
+        public UpdateMedicalStaffDTO DTO { get; set; } = new UpdateMedicalStaffDTO();
     }
 }

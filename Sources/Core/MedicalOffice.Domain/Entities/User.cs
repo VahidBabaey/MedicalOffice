@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MedicalOffice.Identity.Model
 {
-    public class User: IdentityUser<Guid> // BaseDomainEntity<Guid>
+    public class User: IdentityUser<Guid>
     {
         public User()
         {
@@ -37,9 +37,19 @@ namespace MedicalOffice.Identity.Model
         /// </summary>
         public string NationalID { get; set; } = string.Empty;
 
-        ///// <summary>
-        ///// از این مدل برای برقراری ارتباط یک به چند بین کاربر و کاربر-مطب-نقش استفاده می شود
-        ///// </summary>
-        //public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
+        /// <summary>
+        /// از این مدل برای برقراری ارتباط یک به چند بین کاربر و کاربر-مطب-نقش استفاده می شود
+        /// </summary>
+        //public Guid RoleId { get; set; }
+
+        public ICollection<Role>? Roles { get; set; }
+
+        //public Guid? OfficeId { get; set; }
+
+        public ICollection<Office>? Offices { get; set; }
+
+        //public Guid? PermissionId { get; set; }
+
+        public ICollection<Permission>? Permissions { get; set; }
     }
 }

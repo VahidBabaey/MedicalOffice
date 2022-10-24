@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
 {
 
-    public class GetAllUserNameQueryHandler : IRequestHandler<GetAllUsersName, List<UserNameListDTO>>
+    public class GetAllUserNameQueryHandler : IRequestHandler<GetAllUsersName, List<MedicalStaffNameListDTO>>
     {
         private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
@@ -29,9 +29,9 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<UserNameListDTO>> Handle(GetAllUsersName request, CancellationToken cancellationToken)
+        public async Task<List<MedicalStaffNameListDTO>> Handle(GetAllUsersName request, CancellationToken cancellationToken)
         {
-            List<UserNameListDTO> result = new();
+            List<MedicalStaffNameListDTO> result = new();
 
             Log log = new();
 
@@ -39,7 +39,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
             {
                 var Users = await _repository.GetAllUsersName();
 
-                result = _mapper.Map<List<UserNameListDTO>>(Users);
+                result = _mapper.Map<List<MedicalStaffNameListDTO>>(Users);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

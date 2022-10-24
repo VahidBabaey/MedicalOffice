@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MedicalOffice.WebApi.WebApi.Controllers
+namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class AuthenticateByPasswordRequest
+    public class authenticateByPasswordRequestDTO
     {
         [Required]
         public string? MobilePhone { get; set; }

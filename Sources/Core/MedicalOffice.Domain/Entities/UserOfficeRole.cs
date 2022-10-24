@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Common;
+using MedicalOffice.Identity.Model;
 
 namespace MedicalOffice.Domain.Entities;
 
@@ -8,7 +9,7 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class UserOfficeRole : BaseDomainEntity<Guid>
 {
-    public MedicalStaff? MedicalStaff { get; set; }
+    public User? User { get; set; }
     /// <summary>
     /// آیدی کاربر
     /// </summary>
@@ -33,6 +34,7 @@ public class UserOfficeRole : BaseDomainEntity<Guid>
     /// سهم و درصد کاربران
     /// </summary>
     public ICollection<ServiceSharePercent>? UserServiceSharePercents { get; set; }
+
     /// <summary>
     /// دسترسی ها
     /// </summary>

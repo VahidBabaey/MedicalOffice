@@ -64,10 +64,10 @@ public class MappingProfile : Profile
         CreateMap<DrugIntraction, UpdateDrugIntractionDTO>().ReverseMap();
         CreateMap<DrugIntraction, DrugIntractionListDTO>().ReverseMap();
         CreateMap<Role, RoleListDTO>().ReverseMap();
-        CreateMap<MedicalStaff, UserDTO>().ReverseMap();
-        CreateMap<MedicalStaff, UpdateUserDTO>().ReverseMap();
-        CreateMap<MedicalStaff, UserListDTO>().ReverseMap();
-        CreateMap<MedicalStaff, UserNameListDTO>().ReverseMap();
+        CreateMap<MedicalStaff, MedicalStaffDTO>().ReverseMap();
+        CreateMap<MedicalStaff, UpdateMedicalStaffDTO>().ReverseMap();
+        CreateMap<MedicalStaff, MedicalStaffListDTO>().ReverseMap();
+        CreateMap<MedicalStaff, MedicalStaffNameListDTO>().ReverseMap();
         CreateMap<MedicalStaffWorkHourProgram, UserWorkHoursProgramDTO>().ReverseMap();
         CreateMap<MedicalStaffWorkHourProgram, UserWorkHoursProgramListDTO>().ReverseMap();
         CreateMap<BasicInfo, BasicInfoListDTO>().ReverseMap();

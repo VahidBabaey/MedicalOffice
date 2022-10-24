@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Models.Identity
+namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class RegistrationResponse
+    public class RegistrationResponseDTO
     {
-        public Guid UserId { get; set; }
+        public string? UserId { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.UserDTO
 {
-    public class UserListDTO : BaseDto<Guid>
+    public class MedicalStaffListDTO : BaseDto<Guid>
     {
         /// <summary>
         /// عکس کادر درمان

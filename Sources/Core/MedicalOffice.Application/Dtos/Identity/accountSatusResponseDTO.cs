@@ -1,12 +1,12 @@
 ﻿using MedicalOffice.Domain.Enums;
 
-namespace MedicalOffice.WebApi.WebApi.Controllers
+namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class AccountSatusResponse
+    public class accountSatusResponseDTO
     {
         public UserStatus Status { get; set; }
 
-        public bool exist { get; set; } = false;
+        public bool Exist { get; set; } = false;
 
         public bool OtpOption { get; set; } = false;
 

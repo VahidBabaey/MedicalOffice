@@ -1,5 +1,4 @@
-﻿using MedicalOffice.Application.Models.Identity;
-using MedicalOffice.WebApi.WebApi.Controllers;
+﻿using MedicalOffice.Application.Dtos.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,14 +10,14 @@ namespace MedicalOffice.Application.Contracts.Identity
 {
     public interface IAuthService
     {
-        Task<RegistrationResponse> Register(RegistrationRequest request);
+        Task<RegistrationResponseDTO> Register(RegistrationRequestDTO request);
 
-        Task<AccountSatusResponse> GetUserStatus(AccountStatusRequest resuest);
+        Task<accountSatusResponseDTO> GetUserStatus(accountStatusRequestDTO resuest);
 
-        Task<SendOtpResponse> SendOtp(SendOtpRequest request);
+        Task<sendOtpResponseDTO> SendOtp(sendOtpRequestDTO request);
 
         Task<AuthenticateionResponse> AuthenticateByOtp(AuthenticateByOtpRequest request);
 
-        Task<AuthenticateionResponse> AuthenticateByPassword(AuthenticateByPasswordRequest request);
+        Task<AuthenticateionResponse> AuthenticateByPassword(authenticateByPasswordRequestDTO request);
     }
 }

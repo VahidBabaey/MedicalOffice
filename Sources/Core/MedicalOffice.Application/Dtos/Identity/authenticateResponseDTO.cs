@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Models.Identity
+namespace MedicalOffice.Application.Dtos.Identity
 {
     public class AuthenticateionResponse
     {
@@ -20,8 +20,6 @@ namespace MedicalOffice.Application.Models.Identity
         public string? LastName { get; set; }
 
         public string? Email { get; set; }
-
-        public Role? Role { get; set; }
 
         public string? Token { get; set; }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.UserDTO
 {
-    public class UserNameListDTO : BaseDto<Guid>
+    public class MedicalStaffNameListDTO : BaseDto<Guid>
     {
 
         /// <summary>
