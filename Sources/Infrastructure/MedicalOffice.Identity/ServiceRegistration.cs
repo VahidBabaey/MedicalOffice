@@ -1,7 +1,9 @@
 ﻿using Identity.Services;
 using MedicalOffice.Application.Contracts.Identity;
 using MedicalOffice.Application.Models.Identity;
+using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +19,7 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
     {
+
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
         services.AddTransient<IAuthService, AuthService>();

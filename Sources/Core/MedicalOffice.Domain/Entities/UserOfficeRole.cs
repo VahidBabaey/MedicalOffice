@@ -1,5 +1,4 @@
 ﻿using MedicalOffice.Domain.Common;
-using MedicalOffice.Identity.Model;
 
 namespace MedicalOffice.Domain.Entities;
 

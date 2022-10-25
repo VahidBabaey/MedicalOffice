@@ -1,10 +1,8 @@
-﻿using Identity.Services;
-using MedicalOffice.Application.Contracts.Identity;
+﻿using MedicalOffice.Application.Contracts.Identity;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Models.Identity;
 using MedicalOffice.Domain.Entities;
-using MedicalOffice.Identity.Model;
 using MedicalOffice.Infrastructure.Crypto;
 using MedicalOffice.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,8 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace MedicalOffice.Persistence;
 
@@ -21,38 +17,14 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
     {
-        //services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("MedicalOfficeConnectionString"))
         );
 
         services.AddIdentity<User, Role>()
-        .AddRoles<Role>()
         .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-        //services.AddTransient<IAuthService, AuthService>();
-
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
-
-        //services.AddAuthentication(options =>
-        //{
-        //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //})
-        //        .AddJwtBearer(o =>
-        //        {
-        //            o.TokenValidationParameters = new TokenValidationParameters
-        //            {
-        //                ValidateIssuerSigningKey = true,
-        //                ValidateIssuer = true,
-        //                ValidateAudience = true,
-        //                ValidateLifetime = true,
-        //                ClockSkew = TimeSpan.Zero,
-        //                ValidIssuer = configuration["JwtSettings:Issuer"],
-        //                ValidAudience = configuration["JwtSettings:Audience"],
-        //                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]))
-        //            };
-        //        });
 
         services.AddScoped<IOfficeRepository, OfficeRepository>();
         services.AddScoped<IPatientRepository, PatientRepository>();

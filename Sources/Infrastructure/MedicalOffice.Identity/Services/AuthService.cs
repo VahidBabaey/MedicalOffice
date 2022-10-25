@@ -3,12 +3,12 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Models.Identity;
 using MedicalOffice.Domain.Entities;
-using MedicalOffice.Identity.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using OtpNet;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,7 +22,6 @@ namespace Identity.Services
     public class AuthService : IAuthService
     {
         private readonly RoleManager<Role> _roleManager;
-        //private readonly IRoleRepository _roleRepository;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly JwtSettings _jwtSettings;
@@ -95,11 +94,17 @@ namespace Identity.Services
 
                 if (result.Succeeded)
                 {
-                    //var otherRoles = _roleManager.Roles.SingleOrDefaultAsync(r=>r.Name!="patient").Result;
-                    var defaultrole = _roleManager.FindByNameAsync("Default").Result;
-                    if (defaultrole != null)
+                    var role = _roleManager.FindByNameAsync("Patient").Result;
+                    if (role==null)
                     {
-                        IdentityResult roleresult = await _userManager.AddToRoleAsync(user, defaultrole.Name);
+                        var patientRole = await _roleManager.CreateAsync(new Role
+                        {
+
+                            Id = Guid.NewGuid(),
+                            Name = "Patient"
+                        });
+
+                        var newRole = await _userManager.AddToRoleAsync(user, "Patient");
                     }
 
                     var createdUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
@@ -123,17 +128,10 @@ namespace Identity.Services
 
         public async Task<AuthenticateionResponse> AuthenticateByOtp(AuthenticateByOtpRequest request)
         {
-            // How to generate token for that purpose?
-            // How to add a token provider?
-            // How to shit?
-
             var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
 
             if (user == null)
                 throw new Exception($"user with {request.PhoneNumber} isn't exist");
-            //return await Task.FromResult(new AuthenticateionResponse { Success = false });
-
-            //var tokenIsValid = _userManager.VerifyUserTokenAsync(user, "how-to-name?", "authenticate-by-phonenumber", request.OTP).Result;
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.OTP, false, lockoutOnFailure: false);
 
@@ -148,17 +146,43 @@ namespace Identity.Services
             {
                 Id = user.Id.ToString(),
                 UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,   
                 Email = user.Email,
                 Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken)
             };
 
             return response;
-            //return await Task.FromResult(new AuthenticateionResponse { Success = tokenIsValid });
         }
 
         public async Task<AuthenticateionResponse> AuthenticateByPassword(authenticateByPasswordRequestDTO request)
         {
-            throw new NotImplementedException();
+
+            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
+
+            if (user == null)
+                throw new Exception($"user with {request.PhoneNumber} isn't exist");
+
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception($"credencial for {request.PhoneNumber} are'nt valid");
+            }
+
+            JwtSecurityToken JwtSecurityToken = await GenerateToken(user);
+
+            AuthenticateionResponse response = new AuthenticateionResponse
+            {
+                Id = user.Id.ToString(),
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken)
+            };
+
+            return response;
         }
 
         public async Task<accountSatusResponseDTO> GetUserStatus(accountStatusRequestDTO resuest)
@@ -168,7 +192,15 @@ namespace Identity.Services
 
         public async Task<sendOtpResponseDTO> SendOtp(sendOtpRequestDTO request)
         {
-            throw new NotImplementedException();
+            string GenarateTOTP()
+            {
+                var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
+
+                var totp = new Totp(bytes, step: 300);
+
+                return totp.ComputeTotp(DateTime.UtcNow);
+            }
+                throw new NotImplementedException();
         }
 
         private async Task<JwtSecurityToken> GenerateToken(User user)

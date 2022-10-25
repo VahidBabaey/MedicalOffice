@@ -15,14 +15,23 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         _dbContext = dbContext;
     }
 
-    public async Task<Guid> AddReceptionService(Guid receptionId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, long discount, Guid discountTypeId, Guid[] users)
+    public async Task<Guid> AddReceptionService(
+        Guid receptionId,
+        Guid serviceId, 
+        int serviceCount,
+        Guid insuranceId, 
+        Guid additionalInsuranceId, 
+        long received, 
+        long discount, 
+        Guid discountTypeId, 
+        Guid[] userIds)
     {
         var reception = await _dbContext.Receptions.SingleAsync(r => r.Id == receptionId);
         var service = await _dbContext.Services.SingleAsync(s => s.Id == serviceId);
         var insurance = await _dbContext.Insurances.SingleAsync(i => i.Id == insuranceId);
         var additionalInsurance = await _dbContext.Insurances.SingleAsync(i => i.Id == additionalInsuranceId);
         var discountType = await _dbContext.DiscountTypes.SingleAsync(dt => dt.Id == discountTypeId);
-        var usersCheck = users.All(id => _dbContext.MedicalStaffs.Any(u => u.Id == id));
+        var usersCheck = userIds.All(id => _dbContext.MedicalStaffs.Any(u => u.Id == id));
         if (!usersCheck)
             throw new NullReferenceException();
 
@@ -47,7 +56,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         var addedDetail = await _dbContext.ReceptionDetails.AddAsync(detail);
 
-        foreach (var userId in users)
+        foreach (var userId in userIds)
         {
             var receptionUser = new ReceptionUser()
             {

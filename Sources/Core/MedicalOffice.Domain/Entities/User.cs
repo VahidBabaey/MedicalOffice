@@ -2,7 +2,7 @@
 using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
-namespace MedicalOffice.Identity.Model
+namespace MedicalOffice.Domain.Entities
 {
     public class User: IdentityUser<Guid>
     {
@@ -10,6 +10,9 @@ namespace MedicalOffice.Identity.Model
         {
             Id = Guid.NewGuid();
             SecurityStamp = Guid.NewGuid().ToString();
+
+            Offices=new List<Office>(); 
+            Permissions=new List<Permission>();
         }
 
         /// <summary>
@@ -40,16 +43,11 @@ namespace MedicalOffice.Identity.Model
         /// <summary>
         /// از این مدل برای برقراری ارتباط یک به چند بین کاربر و کاربر-مطب-نقش استفاده می شود
         /// </summary>
-        //public Guid RoleId { get; set; }
 
-        public ICollection<Role>? Roles { get; set; }
-
-        //public Guid? OfficeId { get; set; }
-
-        public ICollection<Office>? Offices { get; set; }
+        public ICollection<Office> Offices { get; set; }
 
         //public Guid? PermissionId { get; set; }
 
-        public ICollection<Permission>? Permissions { get; set; }
+        public ICollection<Permission> Permissions { get; set; }
     }
 }

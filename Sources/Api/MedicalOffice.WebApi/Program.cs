@@ -4,6 +4,7 @@ using MedicalOffice.Infrastructure;
 using MedicalOffice.Persistence;
 using MedicalOffice.Identity;
 using Microsoft.OpenApi.Models;
+using OtpNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,8 @@ builder.Services.AddCors(p =>
         .AllowAnyMethod()
         .AllowAnyHeader());
 });
+
+builder.Services.AddSession();
 
 var app = builder.Build();
 

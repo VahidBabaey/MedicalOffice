@@ -1,6 +1,6 @@
 ﻿using MedicalOffice.Domain.Common;
 using MedicalOffice.Domain.Entities;
-using MedicalOffice.Identity.Model;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -86,6 +86,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
         modelBuilder.Entity<User>().ToTable("Users");
         modelBuilder.Entity<Role>().ToTable("Roles");
+        modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRole");
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

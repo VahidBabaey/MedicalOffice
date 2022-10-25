@@ -1,6 +1,4 @@
-﻿using MedicalOffice.Domain.Common;
-using MedicalOffice.Identity.Model;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace MedicalOffice.Domain.Entities;
 
@@ -9,6 +7,11 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class Role : IdentityRole<Guid> // BaseDomainEntity<Guid>
 {
+    public Role()
+    {
+        UserOfficeRoles = new List<UserOfficeRole>();
+    }
+
     /// <summary>
     /// نام
     /// </summary>
@@ -17,6 +20,5 @@ public class Role : IdentityRole<Guid> // BaseDomainEntity<Guid>
     /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین نقش و کاربر-مطب-نقش استفاده می شود
     /// </summary>
-    public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
-    public ICollection<User>? Users { get; set; }
+    public ICollection<UserOfficeRole> UserOfficeRoles { get; set; }
 }
