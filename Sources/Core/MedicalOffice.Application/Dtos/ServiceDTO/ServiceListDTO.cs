@@ -1,6 +1,8 @@
-﻿namespace MedicalOffice.Application.Dtos.ServiceDTO;
+﻿using MedicalOffice.Application.Dtos.Common;
 
-public class ServiceListDTO
+namespace MedicalOffice.Application.Dtos.ServiceDTO;
+
+public class ServiceListDTO : BaseDto<Guid>
 {
     /// <summary>
     /// آیدی مطب

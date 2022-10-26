@@ -95,6 +95,15 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
     {
         return _dbContext.Set<T1>().Find(ids);
     }
+    public async virtual Task<T1?> GetByIDNoTrackingAsync(params object[] ids)
+    {
+        var entity = await _dbContext.Set<T1>().FindAsync(ids);
+        if (entity != null)
+        {
+            this._dbContext.Entry(entity).State = EntityState.Detached;
+        }
+        return entity;
+    }
 
     public IQueryable<T1> TableNoTracking => this._dbContext.Set<T1>().AsNoTracking();
 }

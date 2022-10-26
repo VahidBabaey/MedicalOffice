@@ -21,15 +21,17 @@ using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Dtos.SpecializationDTO;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 
 namespace MedicalOffice.Application.Profiles;
 
-public class MappingProfile : Profile
+public class MappingProfile : Profile 
 {
     public MappingProfile()
     {
         CreateMap<Patient, PatientDTO>().ReverseMap();
         CreateMap<Patient, UpdateAddPatientDto>().ReverseMap();
+        CreateMap<Patient, PatientListDto>().ConvertUsing(new PatientMapper());
         CreateMap<Patient, PatientListDto>().ReverseMap();
         CreateMap<User, PatientDTO>().ReverseMap();
         CreateMap<Section, SectionDTO>().ReverseMap();
@@ -50,6 +52,7 @@ public class MappingProfile : Profile
         CreateMap<Membership, MembershipDTO>().ReverseMap();
         CreateMap<Membership, MembershipListDTO>().ReverseMap();
         CreateMap<Membership, UpdateMembershipDTO>().ReverseMap();
+        CreateMap<MemberShipService, MemberShipServiceDTO>().ReverseMap();
         CreateMap<DrugShape, DrugShapeListDTO>().ReverseMap();
         CreateMap<DrugSection, DrugSectionListDTO>().ReverseMap();
         CreateMap<DrugUsage, DrugUsageListDTO>().ReverseMap();
@@ -87,5 +90,41 @@ public class MappingProfile : Profile
         CreateMap<Picture, PictureUploadDTO>().ReverseMap();
         CreateMap<Picture, AddPictureDTO>().ReverseMap();
         CreateMap<Picture, PatientPicturesDTO>().ReverseMap();
+
     }
+
+    public class PatientMapper : ITypeConverter<Patient, PatientListDto>
+    {
+        public PatientListDto Convert(Patient source, PatientListDto destination, ResolutionContext context)
+        {
+            destination = new()
+            {
+                Id = source.Id,
+                BirthDate = source.BirthDate,
+                FileNumber = source.FileNumber,
+                Mobile = source.PatientContacts.Single(p => p.IsDefault).ContactValue,
+                FatherName = source.FatherName,
+                InsuranceId = source.InsuranceId,
+                FirstName = source.FirstName,
+                LastName = source.LastName
+            };
+            return destination;
+        }
+    }
+    //public class DrugIntractionMapper : ITypeConverter<DrugIntraction, DrugIntractionListDTO>
+    //{
+
+    //    public DrugIntractionListDTO Convert(DrugIntraction source, DrugIntractionListDTO destination, ResolutionContext context)
+    //    {
+    //        destination = new();
+    //        destination.Id = source.Id;
+    //        destination.Group1 = source.Group1;
+    //        destination.Group2 = source.Group2;
+    //        destination.Method = source.Method;
+    //        destination.Effects = source.Effects;
+    //        destination.Control = source.Control;
+    //        destination.PDrugId = source.PDrugId;
+    //        destination.PDrugName = _dbContext.Drugs.Select(q => new { q.Id, q.Name }).Where(q => q.Id == source.PDrugId).FirstOrDefault().Name,
+    //    }
+    //}
 }

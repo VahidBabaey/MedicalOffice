@@ -10,5 +10,6 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Quer
 {
     public class GetAlliillnessReasonsQuery : IRequest<List<BasicInfoDetailListDTO>>
     {
+
     }
 }

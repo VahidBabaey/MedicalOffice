@@ -30,5 +30,5 @@ public class ReceptionDiscount : BaseDomainEntity<Guid>
     /// <summary>
     /// عضویت ها
     /// </summary>
-    public ICollection<Membership>? Memberships { get; set; }
+    public Membership? Membership { get; set; }
 }

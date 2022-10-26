@@ -29,12 +29,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                .WithMany(e => e.UserServiceSharePercents)
                .HasForeignKey(e => e.SectionId)
                .OnDelete(DeleteBehavior.NoAction);
-
-            builder
-                .HasMany(e => e.ReceptionUsers)
-                .WithOne(e => e.UserServiceSharePercent)
-                .HasForeignKey(e => e.UserServiceSharePercentId)
-                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

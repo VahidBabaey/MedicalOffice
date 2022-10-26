@@ -9,13 +9,18 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PatientFile.Requests.Queries
 {
-    public class GetPatientBySearchQuery : IRequest<List<PatientListDto>>
+    public class GetPatientBySearchQuery : IRequest<List<PatientListDto>> 
     {
         public ListDto Dto { get; set; } = new ListDto();
-        public string nationalcode { get; set; } = string.Empty;
-        public string filenumber { get; set; } = string.Empty;
-        public string fullname { get; set; } = string.Empty;
-        public string phonenumber { get; set; } = string.Empty;
-
+        public SearchFields searchFields { get; set; } = new SearchFields();
+        public PatientListDto SearchDTO { get; set; } = new PatientListDto();
+    }
+    public class SearchFields
+    {
+        public string NationalID { get; set; } = string.Empty;
+        public string FileNumber { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Mobile { get; set; } = string.Empty;
     }
 }

@@ -27,43 +27,76 @@ public class DrugController : Controller
     [HttpGet]
     public async Task<ActionResult<List<DrugListDTO>>> GetAll([FromQuery] ListDto dto)
     {
+
         var response = await _mediator.Send(new GetDrugQuery() { DTO = dto });
+
         return Ok(response);
         
     }
 
-    [HttpGet("drug-features")]
-    public async Task<ActionResult<List<DrugShapeListDTO>>> GetAllDrugs([FromQuery] ListDto dto)
+    [HttpGet("drug-shape")]
+    public async Task<ActionResult<List<DrugShapeListDTO>>> GetDrugsShape([FromQuery] ListDto dto)
     {
-        var response1 = await _mediator.Send(new GetDrugShapeQuery() { DTO = dto });
-        var response2 = await _mediator.Send(new GetDrugSectionQuery() { DTO = dto });
-        var response3 = await _mediator.Send(new GetDrugUsageQuery() { DTO = dto });
-        var response4 = await _mediator.Send(new GetDrugConsumptionQuery() { DTO = dto });
 
-        return Ok(response4);
+        var response = await _mediator.Send(new GetDrugShapeQuery() { DTO = dto });
+
+        return Ok(response);
+
+    }
+    [HttpGet("drug-consumption")]
+    public async Task<ActionResult<List<DrugShapeListDTO>>> GetDrugsConsumption([FromQuery] ListDto dto)
+    {
+
+        var response = await _mediator.Send(new GetDrugConsumptionQuery() { DTO = dto });
+
+        return Ok(response);
+
+    }
+    [HttpGet("drug-usage")]
+    public async Task<ActionResult<List<DrugShapeListDTO>>> GetDrugsUsage([FromQuery] ListDto dto)
+    {
+
+        var response = await _mediator.Send(new GetDrugUsageQuery() { DTO = dto });
+
+        return Ok(response);
+
+    }
+    [HttpGet("drug-section")]
+    public async Task<ActionResult<List<DrugShapeListDTO>>> GetDrugsSection([FromQuery] ListDto dto)
+    {
+
+        var response = await _mediator.Send(new GetDrugSectionQuery() { DTO = dto });
+
+        return Ok(response);
     }
 
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] DrugDTO dto)
     {
+
         var response = await _mediator.Send(new AddDrugCommand() { DTO = dto });
 
         return Ok(response);
+
     }
 
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateDrugDTO dto)
     {
+
         var response = await _mediator.Send(new EditDrugCommand() { DTO = dto });
 
         return Ok(response);
+
     }
 
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
+
         var response = await _mediator.Send(new DeleteDrugCommand() { DrugId = id });
 
         return Ok(response);
+
     }
 }

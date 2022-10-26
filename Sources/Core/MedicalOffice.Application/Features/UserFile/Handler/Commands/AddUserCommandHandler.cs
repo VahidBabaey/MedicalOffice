@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Contracts.LogicProviders;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.UserDTO.Validators;
 using MedicalOffice.Application.Features.UserFile.Request.Commands;
@@ -99,5 +100,4 @@ namespace MedicalOffice.Application.Features.UserFile.Handler.Commands
             return response;
         }
     }
-
 }

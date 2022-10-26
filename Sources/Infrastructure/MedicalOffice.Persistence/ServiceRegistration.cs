@@ -29,8 +29,7 @@ public static class ServiceRegistration
         services.AddScoped<IInsuranceRepository, InsuranceRepository>();
         services.AddScoped<ISpecializationRepository, SpecializationRepository>();
         services.AddScoped<IShiftRepository, ShiftRepository>();
-        services.AddScoped<IMembershipRepository, MembershipRepository>();
-        services.AddScoped<IMembershipServiceRepository, MemberShipServiceRepository>();
+        services.AddScoped<IMembershipRepository, MembershipRepository>();        
         services.AddScoped<IDrugRepository, DrugRepository>();
         services.AddScoped<IDrugShapeRepository, DrugShapeRepository>();
         services.AddScoped<IDrugSectionRepository, DrugSectionRepository>();
@@ -51,6 +50,7 @@ public static class ServiceRegistration
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IFormCommitmentRepository, FormCommitmentRepository>();
         services.AddScoped<IPictureRepository, PictureRepository>();
+        services.AddScoped<IMemberShipServiceRepository, MemberShipServiceRepository>();
 
         return services;
     }

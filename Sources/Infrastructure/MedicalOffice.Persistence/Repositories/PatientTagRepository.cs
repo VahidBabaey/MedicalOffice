@@ -12,6 +12,15 @@ public class PatientTagRepository : GenericRepository<PatientTag, Guid>, IPatien
     {
         _dbContext = dbContext;
     }
+    public async Task<bool> RemovePatientTag(Guid patientId)
+    {
 
+        var patientTag = await GetByIDNoTrackingAsync(patientId);
+        if (patientTag == null)
+            return false;
+        await Delete(patientId);
+        return true;
+
+    }
 
 }

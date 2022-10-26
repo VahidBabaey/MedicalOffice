@@ -16,5 +16,8 @@ public class BasicInfoDetailRepository : GenericRepository<BasicInfoDetail, Guid
     {
         return await _dbContext.BasicInfoDetail.Where(srv => srv.basicInfoId == basicInfoId).ToListAsync();
     }
-
+    public async Task<IReadOnlyList<BasicInfoDetail>> GetByBasicInfoIllnessId()
+    {
+        return await _dbContext.BasicInfoDetail.Where(srv => srv.basicInfoId == Guid.Parse("451a9dda-5efe-45cb-8754-3c51e01f9cf0")).ToListAsync();
+    }
 }

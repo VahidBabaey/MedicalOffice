@@ -6,8 +6,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
     public interface IMembershipRepository : IGenericRepository<Membership, Guid>
     {
         Task DeleteMembershipIdofServiceAsync(Guid membershipId);
-        Task<List<MembershipListDTO>> GetMembership();
-        Task<MemberShipService> InsertMembershipIdofServiceAsync(Guid serviceId, Guid membershipId);
+        Task<MemberShipService> InsertMembershipIdofServiceAsync(string tariff, Guid serviceId, Guid membershipId);
         Task<string> SearchServicesforMemberShip(Guid memid);
         Task UpdateMembershipIdofServiceAsync(Guid serviceId, Guid membershipId);
     }

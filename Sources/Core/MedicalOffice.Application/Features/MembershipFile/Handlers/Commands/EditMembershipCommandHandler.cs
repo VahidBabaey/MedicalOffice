@@ -44,18 +44,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                 response.Success = true;
                 response.Message = $"{_requestTitle} succeded";
                 response.Data.Add(new { Id = membership.Id });
-                if (request.DTO.ServiceIDs == null)
-                {
 
-                }
-                else
-                {
-                    await _repository.DeleteMembershipIdofServiceAsync(membership.Id);
-                    foreach (var serviceid in request.DTO.ServiceIDs)
-                    {
-                        await _repository.InsertMembershipIdofServiceAsync(serviceid, membership.Id);
-                    }
-                }
                 log.Type = LogType.Success;
             }
             catch (Exception error)

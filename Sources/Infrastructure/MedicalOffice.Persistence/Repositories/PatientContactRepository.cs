@@ -12,6 +12,15 @@ public class PatientContactRepository : GenericRepository<PatientContact, Guid>,
     {
         _dbContext = dbContext;
     }
+    public async Task<bool> RemovePatientContact(Guid patientId)
+    {
 
+        var patientContact = await GetByIDNoTrackingAsync(patientId);
+        if (patientContact == null)
+            return false;
+        await Delete(patientId);
+        return true;
+
+    }
 
 }

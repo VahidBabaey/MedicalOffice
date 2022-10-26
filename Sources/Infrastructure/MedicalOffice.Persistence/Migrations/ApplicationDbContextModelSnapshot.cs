@@ -22,225 +22,6 @@ namespace MedicalOffice.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.Permission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("DoctorPermissionCommitments")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DoctorPermissionForms")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DoctorPermissionLightPen")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DoctorPermissionPatientHistory")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DoctorPermissionPictures")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DoctorPermissionPrescription")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DoctorChangeOthersVisit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DoctorVisitDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DoctorVisitEdit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DoctorVisitRegistration")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("FilePermissionPatientNumber")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("FileChangeDateAdvancePayment")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("FileChangeUser")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("FileDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("FileEdit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("FileExcel")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("FileRegistration")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("FileRegistrationAdvancePayment")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsBasicInfoPermissionActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDashboardPermissionActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDoctorPermissionActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsFilePermissionActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsReceptionPermissionActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsReportPermissionActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsStorePermissionActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsTimingPermissionActive")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("OfficeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("ReceptionDateChange")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReceptionDebtRegistration")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReceptionDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReceptionEdit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReceptionReturnregistration")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReceptionShiftChange")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportDailyCash")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportDebtors")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportDeposit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportDoctorsPerformancd")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportElectronicPrescription")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportExpense")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportExpertsPerformancd")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportFinancial")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportInstallment")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportInsuranceCopies")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportInsurances")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportIntroducers")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportReturns")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportServicesProvided")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportSpecialForms")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportStaticticalVisits")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportStatuseofPatients")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportStore")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReportTimimg")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("StoreComidity")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("StoreComidityTrasportation")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("StoreConsumerRegitration")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("StoreRemittanceDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("StoreRemittanceEdit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("StoreRemittanceRegitration")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("TimingCancelation")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("TimingDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("TimingRegistration")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("TimingRegistrationforSelectedDoctors")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("UserOfficeRoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OfficeId");
-
-                    b.HasIndex("UserOfficeRoleId");
-
-                    b.ToTable("Permissiones");
-                });
-
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Allergy", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1372,6 +1153,10 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Discount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1388,14 +1173,9 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<Guid>("OfficeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ReceptionDiscountId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OfficeId");
-
-                    b.HasIndex("ReceptionDiscountId");
 
                     b.ToTable("Memberships");
                 });
@@ -1426,6 +1206,10 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.Property<Guid?>("ServiceId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Tariff")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1859,6 +1643,225 @@ namespace MedicalOffice.Persistence.Migrations
                     b.ToTable("PatientTags");
                 });
 
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("DoctorChangeOthersVisit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DoctorPermissionCommitments")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DoctorPermissionForms")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DoctorPermissionLightPen")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DoctorPermissionPatientHistory")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DoctorPermissionPictures")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DoctorPermissionPrescription")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DoctorVisitDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DoctorVisitEdit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DoctorVisitRegistration")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FileChangeDateAdvancePayment")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FileChangeUser")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FileDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FileEdit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FileExcel")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FilePermissionPatientNumber")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FileRegistration")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FileRegistrationAdvancePayment")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsBasicInfoPermissionActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDashboardPermissionActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDoctorPermissionActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFilePermissionActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsReceptionPermissionActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsReportPermissionActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsStorePermissionActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTimingPermissionActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("OfficeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("ReceptionDateChange")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReceptionDebtRegistration")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReceptionDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReceptionEdit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReceptionReturnregistration")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReceptionShiftChange")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportDailyCash")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportDebtors")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportDeposit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportDoctorsPerformancd")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportElectronicPrescription")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportExpense")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportExpertsPerformancd")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportFinancial")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportInstallment")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportInsuranceCopies")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportInsurances")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportIntroducers")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportReturns")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportServicesProvided")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportSpecialForms")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportStaticticalVisits")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportStatuseofPatients")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportStore")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReportTimimg")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("StoreComidity")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("StoreComidityTrasportation")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("StoreConsumerRegitration")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("StoreRemittanceDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("StoreRemittanceEdit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("StoreRemittanceRegitration")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("TimingCancelation")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("TimingDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("TimingRegistration")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("TimingRegistrationforSelectedDoctors")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("UserOfficeRoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("UserOfficeRoleId");
+
+                    b.ToTable("Permissiones");
+                });
+
             modelBuilder.Entity("MedicalOffice.Domain.Entities.PhysicalExam", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2040,11 +2043,11 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("FactorNo")
-                        .HasColumnType("bigint");
+                    b.Property<int>("FactorNo")
+                        .HasColumnType("int");
 
-                    b.Property<long>("FactorNoToday")
-                        .HasColumnType("bigint");
+                    b.Property<int>("FactorNoToday")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsCancelled")
                         .HasColumnType("bit");
@@ -2084,17 +2087,17 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<Guid>("ShiftId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<float>("TotalDebt")
-                        .HasColumnType("real");
+                    b.Property<decimal>("TotalDebt")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("TotalDeposit")
-                        .HasColumnType("real");
+                    b.Property<decimal>("TotalDeposit")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("TotalReceived")
-                        .HasColumnType("real");
+                    b.Property<decimal>("TotalReceived")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("TotalReceptionCost")
-                        .HasColumnType("real");
+                    b.Property<decimal>("TotalReceptionCost")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -2118,8 +2121,8 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<Guid>("AdditionalInsuranceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<float>("Cost")
-                        .HasColumnType("real");
+                    b.Property<long>("Cost")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -2127,11 +2130,11 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<float>("Debt")
-                        .HasColumnType("real");
+                    b.Property<long>("Debt")
+                        .HasColumnType("bigint");
 
-                    b.Property<float>("Deposit")
-                        .HasColumnType("real");
+                    b.Property<long>("Deposit")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("InsuranceId")
                         .HasColumnType("uniqueidentifier");
@@ -2148,11 +2151,14 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<Guid>("OfficeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<long>("Received")
+                        .HasColumnType("bigint");
+
                     b.Property<Guid?>("ReceptionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("ServiceCount")
-                        .HasColumnType("bigint");
+                    b.Property<float>("ServiceCount")
+                        .HasColumnType("real");
 
                     b.Property<Guid>("ServiceId")
                         .HasColumnType("uniqueidentifier");
@@ -2176,8 +2182,8 @@ namespace MedicalOffice.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<float>("Amount")
-                        .HasColumnType("real");
+                    b.Property<long>("Amount")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -2185,7 +2191,7 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DiscountTypeId")
+                    b.Property<Guid>("DiscountTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
@@ -2197,12 +2203,17 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("MembershipId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("ReceptionDetailId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DiscountTypeId");
+
+                    b.HasIndex("MembershipId");
 
                     b.HasIndex("ReceptionDetailId");
 
@@ -2233,10 +2244,19 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<Guid>("ReceptionDetailId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<float>("SharePercent")
+                        .HasColumnType("real");
+
+                    b.Property<decimal>("SharePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserServiceSharePercentId")
+                    b.Property<Guid>("UserOfficeRoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UserServiceSharePercentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -2244,6 +2264,8 @@ namespace MedicalOffice.Persistence.Migrations
                     b.HasIndex("ReceptionDetailId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserOfficeRoleId");
 
                     b.HasIndex("UserServiceSharePercentId");
 
@@ -2940,23 +2962,6 @@ namespace MedicalOffice.Persistence.Migrations
                     b.ToTable("UserWorkHourPrograms");
                 });
 
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.Permission", b =>
-                {
-                    b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
-                        .WithMany("Permissiones")
-                        .HasForeignKey("OfficeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MedicalOffice.Domain.Entities.UserOfficeRole", "UserOfficeRole")
-                        .WithMany("Permissiones")
-                        .HasForeignKey("UserOfficeRoleId");
-
-                    b.Navigation("Office");
-
-                    b.Navigation("UserOfficeRole");
-                });
-
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Allergy", b =>
                 {
                     b.HasOne("MedicalOffice.Domain.Entities.FDO", "FDO")
@@ -3247,13 +3252,7 @@ namespace MedicalOffice.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MedicalOffice.Domain.Entities.ReceptionDiscount", "ReceptionDiscount")
-                        .WithMany("Memberships")
-                        .HasForeignKey("ReceptionDiscountId");
-
                     b.Navigation("Office");
-
-                    b.Navigation("ReceptionDiscount");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.MemberShipService", b =>
@@ -3357,6 +3356,23 @@ namespace MedicalOffice.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.Permission", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
+                        .WithMany("Permissiones")
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MedicalOffice.Domain.Entities.UserOfficeRole", "UserOfficeRole")
+                        .WithMany("Permissiones")
+                        .HasForeignKey("UserOfficeRoleId");
+
+                    b.Navigation("Office");
+
+                    b.Navigation("UserOfficeRole");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.PhysicalExam", b =>
@@ -3482,7 +3498,12 @@ namespace MedicalOffice.Persistence.Migrations
                     b.HasOne("MedicalOffice.Domain.Entities.DiscountType", "DiscountType")
                         .WithMany("ReceptionDiscounts")
                         .HasForeignKey("DiscountTypeId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Membership", "Membership")
+                        .WithMany("ReceptionDiscounts")
+                        .HasForeignKey("MembershipId");
 
                     b.HasOne("MedicalOffice.Domain.Entities.ReceptionDetail", "ReceptionDetail")
                         .WithMany("ReceptionDiscounts")
@@ -3490,6 +3511,8 @@ namespace MedicalOffice.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("DiscountType");
+
+                    b.Navigation("Membership");
 
                     b.Navigation("ReceptionDetail");
                 });
@@ -3502,23 +3525,23 @@ namespace MedicalOffice.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
+                    b.HasOne("MedicalOffice.Domain.Entities.User", null)
                         .WithMany("ReceptionUsers")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("MedicalOffice.Domain.Entities.UserOfficeRole", "UserOfficeRole")
+                        .WithMany("ReceptionUsers")
+                        .HasForeignKey("UserOfficeRoleId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("MedicalOffice.Domain.Entities.UserServiceSharePercent", "UserServiceSharePercent")
+                    b.HasOne("MedicalOffice.Domain.Entities.UserServiceSharePercent", null)
                         .WithMany("ReceptionUsers")
-                        .HasForeignKey("UserServiceSharePercentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("UserServiceSharePercentId");
 
                     b.Navigation("ReceptionDetail");
 
-                    b.Navigation("User");
-
-                    b.Navigation("UserServiceSharePercent");
+                    b.Navigation("UserOfficeRole");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.RoutineMedication", b =>
@@ -3840,12 +3863,12 @@ namespace MedicalOffice.Persistence.Migrations
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Membership", b =>
                 {
                     b.Navigation("MemberShipServices");
+
+                    b.Navigation("ReceptionDiscounts");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Office", b =>
                 {
-                    b.Navigation("Permissiones");
-
                     b.Navigation("DiscountTypes");
 
                     b.Navigation("Insurances");
@@ -3853,6 +3876,8 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("KMultipliers");
 
                     b.Navigation("Patients");
+
+                    b.Navigation("Permissiones");
 
                     b.Navigation("Picture");
 
@@ -3928,11 +3953,6 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("ReceptionUsers");
                 });
 
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionDiscount", b =>
-                {
-                    b.Navigation("Memberships");
-                });
-
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Role", b =>
                 {
                     b.Navigation("UserOfficeRoles");
@@ -4000,6 +4020,8 @@ namespace MedicalOffice.Persistence.Migrations
             modelBuilder.Entity("MedicalOffice.Domain.Entities.UserOfficeRole", b =>
                 {
                     b.Navigation("Permissiones");
+
+                    b.Navigation("ReceptionUsers");
 
                     b.Navigation("UserServiceSharePercents");
                 });

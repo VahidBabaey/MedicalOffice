@@ -52,4 +52,6 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
     Task DeleteReceptionService(Guid receptionDetailId);
     Task<int> GetFactorNo();
     Task<int> GetFactorNoToday();
+
+    Task<decimal> GetReceptionTotal(Guid id);
 }

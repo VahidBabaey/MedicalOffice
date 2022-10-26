@@ -14,7 +14,7 @@ public class PatientIllnessFormRepository : GenericRepository<PatientIllnessForm
     }
     public async Task<IReadOnlyList<BasicInfoDetail>> GetByBasicInfoId()
     {
-        return await _dbContext.BasicInfoDetail.Where(srv => srv.basicInfoId == Guid.Parse("01ebc675-fd48-4273-9d7b-13804e4c490c")).ToListAsync();
+        return await _dbContext.BasicInfoDetail.Where(srv => srv.basicInfoId == Guid.Parse("451a9dda-5efe-45cb-8754-3c51e01f9cf0")).ToListAsync();
     }
     public async Task<IReadOnlyList<PatientIllnessForm>> GetByPatientId(Guid patientId)
     {

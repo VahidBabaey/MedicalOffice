@@ -3,6 +3,7 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.PatientDTO;
+using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.PatientFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Domain.Entities;
@@ -36,7 +37,9 @@ public class GetPatientBySearchQueryHandler : IRequestHandler<GetPatientBySearch
         List<PatientListDto> result = new();
         try
         {
-            await _repository.SearchPateint(request.nationalcode, request.phonenumber, request.filenumber, request.fullname);
+            var pateint = await _repository.SearchPateint(request.Dto.Skip, request.Dto.Take,request.searchFields.FirstName, request.searchFields.LastName, request.searchFields.NationalID, request.searchFields.Mobile, request.searchFields.FileNumber);
+
+            result = _mapper.Map<List<PatientListDto>>(pateint);
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

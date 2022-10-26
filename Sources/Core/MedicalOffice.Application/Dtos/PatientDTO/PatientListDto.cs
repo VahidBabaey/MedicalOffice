@@ -9,9 +9,13 @@ public class PatientListDto : BaseDto<Guid>
     /// </summary>
     public string FileNumber { get; set; } = string.Empty;
     /// <summary>
-    /// نام و نام خانوادگی
+    /// نام  
     /// </summary>
-    public string FullName { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+    /// <summary>
+    ///  نام خانوادگی
+    /// </summary>
+    public string LastName { get; set; } = string.Empty;
     /// <summary>
     /// کد ملی
     /// </summary>

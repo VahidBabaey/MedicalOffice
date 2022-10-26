@@ -13,14 +13,14 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     {
         _dbContext = dbContext;
     }
-    public async Task<string> GetId (Guid id)
+    public Guid GetId (Guid id)
     {
-        var userOfficeRole = await _dbContext.UserOfficeRoles.Where(p => p.UserId == id).FirstOrDefaultAsync();
+        var userOfficeRole =  _dbContext.UserOfficeRoles.Select(p => new {p.Id, p.UserId}).Where(p => p.UserId == id).FirstOrDefault().Id;
 
         if (userOfficeRole == null)
             throw new NullReferenceException("UserOfficeRole Id Not Found!");
 
-        string idUser = userOfficeRole.Id.ToString();
+        Guid idUser = userOfficeRole;
 
         return idUser;
     }
