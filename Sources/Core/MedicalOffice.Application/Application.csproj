@@ -24,8 +24,6 @@
   <ItemGroup>
     <Folder Include="Features\BasicInfoFile\Handlers\Commands\" />
     <Folder Include="Features\BasicInfoFile\Requests\Commands\" />
-    <Folder Include="Features\MemberShipServiceFile\Handlers\Queries\" />
-    <Folder Include="Features\MemberShipServiceFile\Requests\Queries\" />
     <Folder Include="Features\RoleFile\Handlers\Commands\" />
     <Folder Include="Features\RoleFile\Requests\Commands\" />
   </ItemGroup>

@@ -35,9 +35,9 @@ public class PatientController : Controller
         return Ok(response);
     }
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateAddPatientDto dto, Guid patientId)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateAddPatientDto dto)
     {
-        var response = await _mediator.Send(new EditPatientCommand() { Dto = dto , PatientId = patientId});
+        var response = await _mediator.Send(new EditPatientCommand() { Dto = dto });
 
         return Ok(response);
     }

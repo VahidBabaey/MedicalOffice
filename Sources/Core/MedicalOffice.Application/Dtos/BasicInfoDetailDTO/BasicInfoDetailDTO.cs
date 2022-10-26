@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO
 {
-    public class BasicInfoDetailDTO : BaseDto<Guid>
+    public class BasicInfoDetailDTO
     {
         /// <summary>
         /// نام جزئیات

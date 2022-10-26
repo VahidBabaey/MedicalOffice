@@ -20,10 +20,5 @@ public class MembershipDTO
     /// تخفیف
     /// </summary>
     public string Discount { get; set; } = string.Empty;
-    /// <summary>
-    /// آیدی لیست سرویس ها
-    /// </summary>
-    public Guid[]? ServiceIDs  { get; set; }
-
 
 }

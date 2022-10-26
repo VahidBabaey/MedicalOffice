@@ -32,6 +32,15 @@ public class MembershipController : Controller
 
         return Ok(response);
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> RemoveAsync(Guid id)
+    {
+        var response = await _mediator.Send(new DeleteMembershipCommand() { MembershipId = id });
+
+        return Ok(response);
+    }
+
     [HttpGet]
     public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
     {
@@ -39,6 +48,7 @@ public class MembershipController : Controller
 
         return Ok(response);
     }
+
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateMembershipDTO dto)
     {
@@ -46,4 +56,5 @@ public class MembershipController : Controller
 
         return Ok(response);
     }
+
 }

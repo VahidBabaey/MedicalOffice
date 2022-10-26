@@ -18,12 +18,12 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Quer
 
     public class GetAlliillnessReasonsQueryHandler : IRequestHandler<GetAlliillnessReasonsQuery, List<BasicInfoDetailListDTO>>
     {
-        private readonly IPatientIllnessFormRepository _repository;
+        private readonly IBasicInfoDetailRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAlliillnessReasonsQueryHandler(IPatientIllnessFormRepository repository, IMapper mapper, ILogger logger)
+        public GetAlliillnessReasonsQueryHandler(IBasicInfoDetailRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -39,7 +39,7 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Quer
 
             try
             {
-                var illnessreasons = await _repository.GetByBasicInfoId();
+                var illnessreasons = await _repository.GetByBasicInfoIllnessId();
 
                 result = _mapper.Map<List<BasicInfoDetailListDTO>>(illnessreasons);
 

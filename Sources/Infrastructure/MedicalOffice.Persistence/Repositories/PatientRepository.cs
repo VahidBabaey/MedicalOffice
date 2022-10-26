@@ -14,7 +14,6 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
     private readonly IPatientAddressRepository _addressRepository;
     private readonly IPatientTagRepository _tagRepository;
     private readonly IMapper _mapper;
-    List<PatientListDto> patientList = null;
     private readonly ApplicationDbContext _dbContext;
 
     public PatientRepository(IMapper mapper, IPatientContactRepository contactRepository, IPatientAddressRepository addressRepository, IPatientTagRepository tagRepository, ApplicationDbContext dbContext) : base(dbContext)
@@ -73,32 +72,80 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
 
         return patientTag;
     }
-    public async Task<List<PatientListDto>> SearchPateint(int skip, int take, string firstName, string lastName, string nationalCode, string phoneNumber, string fileNumber)
+    public async Task<List<PatientListDto>> SearchPateint(int skip,
+                                                          int take,
+                                                          string firstName,
+                                                          string lastName,
+                                                          string nationalCode,
+                                                          string phoneNumber,
+                                                          string fileNumber)
     {
-
-        List<PatientListDto> patientList = new();
-        var list = await _dbContext.Patients
-            .Where(
-                    p =>
-                    (firstName != "" ? p.FirstName.Contains(firstName) : true) &&
-                    (lastName != "" ? p.LastName.Contains(lastName) : true) &&
-                    (nationalCode != "" ? p.NationalID.StartsWith(nationalCode) : true) &&
-                    (fileNumber != "" ? p.FileNumber.StartsWith(fileNumber) : true)
-                  )
-            .Include(p => p.PatientContacts)
-            .Where(
-            x => (phoneNumber != "" ? x.PatientContacts.Where(y => y.ContactValue == phoneNumber).Any() : true))
-            .ToListAsync();
-
-        foreach (var item in list)
+        try
         {
-            patientList.Add(_mapper.Map<PatientListDto>(list));
+            List<PatientListDto> patientList = new();
+            var list = await _dbContext.Patients
+                .Where(
+                        p =>
+                        p.FirstName.Contains(firstName) &&
+                        p.LastName.Contains(lastName) &&
+                        p.NationalID.StartsWith(nationalCode) &&
+                        p.FileNumber.StartsWith(fileNumber)
+                      )
+                .Include(p => p.PatientContacts)
+                .Where(x => phoneNumber != "" ? x.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber) : true)
+                .ToListAsync();
+
+            foreach (var item in list)
+            {
+                PatientListDto patientListDto = new()
+                {
+                    Id = item.Id,
+                    BirthDate = item.BirthDate,
+                    FileNumber = item.FileNumber,
+                    Mobile = item.PatientContacts.First().ContactValue,
+                    FatherName = item.FatherName,
+                    InsuranceId = item.InsuranceId,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName
+                };
+                patientList.Add(patientListDto);
+            }
+
+            return patientList
+                .Skip(skip)
+                .Take(take)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+
+            throw;
         }
 
-        return patientList
-            .Skip(skip)
-            .Take(take)
-            .ToList();
 
+    }
+    public async Task<bool> RemovePatientContact(Guid patientId)
+    {
+        var patientContact = await _contactRepository.GetByIDNoTrackingAsync(patientId);
+        if (patientContact == null)
+            return false;
+        await _contactRepository.Delete(patientId);
+        return true;
+    }
+    public async Task<bool> RemovePatientAddress(Guid patientId)
+    {
+        var patientAddress = await _addressRepository.GetByIDNoTrackingAsync(patientId);
+        if (patientAddress == null)
+            return false;
+        await _addressRepository.Delete(patientId);
+        return true;
+    }
+    public async Task<bool> RemovePatientTag(Guid patientId)
+    {
+        var patientTag = await _tagRepository.GetByIDNoTrackingAsync(patientId);
+        if (patientTag == null)
+            return false;
+        await _tagRepository.Delete(patientId);
+        return true;
     }
 }

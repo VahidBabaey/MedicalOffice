@@ -53,14 +53,14 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
             {
                 try
                 {
-                    var id = _repository.GetId(Guid.Parse(request.userid)).ToString();
+                    var id = _repository.GetId(Guid.Parse(request.userid));
                     if (id == null)
                     {
                         throw new NullReferenceException("User Not found");
                     }
                     else
                     {
-                    request.DTO.UserOfficeRoleId = Guid.Parse(id);
+                    request.DTO.UserOfficeRoleId = id;
                     if (request.DTO.IsReceptionPermissionActive == false)
                     {
                         request.DTO.ReceptionDateChange = false;

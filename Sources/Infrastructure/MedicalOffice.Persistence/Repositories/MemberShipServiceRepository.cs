@@ -1,18 +1,17 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
 
-public class MemberShipServiceRepository : GenericRepository<MemberShipService, Guid>, IMembershipServiceRepository
+public class MemberShipServiceRepository : GenericRepository<MemberShipService, Guid>, IMemberShipServiceRepository
 {
-    private readonly IMembershipServiceRepository _reposytory;
     private readonly ApplicationDbContext _dbContext;
 
-    public MemberShipServiceRepository(IMembershipServiceRepository reposytory, ApplicationDbContext dbContext) : base(dbContext)
+    public MemberShipServiceRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
-        _reposytory = reposytory;
     }
     public async Task<MemberShipService> InsertServiceToMemberShipAsync(string discount, Guid serviceId, Guid memberShipId)
     {
@@ -26,8 +25,44 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
         if (memberShipService == null)
             throw new Exception();
 
-        await _reposytory.Add(memberShipService);
+        await Add(memberShipService);
+
         return memberShipService;
     }
 
+    public async Task<MemberShipService> UpdateServiceOfMemberShipAsync(string discount, Guid serviceId, Guid memberShipId)
+    {
+        MemberShipService memberShipService = new MemberShipService()
+        {
+            ServiceId = serviceId,
+            MembershipId = memberShipId,
+            Discount = discount
+        };
+
+        if (memberShipService == null)
+            throw new Exception();
+
+        await Update(memberShipService);
+
+        return memberShipService;
+    }
+
+    public async Task<List<ServicesOfMemeberShipListDTO>> GetAllServicesOfMemberShip(Guid memberShipId)
+    {
+        List<ServicesOfMemeberShipListDTO> servicesOfMemeberShipListDTOs = new List<ServicesOfMemeberShipListDTO>();
+
+        var services = await _dbContext.Services.Include(p => p.MemberShipServices).Where(x => (x.MemberShipServices.Where(y => y.MembershipId == memberShipId).Any())).ToListAsync();
+
+        foreach (var item in services)
+        {
+            ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
+            {
+                ServicesName = item.Name,
+                Discount = item.MemberShipServices.Select(p => new { p.Discount, p.MembershipId }).Where(p => p.MembershipId == memberShipId).FirstOrDefault().Discount
+            };
+
+        servicesOfMemeberShipListDTOs.Add(servicesOfMemeberShipDTO);
+        }
+        return servicesOfMemeberShipListDTOs;
+    }
 }

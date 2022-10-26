@@ -21,9 +21,6 @@ using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Dtos.SpecializationDTO;
 using MedicalOffice.Domain.Entities;
-using System.Security.Permissions;
-using System.Data.Entity;
-using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 
 namespace MedicalOffice.Application.Profiles;
@@ -34,6 +31,7 @@ public class MappingProfile : Profile
     {
         CreateMap<Patient, PatientDTO>().ReverseMap();
         CreateMap<Patient, UpdateAddPatientDto>().ReverseMap();
+        CreateMap<Patient, PatientListDto>().ConvertUsing(new PatientMapper());
         CreateMap<Patient, PatientListDto>().ReverseMap();
         CreateMap<User, PatientDTO>().ReverseMap();
         CreateMap<Section, SectionDTO>().ReverseMap();
@@ -92,22 +90,24 @@ public class MappingProfile : Profile
         CreateMap<Picture, PictureUploadDTO>().ReverseMap();
         CreateMap<Picture, AddPictureDTO>().ReverseMap();
         CreateMap<Picture, PatientPicturesDTO>().ReverseMap();
-        CreateMap<Patient, PatientListDto>().ConvertUsing(new PatientMapper());
+
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDto>
     {
         public PatientListDto Convert(Patient source, PatientListDto destination, ResolutionContext context)
         {
-            destination = new();
-            destination.Id = source.Id;
-            destination.BirthDate = source.BirthDate;
-            destination.FileNumber = source.FileNumber;
-            destination.Mobile = source.PatientContacts.Single(p => p.IsDefault).ContactValue;
-            destination.FatherName = source.FatherName;
-            destination.InsuranceId = source.InsuranceId;
-            destination.FirstName = source.FirstName;
-            destination.LastName = source.LastName;
+            destination = new()
+            {
+                Id = source.Id,
+                BirthDate = source.BirthDate,
+                FileNumber = source.FileNumber,
+                Mobile = source.PatientContacts.Single(p => p.IsDefault).ContactValue,
+                FatherName = source.FatherName,
+                InsuranceId = source.InsuranceId,
+                FirstName = source.FirstName,
+                LastName = source.LastName
+            };
             return destination;
         }
     }
