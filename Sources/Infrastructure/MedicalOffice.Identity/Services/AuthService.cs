@@ -6,7 +6,6 @@ using MedicalOffice.Application.Models.Identity;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -24,15 +23,15 @@ namespace Identity.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IOfficeRepository _OfficeRepository;
+        private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly JwtSettings _jwtSettings;
 
-        public AuthService(IOfficeRepository officeRepo, RoleManager<Role> roleManager, UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<User> signInManager)
+        public AuthService(IUserOfficeRoleRepository userOfficeRoleRepository, RoleManager<Role> roleManager, UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<User> signInManager)
         {
-            _OfficeRepository = officeRepo;
+            _userOfficeRoleRepository = userOfficeRoleRepository;
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -42,14 +41,13 @@ namespace Identity.Services
         public async Task<RegistrationResponseDTO> Register(RegistrationRequestDTO request)
         {
             var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
-            //var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
             if (existingUser != null)
             {
                 throw new Exception($"PhoneNumber '{request.PhoneNumber}' already exists.");
             }
 
-            //var roleId = Environment.PatientRoleId
+            //TODO: var roleId = Environment.PatientRoleId
             var user = new User
             {
                 PhoneNumber = request.PhoneNumber,
@@ -82,8 +80,6 @@ namespace Identity.Services
                     }
 
                     var createdUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
-
-
 
                     return new RegistrationResponseDTO
                     {
@@ -181,8 +177,7 @@ namespace Identity.Services
                     accountStatus.PasswordOption = false;
                 }
                 accountStatus.PasswordOption = user.PasswordHash == String.Empty ? false : true;
-            } 
-
+            }
             return accountStatus;
         }
 
@@ -207,13 +202,20 @@ namespace Identity.Services
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
-            //var offices = await _OfficeRepository.Get();
+            var offices = await _userOfficeRoleRepository.GetAll();
 
             var roleClaims = new List<Claim>();
-
             for (int i = 0; i < roles.Count; i++)
             {
                 roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+            }
+
+            var principal = await TransformAsync(new ClaimsPrincipal(), "office");
+
+            var officeClaims = new List<Claim>();
+            for (int i = 0; i < offices.Count; i++)
+            {
+                officeClaims.Add(new Claim("office", offices[i].OfficeId.ToString()));
             }
 
             var claims = new[]
@@ -223,7 +225,8 @@ namespace Identity.Services
                 new Claim(JwtRegisteredClaimNames.Email, user.Email)
             }
             .Union(userClaims)
-            .Union(roleClaims);
+            .Union(roleClaims)
+            .Union(officeClaims);
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
@@ -248,13 +251,26 @@ namespace Identity.Services
 
         private bool VerifyTotp(string phoneNumber, string code)
         {
-            var totp = new Totp(Encoding.Default.GetBytes(phoneNumber), step: 120);
+            var totp = new Totp(Encoding.Default.GetBytes(phoneNumber), step: 30 * 60);
 
             long unixTimestamp = (int)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
 
             var isVerify = totp.VerifyTotp(code, out unixTimestamp);
 
             return isVerify;
+        }
+
+        public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal, string type)
+        {
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity();
+            var claimType = type;
+            if (!principal.HasClaim(claim => claim.Type == claimType))
+            {
+                claimsIdentity.AddClaim(new Claim(claimType, type));
+            }
+
+            principal.AddIdentity(claimsIdentity);
+            return Task.FromResult(principal);
         }
     }
 }

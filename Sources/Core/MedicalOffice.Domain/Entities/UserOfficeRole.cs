@@ -8,6 +8,11 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class UserOfficeRole : BaseDomainEntity<Guid>
 {
+
+    public UserOfficeRole()
+    {
+        OfficeId = Guid.NewGuid();  
+    }
     public User? User { get; set; }
     /// <summary>
     /// آیدی کاربر
@@ -20,7 +25,7 @@ public class UserOfficeRole : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی مطب یا مرکز درمانی
     /// </summary>
-    public Guid? OfficeId { get; set; }
+    public Guid OfficeId { get; set; }
     /// <summary>
     /// نقش
     /// </summary>
