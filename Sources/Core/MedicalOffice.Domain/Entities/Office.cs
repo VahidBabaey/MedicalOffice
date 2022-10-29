@@ -71,4 +71,9 @@ public class Office : BaseDomainEntity<Guid>
     /// دسترسی ها
     /// </summary>
     public ICollection<Picture>? Picture { get; set; }
+
+    /// <summary>
+    /// برای ایجاد ارتباط چند به چند بین  کاربر و مطب ها
+    /// </summary>
+    public ICollection<User> User{ get; set; }=new HashSet<User>();
 }

@@ -8,6 +8,6 @@ namespace MedicalOffice.Application.Dtos.Identity
 {
     public class accountStatusRequestDTO
     {
-        public string? PhoneNember { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }

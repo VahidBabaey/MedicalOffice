@@ -23,13 +23,13 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpGet("status")]
-        public async Task<ActionResult<accountSatusResponseDTO>> GetUserStatus(accountStatusRequestDTO request)
+        public async Task<ActionResult<accountSatusResponseDTO>> GetUserStatus([FromQuery] accountStatusRequestDTO request)
         {
             return Ok(await _authenticationService.GetUserStatus(request));
         }
 
         [HttpPost("send-otp")]
-        public async Task<ActionResult<string>> SendOtp(sendOtpRequestDTO request) 
+        public async Task<ActionResult<string>> SendOtp(sendOtpRequestDTO request)
         {
             return Ok(await _authenticationService.SendOtp(request));
         }

@@ -10,9 +10,6 @@ namespace MedicalOffice.Domain.Entities
         {
             Id = Guid.NewGuid();
             SecurityStamp = Guid.NewGuid().ToString();
-
-            Offices=new List<Office>(); 
-            Permissions=new List<Permission>();
         }
 
         /// <summary>
@@ -41,13 +38,18 @@ namespace MedicalOffice.Domain.Entities
         public string NationalID { get; set; } = string.Empty;
 
         /// <summary>
-        /// از این مدل برای برقراری ارتباط یک به چند بین کاربر و کاربر-مطب-نقش استفاده می شود
+        /// وضعیت کاربر
         /// </summary>
+        public UserStatus Status{ get; set; }
 
-        public ICollection<Office> Offices { get; set; }
+        /// <summary>
+        /// برای ارتباط چند به چند بین کاربران و مطب ها
+        /// </summary>
+        public ICollection<Office> Office { get; set; } = new List<Office>();
 
-        //public Guid? PermissionId { get; set; }
-
-        public ICollection<Permission> Permissions { get; set; }
+        /// <summary>
+        /// برای ایجاد ارتباط چند به چند بین دسترسی ها و کاربران  
+        /// </summary>
+        public ICollection<Permission> Permissions { get; set; }= new List<Permission>();   
     }
 }

@@ -28,7 +28,8 @@ namespace MedicalOffice.Domain.Entities
         /// </summary>
         public Guid? UserOfficeRoleId { get; set; }
 
-
+        public ICollection<User> User { get; set; } = new List<User>();   
+        
         ///// <summary>
         ///// فعال یا غیرفعال بودن پذیرش
         ///// </summary>
