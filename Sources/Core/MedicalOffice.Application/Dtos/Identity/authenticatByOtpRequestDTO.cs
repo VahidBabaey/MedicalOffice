@@ -10,9 +10,9 @@ namespace MedicalOffice.Application.Dtos.Identity
     public class AuthenticateByOtpRequest
     {
         [Required]
-        public string? PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }=string.Empty;
 
         [Required]
-        public string? OTP { get; set; }
+        public string Totp { get; set; } = string.Empty;
     }
 }

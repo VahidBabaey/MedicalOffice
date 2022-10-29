@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,13 +24,15 @@ namespace Identity.Services
 {
     public class AuthService : IAuthService
     {
+        private readonly IOfficeRepository _OfficeRepository;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly JwtSettings _jwtSettings;
 
-        public AuthService(RoleManager<Role> roleManager, UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<User> signInManager)
+        public AuthService(IOfficeRepository officeRepo, RoleManager<Role> roleManager, UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<User> signInManager)
         {
+            _OfficeRepository = officeRepo;
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -71,7 +74,6 @@ namespace Identity.Services
                     {
                         var patientRole = await _roleManager.CreateAsync(new Role
                         {
-
                             Id = Guid.NewGuid(),
                             Name = "Patient"
                         });
@@ -80,6 +82,8 @@ namespace Identity.Services
                     }
 
                     var createdUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
+
+
 
                     return new RegistrationResponseDTO
                     {
@@ -105,11 +109,11 @@ namespace Identity.Services
             if (user == null)
                 throw new Exception($"user with {request.PhoneNumber} isn't exist");
 
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, request.OTP, false, lockoutOnFailure: false);
+            var isVerify = VerifyTotp(request.PhoneNumber, request.Totp);
 
-            if (!result.Succeeded)
+            if (!isVerify)
             {
-                throw new Exception($"credencial for {request.PhoneNumber} are'nt valid");
+                throw new Exception($"Totp for {request.PhoneNumber} are'nt valid");
             }
 
             JwtSecurityToken JwtSecurityToken = await GenerateToken(user);
@@ -129,7 +133,6 @@ namespace Identity.Services
 
         public async Task<AuthenticateionResponse> AuthenticateByPassword(authenticateByPasswordRequestDTO request)
         {
-
             var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
 
             if (user == null)
@@ -179,20 +182,33 @@ namespace Identity.Services
                 }
                 accountStatus.PasswordOption = user.PasswordHash == String.Empty ? false : true;
             } 
-            return accountStatus;
 
+            return accountStatus;
         }
 
         public Task<sendOtpResponseDTO> SendOtp(sendOtpRequestDTO request)
         {
+            try
+            {
+                var totp = GenerateTotp(request.PhoneNumber);
 
+                return Task.FromResult(new sendOtpResponseDTO
+                {
+                    Message = $"the code is {totp}",
+                });
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
         }
 
         private async Task<JwtSecurityToken> GenerateToken(User user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
-            //var permissions = await _userManager.Users
+            //var offices = await _OfficeRepository.Get();
+
             var roleClaims = new List<Claim>();
 
             for (int i = 0; i < roles.Count; i++)
@@ -221,5 +237,24 @@ namespace Identity.Services
             return jwtSecurityToken;
         }
 
+        private string GenerateTotp(string phoneNamber)
+        {
+            var bytes = Encoding.Default.GetBytes(phoneNamber);
+
+            var totp = new Totp(bytes, step: 30 * 60);
+
+            return totp.ComputeTotp(DateTime.UtcNow);
+        }
+
+        private bool VerifyTotp(string phoneNumber, string code)
+        {
+            var totp = new Totp(Encoding.Default.GetBytes(phoneNumber), step: 120);
+
+            long unixTimestamp = (int)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
+
+            var isVerify = totp.VerifyTotp(code, out unixTimestamp);
+
+            return isVerify;
+        }
     }
 }

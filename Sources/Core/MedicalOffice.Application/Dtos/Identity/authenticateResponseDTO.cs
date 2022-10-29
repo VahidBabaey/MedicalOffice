@@ -9,8 +9,6 @@ namespace MedicalOffice.Application.Dtos.Identity
 {
     public class AuthenticateionResponse
     {
-        public bool Success { get; set; } = false;
-
         public string? Id { get; set; }
 
         public string? UserName { get; set; }

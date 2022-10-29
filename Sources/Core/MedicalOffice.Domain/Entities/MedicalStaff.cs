@@ -83,5 +83,6 @@ namespace MedicalOffice.Domain.Entities
         /// وقت دهی ها
         /// </summary>
         public ICollection<Appointment>? Appointments { get; set; }
+
     }
 }
