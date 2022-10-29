@@ -52,8 +52,6 @@ builder.Services.AddCors(p =>
         .AllowAnyHeader());
 });
 
-builder.Services.AddSession();
-
 var app = builder.Build();
 
 app.UseAuthentication();
