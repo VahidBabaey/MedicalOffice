@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Domain.Enums
 {
-    public enum UserStatus
+    public enum UserActivationStatus
     {
         /// <summary>
         /// فعال

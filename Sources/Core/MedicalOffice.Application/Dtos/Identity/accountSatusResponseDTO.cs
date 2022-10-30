@@ -4,7 +4,7 @@ namespace MedicalOffice.Application.Dtos.Identity
 {
     public class accountSatusResponseDTO
     {
-        public UserStatus Status { get; set; } = UserStatus.active;
+        public UserActivationStatus ActivationStatus { get; set; } = UserActivationStatus.active;
 
         public bool Exist { get; set; } = true;
 

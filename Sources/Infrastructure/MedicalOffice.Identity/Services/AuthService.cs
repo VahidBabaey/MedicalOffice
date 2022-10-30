@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using OtpNet;
 using System;
 using System.Collections.Generic;
@@ -23,14 +24,16 @@ namespace Identity.Services
 {
     public class AuthService : IAuthService
     {
+        private readonly IOfficeRepository _officeRepository;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly JwtSettings _jwtSettings;
 
-        public AuthService(IUserOfficeRoleRepository userOfficeRoleRepository, RoleManager<Role> roleManager, UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<User> signInManager)
+        public AuthService(IOfficeRepository officeRepository, IUserOfficeRoleRepository userOfficeRoleRepository, RoleManager<Role> roleManager, UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<User> signInManager)
         {
+            _officeRepository = officeRepository;
             _userOfficeRoleRepository = userOfficeRoleRepository;
             _roleManager = roleManager;
             _userManager = userManager;
@@ -56,7 +59,7 @@ namespace Identity.Services
                 LastName = request.LastName,
                 UserName = request.UserName,
                 EmailConfirmed = true,
-                Status = UserStatus.active
+                ActivationStatus = UserActivationStatus.active
             };
 
             var existingEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -68,18 +71,34 @@ namespace Identity.Services
                 if (result.Succeeded)
                 {
                     var role = _roleManager.FindByNameAsync("Patient").Result;
+                    var patientRole = new Role
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Patient"
+                    };
+
                     if (role == null)
                     {
-                        var patientRole = await _roleManager.CreateAsync(new Role
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = "Patient"
-                        });
+                        await _roleManager.CreateAsync(patientRole);
 
                         var newRole = await _userManager.AddToRoleAsync(user, "Patient");
+
                     }
 
+                    var office = new Office
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "selakTeb"
+                    };
+
+                    await _officeRepository.Add(office);
                     var createdUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
+                    var userOfficeRole = await _userOfficeRoleRepository.Add(new UserOfficeRole
+                    {
+                        UserId = createdUser?.Id,
+                        OfficeId = office.Id,
+                        RoleId = patientRole.Id
+                    });
 
                     return new RegistrationResponseDTO
                     {
@@ -164,14 +183,14 @@ namespace Identity.Services
             if (user == null)
             {
                 accountStatus.Exist = false;
-                accountStatus.Status = UserStatus.inactive;
+                accountStatus.ActivationStatus = UserActivationStatus.inactive;
                 accountStatus.OtpOption = false;
                 accountStatus.PasswordOption = false;
             }
             else
             {
-                accountStatus.Status = user.Status;
-                if (user.Status == UserStatus.inactive)
+                accountStatus.ActivationStatus = user.ActivationStatus;
+                if (user.ActivationStatus == UserActivationStatus.inactive)
                 {
                     accountStatus.OtpOption = false;
                     accountStatus.PasswordOption = false;
@@ -202,7 +221,7 @@ namespace Identity.Services
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
-            var offices = await _userOfficeRoleRepository.GetAll();
+            List<UserOfficeRole> userOfficeRoles = await _userOfficeRoleRepository.GetByUserId(user.Id);
 
             var roleClaims = new List<Claim>();
             for (int i = 0; i < roles.Count; i++)
@@ -210,19 +229,17 @@ namespace Identity.Services
                 roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
             }
 
-            var principal = await TransformAsync(new ClaimsPrincipal(), "office");
-
             var officeClaims = new List<Claim>();
-            for (int i = 0; i < offices.Count; i++)
+            for (int i = 0; i < userOfficeRoles.Count; i++)
             {
-                officeClaims.Add(new Claim("office", offices[i].OfficeId.ToString()));
+                officeClaims.Add(new Claim("office", userOfficeRoles[i].OfficeId.ToString()));
             }
 
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email)
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
             }
             .Union(userClaims)
             .Union(roleClaims)

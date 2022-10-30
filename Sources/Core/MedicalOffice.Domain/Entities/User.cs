@@ -40,7 +40,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// وضعیت کاربر
         /// </summary>
-        public UserStatus Status{ get; set; }
+        public UserActivationStatus ActivationStatus{ get; set; }
 
         /// <summary>
         /// برای ارتباط چند به چند بین کاربران و مطب ها
