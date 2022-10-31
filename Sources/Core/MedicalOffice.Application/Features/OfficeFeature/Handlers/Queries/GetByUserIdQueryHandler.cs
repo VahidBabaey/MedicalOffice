@@ -55,8 +55,7 @@ namespace MedicalOffice.Application.Features.Office.Handlers.Queries
             {
                 try
                 {
-                    var offices = new List<Office>();
-                    //offices = await _repository.GetByUserId(new Guid(request.Dto.UserId));
+                    var offices = await _repository.GetByUserId(new Guid(request.Dto.UserId));
                     //response.Data = _mapper.Map<List<OfficeDTO>>(offices);
                 }
                 catch (Exception)

@@ -262,7 +262,8 @@ namespace Identity.Services
         //    var primativeClaims = token.Claims;
 
         //    //TODO: a permissionUserOffice should be create 
-        //    List<UserOfficeRole> permissions = await _userOfficeRoleRepository.GetByUserId(new Guid(userId));
+        //    List<UserOfficeRole> permissions = await _userOfficeRoleRepo
+        //    sitory.GetByUserId(new Guid(userId));
         //    var permissionClaims = new List<Claim>();
         //    for (int i = 0; i < permissions.Count; i++)
         //    {
