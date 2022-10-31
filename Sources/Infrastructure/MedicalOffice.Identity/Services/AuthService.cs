@@ -220,20 +220,20 @@ namespace Identity.Services
         private async Task<JwtSecurityToken> GenerateToken(User user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
+            
             var roles = await _userManager.GetRolesAsync(user);
-            List<UserOfficeRole> userOfficeRoles = await _userOfficeRoleRepository.GetByUserId(user.Id);
-
             var roleClaims = new List<Claim>();
             for (int i = 0; i < roles.Count; i++)
             {
                 roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
             }
 
-            var officeClaims = new List<Claim>();
-            for (int i = 0; i < userOfficeRoles.Count; i++)
-            {
-                officeClaims.Add(new Claim("office", userOfficeRoles[i].OfficeId.ToString()));
-            }
+            //List<UserOfficeRole> userOfficeRoles = await _userOfficeRoleRepository.GetByUserId(user.Id);
+            //var officeClaims = new List<Claim>();
+            //for (int i = 0; i < userOfficeRoles.Count; i++)
+            //{
+            //    officeClaims.Add(new Claim("userOfficeRole", userOfficeRoles[i].OfficeId.ToString()));
+            //}
 
             var claims = new[]
             {
@@ -242,8 +242,8 @@ namespace Identity.Services
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
             }
             .Union(userClaims)
-            .Union(roleClaims)
-            .Union(officeClaims);
+            .Union(roleClaims);
+            //.Union(officeClaims);
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
@@ -256,6 +256,37 @@ namespace Identity.Services
                 signingCredentials: signingCredentials);
             return jwtSecurityToken;
         }
+
+        //private async Task<JwtSecurityToken> GenerateTokenForSecondaryLogin(JwtSecurityToken token, string userId, string officeId)
+        //{
+        //    var primativeClaims = token.Claims;
+
+        //    //TODO: a permissionUserOffice should be create 
+        //    List<UserOfficeRole> permissions = await _userOfficeRoleRepository.GetByUserId(new Guid(userId));
+        //    var permissionClaims = new List<Claim>();
+        //    for (int i = 0; i < permissions.Count; i++)
+        //    {
+        //        permissionClaims.Add(new Claim("permission", permissions[i].OfficeId.ToString()));
+        //    }
+
+        //    var claims = new[]
+        //    {
+        //        new Claim("officeId",officeId)
+        //    }
+        //    .Union(permissionClaims)
+        //    .Union(primativeClaims);
+
+        //    var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
+        //    var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+        //    var jwtSecurityToken = new JwtSecurityToken(
+        //        issuer: _jwtSettings.Issuer,
+        //        audience: _jwtSettings.Audience,
+        //        claims: claims,
+        //        expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+        //        signingCredentials: signingCredentials);
+        //    return jwtSecurityToken;
+        //}
 
         private string GenerateTotp(string phoneNamber)
         {

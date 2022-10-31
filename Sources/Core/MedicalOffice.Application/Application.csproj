@@ -35,6 +35,8 @@
   <ItemGroup>
     <Folder Include="Features\BasicInfoFile\Handlers\Commands\" />
     <Folder Include="Features\BasicInfoFile\Requests\Commands\" />
+    <Folder Include="Features\OfficeFeature\Handlers\Commands\" />
+    <Folder Include="Features\OfficeFeature\Requests\Commands\" />
     <Folder Include="Features\RoleFile\Handlers\Commands\" />
     <Folder Include="Features\RoleFile\Requests\Commands\" />
   </ItemGroup>
