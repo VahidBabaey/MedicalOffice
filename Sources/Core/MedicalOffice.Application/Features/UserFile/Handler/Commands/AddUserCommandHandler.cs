@@ -59,7 +59,7 @@ namespace MedicalOffice.Application.Features.UserFile.Handler.Commands
                 {
                     var passwordHash = await _cryptoServiceProvider.GetHash(request.DTO.PasswordHash);
                     var User = _mapper.Map<MedicalStaff>(request.DTO);
-                    User.PasswordHash = passwordHash;
+                    //User.PasswordHash = passwordHash;
                     User = await _repository.Add(User);
 
 

@@ -11,6 +11,7 @@ namespace MedicalOffice.Domain.Entities
 {
     public class MedicalStaff : BaseDomainEntity<Guid>
     {
+        public User User { get; set; } = new();
         /// <summary>
         /// مطب
         /// </summary>
@@ -42,7 +43,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// عنوان
         /// </summary>
-        public DoctorTopic? DoctorTopic { get; set; }
+        public Title? Title { get; set; }
         /// <summary>
         /// تخصص
         /// </summary>
@@ -54,15 +55,8 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// شماره تلفن
         /// </summary>
-        public string Mobile { get; set; } = string.Empty;
-        /// <summary>
-        /// شناسه کاربر
-        /// </summary>
-        public string Code { get; set; } = string.Empty;
-        /// <summary>
-        /// پسورد
-        /// </summary>
-        public string PasswordHash { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+
         /// <summary>
         /// برنامه کادر درمان
         /// </summary>

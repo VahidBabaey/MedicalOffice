@@ -23,24 +23,9 @@ namespace MedicalOffice.Domain.Entities
         public string LastName { get; set; } = string.Empty;
 
         /// <summary>
-        /// جنسیت
-        /// </summary>
-        public Gender? Gender { get; set; }
-
-        /// <summary>
-        /// تاریخ تولد
-        /// </summary>
-        public string BirthDate { get; set; } = string.Empty;
-
-        /// <summary>
         /// کد ملی
         /// </summary>
         public string NationalID { get; set; } = string.Empty;
-
-        /// <summary>
-        /// وضعیت کاربر
-        /// </summary>
-        public UserActivationStatus ActivationStatus{ get; set; }
 
         /// <summary>
         /// برای ارتباط چند به چند بین کاربران و مطب ها

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Contracts.Identity;
+using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Models.Identity;
@@ -24,17 +25,15 @@ namespace Identity.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IOfficeRepository _officeRepository;
-        private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
+        private readonly ITokenGenerator _tokenGenerator;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly JwtSettings _jwtSettings;
 
-        public AuthService(IOfficeRepository officeRepository, IUserOfficeRoleRepository userOfficeRoleRepository, RoleManager<Role> roleManager, UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<User> signInManager)
+        public AuthService(RoleManager<Role> roleManager, UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<User> signInManager, ITokenGenerator tokenGenerator)
         {
-            _officeRepository = officeRepository;
-            _userOfficeRoleRepository = userOfficeRoleRepository;
+            _tokenGenerator = tokenGenerator;
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -54,66 +53,40 @@ namespace Identity.Services
             var user = new User
             {
                 PhoneNumber = request.PhoneNumber,
-                Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-                UserName = request.UserName,
-                EmailConfirmed = true,
-                ActivationStatus = UserActivationStatus.active
+                LockoutEnabled = false,
             };
 
-            var existingEmail = await _userManager.FindByEmailAsync(request.Email);
+            var result = await _userManager.CreateAsync(user);
 
-            if (existingEmail == null)
+            if (result.Succeeded)
             {
-                var result = await _userManager.CreateAsync(user, request.Password);
-
-                if (result.Succeeded)
+                var patientRole = new Role
                 {
-                    var role = _roleManager.FindByNameAsync("Patient").Result;
-                    var patientRole = new Role
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "Patient"
-                    };
+                    Id = Guid.NewGuid(),
+                    Name = "Patient"
+                };
 
-                    if (role == null)
-                    {
-                        await _roleManager.CreateAsync(patientRole);
-
-                        var newRole = await _userManager.AddToRoleAsync(user, "Patient");
-
-                    }
-
-                    var office = new Office
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "selakTeb"
-                    };
-
-                    await _officeRepository.Add(office);
-                    var createdUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
-                    var userOfficeRole = await _userOfficeRoleRepository.Add(new UserOfficeRole
-                    {
-                        UserId = createdUser?.Id,
-                        OfficeId = office.Id,
-                        RoleId = patientRole.Id
-                    });
-
-                    return new RegistrationResponseDTO
-                    {
-                        UserId = createdUser?.Id.ToString()
-                    };
-                }
-                else
+                var role = _roleManager.FindByNameAsync("Patient").Result;
+                if (role == null)
                 {
-                    var errors = string.Join(",", result.Errors.Select(x => $"{x.Code} - {x.Description}"));
-                    throw new Exception(errors);
+                    await _roleManager.CreateAsync(patientRole);
+
+                    var newRole = await _userManager.AddToRoleAsync(user, "Patient");
                 }
+
+                var createdUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
+
+                return new RegistrationResponseDTO
+                {
+                    UserId = createdUser?.Id.ToString()
+                };
             }
             else
             {
-                throw new Exception($"UserName {request.Email} already exists.");
+                var errors = string.Join(",", result.Errors.Select(x => $"{x.Code} - {x.Description}"));
+                throw new Exception(errors);
             }
         }
 
@@ -131,7 +104,7 @@ namespace Identity.Services
                 throw new Exception($"Totp for {request.PhoneNumber} are'nt valid");
             }
 
-            JwtSecurityToken JwtSecurityToken = await GenerateToken(user);
+            JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user);
 
             AuthenticateionResponse response = new AuthenticateionResponse
             {
@@ -139,7 +112,6 @@ namespace Identity.Services
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
                 Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken)
             };
 
@@ -160,7 +132,7 @@ namespace Identity.Services
                 throw new Exception($"credencial for {request.PhoneNumber} are'nt valid");
             }
 
-            JwtSecurityToken JwtSecurityToken = await GenerateToken(user);
+            JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user);
 
             AuthenticateionResponse response = new AuthenticateionResponse
             {
@@ -168,7 +140,6 @@ namespace Identity.Services
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
                 Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken)
             };
 
@@ -183,19 +154,19 @@ namespace Identity.Services
             if (user == null)
             {
                 accountStatus.Exist = false;
-                accountStatus.ActivationStatus = UserActivationStatus.inactive;
-                accountStatus.OtpOption = false;
+                accountStatus.LockoutEnabled = false;
+                accountStatus.OtpOption = true;
                 accountStatus.PasswordOption = false;
             }
             else
             {
-                accountStatus.ActivationStatus = user.ActivationStatus;
-                if (user.ActivationStatus == UserActivationStatus.inactive)
+                accountStatus.LockoutEnabled = user.LockoutEnabled;
+                if (user.LockoutEnabled == true)
                 {
                     accountStatus.OtpOption = false;
                     accountStatus.PasswordOption = false;
                 }
-                accountStatus.PasswordOption = user.PasswordHash == String.Empty ? false : true;
+                accountStatus.PasswordOption = user.PasswordHash == string.Empty ? false : true;
             }
             return accountStatus;
         }
@@ -217,65 +188,33 @@ namespace Identity.Services
             }
         }
 
-        private async Task<JwtSecurityToken> GenerateToken(User user)
-        {
-            var userClaims = await _userManager.GetClaimsAsync(user);
-            
-            var roles = await _userManager.GetRolesAsync(user);
-            var roleClaims = new List<Claim>();
-            for (int i = 0; i < roles.Count; i++)
-            {
-                roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
-            }
-
-            //List<UserOfficeRole> userOfficeRoles = await _userOfficeRoleRepository.GetByUserId(user.Id);
-            //var officeClaims = new List<Claim>();
-            //for (int i = 0; i < userOfficeRoles.Count; i++)
-            //{
-            //    officeClaims.Add(new Claim("userOfficeRole", userOfficeRoles[i].OfficeId.ToString()));
-            //}
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            }
-            .Union(userClaims)
-            .Union(roleClaims);
-            //.Union(officeClaims);
-
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
-            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-            var jwtSecurityToken = new JwtSecurityToken(
-                issuer: _jwtSettings.Issuer,
-                audience: _jwtSettings.Audience,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
-                signingCredentials: signingCredentials);
-            return jwtSecurityToken;
-        }
-
-        //private async Task<JwtSecurityToken> GenerateTokenForSecondaryLogin(JwtSecurityToken token, string userId, string officeId)
+        //private async Task<JwtSecurityToken> GenerateToken(User user)
         //{
-        //    var primativeClaims = token.Claims;
+        //    var userClaims = await _userManager.GetClaimsAsync(user);
 
-        //    //TODO: a permissionUserOffice should be create 
-        //    List<UserOfficeRole> permissions = await _userOfficeRoleRepo
-        //    sitory.GetByUserId(new Guid(userId));
-        //    var permissionClaims = new List<Claim>();
-        //    for (int i = 0; i < permissions.Count; i++)
+        //    var roles = await _userManager.GetRolesAsync(user);
+        //    var roleClaims = new List<Claim>();
+        //    for (int i = 0; i < roles.Count; i++)
         //    {
-        //        permissionClaims.Add(new Claim("permission", permissions[i].OfficeId.ToString()));
+        //        roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
         //    }
+
+        //    //List<UserOfficeRole> userOfficeRoles = await _userOfficeRoleRepository.GetByUserId(user.Id);
+        //    //var officeClaims = new List<Claim>();
+        //    //for (int i = 0; i < userOfficeRoles.Count; i++)
+        //    //{
+        //    //    officeClaims.Add(new Claim("userOfficeRole", userOfficeRoles[i].OfficeId.ToString()));
+        //    //}
 
         //    var claims = new[]
         //    {
-        //        new Claim("officeId",officeId)
+        //        new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
+        //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        //        new Claim(JwtRegisteredClaimNames.Email, user.Email),
         //    }
-        //    .Union(permissionClaims)
-        //    .Union(primativeClaims);
+        //    .Union(userClaims)
+        //    .Union(roleClaims);
+        //    //.Union(officeClaims);
 
         //    var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
         //    var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
@@ -293,14 +232,14 @@ namespace Identity.Services
         {
             var bytes = Encoding.Default.GetBytes(phoneNamber);
 
-            var totp = new Totp(bytes, step: 30 * 60);
+            var totp = new Totp(bytes, step: 30*60*1000);
 
             return totp.ComputeTotp(DateTime.UtcNow);
         }
 
         private bool VerifyTotp(string phoneNumber, string code)
         {
-            var totp = new Totp(Encoding.Default.GetBytes(phoneNumber), step: 30 * 60);
+            var totp = new Totp(Encoding.Default.GetBytes(phoneNumber), step: 30*60*1000);
 
             long unixTimestamp = (int)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
 

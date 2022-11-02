@@ -37,7 +37,7 @@ namespace MedicalOffice.Application.Dtos.UserDTO
         /// <summary>
         /// عنوان
         /// </summary>
-        public DoctorTopic? DoctorTopic { get; set; }
+        public Title? DoctorTopic { get; set; }
         /// <summary>
         /// آیدی تخصص
         /// </summary>
