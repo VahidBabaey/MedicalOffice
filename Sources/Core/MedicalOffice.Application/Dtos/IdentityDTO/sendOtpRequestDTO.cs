@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class sendOtpRequestDTO
+    public class sendTotpDTO
     {
         public string PhoneNumber { get; set; } = string.Empty;
-
-        public string Email { get; set; } = string.Empty;
     }
 }

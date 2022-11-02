@@ -2,8 +2,8 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.UserDTO;
-using MedicalOffice.Application.Features.UserFile.Request.Queries;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
+using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Models;
 using System;
 using System.Collections.Generic;
@@ -11,17 +11,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.UserFile.Handler.Queries
+namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
 {
 
-    public class GetAllUserQueryHandler : IRequestHandler<GetAllUsers, List<MedicalStaffListDTO>>
+    public class GetAllMedicalStaffQueryHandler : IRequestHandler<GetAllMedicalStaffs, List<MedicalStaffListDTO>>
     {
-        private readonly IUserRepository _repository;
+        private readonly IMedicalStaffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllUserQueryHandler(IUserRepository repository, IMapper mapper, ILogger logger)
+        public GetAllMedicalStaffQueryHandler(IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -29,16 +29,16 @@ namespace MedicalOffice.Application.Features.UserFile.Handler.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<MedicalStaffListDTO>> Handle(GetAllUsers request, CancellationToken cancellationToken)
+        public async Task<List<MedicalStaffListDTO>> Handle(GetAllMedicalStaffs request, CancellationToken cancellationToken)
         {
             List<MedicalStaffListDTO> result = new();
             Log log = new();
 
             try
             {
-                var Users = await _repository.GetAllUsers();
+                var MedicalStaffs = await _repository.GetAllMedicalStaffs();
 
-                result = _mapper.Map<List<MedicalStaffListDTO>>(Users);
+                result = _mapper.Map<List<MedicalStaffListDTO>>(MedicalStaffs);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

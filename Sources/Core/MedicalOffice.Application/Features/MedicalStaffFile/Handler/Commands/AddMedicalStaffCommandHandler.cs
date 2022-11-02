@@ -2,8 +2,8 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.UserDTO.Validators;
-using MedicalOffice.Application.Features.UserFile.Request.Commands;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO.Validators;
+using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
@@ -13,18 +13,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.UserFile.Handler.Commands
+namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 {
 
-    public class AddUserCommandHandler : IRequestHandler<AddUserCommand, BaseCommandResponse>
+    public class AddMedicalStaffCommandHandler : IRequestHandler<AddMedicalStaffCommand, BaseCommandResponse>
     {
-        private readonly IUserRepository _repository;
+        private readonly IMedicalStaffRepository _repository;
         private readonly ICryptoServiceProvider _cryptoServiceProvider;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddUserCommandHandler(IUserRepository repository, IMapper mapper, ILogger logger, ICryptoServiceProvider cryptoServiceProvider)
+        public AddMedicalStaffCommandHandler(IMedicalStaffRepository repository, IMapper mapper, ILogger logger, ICryptoServiceProvider cryptoServiceProvider)
         {
             _repository = repository;
             _cryptoServiceProvider = cryptoServiceProvider;
@@ -33,11 +33,11 @@ namespace MedicalOffice.Application.Features.UserFile.Handler.Commands
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(AddUserCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(AddMedicalStaffCommand request, CancellationToken cancellationToken)
         {
             BaseCommandResponse response = new();
 
-            AddUserValidator validator = new();
+            AddMedicalStaffValidator validator = new();
 
             Log log = new();
 
@@ -58,14 +58,14 @@ namespace MedicalOffice.Application.Features.UserFile.Handler.Commands
                 try
                 {
                     var passwordHash = await _cryptoServiceProvider.GetHash(request.DTO.PasswordHash);
-                    var User = _mapper.Map<MedicalStaff>(request.DTO);
-                    //User.PasswordHash = passwordHash;
-                    User = await _repository.Add(User);
+                    var MedicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
+                    //MedicalStaff.PasswordHash = passwordHash;
+                    MedicalStaff = await _repository.Add(MedicalStaff);
 
 
                     response.Success = true;
                     response.Message = $"{_requestTitle} succeded";
-                    response.Data.Add(new { Id = User.Id });
+                    response.Data.Add(new { Id = MedicalStaff.Id });
 
                     if (request.DTO.RoleIds == null)
                     {
@@ -75,7 +75,7 @@ namespace MedicalOffice.Application.Features.UserFile.Handler.Commands
                     {
                         foreach (var roleid in request.DTO.RoleIds)
                         {
-                            await _repository.InsertToUserOfficeRole(roleid, User.Id);
+                            await _repository.InsertToUserOfficeRole(roleid, MedicalStaff.Id);
                         }
                     }
 

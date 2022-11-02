@@ -8,6 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\MedicalStaffFile\Handlers\**" />
+    <Compile Remove="Features\MedicalStaffFile\Requests\**" />
+    <EmbeddedResource Remove="Features\MedicalStaffFile\Handlers\**" />
+    <EmbeddedResource Remove="Features\MedicalStaffFile\Requests\**" />
+    <None Remove="Features\MedicalStaffFile\Handlers\**" />
+    <None Remove="Features\MedicalStaffFile\Requests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.2" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
@@ -35,10 +44,12 @@
   <ItemGroup>
     <Folder Include="Features\BasicInfoFile\Handlers\Commands\" />
     <Folder Include="Features\BasicInfoFile\Requests\Commands\" />
+    <Folder Include="Features\IdentityFile\Handlers\Queries\" />
+    <Folder Include="Features\IdentityFile\Requsets\Queries\" />
     <Folder Include="Features\OfficeFeature\Handlers\Commands\" />
     <Folder Include="Features\OfficeFeature\Requests\Commands\" />
     <Folder Include="Features\RoleFile\Handlers\Commands\" />
-    <Folder Include="Features\RoleFile\Requests\Commands\" />
+	<Folder Include="Features\RoleFile\Requests\Commands\" />
   </ItemGroup>
 
 </Project>

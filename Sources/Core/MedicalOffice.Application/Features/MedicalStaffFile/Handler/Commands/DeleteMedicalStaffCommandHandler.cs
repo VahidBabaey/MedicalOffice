@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Features.UserFile.Request.Commands;
+using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using System;
@@ -11,17 +11,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.UserFile.Handler.Commands
+namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 {
 
-    public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, BaseCommandResponse>
+    public class DeleteMedicalStaffCommandHandler : IRequestHandler<DeleteMedicalStaffCommand, BaseCommandResponse>
     {
-        private readonly IUserRepository _repository;
+        private readonly IMedicalStaffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public DeleteUserCommandHandler(IPatientContactRepository repositorycontact, IPatientAddressRepository repositoryaddress, IPatientTagRepository repositorytag, IUserRepository repository, IMapper mapper, ILogger logger)
+        public DeleteMedicalStaffCommandHandler(IPatientContactRepository repositorycontact, IPatientAddressRepository repositoryaddress, IPatientTagRepository repositorytag, IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -29,7 +29,7 @@ namespace MedicalOffice.Application.Features.UserFile.Handler.Commands
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(DeleteMedicalStaffCommand request, CancellationToken cancellationToken)
         {
             BaseCommandResponse response = new();
             Log log = new();

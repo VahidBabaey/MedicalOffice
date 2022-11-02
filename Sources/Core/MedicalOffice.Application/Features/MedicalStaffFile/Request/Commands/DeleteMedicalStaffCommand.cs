@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.UserFile.Request.Commands
+namespace MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands
 {
-    public class DeleteUserCommand : IRequest<BaseCommandResponse>
+    public class DeleteMedicalStaffCommand : IRequest<BaseCommandResponse>
     {
         public Guid UserId { get; set; }
     }

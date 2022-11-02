@@ -10,11 +10,11 @@ namespace MedicalOffice.Application.Contracts.Identity
 {
     public interface IAuthService
     {
-        Task<RegistrationResponseDTO> Register(RegistrationRequestDTO request);
+        //Task<RegistrationResponseDTO> Register(RegisterUserDTO request);
 
         Task<accountSatusResponseDTO> GetUserStatus([FromQuery] accountStatusRequestDTO resuest);
 
-        Task<sendOtpResponseDTO> SendOtp(sendOtpRequestDTO request);
+        Task<sendOtpResponseDTO> SendOtp(sendTotpDTO request);
 
         Task<AuthenticateionResponse> AuthenticateByOtp(AuthenticateByOtpRequest request);
 

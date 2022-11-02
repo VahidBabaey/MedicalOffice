@@ -57,7 +57,6 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
 
                     basicinfodetail = await _repository.Add(basicinfodetail);
 
-                    response.Success = true;
                     response.Message = $"{_requestTitle} succeded";
                     response.Data.Add(new { Id = basicinfodetail.Id });
 

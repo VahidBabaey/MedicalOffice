@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.UserDTO
+namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
 {
     public class MedicalStaffNameListDTO : BaseDto<Guid>
     {

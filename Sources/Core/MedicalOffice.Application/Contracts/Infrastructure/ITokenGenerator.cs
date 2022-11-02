@@ -10,6 +10,6 @@ namespace MedicalOffice.Application.Contracts.Infrastructure
 {
     public interface ITokenGenerator
     {
-        async Task<JwtSecurityToken> GenerateToken(User user);
+        Task<JwtSecurityToken> GenerateToken(User user);
     }
 }

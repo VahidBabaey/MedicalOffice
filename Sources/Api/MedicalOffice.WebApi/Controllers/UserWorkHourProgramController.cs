@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.UserDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.UserWorkHoursProgramFileDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
-using MedicalOffice.Application.Features.UserFile.Request.Commands;
-using MedicalOffice.Application.Features.UserFile.Request.Queries;
+using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
+using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Commands;
 using MedicalOffice.Application.Features.UserWorkHoursProgram.Requests.Commands;
 using MedicalOffice.Application.Features.UserWorkHoursProgram.Requests.Queries;

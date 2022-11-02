@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.ExperimentDTO.Validators;
+using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Features.Experiment.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;

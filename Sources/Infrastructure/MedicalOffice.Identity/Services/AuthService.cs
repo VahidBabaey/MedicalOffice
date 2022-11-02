@@ -25,69 +25,20 @@ namespace Identity.Services
 {
     public class AuthService : IAuthService
     {
+        private readonly ITotpHandler _totp;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly JwtSettings _jwtSettings;
 
-        public AuthService(RoleManager<Role> roleManager, UserManager<User> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<User> signInManager, ITokenGenerator tokenGenerator)
+        public AuthService(RoleManager<Role> roleManager, UserManager<User> userManager,
+            SignInManager<User> signInManager, ITokenGenerator tokenGenerator, ITotpHandler totp)
         {
             _tokenGenerator = tokenGenerator;
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
-            _jwtSettings = jwtSettings.Value;
-        }
-
-        public async Task<RegistrationResponseDTO> Register(RegistrationRequestDTO request)
-        {
-            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
-
-            if (existingUser != null)
-            {
-                throw new Exception($"PhoneNumber '{request.PhoneNumber}' already exists.");
-            }
-
-            //TODO: var roleId = Environment.PatientRoleId
-            var user = new User
-            {
-                PhoneNumber = request.PhoneNumber,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                LockoutEnabled = false,
-            };
-
-            var result = await _userManager.CreateAsync(user);
-
-            if (result.Succeeded)
-            {
-                var patientRole = new Role
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Patient"
-                };
-
-                var role = _roleManager.FindByNameAsync("Patient").Result;
-                if (role == null)
-                {
-                    await _roleManager.CreateAsync(patientRole);
-
-                    var newRole = await _userManager.AddToRoleAsync(user, "Patient");
-                }
-
-                var createdUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
-
-                return new RegistrationResponseDTO
-                {
-                    UserId = createdUser?.Id.ToString()
-                };
-            }
-            else
-            {
-                var errors = string.Join(",", result.Errors.Select(x => $"{x.Code} - {x.Description}"));
-                throw new Exception(errors);
-            }
+            _totp = totp;
         }
 
         public async Task<AuthenticateionResponse> AuthenticateByOtp(AuthenticateByOtpRequest request)
@@ -97,11 +48,11 @@ namespace Identity.Services
             if (user == null)
                 throw new Exception($"user with {request.PhoneNumber} isn't exist");
 
-            var isVerify = VerifyTotp(request.PhoneNumber, request.Totp);
+            var isVerify = _totp.Verify(request.PhoneNumber, request.Totp);
 
             if (!isVerify)
             {
-                throw new Exception($"Totp for {request.PhoneNumber} are'nt valid");
+                throw new Exception($"TotpHandler for {request.PhoneNumber} are'nt valid");
             }
 
             JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user);
@@ -171,11 +122,11 @@ namespace Identity.Services
             return accountStatus;
         }
 
-        public Task<sendOtpResponseDTO> SendOtp(sendOtpRequestDTO request)
+        public Task<sendOtpResponseDTO> SendOtp(sendTotpDTO request)
         {
             try
             {
-                var totp = GenerateTotp(request.PhoneNumber);
+                var totp = _totp.Generate(request.PhoneNumber);
 
                 return Task.FromResult(new sendOtpResponseDTO
                 {
@@ -186,66 +137,6 @@ namespace Identity.Services
             {
                 throw new Exception($"{exception}");
             }
-        }
-
-        //private async Task<JwtSecurityToken> GenerateToken(User user)
-        //{
-        //    var userClaims = await _userManager.GetClaimsAsync(user);
-
-        //    var roles = await _userManager.GetRolesAsync(user);
-        //    var roleClaims = new List<Claim>();
-        //    for (int i = 0; i < roles.Count; i++)
-        //    {
-        //        roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
-        //    }
-
-        //    //List<UserOfficeRole> userOfficeRoles = await _userOfficeRoleRepository.GetByUserId(user.Id);
-        //    //var officeClaims = new List<Claim>();
-        //    //for (int i = 0; i < userOfficeRoles.Count; i++)
-        //    //{
-        //    //    officeClaims.Add(new Claim("userOfficeRole", userOfficeRoles[i].OfficeId.ToString()));
-        //    //}
-
-        //    var claims = new[]
-        //    {
-        //        new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
-        //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        //        new Claim(JwtRegisteredClaimNames.Email, user.Email),
-        //    }
-        //    .Union(userClaims)
-        //    .Union(roleClaims);
-        //    //.Union(officeClaims);
-
-        //    var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
-        //    var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-        //    var jwtSecurityToken = new JwtSecurityToken(
-        //        issuer: _jwtSettings.Issuer,
-        //        audience: _jwtSettings.Audience,
-        //        claims: claims,
-        //        expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
-        //        signingCredentials: signingCredentials);
-        //    return jwtSecurityToken;
-        //}
-
-        private string GenerateTotp(string phoneNamber)
-        {
-            var bytes = Encoding.Default.GetBytes(phoneNamber);
-
-            var totp = new Totp(bytes, step: 30*60*1000);
-
-            return totp.ComputeTotp(DateTime.UtcNow);
-        }
-
-        private bool VerifyTotp(string phoneNumber, string code)
-        {
-            var totp = new Totp(Encoding.Default.GetBytes(phoneNumber), step: 30*60*1000);
-
-            long unixTimestamp = (int)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
-
-            var isVerify = totp.VerifyTotp(code, out unixTimestamp);
-
-            return isVerify;
         }
 
         public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal, string type)

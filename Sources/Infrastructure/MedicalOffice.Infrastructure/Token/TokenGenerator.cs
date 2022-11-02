@@ -1,7 +1,13 @@
-﻿using MedicalOffice.Application.Contracts.Infrastructure;
+﻿using MedicalOffice.Application.Contracts.Identity;
+using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Models.Identity;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Infrastructure.Crypto;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -39,7 +45,6 @@ namespace MedicalOffice.Infrastructure.Token
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
             }
             .Union(userClaims)
             .Union(roleClaims);

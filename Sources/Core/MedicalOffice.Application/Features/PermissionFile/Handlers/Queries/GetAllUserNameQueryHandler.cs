@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.UserDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using System;
@@ -16,12 +16,12 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
 
     public class GetAllUserNameQueryHandler : IRequestHandler<GetAllUsersName, List<MedicalStaffNameListDTO>>
     {
-        private readonly IUserRepository _repository;
+        private readonly IMedicalStaffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllUserNameQueryHandler(IUserRepository repository, IMapper mapper, ILogger logger)
+        public GetAllUserNameQueryHandler(IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;

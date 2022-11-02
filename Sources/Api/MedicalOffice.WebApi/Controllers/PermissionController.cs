@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.PermissionDTO;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.UserDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Commands;

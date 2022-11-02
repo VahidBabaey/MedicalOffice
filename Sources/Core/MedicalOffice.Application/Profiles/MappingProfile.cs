@@ -7,7 +7,7 @@ using MedicalOffice.Application.Dtos.DrugIntractionDTO;
 using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Dtos.FormCommitmentDTO;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
-using MedicalOffice.Application.Dtos.UserDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.UserWorkHoursProgramFileDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.PatientDTO;
@@ -21,6 +21,7 @@ using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Dtos.SpecializationDTO;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Application.Dtos.Identity;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -87,5 +88,6 @@ public class MappingProfile : Profile
         CreateMap<Picture, PictureUploadDTO>().ReverseMap();
         CreateMap<Picture, AddPictureDTO>().ReverseMap();
         CreateMap<Picture, PatientPicturesDTO>().ReverseMap();
+        CreateMap<User, RegisterUserDTO>().ReverseMap();
     }
 }

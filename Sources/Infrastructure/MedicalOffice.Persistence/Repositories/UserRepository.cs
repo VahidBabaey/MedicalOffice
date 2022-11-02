@@ -1,11 +1,11 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.UserDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
 
-public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IUserRepository
+public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMedicalStaffRepository
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -57,7 +57,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IUs
         }
 
     }
-    public async Task<IEnumerable<MedicalStaffListDTO>> GetAllUsers()
+    public async Task<IEnumerable<MedicalStaffListDTO>> GetAllMedicalStaffs()
     {
         var _list = await _dbContext.MedicalStaffs.Select(p => new MedicalStaffListDTO
         {
