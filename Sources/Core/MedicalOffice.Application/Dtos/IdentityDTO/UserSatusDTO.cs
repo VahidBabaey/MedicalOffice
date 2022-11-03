@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class accountSatusResponseDTO
+    public class UserStatusDTO
     {
         public bool LockoutEnabled { get; set; } = false;
 

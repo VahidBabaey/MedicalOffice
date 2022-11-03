@@ -12,9 +12,9 @@ namespace MedicalOffice.Application.Contracts.Identity
     {
         //Task<RegistrationResponseDTO> Register(RegisterUserDTO request);
 
-        Task<accountSatusResponseDTO> GetUserStatus([FromQuery] accountStatusRequestDTO resuest);
+        //Task<UserStatusDTO> GetUserStatus([FromQuery] accountStatusRequestDTO resuest);
 
-        Task<sendOtpResponseDTO> SendOtp(sendTotpDTO request);
+        //Task<sendOtpResponseDTO> SendOtp(PhoneNumberDTO request);
 
         Task<AuthenticateionResponse> AuthenticateByOtp(AuthenticateByOtpRequest request);
 

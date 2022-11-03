@@ -29,12 +29,12 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
         public async Task<BaseCommandResponse> Handle(SendTotpCommand request, CancellationToken cancellationToken)
         {
             BaseCommandResponse response = new();
-            SendTotpValidator validator = new();
+            PhoneNumberValidator validator = new();
             Log log = new Log();
 
             try
             {
-                var validationResult = await validator.ValidateAsync(request.Dto, cancellationToken);
+                var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
                 if (!validationResult.IsValid)
                 {
                     response.Success = false;
@@ -44,7 +44,7 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
                     log.Type = LogType.Error;
                 }
 
-                var totp = _totpHandler.Generate(request.Dto.PhoneNumber);
+                var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
 
                 response.Success = true;
                 response.Message = $"{_requestTitle} succeded";

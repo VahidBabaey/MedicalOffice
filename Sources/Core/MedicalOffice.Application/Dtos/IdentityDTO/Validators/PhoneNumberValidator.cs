@@ -3,9 +3,9 @@ using MedicalOffice.Application.Dtos.Identity;
 
 namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
 {
-    public class SendTotpValidator: AbstractValidator<sendTotpDTO>
+    public class PhoneNumberValidator: AbstractValidator<PhoneNumberDTO>
     {
-        public SendTotpValidator()
+        public PhoneNumberValidator()
         {
 
         }

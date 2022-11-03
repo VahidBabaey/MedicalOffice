@@ -97,47 +97,47 @@ namespace Identity.Services
             return response;
         }
 
-        public async Task<accountSatusResponseDTO> GetUserStatus(accountStatusRequestDTO request)
-        {
-            var accountStatus = new accountSatusResponseDTO();
-            var user = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
+        //public async Task<UserStatusDTO> GetUserStatus(accountStatusRequestDTO request)
+        //{
+        //    var accountStatus = new UserStatusDTO();
+        //    var user = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.PhoneNumber);
 
-            if (user == null)
-            {
-                accountStatus.Exist = false;
-                accountStatus.LockoutEnabled = false;
-                accountStatus.OtpOption = true;
-                accountStatus.PasswordOption = false;
-            }
-            else
-            {
-                accountStatus.LockoutEnabled = user.LockoutEnabled;
-                if (user.LockoutEnabled == true)
-                {
-                    accountStatus.OtpOption = false;
-                    accountStatus.PasswordOption = false;
-                }
-                accountStatus.PasswordOption = user.PasswordHash == string.Empty ? false : true;
-            }
-            return accountStatus;
-        }
+        //    if (user == null)
+        //    {
+        //        accountStatus.Exist = false;
+        //        accountStatus.LockoutEnabled = false;
+        //        accountStatus.OtpOption = true;
+        //        accountStatus.PasswordOption = false;
+        //    }
+        //    else
+        //    {
+        //        accountStatus.LockoutEnabled = user.LockoutEnabled;
+        //        if (user.LockoutEnabled == true)
+        //        {
+        //            accountStatus.OtpOption = false;
+        //            accountStatus.PasswordOption = false;
+        //        }
+        //        accountStatus.PasswordOption = user.PasswordHash == string.Empty ? false : true;
+        //    }
+        //    return accountStatus;
+        //}
 
-        public Task<sendOtpResponseDTO> SendOtp(sendTotpDTO request)
-        {
-            try
-            {
-                var totp = _totp.Generate(request.PhoneNumber);
+        //public Task<sendOtpResponseDTO> SendOtp(PhoneNumberDTO request)
+        //{
+        //    try
+        //    {
+        //        var totp = _totp.Generate(request.PhoneNumber);
 
-                return Task.FromResult(new sendOtpResponseDTO
-                {
-                    Message = $"the code is {totp}",
-                });
-            }
-            catch (Exception exception)
-            {
-                throw new Exception($"{exception}");
-            }
-        }
+        //        return Task.FromResult(new sendOtpResponseDTO
+        //        {
+        //            Message = $"the code is {totp}",
+        //        });
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        throw new Exception($"{exception}");
+        //    }
+        //}
 
         public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal, string type)
         {

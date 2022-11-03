@@ -1,0 +1,98 @@
+﻿using AutoMapper;
+using MediatR;
+using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Dtos.Identity;
+using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
+using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Responses.Enveloping;
+using MedicalOffice.Domain.Entities;
+using MedicalOffice.WebApi.WebApi.Controllers;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Queries
+{
+    public class GetUserStatusQueryHandler : IRequestHandler<GetUserStatusQuery, BaseQueryResponse>
+    {
+        private readonly UserManager<User> _userManager;
+        private readonly ILogger _logger;
+        private readonly string _requestTitle;
+
+        public GetUserStatusQueryHandler(ILogger logger, UserManager<User> userManager)
+        {
+            _logger = logger;
+            _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
+            _userManager = userManager;
+        }
+
+        public async Task<BaseQueryResponse> Handle(GetUserStatusQuery request, CancellationToken cancellationToken)
+        {
+            BaseQueryResponse response = new();
+            PhoneNumberValidator validator = new();
+            Log log = new();
+
+            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                response.Success = false;
+                response.Message = $"{_requestTitle} failed";
+                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+
+                log.Type = LogType.Error;
+            }
+            else
+            {
+                try
+                {
+                    UserStatusDTO userStatus = new();
+                    var user = await _userManager.Users.SingleOrDefaultAsync(u => u.PhoneNumber == request.DTO.PhoneNumber);
+
+                    if (user == null)
+                    {
+                        userStatus.Exist = false;
+                        userStatus.LockoutEnabled = false;
+                        userStatus.OtpOption = true;
+                        userStatus.PasswordOption = false;
+                    }
+                    else
+                    {
+                        userStatus.PasswordOption = user.PasswordHash == string.Empty ? false : true;
+                        
+                        userStatus.LockoutEnabled = user.LockoutEnabled;
+                        if (user.LockoutEnabled == true)
+                        {
+                            userStatus.OtpOption = false;
+                            userStatus.PasswordOption = false;
+                        }
+
+                        response.Success = true;
+                        response.Message = $"{_requestTitle} succeded";
+                        response.Data.Add(userStatus);
+
+                        log.Type = LogType.Success;
+                    }
+                }
+                catch (Exception error)
+                {
+                    response.Success = false;
+                    response.Message = $"{_requestTitle} failed";
+                    response.Errors.Add(error.Message);
+
+                    log.Type = LogType.Error;
+                }
+            }
+
+            log.Header = response.Message;
+            log.Messages = response.Errors;
+
+            await _logger.Log(log);
+
+            return response;
+        }
+    }
+}

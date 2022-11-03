@@ -35,7 +35,7 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
             RegisterUserValidator validator = new();
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.Dto, cancellationToken);
+            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
                 response.Success = false;
@@ -49,21 +49,21 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
                 try
                 {
                     var existingUser = await _userManager.Users.SingleOrDefaultAsync(p =>
-                    p.PhoneNumber == request.Dto.PhoneNumber ||
-                    p.NationalId == request.Dto.NationalId);
+                    p.PhoneNumber == request.DTO.PhoneNumber ||
+                    p.NationalId == request.DTO.NationalId);
 
                     if (existingUser != null)
                     {
                         response.Success = false;
                         response.Message = $"{_requestTitle} failed";
-                        response.Errors.Add($"PhoneNumber: '{request.Dto.PhoneNumber}' or nationalId: '{request.Dto.NationalId}' already exists.");
+                        response.Errors.Add($"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalId}' already exists.");
 
                         log.Type = LogType.Error;
                     }
                     else
                     {
-                        var user = _mapper.Map<User>(request.Dto);
-                        user.UserName = request.Dto.PhoneNumber;
+                        var user = _mapper.Map<User>(request.DTO);
+                        user.UserName = request.DTO.PhoneNumber;
                         user.LockoutEnabled = false;
 
                         var result = await _userManager.CreateAsync(user);
@@ -91,7 +91,7 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
 
                         await _userManager.AddToRoleAsync(user, "Patient");
 
-                        var createdUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.Dto.PhoneNumber);
+                        var createdUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.DTO.PhoneNumber);
 
                         response.Success = true;
                         response.Message = $"{_requestTitle} succeded";

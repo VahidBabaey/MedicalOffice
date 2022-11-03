@@ -20,23 +20,26 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<Guid>> Register(RegisterUserDTO request)
+        public async Task<ActionResult<Guid>> Register(RegisterUserDTO dto)
         {
-            var response = await _mediator.Send(new RegisterUserCommand() { Dto = request });
+            var response = await _mediator.Send(new RegisterUserCommand() { DTO = dto });
             return Ok(response);
         }
 
         [HttpPost("send-Totp")]
-        public async Task<ActionResult<string>> SendOtp(sendTotpDTO request)
+        public async Task<ActionResult<string>> SendOtp(PhoneNumberDTO dto)
         {
-            var response = await _mediator.Send(new SendTotpCommand() { Dto = request });
+            var response = await _mediator.Send(new SendTotpCommand() { DTO = dto });
             return Ok(response);
         }
 
         [HttpGet("status")]
-        public async Task<ActionResult<accountSatusResponseDTO>> GetUserStatus([FromQuery] accountStatusRequestDTO request)
+        public async Task<ActionResult<UserStatusDTO>> GetUserStatus([FromQuery] PhoneNumberDTO dto)
         {
-            return Ok(await _authenticationService.GetUserStatus(request));
+            var response = await _mediator.Send(new GetUserStatusQuery() { DTO = dto });
+
+            return Ok(response);
+            //return Ok(await _authenticationService.GetUserStatus(dto));
         }
 
         [HttpPost("authenticate/otp")]
