@@ -1,8 +1,6 @@
-using Identity;
 using MedicalOffice.Application;
 using MedicalOffice.Infrastructure;
 using MedicalOffice.Persistence;
-using MedicalOffice.Identity;
 using Microsoft.OpenApi.Models;
 using OtpNet;
 
@@ -42,7 +40,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
-builder.Services.AddIdentityServices(builder.Configuration);
+//builder.Services.AddIdentityServices(builder.Configuration);
 
 builder.Services.AddCors(p =>
 {

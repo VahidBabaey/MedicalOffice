@@ -1,10 +1,16 @@
-﻿namespace MedicalOffice.Application.Responses;
+﻿using System.Net;
+
+namespace MedicalOffice.Application.Responses;
 
 public class BaseCommandResponse
 {
     public BaseCommandResponse() { }
 
-    public BaseCommandResponse(bool success, string message, List<string> errors, List<object> data)
+    public BaseCommandResponse(
+        bool success,
+        string message,
+        List<string> errors,
+        List<object> data)
     {
         Success = success;
         Message = message;

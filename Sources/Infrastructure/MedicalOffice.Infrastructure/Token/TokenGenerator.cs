@@ -1,5 +1,4 @@
-﻿using MedicalOffice.Application.Contracts.Identity;
-using MedicalOffice.Application.Contracts.Infrastructure;
+﻿using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Models.Identity;
 using MedicalOffice.Domain.Entities;
@@ -60,6 +59,37 @@ namespace MedicalOffice.Infrastructure.Token
                 signingCredentials: signingCredentials);
 
             return jwtSecurityToken;
+        }
+    }
+
+    public static class TokenGeneratorServiceRegistration
+    {
+        public static IServiceCollection AddTokenGenerator(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<JwtSettings>(configuration.GetSection("jwtSettings"));
+            services.AddTransient<ITokenGenerator, TokenGenerator>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o =>
+            {
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidIssuer = configuration["JwtSettings:Issuer"],
+                    ValidAudience = configuration["JwtSettings:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]))
+                };
+            });
+
+            return services;
         }
     }
 }

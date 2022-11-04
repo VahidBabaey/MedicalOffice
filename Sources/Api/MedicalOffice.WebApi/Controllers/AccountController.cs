@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Contracts.Identity;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Features.IdentityFile.Requsets.Commands;
 using Microsoft.AspNetCore.Http;
@@ -12,11 +11,9 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
     public class AccountController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IAuthService _authenticationService;
-        public AccountController(IAuthService authenticationService, IMediator mediator)
+        public AccountController(IMediator mediator)
         {
             _mediator = mediator;
-            _authenticationService = authenticationService;
         }
 
         [HttpPost("register")]
@@ -39,19 +36,23 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             var response = await _mediator.Send(new GetUserStatusQuery() { DTO = dto });
 
             return Ok(response);
-            //return Ok(await _authenticationService.GetUserStatus(dto));
         }
 
-        [HttpPost("authenticate/otp")]
-        public async Task<ActionResult<AuthenticateionResponse>> AuthenticateByOtp(AuthenticateByOtpRequest request)
+        [HttpPost("authenticate/totp")]
+        public async Task<ActionResult<AuthenticatedUserDTO>> AuthenticateByTotp(AuthenticateByTotpDTO dto)
         {
-            return Ok(await _authenticationService.AuthenticateByOtp(request));
+            var response = await _mediator.Send(new AuthenticateByTotpCommand() { DTO = dto });
+
+            return Ok(response);
         }
 
         [HttpPost("authenticate/password")]
-        public async Task<ActionResult<AuthenticateionResponse>> AuthenticateByPassword(authenticateByPasswordRequestDTO request)
+        public async Task<ActionResult<AuthenticatedUserDTO>> AuthenticateByPassword(AuthenticateByPasswordDTO dto)
         {
-            return Ok(await _authenticationService.AuthenticateByPassword(request));
+
+            var response = await _mediator.Send(new AuthenticateByPasswordCommand() { DTO = dto });
+
+            return Ok(response);
         }
 
         //[HttpPatch("reset-password")]

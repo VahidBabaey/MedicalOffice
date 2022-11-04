@@ -22,7 +22,7 @@ public static class ServiceRegistration
 
         //services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-        services.AddTransient<IAuthService, AuthService>();
+        //services.AddTransient<IAuthService, AuthService>();
 
         //services.AddAuthentication(options =>
         //{

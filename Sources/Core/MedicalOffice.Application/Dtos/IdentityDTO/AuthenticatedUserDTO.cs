@@ -7,17 +7,15 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class AuthenticateionResponse
+    public class AuthenticatedUserDTO
     {
-        public string? Id { get; set; }
+        public Guid Id { get; set; }= Guid.NewGuid();   
 
         public string? UserName { get; set; }
 
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
-        public string? LastName { get; set; }
-
-        public string? Email { get; set; }
+        public string LastName { get; set; }= string.Empty;
 
         public string? Token { get; set; }
     }

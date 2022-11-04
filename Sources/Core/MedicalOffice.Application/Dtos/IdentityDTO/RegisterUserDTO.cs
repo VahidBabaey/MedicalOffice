@@ -11,7 +11,6 @@ namespace MedicalOffice.Application.Dtos.Identity
     {
         [Required]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"(0|\+98)?([ ]|-|[()]){0,2}9[1|2|3|4]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}", ErrorMessage = "Not a valid phone number")]
         public string PhoneNumber { get; set; } = string.Empty;
 
         [Required]

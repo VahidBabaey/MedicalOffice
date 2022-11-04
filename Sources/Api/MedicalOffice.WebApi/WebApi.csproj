@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\MedicalOffice.Application\Application.csproj" />
-	<ProjectReference Include="..\..\Infrastructure\MedicalOffice.Identity\Identity.csproj" />
     <ProjectReference Include="..\..\Infrastructure\MedicalOffice.Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\MedicalOffice.Persistence\Persistence.csproj" />
   </ItemGroup>

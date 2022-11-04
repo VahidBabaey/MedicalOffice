@@ -41,7 +41,7 @@ namespace Identity.Services
             _totp = totp;
         }
 
-        public async Task<AuthenticateionResponse> AuthenticateByOtp(AuthenticateByOtpRequest request)
+        public async Task<AuthenticatedUserDTO> AuthenticateByTotp(AuthenticateByTotpDTO request)
         {
             var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
 
@@ -57,9 +57,9 @@ namespace Identity.Services
 
             JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user);
 
-            AuthenticateionResponse response = new AuthenticateionResponse
+            AuthenticatedUserDTO response = new AuthenticatedUserDTO
             {
-                Id = user.Id.ToString(),
+                Id = user.Id,
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -69,7 +69,7 @@ namespace Identity.Services
             return response;
         }
 
-        public async Task<AuthenticateionResponse> AuthenticateByPassword(authenticateByPasswordRequestDTO request)
+        public async Task<AuthenticatedUserDTO> AuthenticateByPassword(AuthenticateByPasswordDTO request)
         {
             var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
 
@@ -85,9 +85,9 @@ namespace Identity.Services
 
             JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user);
 
-            AuthenticateionResponse response = new AuthenticateionResponse
+            AuthenticatedUserDTO response = new AuthenticatedUserDTO
             {
-                Id = user.Id.ToString(),
+                Id = user.Id,
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class AuthenticateByOtpRequest
+    public class AuthenticateByTotpDTO
     {
         [Required]
         public string PhoneNumber { get; set; }=string.Empty;

@@ -21,11 +21,9 @@ public static class ServiceRegistration
         services.Configure<LoggerSettings>(configuration.GetSection("LoggerSettings"));
         services.AddTransient<ILogger, Logger>();
 
-        services.Configure<JwtSettings>(configuration.GetSection("jwtSettings"));
-        services.AddTransient<ITokenGenerator, TokenGenerator>();
-        
-        services.AddTransient<ITotpHandler, TotpHandler>();  
-        
+        services.AddTransient<ITotpHandler, TotpHandler>();
+
+        services.AddTokenGenerator(configuration);
         services.AddCryptography(configuration);
         
         return services;

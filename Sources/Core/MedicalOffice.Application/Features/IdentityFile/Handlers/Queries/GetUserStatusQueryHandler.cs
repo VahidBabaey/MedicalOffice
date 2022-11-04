@@ -55,16 +55,14 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Queries
                     if (user == null)
                     {
                         userStatus.Exist = false;
-                        userStatus.LockoutEnabled = false;
-                        userStatus.OtpOption = true;
                         userStatus.PasswordOption = false;
                     }
                     else
                     {
                         userStatus.PasswordOption = user.PasswordHash == string.Empty ? false : true;
-                        
-                        userStatus.LockoutEnabled = user.LockoutEnabled;
-                        if (user.LockoutEnabled == true)
+
+                        var isLockout = await _userManager.IsLockedOutAsync(user);
+                        if (isLockout)
                         {
                             userStatus.OtpOption = false;
                             userStatus.PasswordOption = false;

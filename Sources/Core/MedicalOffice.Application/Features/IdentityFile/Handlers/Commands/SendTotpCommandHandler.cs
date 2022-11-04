@@ -48,7 +48,7 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
 
                 response.Success = true;
                 response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Message = $"{totp} was sent to user" });
+                response.Data.Add(new { Message = $"Totp '{totp}' was sent to user" });
 
                 log.Type = LogType.Success;
             }

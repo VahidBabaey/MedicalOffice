@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class authenticateByPasswordRequestDTO
+    public class AuthenticateByPasswordDTO
     {
         [Required]
         public string? PhoneNumber { get; set; }
