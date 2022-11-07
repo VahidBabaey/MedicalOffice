@@ -2,7 +2,7 @@
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Models.Identity;
 using MedicalOffice.Domain.Entities;
-using MedicalOffice.Infrastructure.Crypto;
+using MedicalOffice.WebApi.Crypto;
 using MedicalOffice.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

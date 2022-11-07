@@ -15,14 +15,14 @@ public class AccessRepository : GenericRepository<Permission, Guid>, IPermission
     public string GetId (Guid id)
     {
 
-        string iduser = _dbContext.UserOfficeRoles.Where(p => p.UserId == id).FirstOrDefault().Id.ToString();
+        string iduser = _dbContext.UserOfficeRoles.Where(p => p.MedicalStaffId == id).FirstOrDefault().Id.ToString();
         return iduser;
 
 
     }
     public bool SearchUser(Guid searchid)
     {
-        var idsearchuser = _dbContext.Permissiones.Where(p => p.UserOfficeRoleId == searchid).FirstOrDefault();
+        var idsearchuser = _dbContext.Permissiones.Where(p => p.MedicalStaffOfficeRoleId == searchid).FirstOrDefault();
         if(idsearchuser != null)
         {
             return true;
@@ -36,7 +36,7 @@ public class AccessRepository : GenericRepository<Permission, Guid>, IPermission
     public async Task<IReadOnlyList<Permission>> GetAccessDetailsByUserID(Guid Id)
     {
 
-        return (IReadOnlyList<Permission>)await _dbContext.Permissiones.Where(srv => srv.UserOfficeRoleId == Id).ToListAsync();
+        return (IReadOnlyList<Permission>)await _dbContext.Permissiones.Where(srv => srv.MedicalStaffOfficeRoleId == Id).ToListAsync();
 
     }
 

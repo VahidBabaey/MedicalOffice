@@ -2,7 +2,7 @@
 using MedicalOffice.Application.Models;
 using Microsoft.Extensions.Options;
 
-namespace MedicalOffice.Infrastructure.Log;
+namespace MedicalOffice.WebApi.Log;
 
 public class Logger : ILogger
 {

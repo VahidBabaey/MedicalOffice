@@ -1,5 +1,5 @@
 using MedicalOffice.Application;
-using MedicalOffice.Infrastructure;
+using MedicalOffice.WebApi;
 using MedicalOffice.Persistence;
 using Microsoft.OpenApi.Models;
 using OtpNet;

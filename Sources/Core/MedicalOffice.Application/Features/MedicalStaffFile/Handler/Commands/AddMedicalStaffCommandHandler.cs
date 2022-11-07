@@ -19,13 +19,13 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
     public class AddMedicalStaffCommandHandler : IRequestHandler<AddMedicalStaffCommand, BaseCommandResponse>
     {
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly IMedicalStaffRepository _medicalStaffrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
 
         public AddMedicalStaffCommandHandler(RoleManager<Role> roleManager, UserManager<User> userManager, IMedicalStaffRepository medicalStaffrepository, IMapper mapper, ILogger logger, IUserOfficeRoleRepository userOfficeRoleRepository)
         {
@@ -72,10 +72,8 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                             user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
                     }
 
-                    //var passwordHash = await _cryptoServiceProvider.GetHash(request.DTO.PasswordHash);
                     var medicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
                     medicalStaff.UserId = user.Id;
-                    //medicalStaff.PasswordHash = passwordHash;
                     medicalStaff = await _medicalStaffrepository.Add(medicalStaff);
 
                     response.Success = true;
@@ -116,5 +114,4 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             return response;
         }
     }
-
 }

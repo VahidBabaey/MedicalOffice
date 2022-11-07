@@ -14,12 +14,12 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         _dbContext = dbContext;
     }
 
-    public async Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId)
+    public async Task<MedicalStaffOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId)
     {
-        UserOfficeRole userOfficeRole = new()
+        MedicalStaffOfficeRole userOfficeRole = new()
         {
             RoleId = roleId,
-            UserId = UserId
+            MedicalStaffId = UserId
         };
 
         if (userOfficeRole == null)
@@ -32,7 +32,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
     public async Task UpdateUserOfficeRoleAsync(Guid roleId, Guid UserId)
     {
-        var user = await _dbContext.UserOfficeRoles.Where(ur => ur.UserId == UserId).ToListAsync();
+        var user = await _dbContext.UserOfficeRoles.Where(ur => ur.MedicalStaffId == UserId).ToListAsync();
 
         if (user == null)
             throw new Exception();
@@ -46,7 +46,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
     }
     public async Task DeleteUserOfficeRoleAsync(Guid UserId)
     {
-        var user = await _dbContext.UserOfficeRoles.Where(ur => ur.UserId == UserId).ToListAsync();
+        var user = await _dbContext.UserOfficeRoles.Where(ur => ur.MedicalStaffId == UserId).ToListAsync();
 
         if (user == null)
             throw new Exception();
@@ -64,7 +64,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
             Id = p.Id,
             FirstName = p.FirstName,
             LastName = p.LastName,
-            Mobile = p.PhoneNumber,
+            PhoneNumber = p.PhoneNumber,
             //ProfilePicture = p.ProfilePicture,
             SpecializationId = p.SpecializationId,
             SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Title }).Where(x => x.Id == p.SpecializationId).FirstOrDefault().Title

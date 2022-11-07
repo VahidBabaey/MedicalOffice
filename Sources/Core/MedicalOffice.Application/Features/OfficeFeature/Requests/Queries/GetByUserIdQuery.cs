@@ -9,10 +9,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.Office.Requests.Queries
+namespace MedicalOffice.Application.Features.OfficeFeature.Requests.Queries
 {
     public class GetByUserIdQuery : IRequest<BaseQueryResponse>
     {
-        public OfficesByUserIdDTO Dto { get; set; } = new OfficesByUserIdDTO();
+        public Guid UserId { get; set; }
     }
 }

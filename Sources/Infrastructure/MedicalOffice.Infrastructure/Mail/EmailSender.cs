@@ -5,7 +5,7 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Net;
 
-namespace MedicalOffice.Infrastructure.Mail;
+namespace MedicalOffice.WebApi.Mail;
 
 internal class EmailSender : IEmailSender
 {

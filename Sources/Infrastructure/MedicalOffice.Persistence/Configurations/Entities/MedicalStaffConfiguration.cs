@@ -10,12 +10,12 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public override void ConfigureEntity(EntityTypeBuilder<MedicalStaff> builder)
         {
             builder
-                .HasMany(user => user.Receptions)
+                .HasMany(m => m.Receptions)
                 .WithOne(e => e.MedicalStaff)
                 .HasForeignKey(e => e.LoggedInUserId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
-                .HasMany(medicalStaff => medicalStaff.Appointments)
+                .HasMany(m => m.Appointments)
                 .WithOne(e => e.MedicalStaff)
                 .HasForeignKey(e => e.MedicalStaffId)
                 .OnDelete(DeleteBehavior.NoAction);

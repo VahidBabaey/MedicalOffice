@@ -2,10 +2,10 @@
 
 namespace MedicalOffice.Application.Contracts.Persistence
 {
-    public interface IUserOfficeRoleRepository : IGenericRepository<UserOfficeRole, Guid>
+    public interface IUserOfficeRoleRepository : IGenericRepository<MedicalStaffOfficeRole, Guid>
     {
-        Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId, Guid officeId);
+        Task<MedicalStaffOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId, Guid officeId);
 
-        Task<List<UserOfficeRole>> GetByUserId(Guid UserId);
+        Task<List<MedicalStaffOfficeRole>> GetByUserId(Guid UserId);
     }
 }

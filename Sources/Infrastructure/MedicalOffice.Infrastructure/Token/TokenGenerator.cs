@@ -2,7 +2,7 @@
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Models.Identity;
 using MedicalOffice.Domain.Entities;
-using MedicalOffice.Infrastructure.Crypto;
+using MedicalOffice.WebApi.Crypto;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +17,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Infrastructure.Token
+namespace MedicalOffice.WebApi.Token
 {
     public class TokenGenerator : ITokenGenerator
     {

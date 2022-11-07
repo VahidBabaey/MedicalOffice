@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
 
-public class UserOfficeRoleRepository : GenericRepository<UserOfficeRole, Guid>, IUserOfficeRoleRepository
+public class UserOfficeRoleRepository : GenericRepository<MedicalStaffOfficeRole, Guid>, IUserOfficeRoleRepository
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -13,19 +13,19 @@ public class UserOfficeRoleRepository : GenericRepository<UserOfficeRole, Guid>,
         _dbContext = dbContext;
     }
 
-    public async Task<List<UserOfficeRole>> GetByUserId(Guid userId)
+    public async Task<List<MedicalStaffOfficeRole>> GetByUserId(Guid userId)
     {
-        var userOfficeRole = await _dbContext.UserOfficeRoles.Where(urf => urf.UserId == userId).ToListAsync();
+        var userOfficeRole = await _dbContext.UserOfficeRoles.Where(urf => urf.MedicalStaffId == userId).ToListAsync();
 
         return userOfficeRole;
     }
 
-    public async Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid userId, Guid officeId)
+    public async Task<MedicalStaffOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid userId, Guid officeId)
     {
-        var userOfficeRole = new UserOfficeRole
+        var userOfficeRole = new MedicalStaffOfficeRole
         {
             RoleId = roleId,
-            UserId = userId,
+            MedicalStaffId = userId,
             OfficeId = officeId
         };
 

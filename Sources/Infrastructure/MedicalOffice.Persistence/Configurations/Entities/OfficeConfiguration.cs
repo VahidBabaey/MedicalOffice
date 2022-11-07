@@ -10,7 +10,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public override void ConfigureEntity(EntityTypeBuilder<Office> builder)
         {
             builder
-                .HasMany(office => office.UserOfficeRoles)
+                .HasMany(office => office.MedicalStaffOfficeRoles)
                 .WithOne(userOfficeRole => userOfficeRole.Office)
                 .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);

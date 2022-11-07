@@ -26,7 +26,7 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Queries
         public GetUserStatusQueryHandler(ILogger logger, UserManager<User> userManager)
         {
             _logger = logger;
-            _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
+            _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
             _userManager = userManager;
         }
 

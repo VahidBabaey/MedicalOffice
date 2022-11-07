@@ -7,38 +7,50 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class Office : BaseDomainEntity<Guid>
 {
+    public Office()
+    {
+        User = new List<User>();
+    }
     /// <summary>
     /// نام
     /// </summary>
     public string Name { get; set; } = string.Empty;
+
     /// <summary>
     /// آدرس
     /// </summary>
     public string Address { get; set; } = string.Empty;
+
     /// <summary>
     /// شماره ثابت
     /// </summary>
     public string Tel { get; set; } = string.Empty;
+
     /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و کاربر-مطب-نقش استفاده می شود
     /// </summary>
-    public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
+    public ICollection<MedicalStaffOfficeRole>? MedicalStaffOfficeRoles { get; set; }
+
     /// <summary>
     /// نوع تخفیف ها
     /// </summary>
     public ICollection<DiscountType>? DiscountTypes { get; set; }
+
     /// <summary>
     /// بیمه ها
     /// </summary>
     public ICollection<Insurance>? Insurances { get; set; }
+
     /// <summary>
     /// ضرایب کا
     /// </summary>
     public ICollection<KMultiplier>? KMultipliers { get; set; }
+
     /// <summary>
     /// بیماران
     /// </summary>
     public ICollection<Patient>? Patients { get; set; }
+
     /// <summary>
     /// پذیرش ها
     /// </summary>
@@ -66,14 +78,16 @@ public class Office : BaseDomainEntity<Guid>
     /// <summary>
     /// دسترسی ها
     /// </summary>
-    public ICollection<Permission>? Permissiones { get; set; }
+    public ICollection<Permission>? Permission { get; set; }
     /// <summary>
     /// دسترسی ها
     /// </summary>
     public ICollection<Picture>? Picture { get; set; }
 
+    public Guid UserId{ get; set; }
+
     /// <summary>
     /// برای ایجاد ارتباط چند به چند بین  کاربر و مطب ها
     /// </summary>
-    public ICollection<User> User{ get; set; }=new HashSet<User>();
+    public ICollection<User> User{ get; set; }
 }

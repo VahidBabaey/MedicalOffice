@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MedicalOffice.Application.Contracts.Infrastructure;
 
-namespace MedicalOffice.Infrastructure.Totp
+namespace MedicalOffice.WebApi.Totp
 {
     public class TotpHandler : ITotpHandler
     {

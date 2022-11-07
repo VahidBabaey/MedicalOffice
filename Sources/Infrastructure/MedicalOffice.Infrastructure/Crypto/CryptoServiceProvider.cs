@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MedicalOffice.Infrastructure.Crypto
+namespace MedicalOffice.WebApi.Crypto
 {
     public class CryptoServiceProvider : ICryptoServiceProvider
     {

@@ -23,7 +23,8 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// مطب
         /// </summary>
-        public Office Office { get; set; } = new Office();
+        public Office? Office { get; set; }
+
         /// <summary>
         /// عکس کادر درمان
         /// </summary>
@@ -53,6 +54,7 @@ namespace MedicalOffice.Domain.Entities
         /// عنوان
         /// </summary>
         public Title? Title { get; set; }
+
         /// <summary>
         /// شماره تلفن
         /// </summary>
@@ -68,17 +70,15 @@ namespace MedicalOffice.Domain.Entities
         /// </summary>
         public Specialization? Specialization { get; set; }
 
-
         /// <summary>
         /// برنامه کادر درمان
-        /// </summary>
-        
+        /// </summary>   
         public ICollection<MedicalStaffWorkHourProgram> UserWorkHourPrograms { get; set; } = new List<MedicalStaffWorkHourProgram>();
         
         /// <summary>
         /// از این مدل برای برقراری ارتباط یک به چند بین نقش و کاربر-مطب-نقش استفاده می شود
         /// </summary>
-        public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
+        public ICollection<MedicalStaffOfficeRole>? UserOfficeRoles { get; set; }
         
         /// <summary>
         /// پذیرش ها

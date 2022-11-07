@@ -30,6 +30,7 @@ public class MedicalStaffController : Controller
 
         return Ok(response);
     }
+
     [HttpPatch]
     public async Task<ActionResult<Guid>> UpdateUser([FromBody] UpdateMedicalStaffDTO dto)
     {
@@ -37,6 +38,7 @@ public class MedicalStaffController : Controller
 
         return Ok(response);
     }
+
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
@@ -44,6 +46,7 @@ public class MedicalStaffController : Controller
 
         return Ok(response);
     }
+
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto)
     {

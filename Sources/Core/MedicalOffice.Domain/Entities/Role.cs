@@ -9,7 +9,7 @@ public class Role : IdentityRole<Guid> // BaseDomainEntity<Guid>
 {
     public Role()
     {
-        UserOfficeRoles = new List<UserOfficeRole>();
+        UserOfficeRoles = new List<MedicalStaffOfficeRole>();
     }
 
     /// <summary>
@@ -20,5 +20,5 @@ public class Role : IdentityRole<Guid> // BaseDomainEntity<Guid>
     /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین نقش و کاربر-مطب-نقش استفاده می شود
     /// </summary>
-    public ICollection<UserOfficeRole> UserOfficeRoles { get; set; }
+    public ICollection<MedicalStaffOfficeRole> UserOfficeRoles { get; set; }
 }

@@ -8,7 +8,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task DeleteUserOfficeRoleAsync(Guid UserId);
         Task<IEnumerable<MedicalStaffListDTO>> GetAllMedicalStaffs();
         Task<IEnumerable<MedicalStaffNameListDTO>> GetAllUsersName();
-        Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId);
+        Task<MedicalStaffOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId);
         Task UpdateUserOfficeRoleAsync(Guid roleId, Guid UserId);
     }
 }

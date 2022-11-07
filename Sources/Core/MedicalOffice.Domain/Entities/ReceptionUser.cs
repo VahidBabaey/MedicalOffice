@@ -18,7 +18,7 @@ public class ReceptionUser : BaseDomainEntity<Guid>
     /// <summary>
     /// نفش کادر درمان
     /// </summary>
-    public UserOfficeRole UserOfficeRole { get; set; } = new();
+    public MedicalStaffOfficeRole UserOfficeRole { get; set; } = new();
     /// <summary>
     /// آیدی نقش کادر درمان
     /// </summary>

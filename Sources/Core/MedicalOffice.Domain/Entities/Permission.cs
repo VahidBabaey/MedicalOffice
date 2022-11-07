@@ -11,23 +11,30 @@ namespace MedicalOffice.Domain.Entities
     {
 
         public string? Name { get; set; }
+
         /// <summary>
         /// مطب
         /// </summary>
         public Office? Office { get; set; }
+
         /// <summary>
         /// آیدی مطب
         /// </summary>
         public Guid OfficeId { get; set; }
+
         /// <summary>
         /// کاربر
         /// </summary>
-        public UserOfficeRole? UserOfficeRole { get; set; }
+        public MedicalStaffOfficeRole? MedicalStaffOfficeRole { get; set; }
+
         /// <summary>
         /// آیدی کاربر
         /// </summary>
-        public Guid? UserOfficeRoleId { get; set; }
+        public Guid? MedicalStaffOfficeRoleId { get; set; }
 
+        /// <summary>
+        /// ارتباط چند به چند با کاربر
+        /// </summary>
         public ICollection<User> User { get; set; } = new List<User>();   
         
         ///// <summary>
