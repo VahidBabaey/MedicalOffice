@@ -12,7 +12,7 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// عکس کادر درمان
         /// </summary>
-        public byte[]? ProfilePicture { get; set; }
+        //public byte[]? ProfilePicture { get; set; }
         /// <summary>
         /// نام
         /// </summary>

@@ -64,11 +64,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Specialization> Specializations => Set<Specialization>();
     public DbSet<Tariff> Tariffs => Set<Tariff>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
-    public DbSet<UserOfficeSpecialization> UserOfficeSpecializations => Set<UserOfficeSpecialization>();
     public DbSet<ServiceSharePercent> ServiceSharePercents => Set<ServiceSharePercent>();
 
     // Identity
-    //public DbSet<User> Users => Set<User>();
+    //public DbSet<MedicalStaff> Users => Set<MedicalStaff>();
     //public DbSet<Role> Roles => Set<Role>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

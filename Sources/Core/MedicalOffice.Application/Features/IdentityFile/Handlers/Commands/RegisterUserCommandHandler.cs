@@ -49,13 +49,13 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
             {
                 var existingUser = await _userManager.Users.SingleOrDefaultAsync(p =>
                     p.PhoneNumber == request.DTO.PhoneNumber ||
-                    p.NationalId == request.DTO.NationalId);
+                    p.NationalID == request.DTO.NationalID);
 
                 if (existingUser != null)
                 {
                     response.Success = false;
                     response.Message = $"{_requestTitle} failed";
-                    response.Errors.Add($"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalId}' already exists.");
+                    response.Errors.Add($"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.");
 
                     log.Type = LogType.Error;
                 }

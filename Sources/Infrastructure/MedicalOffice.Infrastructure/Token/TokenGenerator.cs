@@ -29,24 +29,24 @@ namespace MedicalOffice.Infrastructure.Token
             _jwtSettings = jwtSettings.Value;
         }
 
-        public async Task<JwtSecurityToken> GenerateToken(User user)
+        public async Task<JwtSecurityToken> GenerateToken(User user,IEnumerable<Claim> claims)
         {
-            var userClaims = await _userManager.GetClaimsAsync(user);
+            //var userClaims = await _userManager.GetClaimsAsync(user);
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var roleClaims = new List<Claim>();
-            for (int i = 0; i < roles.Count; i++)
-            {
-                roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
-            }
+            //var roles = await _userManager.GetRolesAsync(user);
+            //var roleClaims = new List<Claim>();
+            //for (int i = 0; i < roles.Count; i++)
+            //{
+            //    roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+            //}
 
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            }
-            .Union(userClaims)
-            .Union(roleClaims);
+            //var claims = new[]
+            //{
+            //    new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
+            //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            //}
+            //.Union(userClaims)
+            //.Union(roleClaims);
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);

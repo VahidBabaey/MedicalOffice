@@ -17,7 +17,7 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// عکس کادر درمان
         /// </summary>
-        public byte[]? ProfilePicture { get; set; }
+        //public byte[]? ProfilePicture { get; set; }
         /// <summary>
         /// نام
         /// </summary>
@@ -53,7 +53,7 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// پسورد
         /// </summary>
-        public string PasswordHash { get; set; } = string.Empty;
+        //public string PasswordHash { get; set; } = string.Empty;
         /// <summary>
         /// لیست نقش ها
         /// </summary>

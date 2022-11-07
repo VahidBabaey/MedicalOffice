@@ -22,7 +22,7 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی پزشک
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid MedicalStaffId { get; set; }
     /// <summary>
     /// بیمار
     /// </summary>

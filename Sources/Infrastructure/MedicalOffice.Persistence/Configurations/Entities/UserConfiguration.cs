@@ -24,9 +24,9 @@ namespace MedicalOffice.Persistence.Configurations.Entities
             //    .HasForeignKey("RoleId")
             //    .OnDelete(DeleteBehavior.NoAction),
             //    j => j
-            //    .HasOne<User>()
+            //    .HasOne<MedicalStaff>()
             //    .WithMany()
-            //    .HasForeignKey("UserId")
+            //    .HasForeignKey("MedicalStaffId")
             //    .OnDelete(DeleteBehavior.NoAction)
 
             //    ) ;

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
 using MedicalOffice.Application.Dtos.Identity;
 using System.Net;
+using System.Security.Claims;
 
 namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
 {
@@ -65,7 +66,7 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
                 {
                     response.Success = false;
                     response.Message = $"{_requestTitle} failed";
-                    response.Errors.Add($"User with phone number '{request.DTO.PhoneNumber}' is't exist.");
+                    response.Errors.Add($"MedicalStaff with phone number '{request.DTO.PhoneNumber}' is't exist.");
 
                     log.Type = LogType.Error;
                 }
@@ -82,19 +83,27 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
                     }
                     else
                     {
-                        JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user);
+                        var userClaims = await _userManager.GetClaimsAsync(user);
+
+                        var roles = await _userManager.GetRolesAsync(user);
+                        var roleClaims = new List<Claim>();
+                        for (int i = 0; i < roles.Count; i++)
+                        {
+                            roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+                        }
+
+                        var claims = new[]
+                        {
+                                new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
+                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                            }
+                        .Union(userClaims)
+                        .Union(roleClaims);
+
+                        JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user,claims);
 
                         AuthenticatedUserDTO authenticatedUser = _mapper.Map<AuthenticatedUserDTO>(user);
                         authenticatedUser.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
-
-                        //AuthenticatedUserDTO authenticatedUser = new()
-                        //{
-                        //    Id = user.Id.ToString(),
-                        //    UserName = user.UserName,
-                        //    FirstName = user.FirstName,
-                        //    LastName = user.LastName,
-                        //    Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken)
-                        //};
 
                         response.Success = false;
                         response.Message = $"{_requestTitle} succeded";

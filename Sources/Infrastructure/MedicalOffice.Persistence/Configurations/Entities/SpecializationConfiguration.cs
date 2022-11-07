@@ -10,11 +10,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public override void ConfigureEntity(EntityTypeBuilder<Specialization> builder)
         {
             builder
-                .HasMany(e => e.UserOfficeSpecializations)
-                .WithOne(e => e.Specialization)
-                .HasForeignKey(e => e.SpecializationId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder
                 .HasMany(e => e.Services)
                 .WithOne(e => e.Specialization)
                 .HasForeignKey(e => e.SpecializationId)

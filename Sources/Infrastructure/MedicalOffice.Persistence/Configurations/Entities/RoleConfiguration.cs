@@ -15,9 +15,9 @@ namespace MedicalOffice.Persistence.Configurations.Entities
             //    .UsingEntity<Dictionary<string, object>>(
             //    "UserRole",
             //    j => j
-            //    .HasOne<User>()
+            //    .HasOne<MedicalStaff>()
             //    .WithMany()
-            //    .HasForeignKey("UserId")
+            //    .HasForeignKey("MedicalStaffId")
             //    .OnDelete(DeleteBehavior.NoAction),
             //    j => j
             //    .HasOne<Role>()

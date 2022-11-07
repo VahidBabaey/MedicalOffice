@@ -18,6 +18,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
+using System.Security.Claims;
 
 namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
 {
@@ -71,13 +72,13 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
                     {
                         response.Success = false;
                         response.Message = $"{_requestTitle} failed";
-                        response.Errors.Add($"User with phone number '{request.DTO.PhoneNumber}' is't exist.");
+                        response.Errors.Add($"MedicalStaff with phone number '{request.DTO.PhoneNumber}' is't exist.");
 
                         log.Type = LogType.Error;
                     }
                     else if (await _userManager.IsLockedOutAsync(user))
                     {
-                        // User exists but can not login until _userManager.GetLockoutEndDateAsync()
+                        // MedicalStaff exists but can not login until _userManager.GetLockoutEndDateAsync()
                     }
                     else
                     {
@@ -93,7 +94,24 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
                         }
                         else
                         {
-                            JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user);
+                            var userClaims = await _userManager.GetClaimsAsync(user);
+
+                            var roles = await _userManager.GetRolesAsync(user);
+                            var roleClaims = new List<Claim>();
+                            for (int i = 0; i < roles.Count; i++)
+                            {
+                                roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+                            }
+
+                            var claims = new[]
+                            {
+                                new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
+                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                            }
+                            .Union(userClaims)
+                            .Union(roleClaims);
+
+                            JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user,claims);
 
                             AuthenticatedUserDTO authenticatedUser = _mapper.Map<AuthenticatedUserDTO>(user);
                             authenticatedUser.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);

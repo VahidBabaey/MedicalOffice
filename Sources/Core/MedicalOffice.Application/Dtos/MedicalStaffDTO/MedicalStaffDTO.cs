@@ -13,11 +13,11 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// آیدی مطب
         /// </summary>
-        public Guid? OfficeId { get; set; }
+        public Guid OfficeId { get; set; }
         /// <summary>
         /// عکس کادر درمان
         /// </summary>
-        public byte[]? ProfilePicture { get; set; }
+        //public byte[]? ProfilePicture { get; set; }
         /// <summary>
         /// نام
         /// </summary>
@@ -45,7 +45,7 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// شماره تلفن
         /// </summary>
-        public string Mobile { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
         /// <summary>
         /// شناسه کاربر
         /// </summary>
@@ -53,7 +53,7 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// پسورد
         /// </summary>
-        public string PasswordHash { get; set; } = string.Empty;
+        //public string PasswordHash { get; set; } = string.Empty;
         /// <summary>
         /// لیست نقش ها
         /// </summary>
