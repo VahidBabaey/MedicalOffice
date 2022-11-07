@@ -12,8 +12,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// فرم
         /// </summary>
-        public string Form { get; set; } = string.Empty;
-
+        public string CommitmentName { get; set; } = string.Empty;
         /// <summary>
         /// تاریخ شمسی
         /// </summary>

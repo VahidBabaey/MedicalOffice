@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MedicalOffice.Persistence.Migrations
 {
-    public partial class db1 : Migration
+    public partial class db3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -1072,7 +1072,7 @@ namespace MedicalOffice.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Form = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CommitmentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateSolar = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateAD = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1433,7 +1433,7 @@ namespace MedicalOffice.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MembershipId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Tariff = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Discount = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LastUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),

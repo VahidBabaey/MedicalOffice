@@ -1192,6 +1192,10 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Discount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1206,10 +1210,6 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.Property<Guid?>("ServiceId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Tariff")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1405,6 +1405,10 @@ namespace MedicalOffice.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CommitmentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -1415,10 +1419,6 @@ namespace MedicalOffice.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DateSolar")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Form")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

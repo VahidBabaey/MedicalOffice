@@ -22,10 +22,11 @@ using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Dtos.SpecializationDTO;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
+using MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO;
 
 namespace MedicalOffice.Application.Profiles;
 
-public class MappingProfile : Profile 
+public class MappingProfile : Profile
 {
     public MappingProfile()
     {
@@ -75,12 +76,20 @@ public class MappingProfile : Profile
         CreateMap<UserWorkHourProgram, UserWorkHoursProgramListDTO>().ReverseMap();
         CreateMap<BasicInfo, BasicInfoListDTO>().ReverseMap();
         CreateMap<BasicInfoDetail, BasicInfoDetailDTO>().ReverseMap();
+        CreateMap<BasicInfoDetail, illnessNamesListDTO>()
+            .ForMember(dest => dest.illnessName, opt => opt.MapFrom(src => src.InfoDetailName))
+            .ReverseMap();
+        CreateMap<BasicInfoDetail, CommitmentNamesListDTO>()
+            .ForMember(dest => dest.CommitmentName, opt => opt.MapFrom(src => src.InfoDetailName))
+            .ReverseMap();
         CreateMap<BasicInfoDetail, UpdateBasicInfoDetailDTO>().ReverseMap();
         CreateMap<BasicInfoDetail, BasicInfoDetailListDTO>().ReverseMap();
         CreateMap<PatientIllnessForm, PatientIllnessFormListDTO>().ReverseMap();
         CreateMap<PatientIllnessForm, PatientIllnessFormDTO>().ReverseMap();
         CreateMap<PatientReferralForm, PatientReferralFormDTO>().ReverseMap();
         CreateMap<PatientReferralForm, PatientReferralFormListDTO>().ReverseMap();
+        CreateMap<PatientCommitmentForm, AddPatientCommitmentsFormDTO>().ReverseMap();
+        CreateMap<PatientCommitmentForm, PatientCommitmentsFormListDTO>().ReverseMap();
         CreateMap<Permission, PermissionDTO>().ReverseMap();
         CreateMap<Permission, UpdatePermissionDTO>().ReverseMap();
         CreateMap<Permission, PermissionListDTO>().ReverseMap();
@@ -111,20 +120,4 @@ public class MappingProfile : Profile
             return destination;
         }
     }
-    //public class DrugIntractionMapper : ITypeConverter<DrugIntraction, DrugIntractionListDTO>
-    //{
-
-    //    public DrugIntractionListDTO Convert(DrugIntraction source, DrugIntractionListDTO destination, ResolutionContext context)
-    //    {
-    //        destination = new();
-    //        destination.Id = source.Id;
-    //        destination.Group1 = source.Group1;
-    //        destination.Group2 = source.Group2;
-    //        destination.Method = source.Method;
-    //        destination.Effects = source.Effects;
-    //        destination.Control = source.Control;
-    //        destination.PDrugId = source.PDrugId;
-    //        destination.PDrugName = _dbContext.Drugs.Select(q => new { q.Id, q.Name }).Where(q => q.Id == source.PDrugId).FirstOrDefault().Name,
-    //    }
-    //}
 }

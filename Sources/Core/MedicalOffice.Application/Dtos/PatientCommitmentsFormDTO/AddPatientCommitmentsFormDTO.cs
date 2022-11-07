@@ -1,18 +1,17 @@
-﻿using MedicalOffice.Application.Dtos.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.PatientReferralFormDTO
+namespace MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO
 {
-    public class PatientReferralFormListDTO : BaseDto<Guid>
+    public class AddPatientCommitmentsFormDTO
     {
         /// <summary>
         /// علت
         /// </summary>
-        public string ReferralReason { get; set; } = string.Empty;
+        public string CommitmentName { get; set; } = string.Empty;
         /// <summary>
         /// تاریخ شمسی
         /// </summary>

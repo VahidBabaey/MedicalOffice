@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
+using MedicalOffice.Application.Dtos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query
 {
-    public class GetAlliillnessReasonsQuery : IRequest<List<BasicInfoDetailListDTO>>
+    public class GetAlliillnessReasonsForillnessFormQuery : IRequest<List<illnessNamesListDTO>>
     {
 
     }

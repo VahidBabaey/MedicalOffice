@@ -47,6 +47,7 @@ public static class ServiceRegistration
         services.AddScoped<IBasicInfoDetailRepository, BasicInfoDetailRepository>();
         services.AddScoped<IPatientIllnessFormRepository, PatientIllnessFormRepository>();
         services.AddScoped<IPatientReferralFormRepository, PatientReferralFormRepository>();
+        services.AddScoped<IPatientCommitmentFormRepository, PatientCommitmentFormRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IFormCommitmentRepository, FormCommitmentRepository>();
         services.AddScoped<IPictureRepository, PictureRepository>();

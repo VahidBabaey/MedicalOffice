@@ -83,6 +83,8 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         try
         {
             List<PatientListDto> patientList = new();
+
+
             var list = await _dbContext.Patients
                 .Where(
                         p =>

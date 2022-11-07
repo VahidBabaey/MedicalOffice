@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PatientReferralFormFile.Request.Query
 {
-    public class GetAlliillnessReasonsQuery : IRequest<List<BasicInfoDetailListDTO>>
+    public class GetAlliillnessReasonsForReferalFormQuery : IRequest<List<illnessNamesListDTO>>
     {
     }
 }

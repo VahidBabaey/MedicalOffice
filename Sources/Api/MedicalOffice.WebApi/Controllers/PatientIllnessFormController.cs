@@ -26,9 +26,9 @@ public class PatientIllnessFormController : Controller
     }
 
     [HttpGet("illnessReasons")]
-    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetPatientIllnessReasons()
+    public async Task<ActionResult<List<illnessNamesListDTO>>> GetPatientIllnessReasons()
     {
-        var response = await _mediator.Send(new GetAlliillnessReasonsQuery());
+        var response = await _mediator.Send(new GetAlliillnessReasonsForillnessFormQuery());
 
         return Ok(response);
     }

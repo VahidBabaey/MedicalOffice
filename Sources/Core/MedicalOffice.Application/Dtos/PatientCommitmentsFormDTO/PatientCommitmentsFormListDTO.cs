@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.PatientReferralFormDTO
+namespace MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO
 {
-    public class PatientReferralFormListDTO : BaseDto<Guid>
+    public class PatientCommitmentsFormListDTO : BaseDto<Guid>
     {
         /// <summary>
         /// علت
         /// </summary>
-        public string ReferralReason { get; set; } = string.Empty;
+        public string CommitmentName { get; set; } = string.Empty;
         /// <summary>
         /// تاریخ شمسی
         /// </summary>
@@ -25,5 +25,7 @@ namespace MedicalOffice.Application.Dtos.PatientReferralFormDTO
         /// آی دی بیمار
         /// </summary>
         public Guid? PatientId { get; set; }
+
+
     }
 }

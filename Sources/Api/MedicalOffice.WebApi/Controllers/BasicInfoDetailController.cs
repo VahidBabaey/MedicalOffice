@@ -57,4 +57,7 @@ public class BasicInfoDetailController : Controller
 
         return Ok(response);
     }
+
+
+
 }
