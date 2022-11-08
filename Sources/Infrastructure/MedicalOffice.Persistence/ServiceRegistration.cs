@@ -49,9 +49,9 @@ public static class ServiceRegistration
         services.AddScoped<IDrugIntractionRepository, DrugIntractionRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IMedicalStaffRepository, MedicalStaffRepository>();
-        services.AddScoped<IUserOfficeRoleRepository, UserOfficeRoleRepository>();
+        services.AddScoped<IMedicalStaffOfficeRoleRepository, MedicalStaffOfficeRoleRepository>();
         services.AddScoped<ICryptoServiceProvider, CryptoServiceProvider>();
-        services.AddScoped<IUserWorkHourProgramRepository, UserWorkHourProgramRepository>();
+        services.AddScoped<IUserWorkHourProgramRepository, MedicalStaffWorkHourProgramRepository>();
         services.AddScoped<IBasicInfoRepository, BasicInfoRepository>();
         services.AddScoped<IBasicInfoDetailRepository, BasicInfoDetailRepository>();
         services.AddScoped<IPatientIllnessFormRepository, PatientIllnessFormRepository>();

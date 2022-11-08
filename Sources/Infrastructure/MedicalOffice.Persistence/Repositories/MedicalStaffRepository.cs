@@ -25,14 +25,14 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         if (userOfficeRole == null)
             throw new NullReferenceException(nameof(userOfficeRole));
 
-        await _dbContext.UserOfficeRoles.AddAsync(userOfficeRole);
+        await _dbContext.MedicalStaffOfficeRoles.AddAsync(userOfficeRole);
 
         return userOfficeRole;
     }
 
     public async Task UpdateUserOfficeRoleAsync(Guid roleId, Guid UserId)
     {
-        var user = await _dbContext.UserOfficeRoles.Where(ur => ur.MedicalStaffId == UserId).ToListAsync();
+        var user = await _dbContext.MedicalStaffOfficeRoles.Where(ur => ur.MedicalStaffId == UserId).ToListAsync();
 
         if (user == null)
             throw new Exception();
@@ -40,20 +40,20 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         foreach (var item in user)
         {
             item.RoleId = roleId;
-            _dbContext.UserOfficeRoles.Add(item);
+            _dbContext.MedicalStaffOfficeRoles.Add(item);
         }
         
     }
     public async Task DeleteUserOfficeRoleAsync(Guid UserId)
     {
-        var user = await _dbContext.UserOfficeRoles.Where(ur => ur.MedicalStaffId == UserId).ToListAsync();
+        var user = await _dbContext.MedicalStaffOfficeRoles.Where(ur => ur.MedicalStaffId == UserId).ToListAsync();
 
         if (user == null)
             throw new Exception();
 
         foreach (var item in user)
         {
-            _dbContext.UserOfficeRoles.Remove(item); 
+            _dbContext.MedicalStaffOfficeRoles.Remove(item); 
         }
 
     }
@@ -70,7 +70,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
             SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Title }).Where(x => x.Id == p.SpecializationId).FirstOrDefault().Title
         }).ToListAsync();
 
-        return (IEnumerable<MedicalStaffListDTO>)_list;
+        return _list;
     }
     public async Task<IEnumerable<MedicalStaffNameListDTO>> GetAllUsersName()
     {
@@ -81,7 +81,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
             LastName = p.LastName
         }).ToListAsync();
 
-        return (IEnumerable<MedicalStaffNameListDTO>)_list;
+        return _list;
     }
 
 }

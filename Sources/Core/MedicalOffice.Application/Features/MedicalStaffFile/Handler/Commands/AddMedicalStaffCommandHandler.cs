@@ -21,13 +21,13 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
-        private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
+        private readonly IMedicalStaffOfficeRoleRepository _userOfficeRoleRepository;
         private readonly IMedicalStaffRepository _medicalStaffrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddMedicalStaffCommandHandler(RoleManager<Role> roleManager, UserManager<User> userManager, IMedicalStaffRepository medicalStaffrepository, IMapper mapper, ILogger logger, IUserOfficeRoleRepository userOfficeRoleRepository)
+        public AddMedicalStaffCommandHandler(RoleManager<Role> roleManager, UserManager<User> userManager, IMedicalStaffRepository medicalStaffrepository, IMapper mapper, ILogger logger, IMedicalStaffOfficeRoleRepository userOfficeRoleRepository)
         {
             _roleManager = roleManager;
             _userManager = userManager;

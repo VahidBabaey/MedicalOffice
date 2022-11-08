@@ -13,9 +13,9 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     {
         _dbContext = dbContext;
     }
-    public async Task<string> GetId (Guid id)
+    public async Task<string> GetId(Guid id)
     {
-        var userOfficeRole = await _dbContext.UserOfficeRoles.Where(p => p.MedicalStaffId == id).FirstOrDefaultAsync();
+        var userOfficeRole = await _dbContext.MedicalStaffOfficeRoles.Where(p => p.MedicalStaffId == id).FirstOrDefaultAsync();
 
         if (userOfficeRole == null)
             throw new NullReferenceException("MedicalStaffOfficeRole Id Not Found!");
@@ -24,11 +24,11 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
 
         return idUser;
     }
-    public async Task<bool> SearchUser(Guid searchid)
+    public async Task<bool> SearchMedicalStaff(Guid searchId)
     {
-        var idSearchUser = await _dbContext.Permissiones.Where(p => p.MedicalStaffOfficeRoleId == searchid).FirstOrDefaultAsync();
+        var idSearchUser = await _dbContext.Permissiones.Where(p => p.MedicalStaffOfficeRoleId == searchId).FirstOrDefaultAsync();
 
-        if(idSearchUser != null)
+        if (idSearchUser != null)
         {
             return true;
         }
@@ -39,7 +39,12 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     }
     public async Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id)
     {
-        return (IReadOnlyList<Permission>)await _dbContext.Permissiones.Where(srv => srv.MedicalStaffOfficeRoleId == Id).ToListAsync();
+        return await _dbContext.Permissiones.Where(srv => srv.MedicalStaffOfficeRoleId == Id).ToListAsync();
     }
 
+    public Task<List<Permission>> GetByUserAndOfficeId(Guid userId, Guid officeId)
+    {
+        List<Permission> permissions = _dbContext.MedicalStaffs.Include(m => m.Permission).SingleOrDefault(m => m.UserId == userId && m.OfficeId == officeId).Permission.ToList();
+        return Task.FromResult(permissions);
+    }
 }

@@ -12,7 +12,7 @@ public class OfficeRepository : GenericRepository<Office, Guid>, IOfficeReposito
         _dbcontext = dbContext;
     }
 
-    public async Task<IReadOnlyList<Office>> GetByUserId(Guid userId)
+    public Task<List<Office>> GetByUserId(Guid userId)
     {
         //List<OfficeFeature> offices = await _dbcontext.Offices.Include(s => s.MedicalStaffOfficeRoles.Where(x => x.MedicalStaffId == userId)).ToListAsync();
         //List<Office> offices = await _dbcontext.Offices.Where(o => o.User == new User
@@ -25,8 +25,10 @@ public class OfficeRepository : GenericRepository<Office, Guid>, IOfficeReposito
         //    Id = userId,
         //})).ToListAsync();  
 
-        List<Office> offices = await _dbcontext.Offices.Include(o=>o.User).Where(o=>o.UserId == userId).ToListAsync();  
+        List<Office> offices = _dbcontext.Users.Include(u => u.Office).Single(u => u.Id == userId).Office.ToList();
 
-        return offices;
+        //await Task.Yield();
+
+        return Task.FromResult(offices);
     }
 }

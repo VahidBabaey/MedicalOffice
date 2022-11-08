@@ -75,16 +75,11 @@ public class Office : BaseDomainEntity<Guid>
     /// جزئیات پذیرش
     /// </summary>
     public ICollection<ReceptionDetail>? ReceptionDetails { get; set; }
-    /// <summary>
-    /// دسترسی ها
-    /// </summary>
-    public ICollection<Permission>? Permission { get; set; }
+
     /// <summary>
     /// دسترسی ها
     /// </summary>
     public ICollection<Picture>? Picture { get; set; }
-
-    public Guid UserId{ get; set; }
 
     /// <summary>
     /// برای ایجاد ارتباط چند به چند بین  کاربر و مطب ها

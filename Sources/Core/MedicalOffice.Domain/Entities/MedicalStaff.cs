@@ -13,7 +13,10 @@ namespace MedicalOffice.Domain.Entities
     {
         public Guid UserId { get; set; }
 
-        public User? User { get; set; }
+        /// <summary>
+        /// (ارتباط یک به چند کاربر مطب با کاربر سیستم (هر کاربر سیستم میتواند در هر مطب کاربر متفاوتی باشد
+        /// </summary>
+        public User User { get; set; } = new User();
 
         /// <summary>
         /// آیدی مطب
@@ -21,15 +24,20 @@ namespace MedicalOffice.Domain.Entities
         public Guid OfficeId { get; set; }
 
         /// <summary>
-        /// مطب
+        /// ارتباط یک به چند کاربر مطب با مطب
         /// </summary>
-        public Office? Office { get; set; }
+        public Office Office { get; set; } = new Office();
+
+        /// <summary>
+        /// ارتباط چند به چند کاربر مطب و دسترسی هایش
+        /// </summary>
+        public ICollection<Permission> Permission { get; set; } = new List<Permission>();
 
         /// <summary>
         /// عکس کادر درمان
         /// </summary>
         //public byte[]? ProfilePicture { get; set; }
-        
+
         /// <summary>
         /// نام
         /// </summary>
@@ -74,22 +82,22 @@ namespace MedicalOffice.Domain.Entities
         /// برنامه کادر درمان
         /// </summary>   
         public ICollection<MedicalStaffWorkHourProgram> UserWorkHourPrograms { get; set; } = new List<MedicalStaffWorkHourProgram>();
-        
+
         /// <summary>
         /// از این مدل برای برقراری ارتباط یک به چند بین نقش و کاربر-مطب-نقش استفاده می شود
         /// </summary>
         public ICollection<MedicalStaffOfficeRole>? UserOfficeRoles { get; set; }
-        
+
         /// <summary>
         /// پذیرش ها
         /// </summary>
         public ICollection<Reception>? Receptions { get; set; }
-        
+
         /// <summary>
         /// کاربران پذیرش
         /// </summary>
         public ICollection<ReceptionUser>? ReceptionUsers { get; set; }
-        
+
         /// <summary>
         /// وقت دهی ها
         /// </summary>

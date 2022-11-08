@@ -35,7 +35,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<KMultiplierDetail> KMultiplierDetails => Set<KMultiplierDetail>();
     public DbSet<MedicalAction> MedicalActions => Set<MedicalAction>();
     public DbSet<MedicalStaff> MedicalStaffs => Set<MedicalStaff>();
-    public DbSet<MedicalStaffWorkHourProgram> UserWorkHourPrograms => Set<MedicalStaffWorkHourProgram>();
+    public DbSet<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms => Set<MedicalStaffWorkHourProgram>();
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<MemberShipService> MemberShipServices => Set<MemberShipService>();
     public DbSet<Office> Offices => Set<Office>();
@@ -63,7 +63,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<SocialHistory> SocialHistories => Set<SocialHistory>();
     public DbSet<Specialization> Specializations => Set<Specialization>();
     public DbSet<Tariff> Tariffs => Set<Tariff>();
-    public DbSet<MedicalStaffOfficeRole> UserOfficeRoles => Set<MedicalStaffOfficeRole>();
+    public DbSet<MedicalStaffOfficeRole> MedicalStaffOfficeRoles => Set<MedicalStaffOfficeRole>();
     public DbSet<ServiceSharePercent> ServiceSharePercents => Set<ServiceSharePercent>();
 
     // Identity
