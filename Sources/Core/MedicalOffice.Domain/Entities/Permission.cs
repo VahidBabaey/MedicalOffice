@@ -18,7 +18,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// نام فارسی دسترسی
         /// </summary>
-        public string? NormalizedName { get; set; }
+        public string? PersianName { get; set; }
 
         /// <summary>
         /// شناسه دسته بندی دسترسی
@@ -43,6 +43,5 @@ namespace MedicalOffice.Domain.Entities
         /// کاربر
         /// </summary>
         public ICollection<MedicalStaffOfficeRole>? MedicalStaffOfficeRole { get; set; }
-
     }
 }

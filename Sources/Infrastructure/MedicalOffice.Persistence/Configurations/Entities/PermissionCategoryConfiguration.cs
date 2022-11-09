@@ -11,8 +11,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
 {
     public class PermissionCategoryConfiguration : BaseEntityTypeConfiguration<PermissionCategory, Guid>
     {
-        private static PermissionCategory PermissionCategoryCreator(string guidId, string name, string normalizedName)
-            => new() { Id = Guid.Parse(guidId), Name = name, NormalizedName = normalizedName };
+        private static PermissionCategory PermissionCategoryCreator(string guidId, string name, string persianName)
+            => new() { Id = Guid.Parse(guidId), Name = name, PersianName = persianName };
 
         public override void ConfigureEntity(EntityTypeBuilder<PermissionCategory> builder)
         {
