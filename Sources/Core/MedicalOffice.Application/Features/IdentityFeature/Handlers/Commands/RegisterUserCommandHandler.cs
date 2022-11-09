@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity.Validators;
-using MedicalOffice.Application.Features.IdentityFile.Requsets.Commands;
+using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
-namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
+namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, BaseCommandResponse>
     {

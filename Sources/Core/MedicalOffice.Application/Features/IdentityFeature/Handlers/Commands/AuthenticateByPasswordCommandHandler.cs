@@ -18,7 +18,7 @@ using MedicalOffice.Application.Dtos.Identity;
 using System.Net;
 using System.Security.Claims;
 
-namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
+namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class AuthenticateByPasswordCommandHandler : IRequestHandler<AuthenticateByPasswordCommand, BaseCommandResponse>
     {
