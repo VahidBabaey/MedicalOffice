@@ -79,7 +79,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     else
                     {
                         //TODO: the role should come from role seed or from constant or env variable
-                        var role = _roleManager.FindByNameAsync("Patient").Result;
+                        var role = _roleManager.FindByNameAsync("PATIENT").Result;
                         if (role == null)
                         {
                             response = failedResponse;
@@ -89,7 +89,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                         }
                         else
                         {
-                            await _userManager.AddToRoleAsync(user, "Patient");
+                            await _userManager.AddToRoleAsync(user, "PATIENT");
 
                             var createdUser = await _userManager.Users.SingleOrDefaultAsync(p =>
                             p.PhoneNumber == request.DTO.PhoneNumber);
