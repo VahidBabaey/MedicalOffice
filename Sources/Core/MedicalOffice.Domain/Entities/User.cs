@@ -10,6 +10,7 @@ namespace MedicalOffice.Domain.Entities
         {
             Id = Guid.NewGuid();
             SecurityStamp = Guid.NewGuid().ToString();
+            PasswordHash = string.Empty;   
             Office = new List<Office>();
         }
 

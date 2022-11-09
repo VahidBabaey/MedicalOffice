@@ -34,6 +34,7 @@ namespace MedicalOffice.Domain.Entities
         /// ارتباط چند به چند کاربران مطب و دسترسی هایشان
         /// </summary>
         public ICollection<MedicalStaff> MedicalStaff { get; set; } = new List<MedicalStaff>();
+
         /// <summary>
         /// آیدی کاربر
         /// </summary>
