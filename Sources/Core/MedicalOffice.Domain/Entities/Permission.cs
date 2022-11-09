@@ -43,6 +43,6 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// کاربر
         /// </summary>
-        public ICollection<MedicalStaffOfficeRole>? MedicalStaffOfficeRole { get; set; }
+        public ICollection<UserOfficeRole>? MedicalStaffOfficeRole { get; set; }
     }
 }

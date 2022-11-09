@@ -12,23 +12,20 @@ public class OfficeRepository : GenericRepository<Office, Guid>, IOfficeReposito
         _dbcontext = dbContext;
     }
 
-    public Task<List<Office>> GetByUserId(Guid userId)
+    public async Task<List<Office>> GetByUserId(Guid userId)
     {
-        //List<OfficeFeature> offices = await _dbcontext.Offices.Include(s => s.MedicalStaffOfficeRoles.Where(x => x.MedicalStaffId == userId)).ToListAsync();
-        //List<Office> offices = await _dbcontext.Offices.Where(o => o.User == new User
-        //{
-        //    Id = userId,
-        //}).ToListAsync();
+        List<Office> offices = new List<Office>();
+        List<UserOfficeRole> userOfficeRoles = await _dbcontext.UserOfficeRoles.Include(uor => uor.Office).Where(u => u.UserId == userId).ToListAsync();
 
-        //List<Office> offices = await _dbcontext.Offices.Include(o => o.User.Select(o => new
-        //{
-        //    Id = userId,
-        //})).ToListAsync();  
+        foreach (var item in userOfficeRoles)
+        {
+            var office = await _dbcontext.Offices.SingleOrDefaultAsync(x => x.Id == item.OfficeId);
+            if (office != null)
+            {
+                offices.Add(office);
+            }
+        }
 
-        List<Office> offices = _dbcontext.Users.Include(u => u.Office).Single(u => u.Id == userId).Office.ToList();
-
-        //await Task.Yield();
-
-        return Task.FromResult(offices);
+        return offices;
     }
 }

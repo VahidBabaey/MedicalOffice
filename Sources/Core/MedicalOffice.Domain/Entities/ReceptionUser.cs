@@ -18,11 +18,11 @@ public class ReceptionUser : BaseDomainEntity<Guid>
     /// <summary>
     /// نفش کادر درمان
     /// </summary>
-    public MedicalStaffOfficeRole UserOfficeRole { get; set; } = new();
+    public MedicalStaff MedicalStaff { get; set; } = new();
     /// <summary>
     /// آیدی نقش کادر درمان
     /// </summary>
-    public Guid UserOfficeRoleId { get; set; }
+    public Guid MedicalStaffId { get; set; }
     /// <summary>
     /// مبلغ سهم
     /// </summary>

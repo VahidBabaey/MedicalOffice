@@ -14,6 +14,15 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .WithOne(e => e.Specialization)
                 .HasForeignKey(e => e.SpecializationId)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasData(new[]
+                {
+                    new Specialization
+                    {
+                        Id = Guid.Parse("3ba9ddbe-0d1e-47cc-807f-3ea8d9a04ef3"),
+                        Name = "متخصص قلب"
+                    }
+                });
         }
     }
 }

@@ -72,13 +72,13 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     {
                         response.Success = false;
                         response.Message = $"{_requestTitle} failed";
-                        response.Errors.Add($"MedicalStaff with phone number '{request.DTO.PhoneNumber}' is't exist.");
+                        response.Errors.Add($"User with phone number '{request.DTO.PhoneNumber}' is't exist.");
 
                         log.Type = LogType.Error;
                     }
                     else if (await _userManager.IsLockedOutAsync(user))
                     {
-                        // MedicalStaff exists but can not login until _userManager.GetLockoutEndDateAsync()
+                        // User exists but can not login until _userManager.GetLockoutEndDateAsync()
                     }
                     else
                     {

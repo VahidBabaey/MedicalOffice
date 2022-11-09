@@ -18,13 +18,13 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
     public class MyCommandHandlerCommandHandler : IRequestHandler<EditMedicalStaffCommand, BaseCommandResponse>
     {
         private readonly IMedicalStaffRepository _repository;
-        private readonly IMedicalStaffOfficeRoleRepository _repositoryuserofficerole;
+        private readonly IUserOfficeRoleRepository _repositoryuserofficerole;
         private readonly ICryptoServiceProvider _cryptoServiceProvider;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public MyCommandHandlerCommandHandler(IMedicalStaffOfficeRoleRepository repositoryuserofficerole, IMedicalStaffRepository repository, IMapper mapper, ILogger logger, ICryptoServiceProvider cryptoServiceProvider)
+        public MyCommandHandlerCommandHandler(IUserOfficeRoleRepository repositoryuserofficerole, IMedicalStaffRepository repository, IMapper mapper, ILogger logger, ICryptoServiceProvider cryptoServiceProvider)
         {
             _repositoryuserofficerole = repositoryuserofficerole;
             _repository = repository;

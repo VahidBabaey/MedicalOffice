@@ -6,19 +6,19 @@ namespace MedicalOffice.Domain.Entities;
 /// کاربر-مطب-نقش
 /// <para>از این مدل برای دانستن نقش هر کاربر در هر مطب یا مرکز درمانی استفاده می شود</para>
 /// </summary>
-public class MedicalStaffOfficeRole : BaseDomainEntity<Guid>
+public class UserOfficeRole : BaseDomainEntity<Guid>
 {
 
-    public MedicalStaffOfficeRole()
+    public UserOfficeRole()
     {
         OfficeId = Guid.NewGuid();  
     }
-    public MedicalStaff? MedicalStaff { get; set; }
+    public User? User { get; set; }
 
     /// <summary>
     /// آیدی کاربر
     /// </summary>
-    public Guid? MedicalStaffId { get; set; }
+    public Guid? UserId { get; set; }
 
     /// <summary>
     /// مطب - مرکز درمانی
@@ -43,15 +43,10 @@ public class MedicalStaffOfficeRole : BaseDomainEntity<Guid>
     /// <summary>
     /// سهم و درصد کاربران
     /// </summary>
-    public ICollection<ServiceSharePercent>? UserServiceSharePercents { get; set; }
+    //public ICollection<ServiceSharePercent>? UserServiceSharePercents { get; set; }
 
     /// <summary>
     /// دسترسی ها
     /// </summary>
-    public ICollection<Permission>? Permissiones { get; set; }
-
-    /// <summary>
-    /// پذیرش ها
-    /// </summary>
-    public ICollection<ReceptionUser>? ReceptionUsers { get; set; }
+    //public ICollection<Permission>? Permissiones { get; set; }
 }

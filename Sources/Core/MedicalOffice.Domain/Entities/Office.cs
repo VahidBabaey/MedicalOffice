@@ -7,10 +7,6 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class Office : BaseDomainEntity<Guid>
 {
-    public Office()
-    {
-        User = new List<User>();
-    }
     /// <summary>
     /// نام
     /// </summary>
@@ -25,11 +21,6 @@ public class Office : BaseDomainEntity<Guid>
     /// شماره ثابت
     /// </summary>
     public string Tel { get; set; } = string.Empty;
-
-    /// <summary>
-    /// از این مدل برای برقراری ارتباط یک به چند بین مطب و کاربر-مطب-نقش استفاده می شود
-    /// </summary>
-    public ICollection<MedicalStaffOfficeRole>? MedicalStaffOfficeRoles { get; set; }
 
     /// <summary>
     /// نوع تخفیف ها
@@ -79,10 +70,15 @@ public class Office : BaseDomainEntity<Guid>
     /// <summary>
     /// دسترسی ها
     /// </summary>
-    public ICollection<Picture>? Picture { get; set; }
+    public ICollection<Picture>? Pictures { get; set; }
 
     /// <summary>
-    /// برای ایجاد ارتباط چند به چند بین  کاربر و مطب ها
+    /// ارتباط یک به چند مطب با کاربرانش
     /// </summary>
-    public ICollection<User> User{ get; set; }
+    public ICollection<MedicalStaff>? MedicalStaffs { get; set; }
+
+    /// <summary>
+    /// از این مدل برای برقراری ارتباط یک به چند بین مطب و کاربر-مطب-نقش استفاده می شود
+    /// </summary>
+    public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
 }

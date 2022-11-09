@@ -63,11 +63,11 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<SocialHistory> SocialHistories => Set<SocialHistory>();
     public DbSet<Specialization> Specializations => Set<Specialization>();
     public DbSet<Tariff> Tariffs => Set<Tariff>();
-    public DbSet<MedicalStaffOfficeRole> MedicalStaffOfficeRoles => Set<MedicalStaffOfficeRole>();
+    public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
     public DbSet<ServiceSharePercent> ServiceSharePercents => Set<ServiceSharePercent>();
 
     // Identity
-    //public DbSet<MedicalStaff> Users => Set<MedicalStaff>();
+    //public DbSet<User> Users => Set<User>();
     //public DbSet<Role> Roles => Set<Role>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

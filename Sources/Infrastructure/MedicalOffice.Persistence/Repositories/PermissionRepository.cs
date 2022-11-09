@@ -15,10 +15,10 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     }
     public async Task<string> GetId(Guid id)
     {
-        var userOfficeRole = await _dbContext.MedicalStaffOfficeRoles.Where(p => p.MedicalStaffId == id).FirstOrDefaultAsync();
+        var userOfficeRole = await _dbContext.UserOfficeRoles.Where(p => p.UserId == id).FirstOrDefaultAsync();
 
         if (userOfficeRole == null)
-            throw new NullReferenceException("MedicalStaffOfficeRole Id Not Found!");
+            throw new NullReferenceException("MedicalStaff Id Not Found!");
 
         string idUser = userOfficeRole.Id.ToString();
 

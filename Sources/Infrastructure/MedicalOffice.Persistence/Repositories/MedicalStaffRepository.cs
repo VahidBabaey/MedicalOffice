@@ -14,25 +14,25 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         _dbContext = dbContext;
     }
 
-    public async Task<MedicalStaffOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId)
+    public async Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId)
     {
-        MedicalStaffOfficeRole userOfficeRole = new()
+        UserOfficeRole userOfficeRole = new()
         {
             RoleId = roleId,
-            MedicalStaffId = UserId
+            UserId = UserId
         };
 
         if (userOfficeRole == null)
             throw new NullReferenceException(nameof(userOfficeRole));
 
-        await _dbContext.MedicalStaffOfficeRoles.AddAsync(userOfficeRole);
+        await _dbContext.UserOfficeRoles.AddAsync(userOfficeRole);
 
         return userOfficeRole;
     }
 
     public async Task UpdateUserOfficeRoleAsync(Guid roleId, Guid UserId)
     {
-        var user = await _dbContext.MedicalStaffOfficeRoles.Where(ur => ur.MedicalStaffId == UserId).ToListAsync();
+        var user = await _dbContext.UserOfficeRoles.Where(ur => ur.UserId == UserId).ToListAsync();
 
         if (user == null)
             throw new Exception();
@@ -40,20 +40,20 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         foreach (var item in user)
         {
             item.RoleId = roleId;
-            _dbContext.MedicalStaffOfficeRoles.Add(item);
+            _dbContext.UserOfficeRoles.Add(item);
         }
         
     }
     public async Task DeleteUserOfficeRoleAsync(Guid UserId)
     {
-        var user = await _dbContext.MedicalStaffOfficeRoles.Where(ur => ur.MedicalStaffId == UserId).ToListAsync();
+        var user = await _dbContext.UserOfficeRoles.Where(ur => ur.UserId == UserId).ToListAsync();
 
         if (user == null)
             throw new Exception();
 
         foreach (var item in user)
         {
-            _dbContext.MedicalStaffOfficeRoles.Remove(item); 
+            _dbContext.UserOfficeRoles.Remove(item); 
         }
 
     }
@@ -67,7 +67,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
             PhoneNumber = p.PhoneNumber,
             //ProfilePicture = p.ProfilePicture,
             SpecializationId = p.SpecializationId,
-            SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Title }).Where(x => x.Id == p.SpecializationId).FirstOrDefault().Title
+            SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Name }).Where(x => x.Id == p.SpecializationId).FirstOrDefault().Name
         }).ToListAsync();
 
         return _list;
@@ -84,4 +84,9 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         return _list;
     }
 
+    public async Task<bool> GetByOfficeAndUserId(Guid officeId, string phoneNumber)
+    {
+        bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.PhoneNumber == phoneNumber);
+        return isExist;
+    }
 }

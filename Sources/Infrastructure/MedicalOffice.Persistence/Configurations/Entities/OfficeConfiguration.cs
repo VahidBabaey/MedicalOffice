@@ -10,7 +10,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public override void ConfigureEntity(EntityTypeBuilder<Office> builder)
         {
             builder
-                .HasMany(office => office.MedicalStaffOfficeRoles)
+                .HasMany(office => office.UserOfficeRoles)
                 .WithOne(userOfficeRole => userOfficeRole.Office)
                 .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
@@ -67,12 +67,12 @@ namespace MedicalOffice.Persistence.Configurations.Entities
             builder
                 .HasData(new[]
                 {
-                    new Office
+                    new Office()
                     {
                         Id=Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0"),
                         Name = "officeA",
                         Tel = "02112345678",
-                        Address="officeA"
+                        Address="officeA",
                     },
                     new Office
                     {
@@ -80,7 +80,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                         Name = "officeB",
                         Tel = "02123456789",
                         Address="officeB"
-                    },    
+                    },
                     new Office
                     {
                         Id=Guid.Parse("1abfa749-a9b0-413d-8fda-e3674fc942c0"),

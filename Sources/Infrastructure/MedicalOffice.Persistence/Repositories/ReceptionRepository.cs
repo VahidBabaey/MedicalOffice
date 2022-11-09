@@ -61,7 +61,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             var receptionUser = new ReceptionUser()
             {
                 IsDeleted = false,
-                UserOfficeRoleId = userId,
+                MedicalStaffId = userId,
                 ReceptionDetailId = addedDetail.Entity.Id,
             };
 

@@ -56,7 +56,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
                     var id = _repository.GetId(Guid.Parse(request.userid)).ToString();
                     if (id == null)
                     {
-                        throw new NullReferenceException("MedicalStaff Not found");
+                        throw new NullReferenceException("User Not found");
                     }
                     else
                     {

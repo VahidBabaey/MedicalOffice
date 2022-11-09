@@ -10,7 +10,7 @@ public class ServiceSharePercent : BaseDomainEntity<Guid>
     /// <summary>
     /// کاربر
     /// </summary>
-    public MedicalStaffOfficeRole? UserOfficeRole { get; set; }
+    public UserOfficeRole? UserOfficeRole { get; set; }
     /// <summary>
     /// آیدی کاربر
     /// </summary>

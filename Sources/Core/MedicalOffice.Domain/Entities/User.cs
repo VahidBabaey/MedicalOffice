@@ -11,7 +11,6 @@ namespace MedicalOffice.Domain.Entities
             Id = Guid.NewGuid();
             SecurityStamp = Guid.NewGuid().ToString();
             PasswordHash = string.Empty;   
-            Office = new List<Office>();
         }
 
         /// <summary>
@@ -30,13 +29,8 @@ namespace MedicalOffice.Domain.Entities
         public string NationalID { get; set; } = string.Empty;
 
         /// <summary>
-        /// برای ارتباط چند به چند بین کاربران و مطب ها
+        /// ارتباط چند به چند با جدول کاربران مطب ها رول ها
         /// </summary>
-        public ICollection<Office> Office { get; set; }
-
-        /// <summary>
-        /// برای ایجاد ارتباط چند به چند بین دسترسی ها و کاربران  
-        /// </summary>
-        //public ICollection<Permission> Permission { get; set; }= new List<Permission>();   
+        public ICollection<UserOfficeRole>? UserOfficeRoles{ get; set; } 
     }
 }
