@@ -36,11 +36,16 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             RegisterUserValidator validator = new RegisterUserValidator();
             Log log = new();
 
+            var failedResponse = new BaseCommandResponse()
+            {
+                Success = false,
+                Message = $"{_requestTitle} failed"
+            };
+       
             var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response = failedResponse;
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
@@ -53,8 +58,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
                 if (existingUser != null)
                 {
-                    response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response = failedResponse;
                     response.Errors.Add($"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.");
 
                     log.Type = LogType.Error;
@@ -67,8 +71,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     var result = await _userManager.CreateAsync(user);
                     if (!result.Succeeded)
                     {
-                        response.Success = false;
-                        response.Message = $"{_requestTitle} failed";
+                        response = failedResponse;
                         response.Errors.Add(string.Join(",", result.Errors.Select(x => $"{x.Code} - {x.Description}")));
 
                         log.Type = LogType.Error;
@@ -79,8 +82,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                         var role = _roleManager.FindByNameAsync("Patient").Result;
                         if (role == null)
                         {
-                            response.Success = false;
-                            response.Message = $"{_requestTitle} failed";
+                            response = failedResponse;
                             response.Errors.Add($"there is no suitable role for assigning to user");
 
                             log.Type = LogType.Error;
