@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.IdentityFile.Requsets.Commands
+namespace MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands
 {
     public class RegisterUserCommand : IRequest<BaseCommandResponse>
     {

@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity.Validators;
-using MedicalOffice.Application.Features.IdentityFile.Requsets.Commands;
+using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
-namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
+namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, BaseCommandResponse>
     {
@@ -79,24 +79,25 @@ namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
                         var role = _roleManager.FindByNameAsync("Patient").Result;
                         if (role == null)
                         {
-                            var patientRole = new Role
-                            {
-                                Id = Guid.NewGuid(),
-                                Name = "Patient"
-                            };
-                            await _roleManager.CreateAsync(patientRole);
+                            response.Success = false;
+                            response.Message = $"{_requestTitle} failed";
+                            response.Errors.Add($"there is no suitable role for assigning to user");
+
+                            log.Type = LogType.Error;
                         }
+                        else
+                        {
+                            await _userManager.AddToRoleAsync(user, "Patient");
 
-                        await _userManager.AddToRoleAsync(user, "Patient");
+                            var createdUser = await _userManager.Users.SingleOrDefaultAsync(p =>
+                            p.PhoneNumber == request.DTO.PhoneNumber);
 
-                        var createdUser = await _userManager.Users.SingleOrDefaultAsync(p =>
-                        p.PhoneNumber == request.DTO.PhoneNumber);
+                            response.Success = true;
+                            response.Message = $"{_requestTitle} succeded";
+                            response.Data.Add(new { Id = createdUser?.Id });
 
-                        response.Success = true;
-                        response.Message = $"{_requestTitle} succeded";
-                        response.Data.Add(new { Id = createdUser?.Id });
-
-                        log.Type = LogType.Success;
+                            log.Type = LogType.Success;
+                        }
                     }
                 }
             }

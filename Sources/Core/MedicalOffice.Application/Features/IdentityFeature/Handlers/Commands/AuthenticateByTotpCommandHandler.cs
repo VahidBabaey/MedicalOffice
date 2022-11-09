@@ -4,7 +4,7 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
-using MedicalOffice.Application.Features.IdentityFile.Requsets.Commands;
+using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Security.Claims;
 
-namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Commands
+namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class AuthenticateByTotpCommandHandler : IRequestHandler<AuthenticateByTotpCommand, BaseCommandResponse>
     {

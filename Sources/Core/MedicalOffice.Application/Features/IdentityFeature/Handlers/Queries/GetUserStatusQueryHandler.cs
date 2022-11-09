@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.IdentityFile.Handlers.Queries
+namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
 {
     public class GetUserStatusQueryHandler : IRequestHandler<GetUserStatusQuery, BaseQueryResponse>
     {

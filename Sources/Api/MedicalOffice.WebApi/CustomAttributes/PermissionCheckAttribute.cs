@@ -91,16 +91,5 @@ namespace MedicalOffice.WebApi.Attributes
             }
         }
     }
-
-    //[Route("api/resource")]
-    //public class MyController : Controller
-    //{
-    //    [PermissionCheck("CanReadResource")]
-    //    [HttpGet]
-    //    public IActionResult GetResource()
-    //    {
-    //        return Ok();
-    //    }
-    //}
 }
 
