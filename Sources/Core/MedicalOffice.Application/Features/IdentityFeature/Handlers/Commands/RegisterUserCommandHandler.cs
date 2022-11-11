@@ -15,6 +15,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, BaseCommandResponse>
     {
+        //private readonly RegisterUserValidator _validator;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
