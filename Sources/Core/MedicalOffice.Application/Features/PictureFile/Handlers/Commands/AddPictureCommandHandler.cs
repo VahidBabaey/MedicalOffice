@@ -72,7 +72,7 @@ public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseC
         }
 
         log.Header = response.Message;
-        log.Messages = response.Errors;
+        log.AdditionalData = response.Errors;
 
         await _logger.Log(log);
 

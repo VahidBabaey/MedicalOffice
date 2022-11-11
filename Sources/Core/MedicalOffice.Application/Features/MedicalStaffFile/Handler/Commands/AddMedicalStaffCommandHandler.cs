@@ -124,11 +124,13 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                     response.Errors.Add(error.Message);
 
                     log.Type = LogType.Error;
+                    // LogError($"{_requestTitle} failed", e
+                    // rror.Message);
                 }
             }
 
             log.Header = response.Message;
-            log.Messages = response.Errors;
+            log.AdditionalData = response.Errors;
 
             await _logger.Log(log);
 

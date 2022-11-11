@@ -34,7 +34,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         public async Task<ActionResult<UserStatusDTO>> GetUserStatus([FromQuery] PhoneNumberDTO dto)
         {
             var response = await _mediator.Send(new GetUserStatusQuery() { DTO = dto });
-
+            
             return Ok(response);
         }
 

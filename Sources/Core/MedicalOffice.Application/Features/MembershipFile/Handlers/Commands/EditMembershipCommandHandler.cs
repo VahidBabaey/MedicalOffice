@@ -68,7 +68,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
             }
 
             log.Header = response.Message;
-            log.Messages = response.Errors;
+            log.AdditionalData = response.Errors;
 
             await _logger.Log(log);
 

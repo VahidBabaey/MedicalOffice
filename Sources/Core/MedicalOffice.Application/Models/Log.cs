@@ -2,18 +2,18 @@
 
 public class Log
 {
-    public Log(string header, LogType type, List<string> messages)
+    public Log(string header, LogType type, object messages)
     {
         Header = header;
         Type = type;
-        Messages = messages;
+        AdditionalData = messages;
     }
     public Log()
     {
     }
 
     public string Header { get; set; } = string.Empty;
-    public List<string> Messages { get; set; } = new List<string>();
+    public object AdditionalData { get; set; } = new object();
     public LogType Type { get; set; }
 }
 

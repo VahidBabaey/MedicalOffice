@@ -42,7 +42,7 @@ public class GetAllMembershipsQueryHandler : IRequestHandler<GetAllMemberships, 
         catch (Exception error)
         {
             log.Header = $"{_requestTitle} failed";
-            log.Messages.Add(error.Message);
+            log.AdditionalData=error.Message;
             log.Type = LogType.Error;
         }
 

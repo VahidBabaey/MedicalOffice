@@ -20,14 +20,18 @@ public class UserOfficeRoleRepository : GenericRepository<UserOfficeRole, Guid>,
         return userOfficeRole;
     }
 
-    public async Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid userId, Guid officeId)
+    public async Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid userId, Guid? officeId = null)
     {
         var userOfficeRole = new UserOfficeRole
         {
             RoleId = roleId,
             UserId = userId,
-            OfficeId = officeId
         };
+
+        if (officeId != null)
+        {
+            userOfficeRole.OfficeId = (Guid)officeId;
+        }
 
         await _dbContext.UserOfficeRoles.AddAsync(userOfficeRole);
 
