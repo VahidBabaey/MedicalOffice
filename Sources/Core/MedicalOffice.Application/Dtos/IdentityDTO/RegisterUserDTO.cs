@@ -10,19 +10,20 @@ namespace MedicalOffice.Application.Dtos.Identity
     public class RegisterUserDTO
     {
         [Required]
-        [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; } = string.Empty;
 
         [Required]
-        [MinLength(3)]
         public string FirstName { get; set; } = string.Empty;
 
         [Required]
-        [MinLength(3)]
         public string LastName { get; set; } = string.Empty;
 
         [Required]
         public string NationalID { get; set; } = string.Empty;
+
+        public Guid? OfficeId { get; set; }
+
+        public Guid[]? RoleIds{ get; set; }
 
     }
 }

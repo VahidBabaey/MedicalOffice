@@ -17,14 +17,14 @@ namespace MedicalOffice.Application.Features.PatientFile.Handlers.Queries;
 public class GetPatientBySearchQueryHandler : IRequestHandler<GetPatientBySearchQuery, List<PatientListDto>>
 {
     private readonly IPatientRepository _repository;
-    private readonly IMapper _mapper;
+    //private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
     public GetPatientBySearchQueryHandler(IPatientRepository repository, IMapper mapper, ILogger logger)
     {
         _repository = repository;
-        _mapper = mapper;
+        //_mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
@@ -44,7 +44,7 @@ public class GetPatientBySearchQueryHandler : IRequestHandler<GetPatientBySearch
         catch (Exception error)
         {
             log.Header = $"{_requestTitle} failed";
-            log.Messages.Add(error.Message);
+            log.AdditionalData=error.Message;
             log.Type = LogType.Error;
         }
 

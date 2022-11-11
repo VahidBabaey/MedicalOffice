@@ -47,7 +47,7 @@ namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Queri
             catch (Exception error)
             {
                 log.Header = $"{_requestTitle} failed";
-                log.Messages.Add(error.Message);
+                log.AdditionalData=error.Message;
                 log.Type = LogType.Error;
             }
 

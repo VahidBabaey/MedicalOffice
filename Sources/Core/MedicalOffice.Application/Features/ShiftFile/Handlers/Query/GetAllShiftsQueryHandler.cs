@@ -47,7 +47,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
             catch (Exception error)
             {
                 log.Header = $"{_requestTitle} failed";
-                log.Messages.Add(error.Message);
+                log.AdditionalData=error.Message;
                 log.Type = LogType.Error;
             }
 
