@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
-    public class SendTotpCommandHandler : IRequestHandler<SendTotpCommand, BaseCommandResponse>
+    public class SendTotpCommandHandler : IRequestHandler<SendTotpCommand, BaseResponse>
     {
         private readonly ITotpHandler _totpHandler;
         private readonly ILogger _logger;
@@ -26,9 +26,9 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
-        public async Task<BaseCommandResponse> Handle(SendTotpCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(SendTotpCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
             PhoneNumberValidator validator = new();
             Log log = new Log();
 
@@ -38,7 +38,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 if (!validationResult.IsValid)
                 {
                     response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                     log.Type = LogType.Error;
@@ -47,21 +47,21 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Message = $"Totp '{totp}' was sent to user" });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Message = $"Totp '{totp}' was sent to user" });
 
                 log.Type = LogType.Success;
             }
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
 
-            log.Header = response.Message;
+            log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
             await _logger.Log(log);

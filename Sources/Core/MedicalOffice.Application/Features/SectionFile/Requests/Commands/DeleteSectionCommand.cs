@@ -3,7 +3,7 @@ using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 
-public class DeleteSectionCommand : IRequest<BaseCommandResponse>
+public class DeleteSectionCommand : IRequest<BaseResponse>
 {
     public Guid SectionId { get; set; }
 }

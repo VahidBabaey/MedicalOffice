@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 
 
-public class DeleteInsuranceCommand : IRequest<BaseCommandResponse>
+public class DeleteInsuranceCommand : IRequest<BaseResponse>
 {
     public Guid InsuranceID { get; set; }
 }

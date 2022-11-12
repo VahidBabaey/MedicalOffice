@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
 {
-    public class EditPermissionCommandHandler : IRequestHandler<EditPermissionCommand, BaseCommandResponse>
+    public class EditPermissionCommandHandler : IRequestHandler<EditPermissionCommand, BaseResponse>
     {
         private readonly IPermissionRepository _repository;
         private readonly IMapper _mapper;
@@ -30,9 +30,9 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(EditPermissionCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(EditPermissionCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             Log log = new();
 
@@ -122,22 +122,22 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
                 await _repository.Update(Permission);
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Id = Permission.Id });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = Permission.Id });
 
                 log.Type = LogType.Success;
             }
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
 
 
-            log.Header = response.Message;
+            log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
             await _logger.Log(log);

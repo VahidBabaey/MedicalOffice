@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.DrugFile.Requests.Commands
 {
-    public class AddDrugCommand : IRequest<BaseCommandResponse>
+    public class AddDrugCommand : IRequest<BaseResponse>
     {
         public DrugDTO DTO { get; set; } = new DrugDTO();
     }

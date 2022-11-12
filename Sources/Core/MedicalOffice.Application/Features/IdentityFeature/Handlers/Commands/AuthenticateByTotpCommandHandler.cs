@@ -22,7 +22,7 @@ using System.Security.Claims;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
-    public class AuthenticateByTotpCommandHandler : IRequestHandler<AuthenticateByTotpCommand, BaseCommandResponse>
+    public class AuthenticateByTotpCommandHandler : IRequestHandler<AuthenticateByTotpCommand, BaseResponse>
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
@@ -48,9 +48,9 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             _mapper = mapper;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
-        public async Task<BaseCommandResponse> Handle(AuthenticateByTotpCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(AuthenticateByTotpCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new BaseCommandResponse();
+            BaseResponse response = new BaseResponse();
             AuthenticateByTotpValidator validator = new();
             Log log = new();
 
@@ -58,7 +58,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             if (!validationResult.IsValid)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
@@ -71,7 +71,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     if (user == null)
                     {
                         response.Success = false;
-                        response.Message = $"{_requestTitle} failed";
+                        response.StatusDescription = $"{_requestTitle} failed";
                         response.Errors.Add($"User with phone number '{request.DTO.PhoneNumber}' is't exist.");
 
                         log.Type = LogType.Error;
@@ -86,8 +86,9 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
                         if (!isVerify)
                         {
+                            response.StatusCode = HttpStatusCode.NotAcceptable;
                             response.Success = false;
-                            response.Message = $"{_requestTitle} failed";
+                            response.StatusDescription = $"{_requestTitle} failed";
                             response.Errors.Add($"Totp for {request.DTO.PhoneNumber} are'nt valid");
 
                             log.Type = LogType.Error;
@@ -126,8 +127,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                             //};
 
                             response.Success = true;
-                            response.Message = $"{_requestTitle} succeded";
-                            response.Data.Add(authenticatedUser);
+                            response.StatusDescription = $"{_requestTitle} succeded";
+                            response.Data = (authenticatedUser);
 
                             log.Type = LogType.Success;
                         }
@@ -136,14 +137,15 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 catch (Exception error)
                 {
                     response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response.StatusCode = HttpStatusCode.Unauthorized;
+                    response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 
                     log.Type = LogType.Error;
                 }
             }
 
-            log.Header = response.Message;
+            log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
             await _logger.Log(log);

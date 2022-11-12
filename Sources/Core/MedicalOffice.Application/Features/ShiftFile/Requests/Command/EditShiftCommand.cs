@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.ShiftFile.Requests.Command
 {
-    public class EditShiftCommand : IRequest<BaseCommandResponse>
+    public class EditShiftCommand : IRequest<BaseResponse>
     {
         public UpdateShiftDTO DTO { get; set; } = new UpdateShiftDTO();
     }

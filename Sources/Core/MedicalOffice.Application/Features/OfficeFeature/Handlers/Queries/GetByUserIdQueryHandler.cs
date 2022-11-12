@@ -5,12 +5,12 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Queries;
 using MedicalOffice.Application.Models;
-using MedicalOffice.Application.Responses.Enveloping;
+using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Queries
 {
-    public class GetByUserIdQueryHandler : IRequestHandler<GetByUserIdQuery, BaseQueryResponse>
+    public class GetByUserIdQueryHandler : IRequestHandler<GetByUserIdQuery, BaseResponse>
     {
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
@@ -25,17 +25,17 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Queries
             _repository = repository;
         }
 
-        public async Task<BaseQueryResponse> Handle(GetByUserIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetByUserIdQuery request, CancellationToken cancellationToken)
         {
-            BaseQueryResponse response = new();
+            BaseResponse response = new();
             Log log = new();
 
             var offices = await _repository.GetByUserId(request.UserId);
             var result = _mapper.Map<List<Office>>(offices);
 
             response.Success = true;
-            response.Message = $"{_requestTitle} succeded";
-            response.Data.Add(result);
+            response.StatusDescription = $"{_requestTitle} succeded";
+            response.Data = (result);
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

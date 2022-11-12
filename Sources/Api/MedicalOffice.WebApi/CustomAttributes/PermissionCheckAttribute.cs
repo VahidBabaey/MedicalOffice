@@ -68,8 +68,7 @@ namespace MedicalOffice.WebApi.Attributes
 
         public PermissionFilter(
             string permission,
-            IPermissionRepository repository
-            )
+            IPermissionRepository repository)
         {
             _permission = permission;
             _repository = repository;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MembershipFile.Requests.Commands
 {
-    public class DeleteMembershipCommand : IRequest<BaseCommandResponse>
+    public class DeleteMembershipCommand : IRequest<BaseResponse>
     {
         public Guid MembershipId { get; set; }
         public Guid[]? ServiceIDs { get; set; }

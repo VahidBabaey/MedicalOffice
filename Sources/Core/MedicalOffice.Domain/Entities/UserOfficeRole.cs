@@ -28,7 +28,7 @@ public class UserOfficeRole : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی مطب یا مرکز درمانی
     /// </summary>
-    public Guid OfficeId { get; set; }
+    public Guid? OfficeId { get; set; }
 
     /// <summary>
     /// نقش

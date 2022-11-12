@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PictureFile.Requests.Commands
 {
-    public class AddPictureCommand : IRequest<BaseCommandResponse>
+    public class AddPictureCommand : IRequest<BaseResponse>
     {
         public PictureUploadDTO DTO { get; set; } = new PictureUploadDTO();
         public PatientPicturesDTO DTOpatientpicture { get; set; } = new PatientPicturesDTO();

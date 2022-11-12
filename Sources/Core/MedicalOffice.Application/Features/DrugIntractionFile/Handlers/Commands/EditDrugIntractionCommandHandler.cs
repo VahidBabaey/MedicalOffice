@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Commands
 {
 
-    public class EditDrugIntractionCommandHandler : IRequestHandler<EditDrugIntractionCommand, BaseCommandResponse>
+    public class EditDrugIntractionCommandHandler : IRequestHandler<EditDrugIntractionCommand, BaseResponse>
     {
         private readonly IDrugIntractionRepository _repository;
         private readonly IMapper _mapper;
@@ -30,9 +30,9 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Command
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(EditDrugIntractionCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(EditDrugIntractionCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             Log log = new();
 
@@ -43,21 +43,21 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Command
                 await _repository.Update(drugintraction);
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Id = drugintraction.Id });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = drugintraction.Id });
 
                 log.Type = LogType.Success;
             }
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
 
-            log.Header = response.Message;
+            log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
             await _logger.Log(log);

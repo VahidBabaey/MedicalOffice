@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Commands
 {
 
-    public class AddSpecializationCommandHandler : IRequestHandler<AddSpecializationCommand, BaseCommandResponse>
+    public class AddSpecializationCommandHandler : IRequestHandler<AddSpecializationCommand, BaseResponse>
     {
         private readonly ISpecializationRepository _repository;
         private readonly IMapper _mapper;
@@ -31,9 +31,9 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Command
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(AddSpecializationCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(AddSpecializationCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             AddSpecializationValidator validator = new();
 
@@ -44,7 +44,7 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Command
             if (!validationResult.IsValid)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
@@ -58,22 +58,22 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Command
                     Specialization = await _repository.Add(Specialization);
 
                     response.Success = true;
-                    response.Message = $"{_requestTitle} succeded";
-                    response.Data.Add(new { Id = Specialization.Id });
+                    response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = Specialization.Id });
 
                     log.Type = LogType.Success;
                 }
                 catch (Exception error)
                 {
                     response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 
                     log.Type = LogType.Error;
                 }
             }
 
-            log.Header = response.Message;
+            log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
             await _logger.Log(log);

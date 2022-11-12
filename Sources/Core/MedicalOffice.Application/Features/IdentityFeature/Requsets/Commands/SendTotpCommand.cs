@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands
 {
-    public class SendTotpCommand : IRequest<BaseCommandResponse>
+    public class SendTotpCommand : IRequest<BaseResponse>
     {
         public PhoneNumberDTO DTO { get; set; } = new PhoneNumberDTO();
     }

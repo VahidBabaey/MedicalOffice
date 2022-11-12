@@ -13,9 +13,8 @@ using System.Net;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
-    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, BaseCommandResponse>
+    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, BaseResponse>
     {
-        //private readonly RegisterUserValidator _validator;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
@@ -39,7 +38,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             var validator = new RegisterUserValidator();
             var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
@@ -105,7 +104,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             return await Success($"{_requestTitle} succeded", new { user.Id });
         }
 
-        private async Task<BaseCommandResponse> Success(string message, params object[] data)
+        private async Task<BaseResponse> Success(string message, params object[] data)
         {
             await _logger.Log(new Log
             {
@@ -114,10 +113,10 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 AdditionalData = data
             });
 
-            return new() { Success = true, Message = message, Data = data.ToList() };
+            return new() { Success = true, StatusDescription = message, Data = data.ToList() };
         }
 
-        private async Task<BaseCommandResponse> Faild(string message, params string[] errors)
+        private async Task<BaseResponse> Faild(string message, params string[] errors)
         {
             await _logger.Log(new Log
             {
@@ -126,7 +125,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 AdditionalData = errors
             });
 
-            return new() { Success = false, Message = message, Errors = errors.ToList() };
+            return new() { Success = false, StatusDescription = message, Errors = errors.ToList() };
         }
     }
 }

@@ -4,7 +4,7 @@ using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 
-public class AddSectionCommand : IRequest<BaseCommandResponse>
+public class AddSectionCommand : IRequest<BaseResponse>
 { 
     public SectionDTO Dto { get; set; } = new SectionDTO();
 }

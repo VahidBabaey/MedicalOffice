@@ -12,7 +12,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<IEnumerable<MedicalStaffNameListDTO>> GetAllUsersName();
 
 
-        Task<bool> GetByOfficeAndUserId(Guid officeId, string phoneNumber);
+        Task<bool> GetByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber);
 
         Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId);
 

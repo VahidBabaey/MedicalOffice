@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands
 {
-    public class RegisterUserCommand : IRequest<BaseCommandResponse>
+    public class RegisterUserCommand : IRequest<BaseResponse>
     {
         public RegisterUserDTO DTO { get; set; } = new();
     }

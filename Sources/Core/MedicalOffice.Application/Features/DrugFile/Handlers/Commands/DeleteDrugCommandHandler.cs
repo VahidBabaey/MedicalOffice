@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
 {
 
-    public class DeleteDrugCommandHandler : IRequestHandler<DeleteDrugCommand, BaseCommandResponse>
+    public class DeleteDrugCommandHandler : IRequestHandler<DeleteDrugCommand, BaseResponse>
     {
         private readonly IDrugRepository _repository;
         private readonly IMapper _mapper;
@@ -29,9 +29,9 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(DeleteDrugCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(DeleteDrugCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
             Log log = new();
 
             try
@@ -39,21 +39,21 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
                 await _repository.Delete(request.DrugId);
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Id = request.DrugId });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = request.DrugId });
 
                 log.Type = LogType.Success;
             }
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
 
-            log.Header = response.Message;
+            log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
             await _logger.Log(log);

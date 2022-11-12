@@ -4,7 +4,7 @@ using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers
 {
-    public class AuthenticateByPasswordCommand : IRequest<BaseCommandResponse>
+    public class AuthenticateByPasswordCommand : IRequest<BaseResponse>
     {
         public AuthenticateByPasswordDTO DTO { get; set; } = new();
     }

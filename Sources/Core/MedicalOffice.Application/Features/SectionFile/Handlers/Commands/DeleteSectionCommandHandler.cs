@@ -7,7 +7,7 @@ using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 
-public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand, BaseCommandResponse>
+public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand, BaseResponse>
 {
     private readonly ISectionRepository _repository;
     private readonly ILogger _logger;
@@ -20,9 +20,9 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseCommandResponse> Handle(DeleteSectionCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(DeleteSectionCommand request, CancellationToken cancellationToken)
     {
-        BaseCommandResponse response = new();
+        BaseResponse response = new();
         Log log = new();
 
         try
@@ -30,21 +30,21 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
             await _repository.Delete(request.SectionId);
 
             response.Success = true;
-            response.Message = $"{_requestTitle} succeded";
-            response.Data.Add(new { Id = request.SectionId });
+            response.StatusDescription = $"{_requestTitle} succeded";
+            response.Data = (new { Id = request.SectionId });
 
             log.Type = LogType.Success;
         }
         catch (Exception error)
         {
             response.Success = false;
-            response.Message = $"{_requestTitle} failed";
+            response.StatusDescription = $"{_requestTitle} failed";
             response.Errors.Add(error.Message);
 
             log.Type = LogType.Error;
         }
 
-        log.Header = response.Message;
+        log.Header = response.StatusDescription;
         log.AdditionalData = response.Errors;
 
         await _logger.Log(log);

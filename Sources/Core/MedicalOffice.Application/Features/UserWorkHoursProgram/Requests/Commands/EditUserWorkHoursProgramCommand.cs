@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Requests.Commands
 {
-    public class EditUserWorkHoursProgramCommand : IRequest<BaseCommandResponse>
+    public class EditUserWorkHoursProgramCommand : IRequest<BaseResponse>
     {
         public UserWorkHoursProgramDTO DTO { get; set; } = new UserWorkHoursProgramDTO();
     }

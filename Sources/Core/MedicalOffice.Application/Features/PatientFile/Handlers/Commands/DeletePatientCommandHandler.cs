@@ -7,7 +7,7 @@ using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.PatientFile.Handlers.Commands;
 
-public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand, BaseCommandResponse>
+public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand, BaseResponse>
 {
     private readonly IPatientRepository _repository;
     private readonly IPatientContactRepository _repositorycontact;
@@ -26,9 +26,9 @@ public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand,
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseCommandResponse> Handle(DeletePatientCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(DeletePatientCommand request, CancellationToken cancellationToken)
     {
-        BaseCommandResponse response = new();
+        BaseResponse response = new();
         Log log = new();
 
         try
@@ -38,21 +38,21 @@ public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand,
             await _repositoryaddress.Delete(request.PatientId);
             await _repositorytag.Delete(request.PatientId);
             response.Success = true;
-            response.Message = $"{_requestTitle} succeded";
-            response.Data.Add(new { Id = request.PatientId });
+            response.StatusDescription = $"{_requestTitle} succeded";
+            response.Data = (new { Id = request.PatientId });
 
             log.Type = LogType.Success;
         }
         catch (Exception error)
         {
             response.Success = false;
-            response.Message = $"{_requestTitle} failed";
+            response.StatusDescription = $"{_requestTitle} failed";
             response.Errors.Add(error.Message);
 
             log.Type = LogType.Error;
         }
 
-        log.Header = response.Message;
+        log.Header = response.StatusDescription;
         log.AdditionalData = response.Errors;
 
         await _logger.Log(log);

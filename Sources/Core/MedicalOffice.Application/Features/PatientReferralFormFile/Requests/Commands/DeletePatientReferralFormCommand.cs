@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Commands
 {
-    public class DeletePatientReferralFormCommand : IRequest<BaseCommandResponse>
+    public class DeletePatientReferralFormCommand : IRequest<BaseResponse>
     {
         public Guid PatientReferralFormId { get; set; }
     }

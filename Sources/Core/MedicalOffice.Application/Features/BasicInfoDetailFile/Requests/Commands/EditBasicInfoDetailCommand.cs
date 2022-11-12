@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Commands
 {
-    public class EditBasicInfoDetailCommand : IRequest<BaseCommandResponse>
+    public class EditBasicInfoDetailCommand : IRequest<BaseResponse>
     {
         public UpdateBasicInfoDetailDTO DTO { get; set; } = new UpdateBasicInfoDetailDTO();
     }

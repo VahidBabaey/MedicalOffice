@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using static System.Collections.Specialized.BitVector32;
 
 namespace MedicalOffice.Application.Features.PictureFile.Handlers.Commands;
-public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseCommandResponse>
+public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseResponse>
 {
     private readonly IPictureRepository _repository;
     private readonly IMapper _mapper;
@@ -31,9 +31,9 @@ public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseC
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseCommandResponse> Handle(AddPictureCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(AddPictureCommand request, CancellationToken cancellationToken)
     {
-        BaseCommandResponse response = new();
+        BaseResponse response = new();
 
         AddPictureValidator validator = new();
 
@@ -44,7 +44,7 @@ public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseC
         if (!validationResult.IsValid)
         {
             response.Success = false;
-            response.Message = $"{_requestTitle} failed";
+            response.StatusDescription = $"{_requestTitle} failed";
             response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
             log.Type = LogType.Error;
@@ -57,21 +57,21 @@ public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseC
                 var picture = _mapper.Map<Picture>(await _repository.RegisterPictureAsync(request.DTO));
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
+                response.StatusDescription = $"{_requestTitle} succeded";
 
                 log.Type = LogType.Success;
             }
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
         }
 
-        log.Header = response.Message;
+        log.Header = response.StatusDescription;
         log.AdditionalData = response.Errors;
 
         await _logger.Log(log);

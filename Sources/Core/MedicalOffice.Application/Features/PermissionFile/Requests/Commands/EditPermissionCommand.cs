@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PermissionFile.Requests.Commands
 {
-    public class EditPermissionCommand : IRequest<BaseCommandResponse>
+    public class EditPermissionCommand : IRequest<BaseResponse>
     {
         public UpdatePermissionDTO DTOUp { get; set; } = new UpdatePermissionDTO();
     }

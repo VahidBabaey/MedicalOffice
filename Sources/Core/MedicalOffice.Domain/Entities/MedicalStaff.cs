@@ -70,7 +70,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// ارتباط چند به چند کاربر مطب و دسترسی هایش
         /// </summary>
-        public ICollection<Permission> Permission { get; set; } = new List<Permission>();
+        public ICollection<Permission>? Permission { get; set; }
 
         /// <summary>
         /// شناسه نقش کاربر مطب 

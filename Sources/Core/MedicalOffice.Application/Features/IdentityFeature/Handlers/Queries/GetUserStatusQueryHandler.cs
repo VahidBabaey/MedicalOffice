@@ -4,7 +4,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
 using MedicalOffice.Application.Models;
-using MedicalOffice.Application.Responses.Enveloping;
+using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.WebApi.WebApi.Controllers;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
 {
-    public class GetUserStatusQueryHandler : IRequestHandler<GetUserStatusQuery, BaseQueryResponse>
+    public class GetUserStatusQueryHandler : IRequestHandler<GetUserStatusQuery, BaseResponse>
     {
         private readonly UserManager<User> _userManager;
         private readonly ILogger _logger;
@@ -30,9 +30,9 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
             _userManager = userManager;
         }
 
-        public async Task<BaseQueryResponse> Handle(GetUserStatusQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetUserStatusQuery request, CancellationToken cancellationToken)
         {
-            BaseQueryResponse response = new();
+            BaseResponse response = new();
             PhoneNumberValidator validator = new();
             Log log = new();
 
@@ -40,7 +40,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
             if (!validationResult.IsValid)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
@@ -69,8 +69,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
                         }
 
                         response.Success = true;
-                        response.Message = $"{_requestTitle} succeded";
-                        response.Data.Add(userStatus);
+                        response.StatusDescription = $"{_requestTitle} succeded";
+                        response.Data = (userStatus);
 
                         log.Type = LogType.Success;
                     }
@@ -78,14 +78,14 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
                 catch (Exception error)
                 {
                     response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 
                     log.Type = LogType.Error;
                 }
             }
 
-            log.Header = response.Message;
+            log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
             await _logger.Log(log);

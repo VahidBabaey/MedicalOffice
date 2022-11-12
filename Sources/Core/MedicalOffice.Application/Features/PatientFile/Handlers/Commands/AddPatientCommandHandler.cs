@@ -10,7 +10,7 @@ using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Features.PatientFile.Handlers.Commands;
 
-public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseCommandResponse>
+public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseResponse>
 {
     private readonly IPatientRepository _repository;
     private readonly IMapper _mapper;
@@ -25,9 +25,9 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseC
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseCommandResponse> Handle(AddPatientCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(AddPatientCommand request, CancellationToken cancellationToken)
     {
-        BaseCommandResponse response = new();
+        BaseResponse response = new();
 
         AddPatientValidator validator = new();
 
@@ -38,7 +38,7 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseC
         if (!validationResult.IsValid)
         {
             response.Success = false;
-            response.Message = $"{_requestTitle} failed";
+            response.StatusDescription = $"{_requestTitle} failed";
             response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
             log.Type = LogType.Error;
@@ -52,8 +52,8 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseC
                 patient = await _repository.Add(patient);
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Id = patient.Id });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = patient.Id });
                 if (request.Dto.Mobile == null)
                 {
 
@@ -78,14 +78,14 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseC
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
         }
 
-        log.Header = response.Message;
+        log.Header = response.StatusDescription;
         log.AdditionalData = response.Errors;
 
         await _logger.Log(log);

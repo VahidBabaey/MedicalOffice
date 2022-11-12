@@ -12,7 +12,7 @@ using MedicalOffice.Domain.Entities;
 namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Commands
 {
 
-    public class AddUserWorkHoursProgramHandler : IRequestHandler<AddUserWorkHoursProgramCommand, BaseCommandResponse>
+    public class AddUserWorkHoursProgramHandler : IRequestHandler<AddUserWorkHoursProgramCommand, BaseResponse>
     {
         private readonly IUserWorkHourProgramRepository _repository;
         private readonly IMapper _mapper;
@@ -29,9 +29,9 @@ namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Comma
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(AddUserWorkHoursProgramCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(AddUserWorkHoursProgramCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             AddUserWorkHoursProgramValidator validator = new();
 
@@ -42,7 +42,7 @@ namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Comma
             if (!validationResult.IsValid)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
@@ -66,22 +66,22 @@ namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Comma
                     }
                     
                     response.Success = true;
-                    response.Message = $"{_requestTitle} succeded";
-                    response.Data.Add(new { Id = Userworkhourprogram.Id });
+                    response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = Userworkhourprogram.Id });
 
                     log.Type = LogType.Success;
                 }
                 catch (Exception error)
                 {
                     response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 
                     log.Type = LogType.Error;
                 }
             }
 
-            log.Header = response.Message;
+            log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
             await _logger.Log(log);

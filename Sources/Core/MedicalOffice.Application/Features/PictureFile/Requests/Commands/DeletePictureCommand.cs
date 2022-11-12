@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PictureFile.Requests.Commands
 {
-    public class DeletePictureCommand : IRequest<BaseCommandResponse>
+    public class DeletePictureCommand : IRequest<BaseResponse>
     {
         public Guid PictureId { get; set; }
     }

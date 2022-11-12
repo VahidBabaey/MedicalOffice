@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers
@@ -34,7 +33,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         public async Task<ActionResult<UserStatusDTO>> GetUserStatus([FromQuery] PhoneNumberDTO dto)
         {
             var response = await _mediator.Send(new GetUserStatusQuery() { DTO = dto });
-            
+
             return Ok(response);
         }
 
@@ -43,7 +42,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         {
             var response = await _mediator.Send(new AuthenticateByTotpCommand() { DTO = dto });
 
-            return Ok(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [HttpPost("authenticate/password")]

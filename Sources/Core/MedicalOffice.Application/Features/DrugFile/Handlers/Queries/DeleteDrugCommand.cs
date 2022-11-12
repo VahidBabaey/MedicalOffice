@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.DrugFile.Handlers.Queries
 {
-    public class DeleteDrugCommand : IRequest<BaseCommandResponse>
+    public class DeleteDrugCommand : IRequest<BaseResponse>
     {
         public Guid DrugId { get; set; }
     }

@@ -33,12 +33,12 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// ارتباط چند به چند کاربران مطب و دسترسی هایشان
         /// </summary>
-        public ICollection<MedicalStaff> MedicalStaff { get; set; } = new List<MedicalStaff>();
+        public ICollection<MedicalStaff>? MedicalStaff { get; set; } 
 
         /// <summary>
         /// آیدی کاربر
         /// </summary>
-        public Guid? MedicalStaffOfficeRoleId { get; set; }
+        public Guid? UserOfficeRoleId { get; set; }
 
         /// <summary>
         /// کاربر

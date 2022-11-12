@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Commands
 {
-    public class DeleteBasicInfoDetailCommand : IRequest<BaseCommandResponse>
+    public class DeleteBasicInfoDetailCommand : IRequest<BaseResponse>
     {
         public Guid BasicInfoDetailId { get; set; }
     }

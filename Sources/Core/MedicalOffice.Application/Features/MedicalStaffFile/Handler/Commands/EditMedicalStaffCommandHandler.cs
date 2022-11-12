@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 {
 
-    public class MyCommandHandlerCommandHandler : IRequestHandler<EditMedicalStaffCommand, BaseCommandResponse>
+    public class MyCommandHandlerCommandHandler : IRequestHandler<EditMedicalStaffCommand, BaseResponse>
     {
         private readonly IMedicalStaffRepository _repository;
         private readonly IUserOfficeRoleRepository _repositoryuserofficerole;
@@ -34,9 +34,9 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(EditMedicalStaffCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(EditMedicalStaffCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             Log log = new();
 
@@ -49,8 +49,8 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 await _repository.Update(medicalStaff);
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Id = medicalStaff.Id });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = medicalStaff.Id });
                 if (request.DTO.RoleIds == null)
                 {
                     throw new NullReferenceException("Role not Found");
@@ -69,13 +69,13 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
 
-            log.Header = response.Message;
+            log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
             await _logger.Log(log);

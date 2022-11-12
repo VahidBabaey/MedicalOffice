@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Commands
 {
-    public class AddFormCommitmentCommandHandler : IRequestHandler<AddFormCommitmentCommand, BaseCommandResponse>
+    public class AddFormCommitmentCommandHandler : IRequestHandler<AddFormCommitmentCommand, BaseResponse>
     {
         private readonly IFormCommitmentRepository _repository;
         private readonly IMapper _mapper;
@@ -32,9 +32,9 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(AddFormCommitmentCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(AddFormCommitmentCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             AddFormCommitmentValidator validator = new();
 
@@ -45,7 +45,7 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
             if (!validationResult.IsValid)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
@@ -59,22 +59,22 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
                     formcommitment = await _repository.Add(formcommitment);
 
                     response.Success = true;
-                    response.Message = $"{_requestTitle} succeded";
-                    response.Data.Add(new { Id = formcommitment.Id });
+                    response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = formcommitment.Id });
 
                     log.Type = LogType.Success;
                 }
                 catch (Exception error)
                 {
                     response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 
                     log.Type = LogType.Error;
                 }
             }
 
-            log.Header = response.Message;
+            log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
             await _logger.Log(log);

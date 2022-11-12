@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Command
 {
-    public class AddPatientIllnessFormCommand : IRequest<BaseCommandResponse>
+    public class AddPatientIllnessFormCommand : IRequest<BaseResponse>
     {
         public PatientIllnessFormDTO DTO { get; set; } = new PatientIllnessFormDTO();
     }
