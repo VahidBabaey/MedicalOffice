@@ -65,6 +65,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Tariff> Tariffs => Set<Tariff>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
     public DbSet<ServiceSharePercent> ServiceSharePercents => Set<ServiceSharePercent>();
+    public DbSet<MedicalStaffPermission> MedicalStaffPermissions=> Set<MedicalStaffPermission>();
 
     // Identity
     //public DbSet<User> Users => Set<User>();

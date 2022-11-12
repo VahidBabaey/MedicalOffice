@@ -2,6 +2,7 @@
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace MedicalOffice.Persistence.Repositories;
 
@@ -24,27 +25,29 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
 
         return idUser;
     }
-    public async Task<bool> SearchMedicalStaff(Guid searchId)
-    {
-        var idSearchUser = await _dbContext.Permissiones.Where(p => p.MedicalStaffOfficeRoleId == searchId).FirstOrDefaultAsync();
+    //public async Task<bool> SearchMedicalStaff(Guid searchId)
+    //{
+    //    var idSearchUser = await _dbContext.Permissiones.Where(p => p.UserOfficeRoleId == searchId).FirstOrDefaultAsync();
 
-        if (idSearchUser != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    //    if (idSearchUser != null)
+    //        return true;
+
+    //    else
+    //        return false;
+
+    //}
     public async Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id)
     {
-        return await _dbContext.Permissiones.Where(srv => srv.MedicalStaffOfficeRoleId == Id).ToListAsync();
+        return await _dbContext.Permissiones.Where(srv => srv.UserOfficeRoleId == Id).ToListAsync();
     }
 
     public Task<List<Permission>> GetByUserAndOfficeId(Guid userId, Guid officeId)
     {
-        List<Permission> permissions = _dbContext.MedicalStaffs.Include(m => m.Permission).SingleOrDefault(m => m.UserId == userId && m.OfficeId == officeId).Permission.ToList();
-        return Task.FromResult(permissions);
+        var permission = _dbContext.MedicalStaffs.Include(m => m.Permission).SingleAsync(m => m.UserId == userId && m.OfficeId == officeId).Result.Permission?.ToList();
+
+        if (permission != null)
+            return Task.FromResult(permission);
+        else
+            return Task.FromResult(new List<Permission>());
     }
 }
