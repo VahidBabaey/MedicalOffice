@@ -54,7 +54,7 @@ namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Comma
                     foreach (var item in request.DTO.StaffWorkHours)
                     {
                         Userworkhourprogram.Id = new Guid();
-                        Userworkhourprogram.UserId = request.DTO.UserId;
+                        Userworkhourprogram.MedicalStaffId = request.DTO.UserId;
                         Userworkhourprogram.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
                         Userworkhourprogram.WeekDay = item.Day;
                         Userworkhourprogram.MorningStart = item.MorningStart;

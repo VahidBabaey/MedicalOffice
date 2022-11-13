@@ -16,7 +16,7 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
     }
     public async Task UpdateUsersWorkHoursProgram(Guid userid, int day, UserWorkHoursProgramDTO UserWorkHoursProgramDTO)
     {
-        var _list = await _dbContext.MedicalStaffWorkHourPrograms.Where(p => p.UserId == userid && (int)p.WeekDay == day).ToListAsync();
+        var _list = await _dbContext.MedicalStaffWorkHourPrograms.Where(p => p.MedicalStaffId == userid && (int)p.WeekDay == day).ToListAsync();
 
         foreach (var item in _list)
         {
@@ -38,7 +38,7 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
     }
     public async Task DeleteUserWorkHourProgram(Guid id)
     {
-        var _list = await _dbContext.MedicalStaffWorkHourPrograms.Where(p => p.UserId == id).ToListAsync();
+        var _list = await _dbContext.MedicalStaffWorkHourPrograms.Where(p => p.MedicalStaffId == id).ToListAsync();
 
         foreach (var item in _list)
         {
@@ -48,7 +48,7 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
     }
     public async Task<IReadOnlyList<MedicalStaffWorkHourProgram>> GetUserWorkHourProgramByID(Guid Id)
     {
-        return await _dbContext.MedicalStaffWorkHourPrograms.Where(srv => srv.UserId == Id).ToListAsync();
+        return await _dbContext.MedicalStaffWorkHourPrograms.Where(srv => srv.MedicalStaffId == Id).ToListAsync();
     }
 
 }

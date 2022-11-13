@@ -11,6 +11,8 @@ using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 
 using Microsoft.AspNetCore.Mvc;
 using MedicalOffice.Application.Dtos.Permission;
+using MedicalOffice.WebApi.Attributes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
@@ -54,6 +56,8 @@ public class PermissionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
+    [PermissionCheck("goh")]
     [HttpPatch("update-permission")]
     public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] UpdateMedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)
     {

@@ -50,7 +50,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// شناسه کاربر سیستم
         /// </summary>
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
 
         /// <summary>
         /// (ارتباط یک به چند کاربر مطب با کاربر سیستم (هر کاربر سیستم میتواند در هر مطب کاربر متفاوتی باشد
@@ -60,7 +60,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// آیدی مطب
         /// </summary>
-        public Guid OfficeId { get; set; }
+        public Guid? OfficeId { get; set; }
 
         /// <summary>
         /// ارتباط یک به چند کاربر مطب با مطب
@@ -70,22 +70,22 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// ارتباط چند به چند کاربر مطب و دسترسی هایش
         /// </summary>
-        public ICollection<Permission>? Permission { get; set; }
+        public ICollection<MedicalStaffPermission> MedicalStaffPermissions { get; set; } = new List<MedicalStaffPermission>();
 
         /// <summary>
         /// شناسه نقش کاربر مطب 
         /// </summary>
-        public Guid RoleId{ get; set; }
+        public Guid? RoleId { get; set; }
 
         /// <summary>
         /// برای ارتباط یک به چند یک نقش با کاربران مطب
         /// </summary>
-        public Role? Role{ get; set; }
+        public Role? Role { get; set; }
 
         /// <summary>
         /// آیدی تخصص
         /// </summary>
-        public Guid SpecializationId { get; set; } = new Guid();
+        public Guid? SpecializationId { get; set; }
 
         /// <summary>
         /// تخصص
@@ -95,7 +95,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// برنامه کادر درمان
         /// </summary>   
-        public ICollection<MedicalStaffWorkHourProgram> UserWorkHourPrograms { get; set; } = new List<MedicalStaffWorkHourProgram>();
+        public ICollection<MedicalStaffWorkHourProgram>? UserWorkHourPrograms { get; set; }
 
         /// <summary>
         /// پذیرش ها

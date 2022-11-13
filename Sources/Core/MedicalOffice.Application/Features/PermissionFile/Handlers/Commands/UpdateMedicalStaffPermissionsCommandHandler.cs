@@ -48,25 +48,44 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
                 return await Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
-            var permissions = _permissionRepository.GetAll().Result.Where(m => request.DTO.PermissionIds.Contains(m.Id));
+            var existingpermissions = _medicalStaffPermissionRepository.GetAll().Result.Where(mp => mp.MedicalStaffId == medicalStaff.Id);
 
-            foreach (var item in permissions)
+            var newPermissionIds = _permissionRepository.GetAll().Result.Where(m => request.DTO.PermissionIds.Contains(m.Id))
+                .Select(p => p.Id);
+
+            var medicalStaffPermissions = new List<MedicalStaffPermission>();
+
+            foreach (var permissionId in newPermissionIds)
             {
-
-                await _medicalStaffPermissionRepository.Delete(new MedicalStaffPermission
+                medicalStaffPermissions.Add(new MedicalStaffPermission
                 {
                     MedicalStaffId = medicalStaff.Id,
-                    PermissionId = item.Id
+                    PermissionId = permissionId
                 });
+            };
 
+            if (existingpermissions != null)
+            {
+                foreach (var permission in existingpermissions)
+                {
+                    await _medicalStaffPermissionRepository.Delete(permission);
+                }
+            };
+
+            foreach (var permissionId in newPermissionIds)
+            {
                 await _medicalStaffPermissionRepository.Add(new MedicalStaffPermission
                 {
                     MedicalStaffId = medicalStaff.Id,
-                    PermissionId = item.Id,
+                    PermissionId = permissionId
                 });
-            }
+            };
 
-            return await Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", new { medicalStaff.Id });
+            return await Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", new
+            {
+                medicalStaff
+                .Id
+            });
         }
 
         private async Task<BaseResponse> Success(HttpStatusCode statusCode, string message, params object[] data)

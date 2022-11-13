@@ -38,16 +38,16 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     //}
     public async Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id)
     {
-        return await _dbContext.Permissiones.Where(srv => srv.UserOfficeRoleId == Id).ToListAsync();
+        return await _dbContext.Permissions.Where(srv => srv.UserOfficeRoleId == Id).ToListAsync();
     }
 
-    public Task<List<Permission>> GetByUserAndOfficeId(Guid userId, Guid officeId)
-    {
-        var permission = _dbContext.MedicalStaffs.Include(m => m.Permission).SingleAsync(m => m.UserId == userId && m.OfficeId == officeId).Result.Permission?.ToList();
+    //public Task<List<Permission>> GetByUserAndOfficeId(Guid userId, Guid officeId)
+    //{
+    //    var permission = _dbContext.MedicalStaffs.Include(m => m.Permissions).SingleAsync(m => m.UserId == userId && m.OfficeId == officeId).Result.Permissions?.ToList();
 
-        if (permission != null)
-            return Task.FromResult(permission);
-        else
-            return Task.FromResult(new List<Permission>());
-    }
+    //    if (permission != null)
+    //        return Task.FromResult(permission);
+    //    else
+    //        return Task.FromResult(new List<Permission>());
+    //}
 }

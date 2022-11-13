@@ -64,11 +64,11 @@ namespace MedicalOffice.WebApi.Attributes
     public class PermissionFilter : IAuthorizationFilter
     {
         readonly string _permission;
-        private readonly IPermissionRepository _repository;
+        private readonly IMedicalStaffRepository _repository;
 
         public PermissionFilter(
             string permission,
-            IPermissionRepository repository)
+            IMedicalStaffRepository repository)
         {
             _permission = permission;
             _repository = repository;
@@ -78,12 +78,16 @@ namespace MedicalOffice.WebApi.Attributes
         {
             var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // will give the user's userId
             var officeId = QueryHelpers.ParseQuery(context.HttpContext.Request.QueryString.Value).ToString();
-            bool permission = false;
+            //bool permission = false;
 
             if (officeId != null)
             {
-                permission = _repository.GetByUserAndOfficeId(Guid.Parse(userId), Guid.Parse(officeId)).Result.Any(p => p.Name == _permission);
-                if (!permission)
+
+               var bib = _repository.MedicalStaffPermissions(Guid.Parse(userId),Guid.Parse(officeId));
+               var permission = _repository.GetAll().Result.Where(m => m.OfficeId == Guid.Parse(officeId) && m.UserId == Guid.Parse(userId))
+                    .Select(m => m.MedicalStaffPermissions);
+
+                if (permission!=null)
                 {
                     context.Result = new ForbidResult();
                 }

@@ -13,7 +13,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<AppointmentService> AppointmentServices => Set<AppointmentService>();
     public DbSet<AppointmentType> AppointmentTypes => Set<AppointmentType>();
     public DbSet<BasicInfo> BasicInfos => Set<BasicInfo>();
-    public DbSet<Permission> Permissiones => Set<Permission>();
+    public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<BasicInfoDetail> BasicInfoDetail => Set<BasicInfoDetail>();
     public DbSet<Diagnose> Diagnoses => Set<Diagnose>();
     public DbSet<DiscountType> DiscountTypes => Set<DiscountType>();
@@ -65,7 +65,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Tariff> Tariffs => Set<Tariff>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
     public DbSet<ServiceSharePercent> ServiceSharePercents => Set<ServiceSharePercent>();
-    public DbSet<MedicalStaffPermission> MedicalStaffPermissions=> Set<MedicalStaffPermission>();
+    public DbSet<MedicalStaffPermission> MedicalStaffPermissions => Set<MedicalStaffPermission>();
 
     // Identity
     //public DbSet<User> Users => Set<User>();

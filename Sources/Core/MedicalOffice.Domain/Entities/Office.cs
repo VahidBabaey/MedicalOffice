@@ -75,7 +75,7 @@ public class Office : BaseDomainEntity<Guid>
     /// <summary>
     /// ارتباط یک به چند مطب با کاربرانش
     /// </summary>
-    public ICollection<MedicalStaff>? MedicalStaffs { get; set; }
+    public ICollection<MedicalStaff> MedicalStaffs { get; set; } = new HashSet<MedicalStaff>();
 
     /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و کاربر-مطب-نقش استفاده می شود

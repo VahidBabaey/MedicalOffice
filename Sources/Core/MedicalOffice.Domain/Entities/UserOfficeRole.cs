@@ -8,11 +8,6 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class UserOfficeRole : BaseDomainEntity<Guid>
 {
-
-    public UserOfficeRole()
-    {
-        OfficeId = Guid.NewGuid();  
-    }
     public User? User { get; set; }
 
     /// <summary>

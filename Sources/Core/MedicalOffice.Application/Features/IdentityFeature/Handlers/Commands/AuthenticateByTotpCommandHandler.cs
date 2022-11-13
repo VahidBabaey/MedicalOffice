@@ -108,6 +108,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                             {
                                 new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
                                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                                new Claim(JwtRegisteredClaimNames.Email, user.Email),
                             }
                             .Union(userClaims)
                             .Union(roleClaims);

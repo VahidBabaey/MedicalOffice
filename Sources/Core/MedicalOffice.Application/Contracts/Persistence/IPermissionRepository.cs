@@ -10,6 +10,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         //Task<bool> SearchMedicalStaff(Guid searchId);
 
-        Task<List<Permission>> GetByUserAndOfficeId(Guid userId,Guid officeId); 
+        //Task<List<Permission>> GetByUserAndOfficeId(Guid userId, Guid officeId);
     }
 }

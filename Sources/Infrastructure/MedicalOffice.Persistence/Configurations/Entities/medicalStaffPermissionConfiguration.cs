@@ -14,7 +14,17 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public void Configure(EntityTypeBuilder<MedicalStaffPermission> builder)
         {
             builder
-                .HasKey(x => x.PermissionId);
+                .HasKey(mp => mp.PermissionId);
+            builder
+                .HasOne(mp => mp.MedicalStaff)
+                .WithMany(m => m.MedicalStaffPermissions)
+                .HasForeignKey(mp => mp.MedicalStaffId).IsRequired()
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasOne(mp => mp.Permission)
+                .WithMany(m => m.MedicalStaffPermissions)
+                .HasForeignKey(mp => mp.PermissionId).IsRequired()
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

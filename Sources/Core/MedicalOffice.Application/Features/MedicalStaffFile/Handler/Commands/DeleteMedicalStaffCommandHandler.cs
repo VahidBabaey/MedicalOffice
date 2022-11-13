@@ -21,7 +21,10 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public DeleteMedicalStaffCommandHandler(IPatientContactRepository repositorycontact, IPatientAddressRepository repositoryaddress, IPatientTagRepository repositorytag, IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
+        public DeleteMedicalStaffCommandHandler(
+            IPatientContactRepository repositorycontact, 
+            IPatientAddressRepository repositoryaddress, IPatientTagRepository repositorytag, 
+            IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;

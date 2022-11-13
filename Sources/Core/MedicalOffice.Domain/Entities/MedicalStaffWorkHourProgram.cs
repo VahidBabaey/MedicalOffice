@@ -9,11 +9,11 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// کادر درمان
         /// </summary>
-        public MedicalStaff? User { get; set; }
+        public MedicalStaff? MedicalStaff { get; set; }
         /// <summary>
         /// آیدی کادر درمان
         /// </summary>
-        public Guid UserId { get; set; }
+        public Guid MedicalStaffId { get; set; }
         /// <summary>
         /// حداکثر تعداد نوبت‌ها در روز
         /// </summary>
