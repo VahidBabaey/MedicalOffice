@@ -26,6 +26,7 @@ public static class ServiceRegistration
         services.AddScoped<IPatientTagRepository, PatientTagRepository>();
         services.AddScoped<ISectionRepository, SectionRepository>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
+        services.AddScoped<IServiceTariffRepository, ServiceTariffRepository>();
         services.AddScoped<IInsuranceRepository, InsuranceRepository>();
         services.AddScoped<ISpecializationRepository, SpecializationRepository>();
         services.AddScoped<IShiftRepository, ShiftRepository>();
@@ -39,10 +40,12 @@ public static class ServiceRegistration
         services.AddScoped<IExperimentRepository, ExperimentRepository>();
         services.AddScoped<IDrugIntractionRepository, DrugIntractionRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IMedicalStaffRepository, MedicalStaffRepository>();
+        services.AddScoped<IMedicalStaffRoleRepository, MedicalStaffRoleRepository>();
         services.AddScoped<IUserOfficeRoleRepository, UserOfficeRoleRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICryptoServiceProvider, CryptoServiceProvider>();
-        services.AddScoped<IUserWorkHourProgramRepository, UserWorkHourProgramRepository>();
+        services.AddScoped<IMedicalStaffWorkHourProgramRepository, MedicalStaffWorkHourProgramRepository>();
         services.AddScoped<IBasicInfoRepository, BasicInfoRepository>();
         services.AddScoped<IBasicInfoDetailRepository, BasicInfoDetailRepository>();
         services.AddScoped<IPatientIllnessFormRepository, PatientIllnessFormRepository>();
@@ -52,6 +55,8 @@ public static class ServiceRegistration
         services.AddScoped<IFormCommitmentRepository, FormCommitmentRepository>();
         services.AddScoped<IPictureRepository, PictureRepository>();
         services.AddScoped<IMemberShipServiceRepository, MemberShipServiceRepository>();
+        services.AddScoped<IReceptionRepository, ReceptionRepository>();
+        services.AddScoped<IReceptionDiscountRepository, ReceptionDiscountRepository>();
 
         return services;
     }

@@ -14,11 +14,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .WithMany(e => e.ReceptionDiscounts)
                 .HasForeignKey(e => e.DiscountTypeId)
                 .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .HasOne(e => e.ReceptionDetail)
-                .WithMany(e => e.ReceptionDiscounts)
-                .HasForeignKey(e => e.ReceptionDetailId)
-                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

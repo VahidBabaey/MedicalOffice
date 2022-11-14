@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.PermissionDTO;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.UserDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Commands;
@@ -27,7 +27,7 @@ public class PermissionController : Controller
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(string id, [FromBody] PermissionDTO dto)
     {
-        var response = await _mediator.Send(new AddPermissionCommand() { userid = id, DTO = dto });
+        var response = await _mediator.Send(new AddPermissionCommand() { MedicalStaffid = id, DTO = dto });
 
         return Ok(response);
     }
@@ -38,17 +38,17 @@ public class PermissionController : Controller
 
         return Ok(response);
     }
-    [HttpGet("Users")]
-    public async Task<ActionResult<List<UserNameListDTO>>> GetAll()
+    [HttpGet("MedicalStaffs")]
+    public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetAll()
     {
-        var response = await _mediator.Send(new GetAllUsersName());
+        var response = await _mediator.Send(new GetAllMedicalStaffsName());
 
         return Ok(response);
     }
     [HttpGet]
-    public async Task<ActionResult<List<UserNameListDTO>>> GetPermissionDetails(Guid id)
+    public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetPermissionDetails(Guid id)
     {
-        var response = await _mediator.Send(new GetPermissionDetailsofUser() { UserOfficeRoleId = id});
+        var response = await _mediator.Send(new GetPermissionDetailsofMedicalStaff() { UserOfficeRoleId = id});
 
         return Ok(response);
     }

@@ -18,11 +18,11 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// پزشک
     /// </summary>
-    public User? User { get; set; }
+    public MedicalStaff? MedicalStaff { get; set; }
     /// <summary>
     /// آیدی پزشک
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid MedicalStaffId { get; set; }
     /// <summary>
     /// بیمار
     /// </summary>

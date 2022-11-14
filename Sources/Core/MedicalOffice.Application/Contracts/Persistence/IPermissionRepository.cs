@@ -4,8 +4,8 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IPermissionRepository : IGenericRepository<Permission, Guid>
     {
-        Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id);
+        Task<IReadOnlyList<Permission>> GetPermissionDetailsByMedicalStaffID(Guid Id);
         Guid GetId(Guid id);
-        Task<bool> SearchUser(Guid searchid);
+        Task<bool> SearchMedicalStaff(Guid searchid);
     }
 }

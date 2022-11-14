@@ -32,8 +32,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<KMultiplier> KMultipliers => Set<KMultiplier>();
     public DbSet<KMultiplierDetail> KMultiplierDetails => Set<KMultiplierDetail>();
     public DbSet<MedicalAction> MedicalActions => Set<MedicalAction>();
-    public DbSet<User> Users => Set<User>();
-    public DbSet<UserWorkHourProgram> UserWorkHourPrograms => Set<UserWorkHourProgram>();
+    public DbSet<MedicalStaff> MedicalStaffs => Set<MedicalStaff>();
+    public DbSet<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms => Set<MedicalStaffWorkHourProgram>();
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<MemberShipService> MemberShipServices => Set<MemberShipService>();
     public DbSet<Office> Offices => Set<Office>();
@@ -51,7 +51,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Reception> Receptions => Set<Reception>();
     public DbSet<ReceptionDetail> ReceptionDetails => Set<ReceptionDetail>();
     public DbSet<ReceptionDiscount> ReceptionDiscounts => Set<ReceptionDiscount>();
-    public DbSet<ReceptionUser> ReceptionUsers => Set<ReceptionUser>();
+    public DbSet<ReceptionMedicalStaff> ReceptionMedicalStaffs => Set<ReceptionMedicalStaff>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<RoutineMedication> RoutineMedications => Set<RoutineMedication>();
     public DbSet<RVU3> RVU3 => Set<RVU3>();
@@ -62,9 +62,11 @@ public class ApplicationDbContext : DbContext
     public DbSet<SocialHistory> SocialHistories => Set<SocialHistory>();
     public DbSet<Specialization> Specializations => Set<Specialization>();
     public DbSet<Tariff> Tariffs => Set<Tariff>();
+    public DbSet<User> Users => Set<User>();
+    public DbSet<MedicalStaffRole> MedicalStaffRoles => Set<MedicalStaffRole>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
-    public DbSet<UserOfficeSpecialization> UserOfficeSpecializations => Set<UserOfficeSpecialization>();
-    public DbSet<UserServiceSharePercent> UserServiceSharePercents => Set<UserServiceSharePercent>();
+    public DbSet<MedicalStaffOfficeSpecialization> MedicalStaffOfficeSpecializations => Set<MedicalStaffOfficeSpecialization>();
+    public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     { }
@@ -78,7 +80,7 @@ public class ApplicationDbContext : DbContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        //TODO: Save current user as updatedby and createdby
+        //TODO: Save current MedicalStaff as updatedby and createdby
         foreach (var entry in ChangeTracker.Entries<BaseDomainEntity<Guid>>())
         {
             entry.Entity.LastUpdatedDate = DateTime.Now;

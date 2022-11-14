@@ -4,26 +4,20 @@ using MedicalOffice.Application.Dtos.Discount;
 
 namespace MedicalOffice.Application.Dtos.Reception;
 
-public class ReceptionDiscountDTO : BaseDto<Guid>
+public class ReceptionDiscountDTO 
 {
-    /// <summary>
-    /// نوع تخفیف
-    /// </summary>
-    public DiscountTypeDTO? DiscountType { get; set; }
+
     /// <summary>
     /// آیدی نوع تخفیف
     /// </summary>
-    public Guid DiscountTypeId { get; set; }
+    public Guid? DiscountTypeId { get; set; }
+    /// <summary>
+    /// آیدی نوع عضویت
+    /// </summary>
+    public Guid? MembershipId { get; set; }
     /// <summary>
     /// مبلغ تخفیف
     /// </summary>
-    public float Amount { get; set; }
-    /// <summary>
-    /// جزئیات پذیرش
-    /// </summary>
-    public ReceptionDetailDTO? ReceptionDetail { get; set; }
-    /// <summary>
-    /// آیدی جزئیات پذیرش
-    /// </summary>
-    public Guid ReceptionDetailId { get; set; }
+    public float Discount { get; set; }
+
 }

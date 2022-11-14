@@ -10,14 +10,14 @@ using MedicalOffice.Domain.Entities;
 namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 {
 
-    public class MyCommandHandlerCommandHandler : IRequestHandler<EditServiceCommand, BaseCommandResponse>
+    public class EditServiceCommandHandler : IRequestHandler<EditServiceCommand, BaseCommandResponse>
     {
         private readonly IServiceRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public MyCommandHandlerCommandHandler(IServiceRepository repository, IMapper mapper, ILogger logger)
+        public EditServiceCommandHandler(IServiceRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;

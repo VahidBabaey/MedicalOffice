@@ -1,12 +1,12 @@
-﻿using MedicalOffice.Application.Dtos.UserWorkHoursProgramFileDTO;
+﻿using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
 using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Contracts.Persistence
 {
-    public interface IUserWorkHourProgramRepository : IGenericRepository<UserWorkHourProgram, Guid>
+    public interface IMedicalStaffWorkHourProgramRepository : IGenericRepository<MedicalStaffWorkHourProgram, Guid>
     {
-        Task DeleteUserWorkHourProgram(Guid id);
-        Task<IReadOnlyList<UserWorkHourProgram>> GetUserWorkHourProgramByID(Guid Id);
-        Task UpdateUsersWorkHoursProgram(Guid userid, int day, UserWorkHoursProgramDTO UserWorkHoursProgramDTO);
+        Task DeleteMedicalStaffWorkHourProgram(Guid id);
+        Task<IReadOnlyList<MedicalStaffWorkHourProgram>> GetMedicalStaffWorkHourProgramByID(Guid Id);
+        Task UpdateMedicalStaffsWorkHoursProgram(Guid MedicalStaffid, int day, MedicalStaffWorkHoursProgramDTO MedicalStaffWorkHoursProgramDTO);
     }
 }

@@ -14,7 +14,7 @@ public class Specialization : BaseDomainEntity<Guid>
     /// <summary>
     /// تخصص کاربران
     /// </summary>
-    public ICollection<UserOfficeSpecialization>? UserOfficeSpecializations { get; set; }
+    public ICollection<MedicalStaffOfficeSpecialization>? MedicalStaffOfficeSpecializations { get; set; }
     /// <summary>
     /// بخش ها
     /// </summary>
@@ -22,5 +22,5 @@ public class Specialization : BaseDomainEntity<Guid>
     /// <summary>
     /// پزشکان
     /// </summary>
-    public ICollection<User>? Doctors { get; set; }
+    public ICollection<MedicalStaff>? Doctors { get; set; }
 }

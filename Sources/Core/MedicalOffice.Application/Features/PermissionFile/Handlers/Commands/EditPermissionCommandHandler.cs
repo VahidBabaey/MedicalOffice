@@ -55,7 +55,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
                     request.DTOUp.FileRegistrationAdvancePayment = false;
                     request.DTOUp.FileChangeDateAdvancePayment = false;
                     request.DTOUp.FileExcel = false;
-                    request.DTOUp.FileChangeUser = false;
+                    request.DTOUp.FileChangeMedicalStaff = false;
                     request.DTOUp.FilePermissionPatientNumber = false;
                 }
                 if (request.DTOUp.IsDoctorPermissionActive == false)

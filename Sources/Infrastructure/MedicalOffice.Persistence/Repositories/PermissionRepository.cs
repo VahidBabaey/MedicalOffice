@@ -1,6 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Domain.Entities;
-using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
@@ -15,20 +14,20 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     }
     public Guid GetId (Guid id)
     {
-        var userOfficeRole =  _dbContext.UserOfficeRoles.Select(p => new {p.Id, p.UserId}).Where(p => p.UserId == id).FirstOrDefault().Id;
+        var UserOfficeRole =  _dbContext.UserOfficeRoles.Select(p => new {p.Id, p.UserId}).Where(p => p.UserId == id).FirstOrDefault().Id;
 
-        if (userOfficeRole == null)
+        if (UserOfficeRole == null)
             throw new NullReferenceException("UserOfficeRole Id Not Found!");
 
-        Guid idUser = userOfficeRole;
+        Guid idMedicalStaff = UserOfficeRole;
 
-        return idUser;
+        return idMedicalStaff;
     }
-    public async Task<bool> SearchUser(Guid searchid)
+    public async Task<bool> SearchMedicalStaff(Guid searchid)
     {
-        var idSearchUser = await _dbContext.Permissiones.Where(p => p.UserOfficeRoleId == searchid).FirstOrDefaultAsync();
+        var idSearchMedicalStaff = await _dbContext.Permissiones.Where(p => p.UserOfficeRoleId == searchid).FirstOrDefaultAsync();
 
-        if(idSearchUser != null)
+        if(idSearchMedicalStaff != null)
         {
             return true;
         }
@@ -37,7 +36,7 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
             return false;
         }
     }
-    public async Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id)
+    public async Task<IReadOnlyList<Permission>> GetPermissionDetailsByMedicalStaffID(Guid Id)
     {
         return (IReadOnlyList<Permission>)await _dbContext.Permissiones.Where(srv => srv.UserOfficeRoleId == Id).ToListAsync();
     }

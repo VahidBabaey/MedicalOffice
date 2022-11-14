@@ -16,7 +16,7 @@ public class Tariff : BaseDomainEntity<Guid>
     /// </summary>
     public Guid OfficeId { get; set; }
     /// <summary>
-    /// خدمت
+    /// خدمات
     /// </summary>
     public Service? Service { get; set; }
     /// <summary>
@@ -31,18 +31,6 @@ public class Tariff : BaseDomainEntity<Guid>
     /// آیدی بیمه
     /// </summary>
     public Guid InsuranceId { get; set; }
-    /// <summary>
-    /// از ضرایب کا استفاده شود یا خیر
-    /// </summary>
-    public bool UseKMultiplier { get; set; }
-    /// <summary>
-    /// ضرایب کا
-    /// </summary>
-    public KMultiplier? KMultiplier { get; set; }
-    /// <summary>
-    /// آیدی ضرایب کا
-    /// </summary>
-    public Guid KMultiplierId { get; set; }
     /// <summary>
     /// مبلغ تعرفه
     /// </summary>
