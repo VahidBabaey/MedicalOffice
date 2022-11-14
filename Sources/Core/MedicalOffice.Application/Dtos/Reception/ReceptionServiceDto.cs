@@ -7,7 +7,7 @@ public class ReceptionServiceDto
     public float ServiceCount { get; set; }
     public Guid InsuranceId { get; set; }
     public Guid AdditionalInsuranceId { get; set; }
-    public Guid[]? Users { get; set; }
+    public Guid[]? MedicalStaffs { get; set; }
     public long Received { get; set; }
     public Guid DiscountTypeId { get; set; }
     public long DiscountAmount { get; set; }

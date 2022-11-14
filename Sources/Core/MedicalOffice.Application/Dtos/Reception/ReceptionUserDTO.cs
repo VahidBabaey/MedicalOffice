@@ -6,21 +6,21 @@ namespace MedicalOffice.Domain.Entities;
 /// <summary>
 /// کاربران / دکتران پذیرش
 /// </summary>
-public class ReceptionUserDTO : BaseDomainEntity<Guid>
+public class ReceptionMedicalStaffDTO : BaseDomainEntity<Guid>
 {
 
     /// <summary>
     /// آیدی درصد و سهم پزشک
     /// </summary>
-    public Guid UserServiceSharePercentId { get; set; }
+    public Guid MedicalStaffServiceSharePercentId { get; set; }
     /// <summary>
     /// کاربر لاگین شده
     /// </summary>
-    public User? User { get; set; }
+    public MedicalStaff? MedicalStaff { get; set; }
     /// <summary>
     /// آیدی کاربر لاگین شده
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid MedicalStaffId { get; set; }
     /// <summary>
     /// جزئیات پذیرش
     /// </summary>

@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.Reception;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
@@ -15,15 +16,15 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         _dbContext = dbContext;
     }
 
-    public async Task<Guid> AddReceptionService(Guid receptionId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, long discount, Guid discountTypeId, Guid[] users)
+    public async Task<Guid> AddReceptionService(Guid receptionId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, long discount, Guid discountTypeId, Guid[] MedicalStaffs)
     {
         var reception = await _dbContext.Receptions.SingleAsync(r => r.Id == receptionId);
         var service = await _dbContext.Services.SingleAsync(s => s.Id == serviceId);
         var insurance = await _dbContext.Insurances.SingleAsync(i => i.Id == insuranceId);
         var additionalInsurance = await _dbContext.Insurances.SingleAsync(i => i.Id == additionalInsuranceId);
         var discountType = await _dbContext.DiscountTypes.SingleAsync(dt => dt.Id == discountTypeId);
-        var usersCheck = users.All(id => _dbContext.Users.Any(u => u.Id == id));
-        if (!usersCheck)
+        var MedicalStaffsCheck = MedicalStaffs.All(id => _dbContext.MedicalStaffs.Any(u => u.Id == id));
+        if (!MedicalStaffsCheck)
             throw new NullReferenceException();
 
         var cost = await GetReceptionServiceCost(serviceId, serviceCount, insuranceId, additionalInsuranceId);
@@ -47,22 +48,22 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         var addedDetail = await _dbContext.ReceptionDetails.AddAsync(detail);
 
-        foreach (var userId in users)
+        foreach (var MedicalStaffId in MedicalStaffs)
         {
-            var receptionUser = new ReceptionUser()
+            var receptionMedicalStaff = new ReceptionMedicalStaff()
             {
                 IsDeleted = false,
-                UserOfficeRoleId = userId,
+                UserOfficeRoleId = MedicalStaffId,
                 ReceptionDetailId = addedDetail.Entity.Id,
             };
 
-            await _dbContext.ReceptionUsers.AddAsync(receptionUser);
+            await _dbContext.ReceptionMedicalStaffs.AddAsync(receptionMedicalStaff);
         }
 
         return addedDetail.Entity.Id;
     }
 
-    public async Task<Guid> CreateNewReception(Guid userId, Guid shiftId, Guid officeId, Guid patientId, ReceptionType receptionType)
+    public async Task<Guid> CreateNewReception(Guid MedicalStaffId, Guid shiftId, Guid officeId, Guid patientId, ReceptionType receptionType)
     {
         var factorNo = await GetFactorNo();
         var factorNoToday = await GetFactorNoToday();
@@ -74,7 +75,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             IsCancelled = false,
             IsDeleted = false,
             IsReturned = false,
-            LoggedInUserId = userId,
+            LoggedInMedicalStaffId = MedicalStaffId,
             OfficeId = officeId,
             PatientId = patientId,
             ReceptionDate = DateTime.Now.ToPersianDate(),
@@ -140,52 +141,52 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         throw new NotImplementedException();
     }
 
-    public async Task<ReceptionServiceDto> GetReceptionServiceInfo(Guid receptionDetailId)
-    {
-        var detail = await _dbContext.ReceptionDetails.SingleOrDefaultAsync(rd => rd.Id == receptionDetailId);
+    //public async Task<ReceptionServiceDto> GetReceptionServiceInfo(Guid receptionDetailId)
+    //{
+        //var detail = await _dbContext.ReceptionDetails.SingleOrDefaultAsync(rd => rd.Id == receptionDetailId);
 
-        if (detail != null)
-        {
-            await _dbContext
-                .Entry(detail)
-                .Collection(d => d.ReceptionDiscounts).EntityEntry
-                .Collection(d => d.ReceptionUsers).EntityEntry
-                .Reference(d => d.Service)
-                .LoadAsync();
+        //if (detail != null)
+        //{
+        //    await _dbContext
+        //        .Entry(detail)
+        //        .Collection(d => d.ReceptionDiscounts).EntityEntry
+        //        .Collection(d => d.ReceptionMedicalStaffs).EntityEntry
+        //        .Reference(d => d.Service)
+        //        .LoadAsync();
 
-            long discount = default;
-            Guid discountTypeId = default;
-            Guid[]? users = default;
-            if (detail.ReceptionDiscounts.Any())
-            {
-                discount = detail.ReceptionDiscounts.Sum(d => d.Amount);
-                discountTypeId = detail.ReceptionDiscounts.First().DiscountTypeId;
-            }
-            if (detail.ReceptionUsers.Any())
-            {
-                users = detail.ReceptionUsers
-                    .Select(u => u.Id)
-                    .ToArray();
-            }
+        //    long discount = default;
+        //    Guid discountTypeId = default;
+        //    Guid[]? MedicalStaffs = default;
+        //    if (detail.ReceptionDiscounts.Any())
+        //    {
+        //        discount = detail.ReceptionDiscounts.Sum(d => d.Amount);
+        //        discountTypeId = detail.ReceptionDiscounts.First().DiscountTypeId;
+        //    }
+        //    if (detail.ReceptionMedicalStaffs.Any())
+        //    {
+        //        MedicalStaffs = detail.ReceptionMedicalStaffs
+        //            .Select(u => u.Id)
+        //            .ToArray();
+        //    }
 
-            ReceptionServiceDto dto = new()
-            {
-                AdditionalInsuranceId = detail.AdditionalInsuranceId,
-                DiscountAmount = discount,
-                DiscountTypeId = discountTypeId,
-                InsuranceId = detail.InsuranceId,
-                ServiceId = detail.ServiceId,
-                Users = users,
-                ServiceName = detail.Service.Name,
-                Received = detail.Received,
-                ServiceCount = detail.ServiceCount
-            };
+        //    ReceptionServiceDto dto = new()
+        //    {
+        //        AdditionalInsuranceId = detail.AdditionalInsuranceId,
+        //        DiscountAmount = discount,
+        //        DiscountTypeId = discountTypeId,
+        //        InsuranceId = detail.InsuranceId,
+        //        ServiceId = detail.ServiceId,
+        //        MedicalStaffs = MedicalStaffs,
+        //        ServiceName = detail.Service.Name,
+        //        Received = detail.Received,
+        //        ServiceCount = detail.ServiceCount
+        //    };
 
-            return dto;
-        }
-        else
-            throw new NullReferenceException();
-    }
+        //    return dto;
+        //}
+        //else
+        //    throw new NullReferenceException();
+    //}
 
     public async Task<ReceptionSummaryDto> GetReceptionSummary(Guid receptionId)
     {
@@ -199,6 +200,20 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         };
 
         return dto;
+
+    }
+    public async Task<IEnumerable<MembershipNamesDTO>> GetAllMembershipNames()
+    {
+
+        var membershipNames = await _dbContext.Memberships.Select(p => new MembershipNamesDTO
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Discount = p.Discount
+        }).ToListAsync();
+
+        return membershipNames;
+
     }
 
     public async Task<decimal> GetReceptionTotal(Guid id)
@@ -232,7 +247,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         return reception;
     }
 
-    public async Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, long discount, Guid discountTypeId, Guid[] Users)
+    public async Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, long discount, Guid discountTypeId, Guid[] MedicalStaffs)
     {
         throw new NotImplementedException();
     }

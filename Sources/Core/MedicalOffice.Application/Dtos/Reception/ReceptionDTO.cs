@@ -33,7 +33,7 @@ public class ReceptionDTO : BaseDto<Guid>
     /// <summary>
     /// آیدی یوزر لاگین شده
     /// </summary>
-    public Guid LoggedInUserId { get; set; }
+    public Guid LoggedInMedicalStaffId { get; set; }
     /// <summary>
     /// شماره فاکتور
     /// </summary>
@@ -42,10 +42,6 @@ public class ReceptionDTO : BaseDto<Guid>
     /// شماره فاکتور روز
     /// </summary>
     public uint FactorNoToday { get; set; }
-    /// <summary>
-    /// جزئیات پذیرش
-    /// </summary>
-    public ICollection<ReceptionDetailDTO>? ReceptionDetails { get; set; }
     /// <summary>
     /// جمع کلی هزینه
     /// </summary>
@@ -70,35 +66,5 @@ public class ReceptionDTO : BaseDto<Guid>
     /// پذیرش به طور کامل برگشت خورده یا خیر
     /// </summary>
     public bool IsReturned { get; set; }
-
-
-    ///// <summary>
-    ///// لیست سرویس ها
-    ///// </summary>
-    //public  IList<SelectListItem> Services { get; set; }
-    ///// <summary>
-    ///// لیست سرویس های پذیرش
-    ///// </summary>
-    //public IList<SelectListItem> ListPazireshServices { get; set; }
-    ///// <summary>
-    ///// لیست بیمه
-    ///// </summary>
-    //public IList<SelectListItem> ListInsurance { get; set; }
-    ///// <summary>
-    ///// لیست پزشکان
-    ///// </summary>
-    //public IList<SelectListItem> ListDrTeam { get; set; }
-    ///// <summary>
-    ///// هزینه دریافتی
-    ///// </summary>
-    //public float Cost { get; set; }
-    ///// <summary>
-    ///// تاریخ
-    ///// </summary>
-    //public DateTime Date { get; set; }
-    ///// <summary>
-    ///// توضیحات
-    ///// </summary>
-    //public string Desc { get; set; }
 
 }

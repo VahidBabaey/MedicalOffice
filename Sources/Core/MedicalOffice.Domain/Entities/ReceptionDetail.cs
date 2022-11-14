@@ -50,7 +50,7 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// <summary>
     /// کاربران / پزشکان
     /// </summary>
-    public ICollection<ReceptionUser> ReceptionUsers { get; set; } = new List<ReceptionUser>();
+    public ICollection<ReceptionMedicalStaff> ReceptionMedicalStaffs { get; set; } = new List<ReceptionMedicalStaff>();
     /// <summary>
     /// هزینه دریافتی
     /// </summary>
@@ -58,7 +58,11 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// <summary>
     /// اطلاعات تخفیف ها
     /// </summary>
-    public ICollection<ReceptionDiscount> ReceptionDiscounts { get; set; } = new List<ReceptionDiscount>();
+    public ReceptionDiscount? ReceptionDiscount { get; set; }
+    /// <summary>
+    /// آیدی تخفیف
+    /// </summary>
+    public Guid ReceptionDiscountId { get; set; }
     /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>
