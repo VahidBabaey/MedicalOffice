@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Application.Dtos.Reception;
+﻿using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Dtos.Reception;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using System.Data.SqlTypes;
@@ -9,7 +10,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
 {
     Task<Guid> CreateNewReception
         (
-        Guid userId,
+        Guid MedicalStaffId,
         Guid shiftId,
         Guid officeId,
         Guid patientId,
@@ -32,7 +33,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
         long received,
         long discount,
         Guid discountTypeId,
-        Guid[] Users
+        Guid[] MedicalStaffs
         );
     Task<Guid> UpdateReceptionService
         (
@@ -44,12 +45,15 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
         long received,
         long discount,
         Guid discountTypeId,
-        Guid[] Users
+        Guid[] MedicalStaffs
         );
-    Task<ReceptionServiceDto> GetReceptionServiceInfo(Guid receptionDetailId);
+    //Task<ReceptionServiceDto> GetReceptionServiceInfo(Guid receptionDetailId);
     Task<Reception> SummarizeReception(Guid receptionId);
     Task<ReceptionSummaryDto> GetReceptionSummary(Guid receptionId);
     Task DeleteReceptionService(Guid receptionDetailId);
     Task<int> GetFactorNo();
     Task<int> GetFactorNoToday();
+
+    Task<decimal> GetReceptionTotal(Guid id);
+    Task<IEnumerable<MembershipNamesDTO>> GetAllMembershipNames();
 }

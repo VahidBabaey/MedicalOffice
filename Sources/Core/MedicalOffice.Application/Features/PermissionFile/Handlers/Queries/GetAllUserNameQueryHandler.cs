@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
 {
 
-    public class GetAllUserNameQueryHandler : IRequestHandler<GetAllUsersName, List<MedicalStaffNameListDTO>>
+    public class GetAllMedicalStaffNameQueryHandler : IRequestHandler<GetAllMedicalStaffsName, List<MedicalStaffNameListDTO>>
     {
         private readonly IMedicalStaffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllUserNameQueryHandler(IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
+        public GetAllMedicalStaffNameQueryHandler(IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -29,7 +29,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<MedicalStaffNameListDTO>> Handle(GetAllUsersName request, CancellationToken cancellationToken)
+        public async Task<List<MedicalStaffNameListDTO>> Handle(GetAllMedicalStaffsName request, CancellationToken cancellationToken)
         {
             List<MedicalStaffNameListDTO> result = new();
 
@@ -37,9 +37,9 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
 
             try
             {
-                var Users = await _repository.GetAllUsersName();
+                var MedicalStaffs = await _repository.GetAllMedicalStaffsName();
 
-                result = _mapper.Map<List<MedicalStaffNameListDTO>>(Users);
+                result = _mapper.Map<List<MedicalStaffNameListDTO>>(MedicalStaffs);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

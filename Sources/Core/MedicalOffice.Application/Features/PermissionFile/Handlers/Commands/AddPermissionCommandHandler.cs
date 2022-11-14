@@ -53,14 +53,14 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
             {
                 try
                 {
-                    var id = _repository.GetId(Guid.Parse(request.userid)).ToString();
+                    var id = _repository.GetId(Guid.Parse(request.MedicalStaffid));
                     if (id == null)
                     {
-                        throw new NullReferenceException("User Not found");
+                        throw new NullReferenceException("MedicalStaff Not found");
                     }
                     else
                     {
-                    request.DTO.UserOfficeRoleId = Guid.Parse(id);
+                    request.DTO.UserOfficeRoleId = id;
                     if (request.DTO.IsReceptionPermissionActive == false)
                     {
                         request.DTO.ReceptionDateChange = false;
@@ -78,7 +78,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
                         request.DTO.FileRegistrationAdvancePayment = false;
                         request.DTO.FileChangeDateAdvancePayment = false;
                         request.DTO.FileExcel = false;
-                        request.DTO.FileChangeUser = false;
+                        request.DTO.FileChangeMedicalStaff = false;
                         request.DTO.FilePermissionPatientNumber = false;
                     }
                     if (request.DTO.IsDoctorPermissionActive == false)

@@ -26,5 +26,5 @@ public class ReceptionListDTO : BaseDto<Guid>
     /// <summary>
     /// کاربران / پزشکان
     /// </summary>
-    public ICollection<ReceptionUserDTO>? ReceptionUsers { get; set; }
+    public ICollection<ReceptionMedicalStaffDTO>? ReceptionMedicalStaffs { get; set; }
 }

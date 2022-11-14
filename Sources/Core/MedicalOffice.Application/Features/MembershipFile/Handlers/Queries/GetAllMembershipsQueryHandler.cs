@@ -34,7 +34,9 @@ public class GetAllMembershipsQueryHandler : IRequestHandler<GetAllMemberships, 
 
         try
         {
-            result = await _repository.GetMembership();
+            var memberShip = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
+
+            result = _mapper.Map<List<MembershipListDTO>>(memberShip);
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

@@ -24,13 +24,15 @@ public class PatientIllnessFormController : Controller
     {
         _mediator = mediator;
     }
+
     [HttpGet("illnessReasons")]
-    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetPatientIllnessReasons()
+    public async Task<ActionResult<List<illnessNamesListDTO>>> GetPatientIllnessReasons()
     {
-        var response = await _mediator.Send(new GetAlliillnessReasonsQuery());
+        var response = await _mediator.Send(new GetAlliillnessReasonsForillnessFormQuery());
 
         return Ok(response);
     }
+
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] PatientIllnessFormDTO dto)
     {
@@ -38,6 +40,7 @@ public class PatientIllnessFormController : Controller
 
         return Ok(response);
     }
+
     [HttpGet]
     public async Task<ActionResult<List<PatientIllnessFormListDTO>>> GetAll([FromQuery] ListDto dto, Guid patientid)
     {
@@ -45,6 +48,7 @@ public class PatientIllnessFormController : Controller
 
         return Ok(response);
     }
+
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {

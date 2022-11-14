@@ -63,18 +63,18 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
                     response.Success = true;
                     response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data = (new { Id = membership.Id });
-                    if (request.DTO.ServiceIDs == null)
-                    {
+                    response.Data=(new { Id = membership.Id });
+                    //if (request.DTO.ServiceIDs == null)
+                    //{
 
-                    }
-                    else
-                    {
-                        foreach (var srvid in request.DTO.ServiceIDs)
-                        {                   
-                        await _repository.InsertMembershipIdofServiceAsync(srvid, membership.Id);
-                        }
-                    }
+                    //}
+                    //else
+                    //{
+                    //    foreach (var srvid in request.DTO.ServiceIDs)
+                    //    {                   
+                    //    await _repository.InsertMembershipIdofServiceAsync(membership.Discount, srvid, membership.Id);
+                    //    }
+                    //}
                     
 
                     log.Type = LogType.Success;

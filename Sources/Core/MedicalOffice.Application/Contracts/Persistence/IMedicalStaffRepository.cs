@@ -11,11 +11,14 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         Task<IEnumerable<MedicalStaffNameListDTO>> GetAllUsersName();
 
-
         Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber);
 
         Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId);
 
         Task UpdateUserOfficeRoleAsync(Guid roleId, Guid UserId);
+
+        Task<IEnumerable<MedicalStaffNameListDTO>> GetAllMedicalStaffsName();
+
+        Task<List<MedicalStaffNamesDTO>> GetAllMedicalStaffsNamesandRoles();
     }
 }

@@ -10,6 +10,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands
 {
     public class DeleteMedicalStaffCommand : IRequest<BaseResponse>
     {
-        public Guid UserId { get; set; }
+        public Guid MedicalStaffId { get; set; }
     }
 }

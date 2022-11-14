@@ -18,15 +18,15 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
     public class MyCommandHandlerCommandHandler : IRequestHandler<EditMedicalStaffCommand, BaseResponse>
     {
         private readonly IMedicalStaffRepository _repository;
-        private readonly IUserOfficeRoleRepository _repositoryuserofficerole;
+        private readonly IUserOfficeRoleRepository _repositoryUserOfficeRole;
         private readonly ICryptoServiceProvider _cryptoServiceProvider;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public MyCommandHandlerCommandHandler(IUserOfficeRoleRepository repositoryuserofficerole, IMedicalStaffRepository repository, IMapper mapper, ILogger logger, ICryptoServiceProvider cryptoServiceProvider)
+        public MyCommandHandlerCommandHandler(IUserOfficeRoleRepository repositoryUserOfficeRole, IMedicalStaffRepository repository, IMapper mapper, ILogger logger, ICryptoServiceProvider cryptoServiceProvider)
         {
-            _repositoryuserofficerole = repositoryuserofficerole;
+            _repositoryUserOfficeRole = repositoryUserOfficeRole;
             _repository = repository;
             _cryptoServiceProvider = cryptoServiceProvider;
             _mapper = mapper;
@@ -42,25 +42,23 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
             try
             {
-                //var passwordHash = await _cryptoServiceProvider.GetHash(request.DTO.PasswordHash);
-                var medicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
-                //medicalStaff.PasswordHash = passwordHash;
+                var MedicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
 
-                await _repository.Update(medicalStaff);
+                await _repository.Update(MedicalStaff);
 
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = medicalStaff.Id });
+                response.Data=(new { Id = MedicalStaff.Id });
                 if (request.DTO.RoleIds == null)
                 {
                     throw new NullReferenceException("Role not Found");
                 }
                 else
                 {
-                    await _repository.DeleteUserOfficeRoleAsync(medicalStaff.Id);
+                    await _repository.DeleteUserOfficeRoleAsync(MedicalStaff.Id);
                     foreach (var roleid in request.DTO.RoleIds)
                     {
-                        await _repository.InsertToUserOfficeRole(roleid, medicalStaff.Id);
+                        //await _repository.InsertToUserOfficeRole(roleid, MedicalStaff.Id);
                     }
                 }
 

@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
 {
 
-    public class GetPermissionDetailsofUserQueryHandler : IRequestHandler<GetPermissionDetailsofUser, List<PermissionListDTO>>
+    public class GetPermissionDetailsofMedicalStaffQueryHandler : IRequestHandler<GetPermissionDetailsofMedicalStaff, List<PermissionListDTO>>
     {
         private readonly IPermissionRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetPermissionDetailsofUserQueryHandler(IPermissionRepository repository, IMapper mapper, ILogger logger)
+        public GetPermissionDetailsofMedicalStaffQueryHandler(IPermissionRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -29,7 +29,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<PermissionListDTO>> Handle(GetPermissionDetailsofUser request, CancellationToken cancellationToken)
+        public async Task<List<PermissionListDTO>> Handle(GetPermissionDetailsofMedicalStaff request, CancellationToken cancellationToken)
         {
             List<PermissionListDTO> result = new();
 
@@ -38,7 +38,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
             try
             {
 
-                var Permissiondetails = await _repository.GetPermissionDetailsByUserID(request.UserOfficeRoleId);
+                var Permissiondetails = await _repository.GetPermissionDetailsByMedicalStaffID(request.UserOfficeRoleId);
 
                 result = _mapper.Map<List<PermissionListDTO>>(Permissiondetails);
 

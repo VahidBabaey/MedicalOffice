@@ -8,6 +8,7 @@ using MedicalOffice.Application.Dtos.PatientReferralFormDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Command;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
+using MedicalOffice.Application.Features.PatientReferralFormFile.Request.Query;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Commands;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
@@ -28,9 +29,9 @@ public class PatientReferralFormController : Controller
         _mediator = mediator;
     }
     [HttpGet("illnessReasons")]
-    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetPatientIllnessReasons()
+    public async Task<ActionResult<List<illnessNamesListDTO>>> GetPatientIllnessReasons()
     {
-        var response = await _mediator.Send(new GetAlliillnessReasonsQuery());
+        var response = await _mediator.Send(new GetAlliillnessReasonsForReferalFormQuery());
 
         return Ok(response);
     }

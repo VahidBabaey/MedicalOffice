@@ -1,6 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Domain.Entities;
-using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
@@ -14,31 +13,40 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     {
         _dbContext = dbContext;
     }
-    public async Task<string> GetId(Guid id)
+    public Guid GetId (Guid id)
     {
-        var userOfficeRole = await _dbContext.UserOfficeRoles.Where(p => p.UserId == id).FirstOrDefaultAsync();
+        var userOfficeRole =  _dbContext.UserOfficeRoles.Select(p => new {p.Id, p.UserId}).Where(p => p.UserId == id).FirstOrDefault();
 
         if (userOfficeRole == null)
-            throw new NullReferenceException("MedicalStaff Id Not Found!");
+            throw new NullReferenceException("userOfficeRole Id Not Found!");
 
-        string idUser = userOfficeRole.Id.ToString();
+        Guid medicalStaffId = userOfficeRole.Id;
 
-        return idUser;
+        return medicalStaffId;
     }
-    //public async Task<bool> SearchMedicalStaff(Guid searchId)
-    //{
-    //    var idSearchUser = await _dbContext.Permissiones.Where(p => p.UserOfficeRoleId == searchId).FirstOrDefaultAsync();
 
-    //    if (idSearchUser != null)
-    //        return true;
-
-    //    else
-    //        return false;
-
-    //}
-    public async Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id)
+    public Task<IReadOnlyList<Permission>> GetPermissionDetailsByMedicalStaffID(Guid Id)
     {
-        return await _dbContext.Permissions.Where(srv => srv.UserOfficeRoleId == Id).ToListAsync();
+        throw new NotImplementedException();
+    }
+
+    public Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> SearchMedicalStaff(Guid searchid)
+    {
+        var idSearchMedicalStaff = await _dbContext.Permissions.Where(p => p.UserOfficeRoleId == searchid).FirstOrDefaultAsync();
+
+        if(idSearchMedicalStaff != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public Task<bool> UserHasPermission(Guid userId, Guid officeId, string permission)

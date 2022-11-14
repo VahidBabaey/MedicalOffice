@@ -17,6 +17,22 @@ public class Service : BaseDomainEntity<Guid>
     /// </summary>
     public Guid OfficeId { get; set; }
     /// <summary>
+    /// تعرفه ها
+    /// </summary>
+    public ICollection<Tariff>? Tariffs { get; set; }
+    /// <summary>
+    /// آیدی تعرفه
+    /// </summary>
+    public Guid? TariffId { get; set; }
+    /// <summary>
+    /// بیمه
+    /// </summary>
+    public Insurance? Insurance { get; set; }
+    /// <summary>
+    /// آیدی بیمه
+    /// </summary>
+    public Guid? InsuranceId { get; set; }
+    /// <summary>
     /// بخش
     /// </summary>
     public Section? Section { get; set; }
@@ -49,10 +65,6 @@ public class Service : BaseDomainEntity<Guid>
     /// </summary>
     public bool HasTariff { get; set; }
     /// <summary>
-    /// تعرفه های این خدمت
-    /// </summary>
-    public ICollection<Tariff> Tariffs { get; set; } = new List<Tariff>();
-    /// <summary>
     /// عملی هست یا نه
     /// </summary>
     public bool IsPractical { get; set; }
@@ -63,11 +75,11 @@ public class Service : BaseDomainEntity<Guid>
     /// <summary>
     /// سهم و درصد کاربران
     /// </summary>
-    public ICollection<ServiceSharePercent>? UserServiceSharePercents { get; set; }
+    public ICollection<MedicalStaffServiceSharePercent>? MedicalStaffServiceSharePercents { get; set; }
     /// <summary>
-    /// جزئیات پذیرش
+    /// جزئیات پذیرش و سرویس
     /// </summary>
-    public ICollection<ReceptionDetail>? ReceptionDetails { get; set; }
+    public ICollection<ReceptionDetailService>? ReceptionDetails { get; set; }
     /// <summary>
     /// خدمات وقت دهی ها
     /// </summary>

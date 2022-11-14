@@ -15,20 +15,11 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                .HasForeignKey(e => e.OfficeId)
                .OnDelete(DeleteBehavior.NoAction);
             builder
-               .HasOne(e => e.Service)
-               .WithMany(e => e.Tariffs)
-               .HasForeignKey(e => e.ServiceId)
-               .OnDelete(DeleteBehavior.NoAction);
-            builder
                .HasOne(e => e.Insurance)
                .WithMany(e => e.Tariffs)
                .HasForeignKey(e => e.InsuranceId)
                .OnDelete(DeleteBehavior.NoAction);
-            builder
-               .HasOne(e => e.KMultiplier)
-               .WithMany(e => e.Tariffs)
-               .HasForeignKey(e => e.KMultiplierId)
-               .OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }

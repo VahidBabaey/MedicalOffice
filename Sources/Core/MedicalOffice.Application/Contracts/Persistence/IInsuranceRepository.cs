@@ -4,6 +4,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IInsuranceRepository : IGenericRepository<Insurance, Guid>
     {
-       
+        Task<IReadOnlyList<Insurance>> GetAllAdditionalInsuranceNames();
     }
 }

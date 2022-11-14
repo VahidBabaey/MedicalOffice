@@ -38,5 +38,5 @@ public class Shift : BaseDomainEntity<Guid>
     /// <summary>
     /// درصد سهم کاربران
     /// </summary>
-    public ICollection<ServiceSharePercent>? UserServiceSharePercents { get; set; }
+    public ICollection<MedicalStaffServiceSharePercent>? MedicalStaffServiceSharePercents { get; set; }
 }

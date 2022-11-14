@@ -34,9 +34,9 @@ public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand,
         try
         {
             await _repository.Delete(request.PatientId);
-            await _repositorycontact.Delete(request.PatientId);
-            await _repositoryaddress.Delete(request.PatientId);
-            await _repositorytag.Delete(request.PatientId);
+            await _repositorycontact.RemovePatientContact(request.PatientId);
+            await _repositoryaddress.RemovePatientAddress(request.PatientId);
+            await _repositorytag.RemovePatientTag(request.PatientId);
             response.Success = true;
             response.StatusDescription = $"{_requestTitle} succeded";
             response.Data = (new { Id = request.PatientId });

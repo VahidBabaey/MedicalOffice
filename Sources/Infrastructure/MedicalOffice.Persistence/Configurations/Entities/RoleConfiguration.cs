@@ -13,6 +13,11 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder
+                .HasMany(role => role.UserOfficeRoles)
+                .WithOne(UserOfficeRole => UserOfficeRole.Role)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.RoleId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
                .HasData(new Role[] {
                    RoleCreator("95632500-3619-48e0-a774-2494b819b594", "Patient", "PATIENT","بیمار"),
                    RoleCreator("70508b44-eae8-4d40-9318-651ae5b38f40", "Admin", "ADMIN","ادمین"),

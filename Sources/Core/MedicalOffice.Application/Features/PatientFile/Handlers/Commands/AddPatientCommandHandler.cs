@@ -27,6 +27,7 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
 
     public async Task<BaseResponse> Handle(AddPatientCommand request, CancellationToken cancellationToken)
     {
+
         BaseResponse response = new();
 
         AddPatientValidator validator = new();
@@ -95,6 +96,8 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
 
 
 }
+
+
 
 
 

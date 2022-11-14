@@ -20,11 +20,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .HasForeignKey(e => e.ReceptionId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
-                .HasOne(e => e.Service)
-                .WithMany(e => e.ReceptionDetails)
-                .HasForeignKey(e => e.ServiceId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder
                 .HasOne(e => e.Insurance)
                 .WithMany(e => e.ReceptionDetails_Insurance)
                 .HasForeignKey(e => e.InsuranceId)
@@ -36,12 +31,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
-                .HasMany(e => e.ReceptionUsers)
-                .WithOne(e => e.ReceptionDetail)
-                .HasForeignKey(e => e.ReceptionDetailId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .HasMany(e => e.ReceptionDiscounts)
+                .HasMany(e => e.ReceptionMedicalStaffs)
                 .WithOne(e => e.ReceptionDetail)
                 .HasForeignKey(e => e.ReceptionDetailId)
                 .OnDelete(DeleteBehavior.NoAction);

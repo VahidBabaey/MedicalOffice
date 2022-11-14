@@ -41,9 +41,9 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
             var patient = _mapper.Map<Patient>(request.Dto);
 
             await _repository.Update(patient);
-            await _repositorycontact.Delete(request.PatientId);
-            await _repositoryaddress.Delete(request.PatientId);
-            await _repositorytag.Delete(request.PatientId);
+            await _repositorycontact.RemovePatientContact(patient.Id);
+            await _repositoryaddress.RemovePatientAddress(patient.Id);
+            await _repositorytag.RemovePatientTag(patient.Id);
 
             response.Success = true;
             response.StatusDescription = $"{_requestTitle} succeded";

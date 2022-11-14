@@ -51,7 +51,7 @@ public class Reception : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی یوزر لاگین شده
     /// </summary>
-    public Guid LoggedInUserId { get; set; }
+    public Guid LoggedInMedicalStaffId { get; set; }
     /// <summary>
     /// شماره فاکتور
     /// </summary>

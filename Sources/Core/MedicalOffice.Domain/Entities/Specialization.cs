@@ -11,6 +11,10 @@ public class Specialization : BaseDomainEntity<Guid>
     /// عنوان تخصص
     /// </summary>
     public string Name { get; set; } = string.Empty;
+    /// <summary>
+    /// تخصص کاربران
+    /// </summary>
+    public ICollection<MedicalStaffOfficeSpecialization>? MedicalStaffOfficeSpecializations { get; set; }
 
     /// <summary>
     /// بخش ها

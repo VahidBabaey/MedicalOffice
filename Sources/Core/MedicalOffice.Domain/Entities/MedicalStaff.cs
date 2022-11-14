@@ -94,9 +94,8 @@ namespace MedicalOffice.Domain.Entities
 
         /// <summary>
         /// برنامه کادر درمان
-        /// </summary>   
-        public ICollection<MedicalStaffWorkHourProgram>? UserWorkHourPrograms { get; set; }
-
+        /// </summary>
+        public ICollection<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms { get; set; } = new List<MedicalStaffWorkHourProgram>();
         /// <summary>
         /// پذیرش ها
         /// </summary>
@@ -105,12 +104,14 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// کاربران پذیرش
         /// </summary>
-        public ICollection<ReceptionUser>? ReceptionUsers { get; set; }
-
+        public ICollection<ReceptionMedicalStaff>? ReceptionMedicalStaffs { get; set; }
         /// <summary>
         /// وقت دهی ها
         /// </summary>
         public ICollection<Appointment>? Appointments { get; set; }
-
+        /// <summary>
+        /// کادر درمان - نقش
+        /// </summary>
+        public ICollection<MedicalStaffRole>? MedicalStaffRoles { get; set; }
     }
 }

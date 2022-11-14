@@ -6,6 +6,7 @@ using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace MedicalOffice.Persistence.Repositories;
 
@@ -22,12 +23,13 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
         nameService = "";
     }
 
-    public async Task<MemberShipService> InsertMembershipIdofServiceAsync(Guid serviceId, Guid memberShipId)
+    public async Task<MemberShipService> InsertMembershipIdofServiceAsync(string tariff, Guid serviceId, Guid memberShipId)
     {
         MemberShipService memberShipService = new MemberShipService()
         {
         ServiceId = serviceId,
-        MembershipId = memberShipId
+        MembershipId = memberShipId,
+        Discount = tariff
         };
 
         if (memberShipService == null)
@@ -77,38 +79,5 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
 
         return nameService;
     }
-    public async Task<List<MembershipListDTO>> GetMembership()
-    {
-        var memberShip = await _dbContext.Memberships.ToListAsync();
 
-        if (memberShip == null)
-            throw new NullReferenceException("MemberShip not Found");
-
-        foreach (var item in memberShip)
-        {
-            var memberShipService = await _dbContext.MemberShipServices.Where(ms => ms.MembershipId == item.Id).ToListAsync();
-
-            foreach (var item1 in memberShipService)
-            {
-                var serviceName = _dbContext.Services.Where(ser => ser.Id == item1.ServiceId).FirstOrDefault();
-
-                if (serviceName == null)
-                    throw new NullReferenceException("Service not Found");
-
-                nameService += serviceName.Name + " ، ";
-            }
-
-            var q = new MembershipListDTO()
-            {
-                Id = item.Id, 
-                Name = item.Name,
-                NameServices = nameService,
-            };
-
-            ListmembershipDTO.Add(q);
-            nameService = "";
-        }
-
-        return ListmembershipDTO;
-    }
 }

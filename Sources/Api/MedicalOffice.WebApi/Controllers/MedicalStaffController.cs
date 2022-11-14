@@ -32,7 +32,7 @@ public class MedicalStaffController : Controller
     }
 
     [HttpPatch]
-    public async Task<ActionResult<Guid>> UpdateUser([FromBody] UpdateMedicalStaffDTO dto)
+    public async Task<ActionResult<Guid>> UpdateMedicalStaff([FromBody] UpdateMedicalStaffDTO dto)
     {
         var response = await _mediator.Send(new EditMedicalStaffCommand() { DTO = dto });
 
@@ -42,7 +42,7 @@ public class MedicalStaffController : Controller
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
-        var response = await _mediator.Send(new DeleteMedicalStaffCommand() { UserId = id });
+        var response = await _mediator.Send(new DeleteMedicalStaffCommand() { MedicalStaffId = id });
 
         return Ok(response);
     }

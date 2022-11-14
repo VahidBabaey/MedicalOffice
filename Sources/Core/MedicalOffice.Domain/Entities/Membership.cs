@@ -19,14 +19,18 @@ public class Membership : BaseDomainEntity<Guid>
     /// <summary>
     /// تخفیف پذیرش
     /// </summary>
-    public ReceptionDiscount? ReceptionDiscount { get; set; }
+    public ICollection<ReceptionDiscount>? ReceptionDiscounts { get; set; }
     /// <summary>
     /// نام عضویت
     /// </summary>
     public string Name { get; set; } = string.Empty;
     /// <summary>
+    /// تخفیف
+    /// </summary>
+    public string Discount { get; set; } = string.Empty;
+    /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین عضویت-سرویس استفاده می شود
     /// </summary>
-    public ICollection<MemberShipService>? MemberShipServices { get; set; }
+    public ICollection<MemberShipService> MemberShipServices { get; set; } = new List<MemberShipService>();
 
 }

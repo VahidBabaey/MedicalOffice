@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PermissionFile.Requests.Queries
 {
-    public class GetAllUsersName : IRequest<List<MedicalStaffNameListDTO>>
+    public class GetAllMedicalStaffsName : IRequest<List<MedicalStaffNameListDTO>>
     {
     }
 }

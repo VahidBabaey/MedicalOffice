@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Contracts.LogicProviders;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO.Validators;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
@@ -20,6 +21,11 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
     public class AddMedicalStaffCommandHandler : IRequestHandler<AddMedicalStaffCommand, BaseResponse>
     {
+        //private readonly IMedicalStaffRepository _repository;
+        //private readonly IUserRepository _repositoryUser;
+        //private readonly IMedicalStaffRoleRepository _repositoryMedicalStaffRole;
+        //private readonly IUserOfficeRoleRepository _repositoryUserOfficeRole;
+        //private readonly ICryptoServiceProvider _cryptoServiceProvider;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
@@ -49,9 +55,14 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
         public async Task<BaseResponse> Handle(AddMedicalStaffCommand request, CancellationToken cancellationToken)
         {
-            AddMedicalStaffValidator validator = new();
+            BaseResponse response = new();
+
+            var validator = new AddMedicalStaffValidator();
+
+            Log log = new();
 
             var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+
             if (!validationResult.IsValid)
             {
                 var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
@@ -85,20 +96,20 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                     if (role != null)
                     {
                         await _userOfficeRoleRepository.Add(new UserOfficeRole
-                        {
+                    {
                             RoleId = role.Id,
                             UserId = user.Id,
                         });
 
                         await _userManager.AddToRoleAsync(user, role.NormalizedName);
                     }
-                }
-                else
-                {
+                    }
+                    else
+                    {
                     var error = $"There is a problem in registering user";
                     return await Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error);
-                }
-            }
+                        }
+                    }
 
             var medicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
             medicalStaff.UserId = user.Id;
@@ -114,7 +125,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                     if (role != null)
                     {
                         userOfficeRoles.Add(new UserOfficeRole
-                        {
+                {
                             RoleId = roleId,
                             UserId = user.Id,
                             OfficeId = request.DTO.OfficeId

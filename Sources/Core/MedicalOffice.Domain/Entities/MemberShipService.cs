@@ -25,5 +25,9 @@ namespace MedicalOffice.Domain.Entities
         /// آیدی سرویس
         /// </summary>
         public Guid? ServiceId { get; set; }
+        /// <summary>
+        /// تخفیف
+        /// </summary>
+        public string Discount { get; set; } = string.Empty;
     }
 }

@@ -11,58 +11,58 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         {
             builder
                 .HasMany(office => office.UserOfficeRoles)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasMany(office => office.DiscountTypes)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasMany(office => office.Insurances)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasMany(office => office.KMultipliers)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasMany(office => office.Patients)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasMany(office => office.Receptions)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasMany(office => office.Services)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasMany(office => office.Sections)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasMany(office => office.Shifts)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasMany(office => office.Tariffs)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasMany(office => office.ReceptionDetails)
-                .WithOne(userOfficeRole => userOfficeRole.Office)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasData(new[]

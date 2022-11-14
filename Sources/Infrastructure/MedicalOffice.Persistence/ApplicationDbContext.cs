@@ -53,7 +53,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Reception> Receptions => Set<Reception>();
     public DbSet<ReceptionDetail> ReceptionDetails => Set<ReceptionDetail>();
     public DbSet<ReceptionDiscount> ReceptionDiscounts => Set<ReceptionDiscount>();
-    public DbSet<ReceptionUser> ReceptionUsers => Set<ReceptionUser>();
+    public DbSet<ReceptionMedicalStaff> ReceptionMedicalStaffs => Set<ReceptionMedicalStaff>();
     public DbSet<RoutineMedication> RoutineMedications => Set<RoutineMedication>();
     public DbSet<RVU3> RVU3 => Set<RVU3>();
     public DbSet<Section> Sections => Set<Section>();
@@ -63,8 +63,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<SocialHistory> SocialHistories => Set<SocialHistory>();
     public DbSet<Specialization> Specializations => Set<Specialization>();
     public DbSet<Tariff> Tariffs => Set<Tariff>();
+    public DbSet<MedicalStaffRole> MedicalStaffRoles => Set<MedicalStaffRole>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
-    public DbSet<ServiceSharePercent> ServiceSharePercents => Set<ServiceSharePercent>();
+    public DbSet<MedicalStaffOfficeSpecialization> MedicalStaffOfficeSpecializations => Set<MedicalStaffOfficeSpecialization>();
+    public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
     public DbSet<MedicalStaffPermission> MedicalStaffPermissions => Set<MedicalStaffPermission>();
 
     // Identity
@@ -91,7 +93,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        //TODO: Save current user as updatedby and createdby
+        //TODO: Save current MedicalStaff as updatedby and createdby
         foreach (var entry in ChangeTracker.Entries<BaseDomainEntity<Guid>>())
         {
             entry.Entity.LastUpdatedDate = DateTime.Now;

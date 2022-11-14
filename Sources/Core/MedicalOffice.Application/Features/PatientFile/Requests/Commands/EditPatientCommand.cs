@@ -6,6 +6,6 @@ namespace MedicalOffice.Application.Features.PatientFile.Requests.Commands;
 
 public class EditPatientCommand : IRequest<BaseResponse>
 {
-    public Guid PatientId { get; set; }
+    //public Guid PatientId { get; set; }
     public UpdateAddPatientDto Dto { get; set; } = new UpdateAddPatientDto();
 }

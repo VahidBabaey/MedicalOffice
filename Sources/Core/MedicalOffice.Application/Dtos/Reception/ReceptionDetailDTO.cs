@@ -32,17 +32,13 @@ public class ReceptionDetailDTO : BaseDto<Guid>
     /// </summary>
     public Guid AdditionalInsuranceId { get; set; }
     /// <summary>
-    /// کاربران / پزشکان
-    /// </summary>
-    public ICollection<ReceptionUserDTO>? ReceptionUsers { get; set; }
-    /// <summary>
     /// هزینه دریافتی
     /// </summary>
     public float Cost { get; set; }
     /// <summary>
-    /// اطلاعات تخفیف ها
+    /// آیدی تخفیف
     /// </summary>
-    public ICollection<ReceptionDiscountDTO>? ReceptionDiscounts { get; set; }
+    public Guid ReceptionDiscountId { get; set; }
     /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>

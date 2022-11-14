@@ -14,7 +14,6 @@ public class ServiceDTO
     /// آیدی بخش
     /// </summary>
     public Guid? SectionId { get; set; }
-
     /// <summary>
     /// نام خدمت
     /// </summa?ry>
@@ -23,7 +22,6 @@ public class ServiceDTO
     /// کد ژنریک
     /// </summary>
     public string GenericCode { get; set; } = string.Empty;
-
     /// <summary>
     /// آیدی تخصص مربوط به خدمت
     /// </summary>

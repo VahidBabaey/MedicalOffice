@@ -5,19 +5,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MedicalOffice.Persistence.Configurations.Entities
 {
-    public class UserOfficeRoleConfiguration : BaseEntityTypeConfiguration<UserOfficeRole, Guid>
+    public class UserOfficeRoleRoleConfiguration : BaseEntityTypeConfiguration<UserOfficeRole, Guid>
     {
         public override void ConfigureEntity(EntityTypeBuilder<UserOfficeRole> builder)
         {
             builder
-                .HasOne(userOfficeRole => userOfficeRole.Office)
+                .HasOne(UserOfficeRole => UserOfficeRole.Office)
                 .WithMany(office => office.UserOfficeRoles)
-                .HasForeignKey(userOfficeRole => userOfficeRole.OfficeId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .HasOne(userOfficeRole => userOfficeRole.Role)
-                .WithMany(role => role.UserOfficeRoles)
-                .HasForeignKey(userOfficeRole => userOfficeRole.RoleId)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasOne(uor => uor.User)

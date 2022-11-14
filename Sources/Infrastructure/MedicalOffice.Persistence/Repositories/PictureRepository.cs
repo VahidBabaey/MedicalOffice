@@ -2,19 +2,20 @@
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.PictureDTO;
 using MedicalOffice.Domain.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
 
 public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepository
 {
+    private readonly IGenericRepository<Picture, Guid> _pictureRepository;
     private readonly ApplicationDbContext _dbContext;
     public List<PatientPicturesDTO> PatientPicturesDTO = null;
 
-    public PictureRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public PictureRepository(IGenericRepository<Picture, Guid> pictureRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
+        _pictureRepository = pictureRepository;
         PatientPicturesDTO = new List<PatientPicturesDTO>();
     }
     public async Task<AddPictureDTO> RegisterPictureAsync(PictureUploadDTO pictureUploadDTO)
@@ -26,7 +27,7 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
             picture.OfficeId = pictureUploadDTO.OfficeId;
             picture.PatientId = pictureUploadDTO.PatientId;
 
-            await _dbContext.Pictures.AddAsync(picture);
+            
 
             var fileName = "" + picture.PictureName;
             byte[] pictureBinary = null;
@@ -44,7 +45,8 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
 
             picture.VirtualPath = filePath;
 
-            _dbContext.Pictures.Update(picture);
+            await _pictureRepository.Add(picture);
+            //_pictureRepository.Update(picture);
 
             AddPictureDTO pictureDTO = new AddPictureDTO()
             {
@@ -70,7 +72,9 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
                 PatientId = item.PatientId,
                 PictureId = item.Id,
                 VirtualPath = item.VirtualPath,
-                OfficeId = item.OfficeId
+                OfficeId = item.OfficeId,
+                Id = item.Id,
+                PictureName = item.PictureName,
             };
 
             PatientPicturesDTO.Add(q);

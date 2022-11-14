@@ -21,7 +21,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .HasForeignKey(e => e.ShiftId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
-               .HasMany(e => e.UserServiceSharePercents)
+               .HasMany(e => e.MedicalStaffServiceSharePercents)
                .WithOne(e => e.Shift)
                .HasForeignKey(e => e.ShiftId)
                .OnDelete(DeleteBehavior.NoAction);

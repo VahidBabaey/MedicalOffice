@@ -21,10 +21,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public DeleteMedicalStaffCommandHandler(
-            IPatientContactRepository repositorycontact, 
-            IPatientAddressRepository repositoryaddress, IPatientTagRepository repositorytag, 
-            IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
+        public DeleteMedicalStaffCommandHandler(IPatientContactRepository repositorycontact, IPatientAddressRepository repositoryaddress, IPatientTagRepository repositorytag, IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -39,11 +36,11 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
             try
             {
-                await _repository.DeleteUserOfficeRoleAsync(request.UserId);
-                await _repository.Delete(request.UserId);
+                await _repository.DeleteUserOfficeRoleAsync(request.MedicalStaffId);
+                await _repository.Delete(request.MedicalStaffId);
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = request.UserId });
+                response.Data=(new { Id = request.MedicalStaffId });
 
                 log.Type = LogType.Success;
             }

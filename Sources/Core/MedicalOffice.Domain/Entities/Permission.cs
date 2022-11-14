@@ -15,15 +15,20 @@ namespace MedicalOffice.Domain.Entities
         /// </summary>
         public string? Name { get; set; }
 
+
+
         /// <summary>
         /// نام فارسی دسترسی
         /// </summary>
         public string? PersianName { get; set; }
 
+
+
         /// <summary>
         /// شناسه دسته بندی دسترسی
         /// </summary>
         public Guid PermissionCategoryId { get; set; }
+
 
         /// <summary>
         ///  ارتباط یک به چند با دسته بندی دسترسی 

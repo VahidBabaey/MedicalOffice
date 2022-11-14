@@ -81,7 +81,7 @@ namespace MedicalOffice.Application.Dtos.PermissionDTO
         /// <summary>
         /// تغییر کاربر پرونده
         /// </summary>
-        public bool FileChangeUser { get; set; } = false;
+        public bool FileChangeMedicalStaff { get; set; } = false;
         /// <summary>
         /// عدم دسترسی به شماره تلفن بیمار
         /// </summary>

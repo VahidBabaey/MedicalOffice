@@ -13,13 +13,21 @@ public class Role : IdentityRole<Guid> // BaseDomainEntity<Guid>
     }
 
     public string PersianName { get; set; } = string.Empty;
+
     /// <summary>
-    /// نام
+    /// نمایش در پذیرش
     /// </summary>
+    public bool ShowinReception { get; set; }
+
+    /// <summary>
+    /// کادر درمان - نقش
+    /// </summary>
+    public ICollection<MedicalStaffRole>? MedicalStaffRoles { get; set; }
+
     //public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// از این مدل برای برقراری ارتباط یک به چند بین نقش و کاربر-مطب-نقش استفاده می شود
+    /// کاربر - آفیس - نقش
     /// </summary>
     public ICollection<UserOfficeRole> UserOfficeRoles { get; set; }
 

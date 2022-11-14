@@ -6,10 +6,15 @@ namespace MedicalOffice.Application.Contracts.Persistence
     {
         Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id);
 
-        Task<string> GetId(Guid id);
+        Guid GetId(Guid id);
 
         Task<bool> UserHasPermission(Guid userId, Guid officeId, string permission);
 
+        Task<IReadOnlyList<Permission>> GetPermissionDetailsByMedicalStaffID(Guid Id);
+
+        Task<bool> SearchMedicalStaff(Guid searchid);
+        
         //Task<bool> SearchMedicalStaff(Guid searchId);
+
     }
 }

@@ -30,7 +30,7 @@ public class PermissionController : Controller
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(string id, [FromBody] PermissionDTO dto)
     {
-        var response = await _mediator.Send(new AddPermissionCommand() { userid = id, DTO = dto });
+        var response = await _mediator.Send(new AddPermissionCommand() { MedicalStaffid = id, DTO = dto });
 
         return Ok(response);
     }
@@ -44,14 +44,14 @@ public class PermissionController : Controller
     [HttpGet("MedicalStaffs")]
     public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetAll()
     {
-        var response = await _mediator.Send(new GetAllUsersName());
+        var response = await _mediator.Send(new GetAllMedicalStaffsName());
 
         return Ok(response);
     }
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetPermissionDetails(Guid id)
     {
-        var response = await _mediator.Send(new GetPermissionDetailsofUser() { UserOfficeRoleId = id });
+        var response = await _mediator.Send(new GetPermissionDetailsofMedicalStaff() { UserOfficeRoleId = id});
 
         return Ok(response);
     }

@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.UserWorkHoursProgramFileDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -7,36 +7,38 @@ using System.Text.Json;
 
 namespace MedicalOffice.Persistence.Repositories;
 
-public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalStaffWorkHourProgram, Guid>, IUserWorkHourProgramRepository
+public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalStaffWorkHourProgram, Guid>, IMedicalStaffWorkHourProgramRepository
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly MedicalStaffWorkHoursProgramListDTO MedicalStaffWorkHoursProgramListDTO = null;
     public MedicalStaffWorkHourProgramRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
+        MedicalStaffWorkHoursProgramListDTO = new MedicalStaffWorkHoursProgramListDTO();
     }
-    public async Task UpdateUsersWorkHoursProgram(Guid userid, int day, UserWorkHoursProgramDTO UserWorkHoursProgramDTO)
+    public async Task UpdateMedicalStaffsWorkHoursProgram(Guid MedicalStaffid,int day, MedicalStaffWorkHoursProgramDTO MedicalStaffWorkHoursProgramDTO)
     {
-        var _list = await _dbContext.MedicalStaffWorkHourPrograms.Where(p => p.MedicalStaffId == userid && (int)p.WeekDay == day).ToListAsync();
+        var _list = await _dbContext.MedicalStaffWorkHourPrograms.Where(p => p.MedicalStaffId == MedicalStaffid && (int)p.WeekDay == day).ToListAsync();
 
         foreach (var item in _list)
         {
-            item.MaxAppointmentCount = UserWorkHoursProgramDTO.MaxAppointmentCount;
+            item.MaxAppointmentCount = MedicalStaffWorkHoursProgramDTO.MaxAppointmentCount;
 
-            foreach (var items in UserWorkHoursProgramDTO.StaffWorkHours)
+            foreach (var items in MedicalStaffWorkHoursProgramDTO.StaffWorkHours)
             {
                 if ((int)items.Day == day)
                 {
-                    item.WeekDay = items.Day;
-                    item.MorningStart = items.MorningStart;
-                    item.MorningEnd = items.MorningEnd;
-                    item.EveningStart = items.EveningStart;
-                    item.EveningEnd = items.EveningEnd;
-                    _dbContext.MedicalStaffWorkHourPrograms.Update(item);
+                item.WeekDay = items.Day;
+                item.MorningStart = items.MorningStart;
+                item.MorningEnd = items.MorningEnd;
+                item.EveningStart = items.EveningStart;
+                item.EveningEnd = items.EveningEnd;
+                _dbContext.MedicalStaffWorkHourPrograms.Update(item);
                 }
-            }
+            }   
         }
     }
-    public async Task DeleteUserWorkHourProgram(Guid id)
+    public async Task DeleteMedicalStaffWorkHourProgram (Guid id)
     {
         var _list = await _dbContext.MedicalStaffWorkHourPrograms.Where(p => p.MedicalStaffId == id).ToListAsync();
 
@@ -46,9 +48,9 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
             _dbContext.SaveChanges();
         }
     }
-    public async Task<IReadOnlyList<MedicalStaffWorkHourProgram>> GetUserWorkHourProgramByID(Guid Id)
+    public async Task<IReadOnlyList<MedicalStaffWorkHourProgram>> GetMedicalStaffWorkHourProgramByID(Guid Id)
     {
-        return await _dbContext.MedicalStaffWorkHourPrograms.Where(srv => srv.MedicalStaffId == Id).ToListAsync();
+        return (IReadOnlyList<MedicalStaffWorkHourProgram>)await _dbContext.MedicalStaffWorkHourPrograms.Where(srv => srv.MedicalStaffId == Id).ToListAsync();
     }
 
 }

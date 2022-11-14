@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Requests.Commands
+namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Commands
 {
-    public class DeleteUserWorkHoursProgramCommand : IRequest<BaseResponse>
+    public class DeleteMedicalStaffWorkHoursProgramCommand : IRequest<BaseResponse>
     {
-        public Guid UserId { get; set; }
+        public Guid MedicalStaffId { get; set; }
     }
 }
