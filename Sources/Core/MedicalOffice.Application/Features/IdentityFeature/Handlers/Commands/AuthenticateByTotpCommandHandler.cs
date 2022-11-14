@@ -106,9 +106,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
                             var claims = new[]
                             {
-                                new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
+                                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                                new Claim(JwtRegisteredClaimNames.Email, user.Email),
                             }
                             .Union(userClaims)
                             .Union(roleClaims);

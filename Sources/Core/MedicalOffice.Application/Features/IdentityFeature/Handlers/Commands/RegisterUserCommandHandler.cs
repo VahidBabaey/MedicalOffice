@@ -70,6 +70,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     return await Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", errors);
                 }
 
+                var userOfficeRoles = new List<UserOfficeRole>();
+                var roleName = new List<string>();
                 //TODO: check current user
                 if (request.DTO.RoleIds != null)
                 {
@@ -79,11 +81,18 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                         Role role = await _roleManager.FindByIdAsync(roleId.ToString());
                         if (role != null)
                         {
-                            await _userOfficeRoleRepository.InsertToUserOfficeRole(roleId, user.Id, request.DTO.OfficeId);
+                            userOfficeRoles.Add(new UserOfficeRole
+                            {
+                                RoleId = roleId,
+                                UserId = user.Id,
+                                OfficeId = request.DTO.OfficeId
+                            });
 
-                            await _userManager.AddToRoleAsync(user, role.NormalizedName);
+                            roleName.Add(role.NormalizedName);
                         }
                     }
+                    await _userManager.AddToRolesAsync(user, roleName);
+                    await _userOfficeRoleRepository.AddUserOfficeRoles(userOfficeRoles);
                 }
 
                 var patientRole = _roleManager.FindByNameAsync("PATIENT").Result;

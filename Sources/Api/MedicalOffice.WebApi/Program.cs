@@ -3,10 +3,12 @@ using MedicalOffice.WebApi;
 using MedicalOffice.Persistence;
 using Microsoft.OpenApi.Models;
 using OtpNet;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(c =>
+    c.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {

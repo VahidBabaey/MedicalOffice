@@ -56,8 +56,8 @@ public class PermissionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
-    [PermissionCheck("goh")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    [PermissionCheck("DoctorPermissionLightPen")]
     [HttpPatch("update-permission")]
     public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] UpdateMedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)
     {

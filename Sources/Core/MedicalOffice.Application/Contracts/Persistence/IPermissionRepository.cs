@@ -8,8 +8,8 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         Task<string> GetId(Guid id);
 
-        //Task<bool> SearchMedicalStaff(Guid searchId);
+        Task<bool> UserHasPermission(Guid userId, Guid officeId, string permission);
 
-        //Task<List<Permission>> GetByUserAndOfficeId(Guid userId, Guid officeId);
+        //Task<bool> SearchMedicalStaff(Guid searchId);
     }
 }

@@ -41,13 +41,11 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
         return await _dbContext.Permissions.Where(srv => srv.UserOfficeRoleId == Id).ToListAsync();
     }
 
-    //public Task<List<Permission>> GetByUserAndOfficeId(Guid userId, Guid officeId)
-    //{
-    //    var permission = _dbContext.MedicalStaffs.Include(m => m.Permissions).SingleAsync(m => m.UserId == userId && m.OfficeId == officeId).Result.Permissions?.ToList();
+    public Task<bool> UserHasPermission(Guid userId, Guid officeId, string permission)
+    {
 
-    //    if (permission != null)
-    //        return Task.FromResult(permission);
-    //    else
-    //        return Task.FromResult(new List<Permission>());
-    //}
+        var result = _dbContext.MedicalStaffPermissions.Include(m => m.Permission).Select(x => x.Permission).Any(x => x != null ? x.Name == permission : false);
+
+        return Task.FromResult(result);
+    }
 }

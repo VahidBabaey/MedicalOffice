@@ -68,6 +68,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             }
 
             var user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
+
             if (user == null)
             {
                 var newUser = _mapper.Map<User>(request.DTO);
@@ -83,7 +84,13 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                     var role = _roleManager.FindByNameAsync("PATIENT").Result;
                     if (role != null)
                     {
-                        await AddUserRole(user, role);
+                        await _userOfficeRoleRepository.Add(new UserOfficeRole
+                        {
+                            RoleId = role.Id,
+                            UserId = user.Id,
+                        });
+
+                        await _userManager.AddToRoleAsync(user, role.NormalizedName);
                     }
                 }
                 else
@@ -97,6 +104,8 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             medicalStaff.UserId = user.Id;
             medicalStaff = await _medicalStaffrepository.Add(medicalStaff);
 
+            var userOfficeRoles = new List<UserOfficeRole>();
+            var roleName = new List<string>();
             if (request.DTO.RoleIds != null)
             {
                 foreach (var roleId in request.DTO.RoleIds)
@@ -104,19 +113,21 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                     Role role = await _roleManager.FindByIdAsync(roleId.ToString());
                     if (role != null)
                     {
-                        await AddUserRole(user, role, request.DTO.OfficeId);
+                        userOfficeRoles.Add(new UserOfficeRole
+                        {
+                            RoleId = roleId,
+                            UserId = user.Id,
+                            OfficeId = request.DTO.OfficeId
+                        });
+
+                        roleName.Add(role.NormalizedName);
                     }
                 }
+                await _userOfficeRoleRepository.AddUserOfficeRoles(userOfficeRoles);
+                await _userManager.AddToRolesAsync(user, roleName);
             }
 
-            return await Success(HttpStatusCode.Created, $"{_requestTitle} succeded", medicalStaff);
-        }
-
-        private async Task AddUserRole(User? user, Role role, Guid? OfficeId = null)
-        {
-            await _userOfficeRoleRepository.InsertToUserOfficeRole(role.Id, user.Id, OfficeId);
-
-            await _userManager.AddToRoleAsync(user, role.NormalizedName);
+            return await Success(HttpStatusCode.Created, $"{_requestTitle} succeded", medicalStaff.Id);
         }
 
         private async Task<BaseResponse> Success(HttpStatusCode statusCode, string message, params object[] data)

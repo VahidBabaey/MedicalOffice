@@ -17,9 +17,5 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId);
 
         Task UpdateUserOfficeRoleAsync(Guid roleId, Guid UserId);
-
-        //Task<MedicalStaff> UpdateMedicalStaffPermissions(Guid medicalStaffId, List<MedicalStaffPermission> medicalStaffPermissions);
-
-        Task MedicalStaffPermissions(Guid userId, Guid officeId);
     }
 }

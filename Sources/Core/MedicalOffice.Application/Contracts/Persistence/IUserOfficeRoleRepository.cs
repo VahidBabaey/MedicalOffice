@@ -6,6 +6,8 @@ namespace MedicalOffice.Application.Contracts.Persistence
     {
         Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId, Guid? officeId = null);
 
+        Task<bool> AddUserOfficeRoles(List<UserOfficeRole> userOfficeRoles);
+
         Task<List<UserOfficeRole>> GetByUserId(Guid UserId);
     }
 }

@@ -89,18 +89,4 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.PhoneNumber == phoneNumber);
         return isExist;
     }
-
-    public Task MedicalStaffPermissions(Guid userId, Guid officeId)
-    {
-        var result = _dbContext.MedicalStaffs.Include(m => m.MedicalStaffPermissions).Single(x => x.OfficeId == officeId && x.UserId == userId)
-            .MedicalStaffPermissions.Select(m => m.Permission);
-        throw new NotImplementedException();
-    }
-
-    //public Task<MedicalStaff> UpdateMedicalStaffPermissions(Guid medicalStaffId, List<MedicalStaffPermission> medicalStaffPermissions)
-    //{
-    //    var result = _dbContext.MedicalStaffs.Include(m=>m.MedicalStaffPermissions).up
-
-    //    return Task.FromResult(result.Entity);
-    //}
 }

@@ -13,6 +13,19 @@ public class UserOfficeRoleRepository : GenericRepository<UserOfficeRole, Guid>,
         _dbContext = dbContext;
     }
 
+    public async Task<bool> AddUserOfficeRoles(List<UserOfficeRole> userOfficeRoles)
+    {
+        try
+        {
+            await _dbContext.UserOfficeRoles.AddRangeAsync(userOfficeRoles);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }   
+    }
+
     public async Task<List<UserOfficeRole>> GetByUserId(Guid userId)
     {
         var userOfficeRole = await _dbContext.UserOfficeRoles.Where(urf => urf.UserId == userId).ToListAsync();
