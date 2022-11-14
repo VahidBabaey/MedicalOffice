@@ -11,8 +11,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         {
             builder
                 .HasMany(role => role.UserOfficeRoles)
-                .WithOne(userOfficeRole => userOfficeRole.Role)
-                .HasForeignKey(userOfficeRole => userOfficeRole.RoleId)
+                .WithOne(UserOfficeRole => UserOfficeRole.Role)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.RoleId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

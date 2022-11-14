@@ -11,9 +11,16 @@ public class Role : BaseDomainEntity<Guid>
     /// نام
     /// </summary>
     public string Name { get; set; } = string.Empty;
-
     /// <summary>
-    /// از این مدل برای برقراری ارتباط یک به چند بین نقش و کاربر-مطب-نقش استفاده می شود
+    /// نمایش در پذیرش
+    /// </summary>
+    public bool ShowinReception { get; set; }
+    /// <summary>
+    /// کادر درمان - نقش
+    /// </summary>
+    public ICollection<MedicalStaffRole>? MedicalStaffRoles { get; set; }
+    /// <summary>
+    /// کاربر - آفیس - نقش
     /// </summary>
     public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
 }

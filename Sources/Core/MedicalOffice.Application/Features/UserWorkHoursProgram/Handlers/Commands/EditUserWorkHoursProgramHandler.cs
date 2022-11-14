@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Features.UserWorkHoursProgram.Requests.Commands;
+using MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
@@ -12,17 +12,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Commands
+namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handlers.Commands
 {
 
-    public class EditUserWorkHoursProgramHandler : IRequestHandler<EditUserWorkHoursProgramCommand, BaseCommandResponse>
+    public class EditMedicalStaffWorkHoursProgramHandler : IRequestHandler<EditMedicalStaffWorkHoursProgramCommand, BaseCommandResponse>
     {
-        private readonly IUserWorkHourProgramRepository _repository;
+        private readonly IMedicalStaffWorkHourProgramRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditUserWorkHoursProgramHandler(IUserWorkHourProgramRepository repository, IMapper mapper, ILogger logger)
+        public EditMedicalStaffWorkHoursProgramHandler(IMedicalStaffWorkHourProgramRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -30,7 +30,7 @@ namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Comma
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(EditUserWorkHoursProgramCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(EditMedicalStaffWorkHoursProgramCommand request, CancellationToken cancellationToken)
         {
             BaseCommandResponse response = new();
 
@@ -41,7 +41,7 @@ namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Comma
                 foreach (var item in request.DTO.StaffWorkHours)
                 {
 
-                await _repository.UpdateUsersWorkHoursProgram(request.DTO.UserId, (int)item.Day, request.DTO);
+                await _repository.UpdateMedicalStaffsWorkHoursProgram(request.DTO.MedicalStaffId, (int)item.Day, request.DTO);
 
                 }
 

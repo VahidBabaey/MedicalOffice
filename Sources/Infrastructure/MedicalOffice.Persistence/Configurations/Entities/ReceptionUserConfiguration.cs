@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MedicalOffice.Persistence.Configurations.Entities
 {
-    public class ReceptionUserConfiguration : BaseEntityTypeConfiguration<ReceptionUser, Guid>
+    public class ReceptionMedicalStaffConfiguration : BaseEntityTypeConfiguration<ReceptionMedicalStaff, Guid>
     {
-        public override void ConfigureEntity(EntityTypeBuilder<ReceptionUser> builder)
+        public override void ConfigureEntity(EntityTypeBuilder<ReceptionMedicalStaff> builder)
         {
             builder
                 .HasOne(e => e.UserOfficeRole)
-                .WithMany(e => e.ReceptionUsers)
+                .WithMany(e => e.ReceptionMedicalStaffs)
                 .HasForeignKey(e => e.UserOfficeRoleId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasOne(e => e.ReceptionDetail)
-                .WithMany(e => e.ReceptionUsers)
+                .WithMany(e => e.ReceptionMedicalStaffs)
                 .HasForeignKey(e => e.ReceptionDetailId)
                 .OnDelete(DeleteBehavior.NoAction);
         }

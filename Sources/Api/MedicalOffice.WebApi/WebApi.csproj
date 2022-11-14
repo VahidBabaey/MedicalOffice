@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>1f59cec8-1de4-4b8c-ab28-0cae1b0fe1aa</UserSecretsId>
+    <MedicalStaffSecretsId>1f59cec8-1de4-4b8c-ab28-0cae1b0fe1aa</MedicalStaffSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
     <RootNamespace>MedicalOffice.WebApi.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>

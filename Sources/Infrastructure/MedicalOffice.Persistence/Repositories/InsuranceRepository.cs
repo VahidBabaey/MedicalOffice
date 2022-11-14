@@ -1,5 +1,6 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,10 @@ namespace MedicalOffice.Persistence.Repositories
         public InsuranceRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
+        }
+        public async Task<IReadOnlyList<Insurance>> GetAllAdditionalInsuranceNames()
+        {
+            return await _dbContext.Insurances.Where(srv => srv.IsAdditionalInsurance == true).ToListAsync();
         }
     }
 }

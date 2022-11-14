@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PermissionFile.Requests.Queries
 {
-    public class GetPermissionDetailsofUser : IRequest<List<PermissionListDTO>>
+    public class GetPermissionDetailsofMedicalStaff : IRequest<List<PermissionListDTO>>
     {
         public Guid UserOfficeRoleId { get; set; }
     }

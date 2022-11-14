@@ -2,6 +2,6 @@
 
 public class UserOfficeRolesDTO
 {
-    public Guid UserID { get; set; }
+    public Guid MedicalStaffID { get; set; }
     public Guid RoleID { get; set; }
 }

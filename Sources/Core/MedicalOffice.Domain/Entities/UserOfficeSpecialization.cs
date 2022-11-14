@@ -5,16 +5,16 @@ namespace MedicalOffice.Domain.Entities;
 /// <summary>
 /// تخصص کاربران / پزشکان
 /// </summary>
-public class UserOfficeSpecialization : BaseDomainEntity<Guid>
+public class MedicalStaffOfficeSpecialization : BaseDomainEntity<Guid>
 {
     /// <summary>
     /// کاربر
     /// </summary>
-    public User? User { get; set; }
+    public MedicalStaff? MedicalStaff { get; set; }
     /// <summary>
     /// آیدی کاربر
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid MedicalStaffId { get; set; }
     /// <summary>
     /// مرکز درمانی - مطب
     /// </summary>

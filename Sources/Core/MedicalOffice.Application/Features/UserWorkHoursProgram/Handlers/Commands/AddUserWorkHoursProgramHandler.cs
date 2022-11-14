@@ -2,38 +2,38 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.UserWorkHoursProgramFileDTO.Validators;
-using MedicalOffice.Application.Features.UserWorkHoursProgram.Requests.Commands;
+using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO.Validators;
+using MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 
 
-namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Commands
+namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handlers.Commands
 {
 
-    public class AddUserWorkHoursProgramHandler : IRequestHandler<AddUserWorkHoursProgramCommand, BaseCommandResponse>
+    public class AddMedicalStaffWorkHoursProgramHandler : IRequestHandler<AddMedicalStaffWorkHoursProgramCommand, BaseCommandResponse>
     {
-        private readonly IUserWorkHourProgramRepository _repository;
+        private readonly IMedicalStaffWorkHourProgramRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
-        UserWorkHourProgram Userworkhourprogram = null;
+        MedicalStaffWorkHourProgram MedicalStaffworkhourprogram = null;
 
-        public AddUserWorkHoursProgramHandler(IUserWorkHourProgramRepository repository, IMapper mapper, ILogger logger)
+        public AddMedicalStaffWorkHoursProgramHandler(IMedicalStaffWorkHourProgramRepository repository, IMapper mapper, ILogger logger)
         {
-            Userworkhourprogram = new UserWorkHourProgram();
+            MedicalStaffworkhourprogram = new MedicalStaffWorkHourProgram();
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(AddUserWorkHoursProgramCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(AddMedicalStaffWorkHoursProgramCommand request, CancellationToken cancellationToken)
         {
             BaseCommandResponse response = new();
 
-            AddUserWorkHoursProgramValidator validator = new();
+            AddMedicalStaffWorkHoursProgramValidator validator = new();
 
             Log log = new();
 
@@ -53,21 +53,21 @@ namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Handlers.Comma
                 {
                     foreach (var item in request.DTO.StaffWorkHours)
                     {
-                        Userworkhourprogram.Id = new Guid();
-                        Userworkhourprogram.UserId = request.DTO.UserId;
-                        Userworkhourprogram.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
-                        Userworkhourprogram.WeekDay = item.Day;
-                        Userworkhourprogram.MorningStart = item.MorningStart;
-                        Userworkhourprogram.MorningEnd = item.MorningEnd;
-                        Userworkhourprogram.EveningStart = item.EveningStart;
-                        Userworkhourprogram.EveningEnd = item.EveningEnd;
-                        var Userprogram = await _repository.Add(Userworkhourprogram);
+                        MedicalStaffworkhourprogram.Id = new Guid();
+                        MedicalStaffworkhourprogram.MedicalStaffId = request.DTO.MedicalStaffId;
+                        MedicalStaffworkhourprogram.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
+                        MedicalStaffworkhourprogram.WeekDay = item.Day;
+                        MedicalStaffworkhourprogram.MorningStart = item.MorningStart;
+                        MedicalStaffworkhourprogram.MorningEnd = item.MorningEnd;
+                        MedicalStaffworkhourprogram.EveningStart = item.EveningStart;
+                        MedicalStaffworkhourprogram.EveningEnd = item.EveningEnd;
+                        var MedicalStaffprogram = await _repository.Add(MedicalStaffworkhourprogram);
 
                     }
                     
                     response.Success = true;
                     response.Message = $"{_requestTitle} succeded";
-                    response.Data.Add(new { Id = Userworkhourprogram.Id });
+                    response.Data.Add(new { Id = MedicalStaffworkhourprogram.Id });
 
                     log.Type = LogType.Success;
                 }

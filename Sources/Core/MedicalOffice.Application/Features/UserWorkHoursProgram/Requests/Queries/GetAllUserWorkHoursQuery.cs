@@ -1,16 +1,16 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.UserWorkHoursProgramFileDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.UserWorkHoursProgram.Requests.Queries
+namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Queries
 {
-    public class GetAllUserWorkHoursQuery : IRequest<List<UserWorkHoursProgramListDTO>>
+    public class GetAllMedicalStaffWorkHoursQuery : IRequest<List<MedicalStaffWorkHoursProgramListDTO>>
     {
-        public Guid UserId { get; set; }
+        public Guid MedicalStaffId { get; set; }
     }
 }

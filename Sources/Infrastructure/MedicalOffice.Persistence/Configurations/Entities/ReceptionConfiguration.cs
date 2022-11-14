@@ -15,9 +15,9 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .HasForeignKey(e => e.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
-                .HasOne(e => e.User)
+                .HasOne(e => e.MedicalStaff)
                 .WithMany(e => e.Receptions)
-                .HasForeignKey(e => e.LoggedInUserId)
+                .HasForeignKey(e => e.LoggedInMedicalStaffId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasOne(e => e.Shift)

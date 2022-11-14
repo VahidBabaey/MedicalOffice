@@ -8,7 +8,7 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class UserOfficeRole : BaseDomainEntity<Guid>
 {
-    public User? User { get; set; }
+    public User? MedicalStaff { get; set; }
     /// <summary>
     /// آیدی کاربر
     /// </summary>
@@ -32,7 +32,7 @@ public class UserOfficeRole : BaseDomainEntity<Guid>
     /// <summary>
     /// سهم و درصد کاربران
     /// </summary>
-    public ICollection<UserServiceSharePercent>? UserServiceSharePercents { get; set; }
+    public ICollection<MedicalStaffServiceSharePercent>? MedicalStaffServiceSharePercents { get; set; }
     /// <summary>
     /// دسترسی ها
     /// </summary>
@@ -40,5 +40,5 @@ public class UserOfficeRole : BaseDomainEntity<Guid>
     /// <summary>
     /// کادر درمان پذیرش
     /// </summary>
-    public ICollection<ReceptionUser> ReceptionUsers { get; set; } = new List<ReceptionUser> ();
+    public ICollection<ReceptionMedicalStaff> ReceptionMedicalStaffs { get; set; } = new List<ReceptionMedicalStaff> ();
 }

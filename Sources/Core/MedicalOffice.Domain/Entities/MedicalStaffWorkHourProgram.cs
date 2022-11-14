@@ -4,16 +4,16 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Domain.Entities
 {
-    public class UserWorkHourProgram : BaseDomainEntity<Guid>
+    public class MedicalStaffWorkHourProgram : BaseDomainEntity<Guid>
     {
         /// <summary>
         /// کادر درمان
         /// </summary>
-        public User? User { get; set; }
+        public MedicalStaff? MedicalStaff { get; set; }
         /// <summary>
         /// آیدی کادر درمان
         /// </summary>
-        public Guid UserId { get; set; }
+        public Guid MedicalStaffId { get; set; }
         /// <summary>
         /// حداکثر تعداد نوبت‌ها در روز
         /// </summary>

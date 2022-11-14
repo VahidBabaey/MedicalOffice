@@ -8,7 +8,7 @@ public enum IntroducerType
     /// <summary>
     /// پزشک
     /// </summary>
-    User = 1,
+    MedicalStaff = 1,
     /// <summary>
     /// بیمار
     /// </summary>

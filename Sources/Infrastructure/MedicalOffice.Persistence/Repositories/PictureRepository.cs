@@ -2,7 +2,6 @@
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.PictureDTO;
 using MedicalOffice.Domain.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;

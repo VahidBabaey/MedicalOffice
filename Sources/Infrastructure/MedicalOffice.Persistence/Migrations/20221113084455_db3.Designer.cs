@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalOffice.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221107145354_db3")]
+    [Migration("20221113084455_db3")]
     partial class db3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,6 +114,9 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("MedicalStaffId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Mobile")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -133,18 +136,15 @@ namespace MedicalOffice.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AppointmentTypeId");
 
                     b.HasIndex("InsuranceId");
 
-                    b.HasIndex("PatientId");
+                    b.HasIndex("MedicalStaffId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Appointments");
                 });
@@ -1143,6 +1143,263 @@ namespace MedicalOffice.Persistence.Migrations
                     b.ToTable("MedicalActions");
                 });
 
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaff", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DoctorTopic")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MedicalNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mobile")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NationalID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("OfficeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid?>("SpecializationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("SpecializationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MedicalStaffs");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaffOfficeSpecialization", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("MedicalStaffId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OfficeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SpecializationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicalStaffId");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("SpecializationId");
+
+                    b.ToTable("MedicalStaffOfficeSpecializations");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaffRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("MedicalStaffId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicalStaffId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("MedicalStaffRoles");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaffServiceSharePercent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SectionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<float>("ShareAmount")
+                        .HasColumnType("real");
+
+                    b.Property<float>("SharePercent")
+                        .HasColumnType("real");
+
+                    b.Property<Guid>("ShiftId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserOfficeRoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SectionId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("ShiftId");
+
+                    b.HasIndex("UserOfficeRoleId");
+
+                    b.ToTable("MedicalStaffServiceSharePercents");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaffWorkHourProgram", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EveningEnd")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EveningStart")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MaxAppointmentCount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("MedicalStaffId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("MorningEnd")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MorningStart")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WeekDay")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicalStaffId");
+
+                    b.ToTable("MedicalStaffWorkHourPrograms");
+                });
+
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Membership", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1690,7 +1947,7 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<bool>("FileChangeDateAdvancePayment")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("FileChangeUser")
+                    b.Property<bool>("FileChangeMedicalStaff")
                         .HasColumnType("bit");
 
                     b.Property<bool>("FileDelete")
@@ -2066,7 +2323,7 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("LoggedInUserId")
+                    b.Property<Guid>("LoggedInMedicalStaffId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("OfficeId")
@@ -2103,7 +2360,7 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoggedInUserId");
+                    b.HasIndex("LoggedInMedicalStaffId");
 
                     b.HasIndex("OfficeId");
 
@@ -2156,6 +2413,9 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<long>("Received")
                         .HasColumnType("bigint");
 
+                    b.Property<Guid>("ReceptionDiscountId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("ReceptionId")
                         .HasColumnType("uniqueidentifier");
 
@@ -2171,11 +2431,49 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.HasIndex("OfficeId");
 
+                    b.HasIndex("ReceptionDiscountId");
+
                     b.HasIndex("ReceptionId");
 
                     b.HasIndex("ServiceId");
 
                     b.ToTable("ReceptionDetails");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionDetailService", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ReceptionDetailId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ServiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceptionDetailId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("ReceptionDetailService");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionDiscount", b =>
@@ -2184,16 +2482,16 @@ namespace MedicalOffice.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("Amount")
-                        .HasColumnType("bigint");
-
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DiscountTypeId")
+                    b.Property<long>("Discount")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid?>("DiscountTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
@@ -2208,21 +2506,16 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<Guid?>("MembershipId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ReceptionDetailId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DiscountTypeId");
 
                     b.HasIndex("MembershipId");
 
-                    b.HasIndex("ReceptionDetailId");
-
                     b.ToTable("ReceptionDiscounts");
                 });
 
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionUser", b =>
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionMedicalStaff", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2243,6 +2536,12 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("MedicalStaffId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("MedicalStaffServiceSharePercentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ReceptionDetailId")
                         .HasColumnType("uniqueidentifier");
 
@@ -2252,26 +2551,20 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<decimal>("SharePrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("UserOfficeRoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UserServiceSharePercentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReceptionDetailId");
+                    b.HasIndex("MedicalStaffId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("MedicalStaffServiceSharePercentId");
+
+                    b.HasIndex("ReceptionDetailId");
 
                     b.HasIndex("UserOfficeRoleId");
 
-                    b.HasIndex("UserServiceSharePercentId");
-
-                    b.ToTable("ReceptionUsers");
+                    b.ToTable("ReceptionMedicalStaffs");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Role", b =>
@@ -2438,6 +2731,9 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<bool>("HasTariff")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("InsuranceId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsConsumingMaterials")
                         .HasColumnType("bit");
 
@@ -2469,7 +2765,12 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<Guid?>("SpecializationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("TariffId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("InsuranceId");
 
                     b.HasIndex("OfficeId");
 
@@ -2673,7 +2974,7 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("KMultiplierId")
+                    b.Property<Guid?>("KMultiplierId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("LastUpdatedById")
@@ -2690,9 +2991,6 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.Property<float>("TariffValue")
                         .HasColumnType("real");
-
-                    b.Property<bool>("UseKMultiplier")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -2713,29 +3011,14 @@ namespace MedicalOffice.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DoctorTopic")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("LastUpdatedById")
                         .HasColumnType("uniqueidentifier");
@@ -2743,36 +3026,12 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MedicalNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Mobile")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NationalID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("OfficeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<Guid?>("SpecializationId")
+                    b.Property<Guid>("OfficeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OfficeId");
-
-                    b.HasIndex("SpecializationId");
 
                     b.ToTable("Users");
                 });
@@ -2798,6 +3057,9 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("MedicalStaffId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("OfficeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -2809,6 +3071,8 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MedicalStaffId");
+
                     b.HasIndex("OfficeId");
 
                     b.HasIndex("RoleId");
@@ -2816,152 +3080,6 @@ namespace MedicalOffice.Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserOfficeRoles");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserOfficeSpecialization", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("OfficeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SpecializationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OfficeId");
-
-                    b.HasIndex("SpecializationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserOfficeSpecializations");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserServiceSharePercent", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("SectionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ServiceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<float>("ShareAmount")
-                        .HasColumnType("real");
-
-                    b.Property<float>("SharePercent")
-                        .HasColumnType("real");
-
-                    b.Property<Guid>("ShiftId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserOfficeRoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SectionId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.HasIndex("ShiftId");
-
-                    b.HasIndex("UserOfficeRoleId");
-
-                    b.ToTable("UserServiceSharePercents");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserWorkHourProgram", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EveningEnd")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EveningStart")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MaxAppointmentCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MorningEnd")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MorningStart")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("WeekDay")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserWorkHourPrograms");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Allergy", b =>
@@ -3003,15 +3121,15 @@ namespace MedicalOffice.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("InsuranceId");
 
-                    b.HasOne("MedicalOffice.Domain.Entities.Patient", "Patient")
+                    b.HasOne("MedicalOffice.Domain.Entities.MedicalStaff", "MedicalStaff")
                         .WithMany("Appointments")
-                        .HasForeignKey("PatientId")
+                        .HasForeignKey("MedicalStaffId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
+                    b.HasOne("MedicalOffice.Domain.Entities.Patient", "Patient")
                         .WithMany("Appointments")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -3019,9 +3137,9 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.Navigation("Insurance");
 
-                    b.Navigation("Patient");
+                    b.Navigation("MedicalStaff");
 
-                    b.Navigation("User");
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.AppointmentService", b =>
@@ -3246,6 +3364,115 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("RVU3");
                 });
 
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaff", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
+                        .WithMany()
+                        .HasForeignKey("OfficeId");
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Specialization", "Specialization")
+                        .WithMany("Doctors")
+                        .HasForeignKey("SpecializationId");
+
+                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
+                        .WithMany("MedicalStaffs")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Office");
+
+                    b.Navigation("Specialization");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaffOfficeSpecialization", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.MedicalStaff", "MedicalStaff")
+                        .WithMany()
+                        .HasForeignKey("MedicalStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
+                        .WithMany()
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Specialization", "Specialization")
+                        .WithMany("MedicalStaffOfficeSpecializations")
+                        .HasForeignKey("SpecializationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MedicalStaff");
+
+                    b.Navigation("Office");
+
+                    b.Navigation("Specialization");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaffRole", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.MedicalStaff", "MedicalStaff")
+                        .WithMany("MedicalStaffRoles")
+                        .HasForeignKey("MedicalStaffId");
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Role", "Role")
+                        .WithMany("MedicalStaffRoles")
+                        .HasForeignKey("RoleId");
+
+                    b.Navigation("MedicalStaff");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaffServiceSharePercent", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.Section", "Section")
+                        .WithMany("MedicalStaffServiceSharePercents")
+                        .HasForeignKey("SectionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Service", "Service")
+                        .WithMany("MedicalStaffServiceSharePercents")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Shift", "Shift")
+                        .WithMany("MedicalStaffServiceSharePercents")
+                        .HasForeignKey("ShiftId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("MedicalOffice.Domain.Entities.UserOfficeRole", "UserOfficeRole")
+                        .WithMany("MedicalStaffServiceSharePercents")
+                        .HasForeignKey("UserOfficeRoleId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Section");
+
+                    b.Navigation("Service");
+
+                    b.Navigation("Shift");
+
+                    b.Navigation("UserOfficeRole");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaffWorkHourProgram", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.MedicalStaff", "MedicalStaff")
+                        .WithMany("MedicalStaffWorkHourPrograms")
+                        .HasForeignKey("MedicalStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MedicalStaff");
+                });
+
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Membership", b =>
                 {
                     b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
@@ -3428,9 +3655,9 @@ namespace MedicalOffice.Persistence.Migrations
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Reception", b =>
                 {
-                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
+                    b.HasOne("MedicalOffice.Domain.Entities.MedicalStaff", "MedicalStaff")
                         .WithMany("Receptions")
-                        .HasForeignKey("LoggedInUserId")
+                        .HasForeignKey("LoggedInMedicalStaffId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -3452,13 +3679,13 @@ namespace MedicalOffice.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.Navigation("MedicalStaff");
+
                     b.Navigation("Office");
 
                     b.Navigation("Patient");
 
                     b.Navigation("Shift");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionDetail", b =>
@@ -3475,15 +3702,21 @@ namespace MedicalOffice.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("MedicalOffice.Domain.Entities.ReceptionDiscount", "ReceptionDiscount")
+                        .WithMany("ReceptionDetails")
+                        .HasForeignKey("ReceptionDiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MedicalOffice.Domain.Entities.Reception", "Reception")
                         .WithMany("ReceptionDetails")
                         .HasForeignKey("ReceptionId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MedicalOffice.Domain.Entities.Service", "Service")
-                        .WithMany("ReceptionDetails")
+                        .WithMany()
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Insurance");
@@ -3491,6 +3724,24 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("Office");
 
                     b.Navigation("Reception");
+
+                    b.Navigation("ReceptionDiscount");
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionDetailService", b =>
+                {
+                    b.HasOne("MedicalOffice.Domain.Entities.ReceptionDetail", "ReceptionDetail")
+                        .WithMany()
+                        .HasForeignKey("ReceptionDetailId");
+
+                    b.HasOne("MedicalOffice.Domain.Entities.Service", "Service")
+                        .WithMany("ReceptionDetails")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("ReceptionDetail");
 
                     b.Navigation("Service");
                 });
@@ -3500,46 +3751,38 @@ namespace MedicalOffice.Persistence.Migrations
                     b.HasOne("MedicalOffice.Domain.Entities.DiscountType", "DiscountType")
                         .WithMany("ReceptionDiscounts")
                         .HasForeignKey("DiscountTypeId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MedicalOffice.Domain.Entities.Membership", "Membership")
                         .WithMany("ReceptionDiscounts")
                         .HasForeignKey("MembershipId");
 
-                    b.HasOne("MedicalOffice.Domain.Entities.ReceptionDetail", "ReceptionDetail")
-                        .WithMany("ReceptionDiscounts")
-                        .HasForeignKey("ReceptionDetailId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.Navigation("DiscountType");
 
                     b.Navigation("Membership");
-
-                    b.Navigation("ReceptionDetail");
                 });
 
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionUser", b =>
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionMedicalStaff", b =>
                 {
+                    b.HasOne("MedicalOffice.Domain.Entities.MedicalStaff", null)
+                        .WithMany("ReceptionMedicalStaffs")
+                        .HasForeignKey("MedicalStaffId");
+
+                    b.HasOne("MedicalOffice.Domain.Entities.MedicalStaffServiceSharePercent", null)
+                        .WithMany("ReceptionMedicalStaffs")
+                        .HasForeignKey("MedicalStaffServiceSharePercentId");
+
                     b.HasOne("MedicalOffice.Domain.Entities.ReceptionDetail", "ReceptionDetail")
-                        .WithMany("ReceptionUsers")
+                        .WithMany("ReceptionMedicalStaffs")
                         .HasForeignKey("ReceptionDetailId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("MedicalOffice.Domain.Entities.User", null)
-                        .WithMany("ReceptionUsers")
-                        .HasForeignKey("UserId");
-
                     b.HasOne("MedicalOffice.Domain.Entities.UserOfficeRole", "UserOfficeRole")
-                        .WithMany("ReceptionUsers")
+                        .WithMany("ReceptionMedicalStaffs")
                         .HasForeignKey("UserOfficeRoleId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("MedicalOffice.Domain.Entities.UserServiceSharePercent", null)
-                        .WithMany("ReceptionUsers")
-                        .HasForeignKey("UserServiceSharePercentId");
 
                     b.Navigation("ReceptionDetail");
 
@@ -3578,6 +3821,10 @@ namespace MedicalOffice.Persistence.Migrations
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Service", b =>
                 {
+                    b.HasOne("MedicalOffice.Domain.Entities.Insurance", "Insurance")
+                        .WithMany("Services")
+                        .HasForeignKey("InsuranceId");
+
                     b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
                         .WithMany("Services")
                         .HasForeignKey("OfficeId")
@@ -3593,6 +3840,8 @@ namespace MedicalOffice.Persistence.Migrations
                         .WithMany("Services")
                         .HasForeignKey("SpecializationId")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Insurance");
 
                     b.Navigation("Office");
 
@@ -3639,11 +3888,9 @@ namespace MedicalOffice.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("MedicalOffice.Domain.Entities.KMultiplier", "KMultiplier")
+                    b.HasOne("MedicalOffice.Domain.Entities.KMultiplier", null)
                         .WithMany("Tariffs")
-                        .HasForeignKey("KMultiplierId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("KMultiplierId");
 
                     b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
                         .WithMany("Tariffs")
@@ -3654,12 +3901,10 @@ namespace MedicalOffice.Persistence.Migrations
                     b.HasOne("MedicalOffice.Domain.Entities.Service", "Service")
                         .WithMany("Tariffs")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Insurance");
-
-                    b.Navigation("KMultiplier");
 
                     b.Navigation("Office");
 
@@ -3669,20 +3914,20 @@ namespace MedicalOffice.Persistence.Migrations
             modelBuilder.Entity("MedicalOffice.Domain.Entities.User", b =>
                 {
                     b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
-                        .WithMany()
-                        .HasForeignKey("OfficeId");
-
-                    b.HasOne("MedicalOffice.Domain.Entities.Specialization", "Specialization")
-                        .WithMany("Doctors")
-                        .HasForeignKey("SpecializationId");
+                        .WithMany("Users")
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Office");
-
-                    b.Navigation("Specialization");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.UserOfficeRole", b =>
                 {
+                    b.HasOne("MedicalOffice.Domain.Entities.MedicalStaff", "MedicalStaff")
+                        .WithMany()
+                        .HasForeignKey("MedicalStaffId");
+
                     b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
                         .WithMany("UserOfficeRoles")
                         .HasForeignKey("OfficeId")
@@ -3693,88 +3938,15 @@ namespace MedicalOffice.Persistence.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
+                    b.HasOne("MedicalOffice.Domain.Entities.User", null)
                         .WithMany("UserOfficeRoles")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("MedicalStaff");
 
                     b.Navigation("Office");
 
                     b.Navigation("Role");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserOfficeSpecialization", b =>
-                {
-                    b.HasOne("MedicalOffice.Domain.Entities.Office", "Office")
-                        .WithMany()
-                        .HasForeignKey("OfficeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MedicalOffice.Domain.Entities.Specialization", "Specialization")
-                        .WithMany("UserOfficeSpecializations")
-                        .HasForeignKey("SpecializationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Office");
-
-                    b.Navigation("Specialization");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserServiceSharePercent", b =>
-                {
-                    b.HasOne("MedicalOffice.Domain.Entities.Section", "Section")
-                        .WithMany("UserServiceSharePercents")
-                        .HasForeignKey("SectionId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("MedicalOffice.Domain.Entities.Service", "Service")
-                        .WithMany("UserServiceSharePercents")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("MedicalOffice.Domain.Entities.Shift", "Shift")
-                        .WithMany("UserServiceSharePercents")
-                        .HasForeignKey("ShiftId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("MedicalOffice.Domain.Entities.UserOfficeRole", "UserOfficeRole")
-                        .WithMany("UserServiceSharePercents")
-                        .HasForeignKey("UserOfficeRoleId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Section");
-
-                    b.Navigation("Service");
-
-                    b.Navigation("Shift");
-
-                    b.Navigation("UserOfficeRole");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserWorkHourProgram", b =>
-                {
-                    b.HasOne("MedicalOffice.Domain.Entities.User", "User")
-                        .WithMany("UserWorkHourPrograms")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Appointment", b =>
@@ -3852,6 +4024,8 @@ namespace MedicalOffice.Persistence.Migrations
 
                     b.Navigation("ReceptionDetails_Insurance");
 
+                    b.Navigation("Services");
+
                     b.Navigation("Tariffs");
                 });
 
@@ -3860,6 +4034,24 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("KMultiplierDetails");
 
                     b.Navigation("Tariffs");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaff", b =>
+                {
+                    b.Navigation("Appointments");
+
+                    b.Navigation("MedicalStaffRoles");
+
+                    b.Navigation("MedicalStaffWorkHourPrograms");
+
+                    b.Navigation("ReceptionMedicalStaffs");
+
+                    b.Navigation("Receptions");
+                });
+
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.MedicalStaffServiceSharePercent", b =>
+                {
+                    b.Navigation("ReceptionMedicalStaffs");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Membership", b =>
@@ -3896,6 +4088,8 @@ namespace MedicalOffice.Persistence.Migrations
                     b.Navigation("Tariffs");
 
                     b.Navigation("UserOfficeRoles");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Patient", b =>
@@ -3950,13 +4144,18 @@ namespace MedicalOffice.Persistence.Migrations
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionDetail", b =>
                 {
-                    b.Navigation("ReceptionDiscounts");
+                    b.Navigation("ReceptionMedicalStaffs");
+                });
 
-                    b.Navigation("ReceptionUsers");
+            modelBuilder.Entity("MedicalOffice.Domain.Entities.ReceptionDiscount", b =>
+                {
+                    b.Navigation("ReceptionDetails");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Role", b =>
                 {
+                    b.Navigation("MedicalStaffRoles");
+
                     b.Navigation("UserOfficeRoles");
                 });
 
@@ -3967,29 +4166,29 @@ namespace MedicalOffice.Persistence.Migrations
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Section", b =>
                 {
-                    b.Navigation("Services");
+                    b.Navigation("MedicalStaffServiceSharePercents");
 
-                    b.Navigation("UserServiceSharePercents");
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Service", b =>
                 {
                     b.Navigation("AppointmentServices");
 
+                    b.Navigation("MedicalStaffServiceSharePercents");
+
                     b.Navigation("MemberShipServices");
 
                     b.Navigation("ReceptionDetails");
 
                     b.Navigation("Tariffs");
-
-                    b.Navigation("UserServiceSharePercents");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.Shift", b =>
                 {
-                    b.Navigation("Receptions");
+                    b.Navigation("MedicalStaffServiceSharePercents");
 
-                    b.Navigation("UserServiceSharePercents");
+                    b.Navigation("Receptions");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.SNOMED", b =>
@@ -4001,36 +4200,25 @@ namespace MedicalOffice.Persistence.Migrations
                 {
                     b.Navigation("Doctors");
 
-                    b.Navigation("Services");
+                    b.Navigation("MedicalStaffOfficeSpecializations");
 
-                    b.Navigation("UserOfficeSpecializations");
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Appointments");
-
-                    b.Navigation("ReceptionUsers");
-
-                    b.Navigation("Receptions");
+                    b.Navigation("MedicalStaffs");
 
                     b.Navigation("UserOfficeRoles");
-
-                    b.Navigation("UserWorkHourPrograms");
                 });
 
             modelBuilder.Entity("MedicalOffice.Domain.Entities.UserOfficeRole", b =>
                 {
+                    b.Navigation("MedicalStaffServiceSharePercents");
+
                     b.Navigation("Permissiones");
 
-                    b.Navigation("ReceptionUsers");
-
-                    b.Navigation("UserServiceSharePercents");
-                });
-
-            modelBuilder.Entity("MedicalOffice.Domain.Entities.UserServiceSharePercent", b =>
-                {
-                    b.Navigation("ReceptionUsers");
+                    b.Navigation("ReceptionMedicalStaffs");
                 });
 #pragma warning restore 612, 618
         }

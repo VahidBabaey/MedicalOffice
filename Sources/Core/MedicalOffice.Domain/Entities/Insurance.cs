@@ -55,5 +55,9 @@ public class Insurance : BaseDomainEntity<Guid>
     /// بیماران
     /// </summary>
     public ICollection<Patient>? Patients { get; set; }
+    /// <summary>
+    /// سرویس ها
+    /// </summary>
+    public ICollection<Service>? Services { get; set; }
 
 }

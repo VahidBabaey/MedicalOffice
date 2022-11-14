@@ -5,7 +5,7 @@ namespace MedicalOffice.Domain.Entities;
 /// <summary>
 /// سهم و درصد کاربران / پزشکان
 /// </summary>
-public class UserServiceSharePercent : BaseDomainEntity<Guid>
+public class MedicalStaffServiceSharePercent : BaseDomainEntity<Guid>
 {
     /// <summary>
     /// کاربر
@@ -50,5 +50,5 @@ public class UserServiceSharePercent : BaseDomainEntity<Guid>
     /// <summary>
     /// کاربران مطب
     /// </summary>
-    public ICollection<ReceptionUser>? ReceptionUsers { get; set; }
+    public ICollection<ReceptionMedicalStaff>? ReceptionMedicalStaffs { get; set; }
 }

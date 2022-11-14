@@ -5,7 +5,7 @@ namespace MedicalOffice.Domain.Entities;
 /// <summary>
 /// کاربران / دکتران پذیرش
 /// </summary>
-public class ReceptionUser : BaseDomainEntity<Guid>
+public class ReceptionMedicalStaff : BaseDomainEntity<Guid>
 {
     /// <summary>
     /// جزئیات پذیرش

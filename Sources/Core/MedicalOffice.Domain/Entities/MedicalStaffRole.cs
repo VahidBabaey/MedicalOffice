@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Domain.Entities
 {
-    public class User : BaseDomainEntity<Guid>
+    public class MedicalStaffRole : BaseDomainEntity<Guid>
     {
         /// <summary>
-        /// مطب
+        /// نقش
         /// </summary>
-        public Office? Office { get; set; }
+        public Role Role { get; set; }
         /// <summary>
-        /// آیدی مطب
+        /// آیدی نقش
         /// </summary>
-        public Guid OfficeId { get; set; }
+        public Guid RoleId { get; set; }
         /// <summary>
         /// کادر درمان
         /// </summary>
-        public ICollection<MedicalStaff>? MedicalStaffs { get; set; }
+        public MedicalStaff MedicalStaff { get; set; }
         /// <summary>
-        /// کاربر - آفیس - نقش
+        /// آیدی کادر درمان
         /// </summary>
-        public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
+        public Guid MedicalStaffId { get; set; }
     }
 }

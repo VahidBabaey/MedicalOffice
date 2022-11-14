@@ -25,9 +25,6 @@ namespace MedicalOffice.Domain.Entities
         /// آیدی کاربر
         /// </summary>
         public Guid? UserOfficeRoleId { get; set; }
-
-
-
         /// <summary>
         /// فعال یا غیرفعال بودن پذیرش
         /// </summary>
@@ -90,7 +87,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// تغییر کاربر پرونده
         /// </summary>
-        public bool FileChangeUser { get; set; } = false;
+        public bool FileChangeMedicalStaff { get; set; } = false;
         /// <summary>
         /// عدم دسترسی به شماره تلفن بیمار
         /// </summary>

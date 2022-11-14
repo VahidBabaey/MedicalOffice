@@ -11,7 +11,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Requests.Commands
 {
     public class AddPermissionCommand : IRequest<BaseCommandResponse>
     {
-        public string userid { get; set; } = string.Empty;
+        public string MedicalStaffid { get; set; } = string.Empty;
         public PermissionDTO DTO { get; set; } = new PermissionDTO();
         public UpdatePermissionDTO DTOUp { get; set; } = new UpdatePermissionDTO();
     }
