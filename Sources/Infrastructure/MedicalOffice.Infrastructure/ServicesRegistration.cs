@@ -1,6 +1,6 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Models;
-using MedicalOffice.Application.Models.Identity;
+using MedicalOffice.Infrastructure.Sms;
 using MedicalOffice.WebApi.Crypto;
 using MedicalOffice.WebApi.Log;
 using MedicalOffice.WebApi.Mail;
@@ -20,6 +20,9 @@ public static class ServiceRegistration
 
         services.Configure<LoggerSettings>(configuration.GetSection("LoggerSettings"));
         services.AddTransient<ILogger, Logger>();
+
+        services.Configure<SmsSettings>(configuration.GetSection("SmsSettings"));
+        services.AddTransient<ISmsSender, SmsSender>();
 
         services.AddTransient<ITotpHandler, TotpHandler>();
 

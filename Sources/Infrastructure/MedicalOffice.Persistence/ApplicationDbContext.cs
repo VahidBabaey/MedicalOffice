@@ -69,10 +69,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
     public DbSet<MedicalStaffPermission> MedicalStaffPermissions => Set<MedicalStaffPermission>();
 
-    // Identity
-    //public DbSet<User> Users => Set<User>();
-    //public DbSet<Role> Roles => Set<Role>();
-
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         //Database.EnsureDeleted();

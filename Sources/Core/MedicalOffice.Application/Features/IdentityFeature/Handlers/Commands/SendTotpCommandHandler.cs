@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Ghasedak.Core;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity;
@@ -16,12 +16,17 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class SendTotpCommandHandler : IRequestHandler<SendTotpCommand, BaseResponse>
     {
+        private readonly ISmsSender _smsSender;
         private readonly ITotpHandler _totpHandler;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public SendTotpCommandHandler(ITotpHandler totpHandler, ILogger logger)
+        public SendTotpCommandHandler(
+            ISmsSender smsSender,
+            ITotpHandler totpHandler, 
+            ILogger logger)
         {
+            _smsSender = smsSender;
             _totpHandler = totpHandler;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -45,6 +50,16 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 }
 
                 var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
+
+                //TODO: add ghasedak sms provider to send sms to user.
+                //var totpSms = new TotpSms()
+                //{
+                //    Type = 1,
+                //    Receptor = new string[] { request.DTO.PhoneNumber },
+                //    Code = totp
+                //};
+
+                //var sendMessageToUser = await _smsSender.SendTotpSmsAsync(totpSms);
 
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";

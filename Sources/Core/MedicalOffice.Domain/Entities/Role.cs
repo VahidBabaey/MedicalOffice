@@ -17,7 +17,7 @@ public class Role : IdentityRole<Guid> // BaseDomainEntity<Guid>
     /// <summary>
     /// نمایش در پذیرش
     /// </summary>
-    public bool ShowinReception { get; set; }
+    public bool ShowInReception { get; set; }
 
     /// <summary>
     /// کادر درمان - نقش

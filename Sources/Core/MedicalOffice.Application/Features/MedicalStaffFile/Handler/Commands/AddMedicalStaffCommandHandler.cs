@@ -21,15 +21,12 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
     public class AddMedicalStaffCommandHandler : IRequestHandler<AddMedicalStaffCommand, BaseResponse>
     {
-        //private readonly IMedicalStaffRepository _repository;
-        //private readonly IUserRepository _repositoryUser;
-        //private readonly IMedicalStaffRoleRepository _repositoryMedicalStaffRole;
-        //private readonly IUserOfficeRoleRepository _repositoryUserOfficeRole;
-        //private readonly ICryptoServiceProvider _cryptoServiceProvider;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IMedicalStaffRoleRepository _medicalStaffRoleRepository;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly IMedicalStaffRepository _medicalStaffrepository;
+        private readonly IMedicalStaffPermissionRepository _mediicalStaffPermissionRepository;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly string _requestTitle;
@@ -40,7 +37,9 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             RoleManager<Role> roleManager,
             UserManager<User> userManager,
             IMedicalStaffRepository medicalStaffrepository,
-            IUserOfficeRoleRepository userOfficeRoleRepository
+            IUserOfficeRoleRepository userOfficeRoleRepository,
+            IMedicalStaffRoleRepository medicalStaffRoleRepository, 
+            IMedicalStaffPermissionRepository mediicalStaffPermissionRepository
             )
         {
             _mapper = mapper;
@@ -49,8 +48,10 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             _userManager = userManager;
             _userOfficeRoleRepository = userOfficeRoleRepository;
             _medicalStaffrepository = medicalStaffrepository;
+            _medicalStaffRoleRepository = medicalStaffRoleRepository;
 
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
+            _mediicalStaffPermissionRepository = mediicalStaffPermissionRepository;
         }
 
         public async Task<BaseResponse> Handle(AddMedicalStaffCommand request, CancellationToken cancellationToken)
@@ -96,27 +97,28 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                     if (role != null)
                     {
                         await _userOfficeRoleRepository.Add(new UserOfficeRole
-                    {
+                        {
                             RoleId = role.Id,
                             UserId = user.Id,
                         });
 
                         await _userManager.AddToRoleAsync(user, role.NormalizedName);
                     }
-                    }
-                    else
-                    {
+                }
+                else
+                {
                     var error = $"There is a problem in registering user";
                     return await Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error);
-                        }
-                    }
+                }
+            }
 
             var medicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
             medicalStaff.UserId = user.Id;
             medicalStaff = await _medicalStaffrepository.Add(medicalStaff);
 
-            var userOfficeRoles = new List<UserOfficeRole>();
             var roleName = new List<string>();
+            var userOfficeRoles = new List<UserOfficeRole>();
+            var medicalstaffRole = new List<MedicalStaffRole>();
             if (request.DTO.RoleIds != null)
             {
                 foreach (var roleId in request.DTO.RoleIds)
@@ -125,16 +127,24 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                     if (role != null)
                     {
                         userOfficeRoles.Add(new UserOfficeRole
-                {
+                        {
                             RoleId = roleId,
                             UserId = user.Id,
                             OfficeId = request.DTO.OfficeId
                         });
 
+                        medicalstaffRole.Add(new MedicalStaffRole
+                        {
+                            RoleId = role.Id,
+                            MedicalStaffId = medicalStaff.Id
+                        });
+
                         roleName.Add(role.NormalizedName);
                     }
                 }
+
                 await _userOfficeRoleRepository.AddUserOfficeRoles(userOfficeRoles);
+                await _medicalStaffRoleRepository.InsertToMedicalStaffRole(medicalstaffRole);
                 await _userManager.AddToRolesAsync(user, roleName);
             }
 

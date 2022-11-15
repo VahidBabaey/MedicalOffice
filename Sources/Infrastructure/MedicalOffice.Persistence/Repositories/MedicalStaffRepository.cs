@@ -81,7 +81,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         List<MedicalStaffNamesDTO> medicalStaffNamesDTO = new();
 
         var _list = _dbContext.MedicalStaffRoles
-            .Include(p => p.MedicalStaff).Include(x => x.Role).Where(x => x.Role.ShowinReception == true);
+            .Include(p => p.MedicalStaff).Include(x => x.Role).Where(x => x.Role.ShowInReception == true);
 
         foreach (var item in _list)
         {

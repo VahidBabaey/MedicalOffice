@@ -21,33 +21,14 @@ namespace MedicalOffice.WebApi.Token
 {
     public class TokenGenerator : ITokenGenerator
     {
-        private readonly UserManager<User> _userManager;
         private readonly JwtSettings _jwtSettings;
-        public TokenGenerator(IOptions<JwtSettings> jwtSettings, UserManager<User> userManager)
+        public TokenGenerator(IOptions<JwtSettings> jwtSettings)
         {
-            _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
         }
 
-        public async Task<JwtSecurityToken> GenerateToken(User user,IEnumerable<Claim> claims)
+        public Task<JwtSecurityToken> GenerateToken(User user, IEnumerable<Claim> claims)
         {
-            //var userClaims = await _userManager.GetClaimsAsync(user);
-
-            //var roles = await _userManager.GetRolesAsync(user);
-            //var roleClaims = new List<Claim>();
-            //for (int i = 0; i < roles.Count; i++)
-            //{
-            //    roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
-            //}
-
-            //var claims = new[]
-            //{
-            //    new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
-            //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            //}
-            //.Union(userClaims)
-            //.Union(roleClaims);
-
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
@@ -58,7 +39,7 @@ namespace MedicalOffice.WebApi.Token
                 expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
                 signingCredentials: signingCredentials);
 
-            return jwtSecurityToken;
+            return Task.FromResult(jwtSecurityToken);
         }
     }
 
@@ -73,6 +54,7 @@ namespace MedicalOffice.WebApi.Token
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(o =>
             {

@@ -11,7 +11,6 @@ using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -19,12 +18,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Security.Claims;
+using Ghasedak.Core;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class AuthenticateByTotpCommandHandler : IRequestHandler<AuthenticateByTotpCommand, BaseResponse>
     {
-        private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly ITotpHandler _totpHandler;
@@ -33,14 +32,12 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly string _requestTitle;
 
         public AuthenticateByTotpCommandHandler(
-            SignInManager<User> signInManager,
             UserManager<User> userManager,
             ITokenGenerator tokenGenerator,
             ITotpHandler totpHandler,
             ILogger logger,
             IMapper mapper)
         {
-            _signInManager = signInManager;
             _userManager = userManager;
             _tokenGenerator = tokenGenerator;
             _totpHandler = totpHandler;
