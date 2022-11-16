@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Domain.Common;
+﻿using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Domain.Common;
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -65,14 +66,18 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Tariff> Tariffs => Set<Tariff>();
     public DbSet<MedicalStaffRole> MedicalStaffRoles => Set<MedicalStaffRole>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
+    public DbSet<UserOfficePermission> UserOfficePermissions => Set<UserOfficePermission>();
     public DbSet<MedicalStaffOfficeSpecialization> MedicalStaffOfficeSpecializations => Set<MedicalStaffOfficeSpecialization>();
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
-    public DbSet<MedicalStaffPermission> MedicalStaffPermissions => Set<MedicalStaffPermission>();
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    //public UserResolverService UserService { get; }
+
+    private readonly IUserResolverService _userResolver;
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolverService userResolver) : base(options)
     {
         //Database.EnsureDeleted();
         Database.EnsureCreated();
+        _userResolver = userResolver;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -89,13 +94,38 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        //TODO: Save current MedicalStaff as updatedby and createdby
+        var userId = _userResolver.GetUserId().Result;
+
+        foreach (var entry in ChangeTracker.Entries<IPrimaryKeyEntity<Guid>>())
+        {
+            if (entry.State == EntityState.Added && entry.Entity.Id == default)
+                entry.Entity.Id = Guid.NewGuid();
+        }
+
+        foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
+        {
+            entry.Entity.LastUpdatedDate = DateTime.Now;
+            entry.Entity.LastUpdatedById = Guid.Parse(userId);
+
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedDate = DateTime.Now;
+                entry.Entity.CreatedById = Guid.Parse(userId);
+            }
+
+        }
+
+        //TODO: Save current User as updatedby and createdby
         foreach (var entry in ChangeTracker.Entries<BaseDomainEntity<Guid>>())
         {
             entry.Entity.LastUpdatedDate = DateTime.Now;
+            entry.Entity.LastUpdatedById = Guid.Parse(userId);
 
             if (entry.State == EntityState.Added)
+            {
                 entry.Entity.CreatedDate = DateTime.Now;
+                entry.Entity.CreatedById = Guid.Parse(userId);
+            }
         }
 
         return base.SaveChangesAsync(cancellationToken);

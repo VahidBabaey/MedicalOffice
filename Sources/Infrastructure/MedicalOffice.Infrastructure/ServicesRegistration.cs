@@ -28,7 +28,11 @@ public static class ServiceRegistration
 
         services.AddTokenGenerator(configuration);
         services.AddCryptography(configuration);
-        
+
+        services.AddTransient<IUserResolverService, UserResolverService>();
+
+        services.AddHttpContextAccessor();
+
         return services;
     }
 }
