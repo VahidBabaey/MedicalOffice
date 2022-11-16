@@ -2,7 +2,7 @@
 using MedicalOffice.Application.Models;
 using Microsoft.Extensions.Options;
 
-namespace MedicalOffice.Infrastructure.Log;
+namespace MedicalOffice.WebApi.Log;
 
 public class Logger : ILogger
 {
@@ -16,7 +16,7 @@ public class Logger : ILogger
 
     public async Task Log(Application.Models.Log log)
     {
-        //var logFormat = $"{string.Format("{0:yyyy/MM/dd HH:mm}", DateTime.Now)}-{log.Type}-{log.Header}\n{new string('-', 20)}\n{string.Join("\n", log.Messages)}\n{new string('-', 20)}";
+        //var logFormat = $"{string.Format("{0:yyyy/MM/dd HH:mm}", DateTime.Now)}-{log.Type}-{log.Header}\n{new string('-', 20)}\n{string.Join("\n", log.AdditionalData)}\n{new string('-', 20)}";
 
         //if (_settings.OutputType == LogOutputType.File)
         //{

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MembershipFile.Requests.Commands
 {
-    public class AddMembershipCommand : IRequest<BaseCommandResponse>
+    public class AddMembershipCommand : IRequest<BaseResponse>
     {
         public MembershipDTO DTO { get; set; } = new MembershipDTO();
     }

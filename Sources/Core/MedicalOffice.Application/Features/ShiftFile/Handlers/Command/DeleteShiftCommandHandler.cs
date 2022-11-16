@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 {
 
-    public class DeleteShiftCommandHandler : IRequestHandler<DeleteShiftCommand, BaseCommandResponse>
+    public class DeleteShiftCommandHandler : IRequestHandler<DeleteShiftCommand, BaseResponse>
     {
         private readonly IShiftRepository _repository;
         private readonly IMapper _mapper;
@@ -29,9 +29,9 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(DeleteShiftCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(DeleteShiftCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
             Log log = new();
 
             try
@@ -39,22 +39,22 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
                 await _repository.Delete(request.ShiftID);
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Id = request.ShiftID });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = request.ShiftID });
 
                 log.Type = LogType.Success;
             }
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
 
-            log.Header = response.Message;
-            log.Messages = response.Errors;
+            log.Header = response.StatusDescription;
+            log.AdditionalData = response.Errors;
 
             await _logger.Log(log);
 

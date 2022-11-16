@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PictureFile.Handlers.Commands;
-public class DeletePictureCommandHandler : IRequestHandler<DeletePictureCommand, BaseCommandResponse>
+public class DeletePictureCommandHandler : IRequestHandler<DeletePictureCommand, BaseResponse>
 {
     private readonly IPictureRepository _repository;
     private readonly ILogger _logger;
@@ -25,9 +25,9 @@ public class DeletePictureCommandHandler : IRequestHandler<DeletePictureCommand,
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseCommandResponse> Handle(DeletePictureCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(DeletePictureCommand request, CancellationToken cancellationToken)
     {
-        BaseCommandResponse response = new();
+        BaseResponse response = new();
         Log log = new();
 
         try
@@ -35,22 +35,22 @@ public class DeletePictureCommandHandler : IRequestHandler<DeletePictureCommand,
             await _repository.Delete(request.PictureId);
 
             response.Success = true;
-            response.Message = $"{_requestTitle} succeded";
-            response.Data.Add(new { Id = request.PictureId });
+            response.StatusDescription = $"{_requestTitle} succeded";
+            response.Data = (new { Id = request.PictureId });
 
             log.Type = LogType.Success;
         }
         catch (Exception error)
         {
             response.Success = false;
-            response.Message = $"{_requestTitle} failed";
+            response.StatusDescription = $"{_requestTitle} failed";
             response.Errors.Add(error.Message);
 
             log.Type = LogType.Error;
         }
 
-        log.Header = response.Message;
-        log.Messages = response.Errors;
+        log.Header = response.StatusDescription;
+        log.AdditionalData = response.Errors;
 
         await _logger.Log(log);
 

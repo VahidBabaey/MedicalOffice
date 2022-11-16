@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.ShiftFile.Requests.Command
 {
-    public class DeleteShiftCommand : IRequest<BaseCommandResponse>
+    public class DeleteShiftCommand : IRequest<BaseResponse>
     {
         public Guid ShiftID { get; set; }
     }

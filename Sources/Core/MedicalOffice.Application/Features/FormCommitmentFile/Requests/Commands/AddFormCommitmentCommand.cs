@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.FormCommitmentFile.Requests.Commands
 {
-    public class AddFormCommitmentCommand : IRequest<BaseCommandResponse>
+    public class AddFormCommitmentCommand : IRequest<BaseResponse>
     {
         public FormCommitmentDTO DTO { get; set; } = new FormCommitmentDTO();
     }

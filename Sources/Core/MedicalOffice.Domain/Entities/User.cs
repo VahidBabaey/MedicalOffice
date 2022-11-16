@@ -1,29 +1,51 @@
 ﻿using MedicalOffice.Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace MedicalOffice.Domain.Entities
 {
-    public class User : BaseDomainEntity<Guid>
+    public class User :
+        IdentityUser<Guid>,
+        IPrimaryKeyEntity<Guid>,
+        IAuditableEntity,
+        ISoftDeletableEntity
     {
+        public User()
+        {
+            SecurityStamp = Guid.NewGuid().ToString();
+            PasswordHash = string.Empty;
+        }
+
         /// <summary>
-        /// مطب
+        /// نام
         /// </summary>
-        public Office? Office { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+
         /// <summary>
-        /// آیدی مطب
+        /// نام خانوادگی
         /// </summary>
-        public Guid OfficeId { get; set; }
+        public string LastName { get; set; } = string.Empty;
+
         /// <summary>
-        /// کادر درمان
+        /// کد ملی
         /// </summary>
-        public ICollection<MedicalStaff>? MedicalStaffs { get; set; }
+        public string NationalID { get; set; } = string.Empty;
+
         /// <summary>
-        /// کاربر - آفیس - نقش
+        /// ارتباط چند به چند با جدول کاربران مطب ها رول ها
         /// </summary>
         public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
+
+        /// <summary>
+        /// ارتباط چند به چند با جدول کاربران مطب ها و دسترسی ها
+        /// </summary>
+        public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public Guid CreatedById { get; set; }
+        public DateTime LastUpdatedDate { get; set; }
+        public Guid LastUpdatedById { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

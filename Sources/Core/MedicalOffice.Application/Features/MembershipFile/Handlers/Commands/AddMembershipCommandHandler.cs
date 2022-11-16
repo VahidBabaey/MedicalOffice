@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 {
 
-    public class AddMembershipCommandHandler : IRequestHandler<AddMembershipCommand, BaseCommandResponse>
+    public class AddMembershipCommandHandler : IRequestHandler<AddMembershipCommand, BaseResponse>
     {
         private readonly IMembershipRepository _repository;
         private readonly IServiceRepository _repositoryservice;
@@ -34,10 +34,10 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
         }
 
-        public async Task<BaseCommandResponse> Handle(AddMembershipCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(AddMembershipCommand request, CancellationToken cancellationToken)
         {
             
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             AddMembershipValidator validator = new();
 
@@ -48,7 +48,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
             if (!validationResult.IsValid)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
@@ -62,8 +62,8 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                     membership = await _repository.Add(membership);
 
                     response.Success = true;
-                    response.Message = $"{_requestTitle} succeded";
-                    response.Data.Add(new { Id = membership.Id });
+                    response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data=(new { Id = membership.Id });
                     //if (request.DTO.ServiceIDs == null)
                     //{
 
@@ -72,7 +72,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                     //{
                     //    foreach (var srvid in request.DTO.ServiceIDs)
                     //    {                   
-                    //    await _repository.InsertMembershipIdofServiceAsync(membership.Discount, srvid, membership.Id);
+                    //    await _officeRepository.InsertMembershipIdofServiceAsync(membership.Discount, srvid, membership.Id);
                     //    }
                     //}
                     
@@ -82,15 +82,15 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                 catch (Exception error)
                 {
                     response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 
                     log.Type = LogType.Error;
                 }
             }
 
-            log.Header = response.Message;
-            log.Messages = response.Errors;
+            log.Header = response.StatusDescription;
+            log.AdditionalData = response.Errors;
 
             await _logger.Log(log);
 

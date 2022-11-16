@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 {
 
-    public class DeleteMedicalStaffCommandHandler : IRequestHandler<DeleteMedicalStaffCommand, BaseCommandResponse>
+    public class DeleteMedicalStaffCommandHandler : IRequestHandler<DeleteMedicalStaffCommand, BaseResponse>
     {
         private readonly IMedicalStaffRepository _repository;
         private readonly IMapper _mapper;
@@ -29,9 +29,9 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(DeleteMedicalStaffCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(DeleteMedicalStaffCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
             Log log = new();
 
             try
@@ -39,22 +39,22 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 await _repository.DeleteUserOfficeRoleAsync(request.MedicalStaffId);
                 await _repository.Delete(request.MedicalStaffId);
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Id = request.MedicalStaffId });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data=(new { Id = request.MedicalStaffId });
 
                 log.Type = LogType.Success;
             }
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
 
-            log.Header = response.Message;
-            log.Messages = response.Errors;
+            log.Header = response.StatusDescription;
+            log.AdditionalData = response.Errors;
 
             await _logger.Log(log);
 

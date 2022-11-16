@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MedicalOffice.Infrastructure.Crypto
+namespace MedicalOffice.WebApi.Crypto
 {
     public class CryptoServiceProvider : ICryptoServiceProvider
     {
@@ -38,7 +38,7 @@ namespace MedicalOffice.Infrastructure.Crypto
         }
     }
 
-    public static class CryptoServiceProviderRegisteration
+    public static class ServiceCollectionExtention
     {
         public static IServiceCollection AddCryptography(this IServiceCollection services, IConfiguration configuration)
         {

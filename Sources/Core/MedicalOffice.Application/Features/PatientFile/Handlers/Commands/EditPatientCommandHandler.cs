@@ -9,7 +9,7 @@ using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Features.PatientFile.Handlers.Commands;
 
-public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, BaseCommandResponse>
+public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, BaseResponse>
 {
     private readonly IPatientRepository _repository;
     private readonly IPatientContactRepository _repositorycontact;
@@ -30,9 +30,9 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseCommandResponse> Handle(EditPatientCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(EditPatientCommand request, CancellationToken cancellationToken)
     {
-        BaseCommandResponse response = new();
+        BaseResponse response = new();
 
         Log log = new();
 
@@ -46,8 +46,8 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
             await _repositorytag.RemovePatientTag(patient.Id);
 
             response.Success = true;
-            response.Message = $"{_requestTitle} succeded";
-            response.Data.Add(new { Id = patient.Id });
+            response.StatusDescription = $"{_requestTitle} succeded";
+            response.Data = (new { Id = patient.Id });
             if (request.Dto.Mobile == null)
             {
 
@@ -72,14 +72,14 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
         catch (Exception error)
         {
             response.Success = false;
-            response.Message = $"{_requestTitle} failed";
+            response.StatusDescription = $"{_requestTitle} failed";
             response.Errors.Add(error.Message);
 
             log.Type = LogType.Error;
         }
 
-        log.Header = response.Message;
-        log.Messages = response.Errors;
+        log.Header = response.StatusDescription;
+        log.AdditionalData = response.Errors;
 
         await _logger.Log(log);
 

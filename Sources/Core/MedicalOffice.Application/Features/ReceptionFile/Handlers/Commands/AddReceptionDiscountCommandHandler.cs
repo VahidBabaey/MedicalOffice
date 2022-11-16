@@ -15,7 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
-public class AddReceptionDiscountCommandHandler : IRequestHandler<AddReceptionDiscountCommand, BaseCommandResponse>
+public class AddReceptionDiscountCommandHandler : IRequestHandler<AddReceptionDiscountCommand, BaseResponse>
 {
     private readonly IReceptionDiscountRepository _repository;
     private readonly IMapper _mapper;
@@ -30,9 +30,9 @@ public class AddReceptionDiscountCommandHandler : IRequestHandler<AddReceptionDi
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseCommandResponse> Handle(AddReceptionDiscountCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(AddReceptionDiscountCommand request, CancellationToken cancellationToken)
     {
-        BaseCommandResponse response = new();
+        BaseResponse response = new();
 
         AddReceptionDiscountValidator validator = new();
 
@@ -43,7 +43,7 @@ public class AddReceptionDiscountCommandHandler : IRequestHandler<AddReceptionDi
         if (!validationResult.IsValid)
         {
             response.Success = false;
-            response.Message = $"{_requestTitle} failed";
+            response.StatusDescription = $"{_requestTitle} failed";
             response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
             log.Type = LogType.Error;
@@ -57,23 +57,23 @@ public class AddReceptionDiscountCommandHandler : IRequestHandler<AddReceptionDi
                 receptionDiscount = await _repository.Add(receptionDiscount);
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Id = receptionDiscount.Id });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data=(new { Id = receptionDiscount.Id });
 
                 log.Type = LogType.Success;
             }
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
         }
 
-        log.Header = response.Message;
-        log.Messages = response.Errors;
+        log.Header = response.StatusDescription;
+        log.AdditionalData = response.Errors;
 
         await _logger.Log(log);
 

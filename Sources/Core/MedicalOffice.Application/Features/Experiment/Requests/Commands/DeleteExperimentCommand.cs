@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.Experiment.Requests.Commands
 {
-    public class DeleteExperimentCommand : IRequest<BaseCommandResponse>
+    public class DeleteExperimentCommand : IRequest<BaseResponse>
     {
         public Guid ExperimentID { get; set; }
     }

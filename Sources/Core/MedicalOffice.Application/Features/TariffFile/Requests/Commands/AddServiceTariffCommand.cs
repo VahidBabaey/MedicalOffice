@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.TariffFile.Requests.Commands
 {
-    public class AddServiceTariffCommand : IRequest<BaseCommandResponse>
+    public class AddServiceTariffCommand : IRequest<BaseResponse>
     {
         public ServiceTariffDTO DTO { get; set; } = new ServiceTariffDTO();
     }

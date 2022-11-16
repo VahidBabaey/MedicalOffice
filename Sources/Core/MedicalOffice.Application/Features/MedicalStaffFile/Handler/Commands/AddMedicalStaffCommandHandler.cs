@@ -8,43 +8,54 @@ using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 {
 
-    public class AddMedicalStaffCommandHandler : IRequestHandler<AddMedicalStaffCommand, BaseCommandResponse>
+    public class AddMedicalStaffCommandHandler : IRequestHandler<AddMedicalStaffCommand, BaseResponse>
     {
-        private readonly IMedicalStaffRepository _repository;
-        private readonly IUserRepository _repositoryUser;
-        private readonly IMedicalStaffRoleRepository _repositoryMedicalStaffRole;
-        private readonly IUserOfficeRoleRepository _repositoryUserOfficeRole;
-        private readonly ICryptoServiceProvider _cryptoServiceProvider;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IMedicalStaffRoleRepository _medicalStaffRoleRepository;
+        private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
+        private readonly IMedicalStaffRepository _medicalStaffrepository;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly string _requestTitle;
 
-        public AddMedicalStaffCommandHandler(IUserOfficeRoleRepository repositoryUserOfficeRole, IMedicalStaffRoleRepository repositoryMedicalStaffRole, IUserRepository repositoryUser, IMedicalStaffRepository repository, IMapper mapper, ILogger logger, ICryptoServiceProvider cryptoServiceProvider)
+        public AddMedicalStaffCommandHandler(
+            IMapper mapper,
+            ILogger logger,
+            RoleManager<Role> roleManager,
+            UserManager<User> userManager,
+            IMedicalStaffRepository medicalStaffrepository,
+            IUserOfficeRoleRepository userOfficeRoleRepository,
+            IMedicalStaffRoleRepository medicalStaffRoleRepository
+            )
         {
-            _repository = repository;
-            _repositoryUser = repositoryUser;
-            _repositoryMedicalStaffRole = repositoryMedicalStaffRole;
-            _repositoryUserOfficeRole = repositoryUserOfficeRole;
-            _cryptoServiceProvider = cryptoServiceProvider;
             _mapper = mapper;
             _logger = logger;
+            _roleManager = roleManager;
+            _userManager = userManager;
+            _userOfficeRoleRepository = userOfficeRoleRepository;
+            _medicalStaffrepository = medicalStaffrepository;
+            _medicalStaffRoleRepository = medicalStaffRoleRepository;
+
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(AddMedicalStaffCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(AddMedicalStaffCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
-            AddMedicalStaffValidator validator = new();
+            var validator = new AddMedicalStaffValidator();
 
             Log log = new();
 
@@ -52,59 +63,112 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.Message = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                log.Type = LogType.Error;
-
-                
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                return await Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
-            else
+
+            bool isMedicalStaffExist = await _medicalStaffrepository.CheckExistByOfficeIdAndPhoneNumber(
+                request.DTO.OfficeId, request.DTO.PhoneNumber);
+
+            if (isMedicalStaffExist)
             {
-                try
+                var error = $"There is a medical staff with this phoneNumber in this office";
+                return await Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
+
+            if (user == null)
+            {
+                var newUser = _mapper.Map<User>(request.DTO);
+                newUser.Id = Guid.NewGuid();
+                newUser.UserName = request.DTO.PhoneNumber;
+                newUser.NormalizedUserName = request.DTO.PhoneNumber;
+
+                var userCreation = await _userManager.CreateAsync(newUser);
+                if (userCreation.Succeeded)
                 {
-                    var user = await _repositoryUser.InsertToUser(request.DTO.OfficeId);
-                    request.DTO.UserId = user.Id;
-                    var passwordHash = await _cryptoServiceProvider.GetHash(request.DTO.PasswordHash);
-                    var medicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
-                    medicalStaff.PasswordHash = passwordHash;
-                    medicalStaff = await _repository.Add(medicalStaff);
-                    response.Success = true;
-                    response.Message = $"{_requestTitle} succeded";
-                    response.Data.Add(new { Id = medicalStaff.Id });
+                    user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
 
-                    if (request.DTO.RoleIds == null)
+                    var role = _roleManager.FindByNameAsync("PATIENT").Result;
+                    if (role != null)
                     {
-
-                    }
-                    else
-                    {
-                        foreach (var roleid in request.DTO.RoleIds)
+                        await _userOfficeRoleRepository.Add(new UserOfficeRole
                         {
-                            await _repositoryMedicalStaffRole.InsertToMedicalStaffRole(roleid, medicalStaff.Id);
-                            await _repositoryUserOfficeRole.InsertToUserOfficeRole(user.Id, roleid, user.OfficeId);
-                        }
+                            RoleId = role.Id,
+                            UserId = user.Id,
+                        });
+
+                        await _userManager.AddToRoleAsync(user, role.NormalizedName);
                     }
-
-                    log.Type = LogType.Success;
                 }
-                catch (Exception error)
+                else
                 {
-                    response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
+                    var error = $"There is a problem in registering user";
+                    return await Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error);
                 }
             }
 
-            log.Header = response.Message;
-            log.Messages = response.Errors;
+            var medicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
+            medicalStaff.UserId = user.Id;
+            medicalStaff = await _medicalStaffrepository.Add(medicalStaff);
 
-            await _logger.Log(log);
+            var roleName = new List<string>();
+            var userOfficeRoles = new List<UserOfficeRole>();
+            var medicalstaffRole = new List<MedicalStaffRole>();
+            if (request.DTO.RoleIds != null)
+            {
+                foreach (var roleId in request.DTO.RoleIds)
+                {
+                    Role role = await _roleManager.FindByIdAsync(roleId.ToString());
+                    if (role != null)
+                    {
+                        userOfficeRoles.Add(new UserOfficeRole
+                        {
+                            RoleId = roleId,
+                            UserId = user.Id,
+                            OfficeId = request.DTO.OfficeId
+                        });
 
-            return response;
+                        medicalstaffRole.Add(new MedicalStaffRole
+                        {
+                            RoleId = role.Id,
+                            MedicalStaffId = medicalStaff.Id
+                        });
+
+                        roleName.Add(role.NormalizedName);
+                    }
+                }
+
+                await _userOfficeRoleRepository.AddUserOfficeRoles(userOfficeRoles);
+                await _medicalStaffRoleRepository.InsertToMedicalStaffRole(medicalstaffRole);
+                await _userManager.AddToRolesAsync(user, roleName);
+            }
+
+            return await Success(HttpStatusCode.Created, $"{_requestTitle} succeded", medicalStaff.Id);
+        }
+
+        private async Task<BaseResponse> Success(HttpStatusCode statusCode, string message, params object[] data)
+        {
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = message,
+                AdditionalData = data
+            });
+            return new() { StatusCode = statusCode, Success = true, StatusDescription = message, Data = data.ToList() };
+        }
+
+        private async Task<BaseResponse> Faild(HttpStatusCode statusCode, string message, params string[] errors)
+        {
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = message,
+                AdditionalData = errors
+            });
+            return new() { StatusCode = statusCode, Success = false, StatusDescription = message, Errors = errors.ToList() };
         }
     }
 }
+

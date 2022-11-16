@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Commands
 {
-    public class DeleteMedicalStaffWorkHoursProgramCommand : IRequest<BaseCommandResponse>
+    public class DeleteMedicalStaffWorkHoursProgramCommand : IRequest<BaseResponse>
     {
         public Guid MedicalStaffId { get; set; }
     }

@@ -9,7 +9,7 @@ using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 
-public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, BaseCommandResponse>
+public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, BaseResponse>
 {
     private readonly ISectionRepository _repository;
     private readonly IMapper _mapper;
@@ -24,9 +24,9 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseCommandResponse> Handle(EditSectionCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(EditSectionCommand request, CancellationToken cancellationToken)
     {
-        BaseCommandResponse response = new();
+        BaseResponse response = new();
 
         Log log = new();
 
@@ -37,22 +37,22 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
             await _repository.Update(section);
 
             response.Success = true;
-            response.Message = $"{_requestTitle} succeded";
-            response.Data.Add(new { Id = section.Id });
+            response.StatusDescription = $"{_requestTitle} succeded";
+            response.Data = (new { Id = section.Id });
 
             log.Type = LogType.Success;
         }
         catch (Exception error)
         {
             response.Success = false;
-            response.Message = $"{_requestTitle} failed";
+            response.StatusDescription = $"{_requestTitle} failed";
             response.Errors.Add(error.Message);
 
             log.Type = LogType.Error;
         }
 
-        log.Header = response.Message;
-        log.Messages = response.Errors;
+        log.Header = response.StatusDescription;
+        log.AdditionalData = response.Errors;
 
         await _logger.Log(log);
 

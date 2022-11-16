@@ -1,12 +1,15 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Models;
-using MedicalOffice.Infrastructure.Crypto;
-using MedicalOffice.Infrastructure.Log;
-using MedicalOffice.Infrastructure.Mail;
+using MedicalOffice.Infrastructure.Sms;
+using MedicalOffice.WebApi.Crypto;
+using MedicalOffice.WebApi.Log;
+using MedicalOffice.WebApi.Mail;
+using MedicalOffice.WebApi.Token;
+using MedicalOffice.WebApi.Totp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MedicalOffice.Infrastructure;
+namespace MedicalOffice.WebApi;
 
 public static class ServiceRegistration
 {
@@ -14,11 +17,22 @@ public static class ServiceRegistration
     {
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
         services.AddTransient<IEmailSender, EmailSender>();
+
         services.Configure<LoggerSettings>(configuration.GetSection("LoggerSettings"));
         services.AddTransient<ILogger, Logger>();
 
+        services.Configure<SmsSettings>(configuration.GetSection("SmsSettings"));
+        services.AddTransient<ISmsSender, SmsSender>();
+
+        services.AddTransient<ITotpHandler, TotpHandler>();
+
+        services.AddTokenGenerator(configuration);
         services.AddCryptography(configuration);
-        
+
+        services.AddTransient<IUserResolverService, UserResolverService>();
+
+        services.AddHttpContextAccessor();
+
         return services;
     }
 }

@@ -5,9 +5,8 @@ using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
+using MedicalOffice.WebApi.Attributes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -23,6 +22,7 @@ public class MedicalStaffController : Controller
         _mediator = mediator;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto)
     {
@@ -30,6 +30,8 @@ public class MedicalStaffController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> UpdateMedicalStaff([FromBody] UpdateMedicalStaffDTO dto)
     {
@@ -37,6 +39,8 @@ public class MedicalStaffController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
@@ -44,11 +48,23 @@ public class MedicalStaffController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllMedicalStaffs() { DTO = dto });
 
         return Ok(response);
+    }
+
+    [Authorize]
+    [PermissionCheck("DoctorPermissionLightPen")]
+    [HttpPatch("permissions")]
+    public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] MedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)
+    {
+        var response = await _mediator.Send(new UpdateMedicalStaffCommand() { DTO = dto, OffceId = officeId });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

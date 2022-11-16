@@ -8,7 +8,8 @@ using MedicalOffice.Application.Features.DrugFile.Requests.Commands;
 using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
+using MedicalOffice.WebApi.Attributes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;

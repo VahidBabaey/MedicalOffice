@@ -10,6 +10,8 @@ using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 
 using Microsoft.AspNetCore.Mvc;
+using MedicalOffice.WebApi.Attributes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
@@ -31,13 +33,15 @@ public class PermissionController : Controller
 
         return Ok(response);
     }
+
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdatePermissionDTO dto)
     {
-        var response = await _mediator.Send(new EditPermissionCommand() {DTOUp = dto });
+        var response = await _mediator.Send(new EditPermissionCommand() { DTOUp = dto });
 
         return Ok(response);
     }
+
     [HttpGet("MedicalStaffs")]
     public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetAll()
     {
@@ -45,6 +49,7 @@ public class PermissionController : Controller
 
         return Ok(response);
     }
+
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetPermissionDetails(Guid id)
     {
@@ -52,5 +57,6 @@ public class PermissionController : Controller
 
         return Ok(response);
     }
+
 
 }

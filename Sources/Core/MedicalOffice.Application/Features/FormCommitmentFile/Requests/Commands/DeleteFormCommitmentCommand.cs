@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.FormCommitmentFile.Requests.Commands
 {
-    public class DeleteFormCommitmentCommand : IRequest<BaseCommandResponse>
+    public class DeleteFormCommitmentCommand : IRequest<BaseResponse>
     {
         public Guid FormCommitmentID { get; set; }
     }

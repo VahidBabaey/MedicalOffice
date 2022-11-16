@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Commands
 {
 
-    public class MyCommandHandlerCommandHandler : IRequestHandler<AddDrugIntractionCommand, BaseCommandResponse>
+    public class MyCommandHandlerCommandHandler : IRequestHandler<AddDrugIntractionCommand, BaseResponse>
     {
         private readonly IDrugIntractionRepository _repository;
         private readonly IMapper _mapper;
@@ -31,9 +31,9 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Command
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(AddDrugIntractionCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(AddDrugIntractionCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             AddDrugIntractionValidator validator = new();
 
@@ -44,7 +44,7 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Command
             if (!validationResult.IsValid)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
@@ -58,23 +58,23 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Command
                     drugTodrugintraction = await _repository.Add(drugTodrugintraction);
 
                     response.Success = true;
-                    response.Message = $"{_requestTitle} succeded";
-                    response.Data.Add(new { Id = drugTodrugintraction.Id });
+                    response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = drugTodrugintraction.Id });
 
                     log.Type = LogType.Success;
                 }
                 catch (Exception error)
                 {
                     response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 
                     log.Type = LogType.Error;
                 }
             }
 
-            log.Header = response.Message;
-            log.Messages = response.Errors;
+            log.Header = response.StatusDescription;
+            log.AdditionalData = response.Errors;
 
             await _logger.Log(log);
 

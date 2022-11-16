@@ -1,6 +1,7 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace MedicalOffice.Persistence.Repositories;
 
@@ -14,31 +15,31 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     }
     public Guid GetId (Guid id)
     {
-        var UserOfficeRole =  _dbContext.UserOfficeRoles.Select(p => new {p.Id, p.UserId}).Where(p => p.UserId == id).FirstOrDefault().Id;
+        var userOfficeRole =  _dbContext.UserOfficeRoles.Select(p => new {p.Id, p.UserId}).Where(p => p.UserId == id).FirstOrDefault();
 
-        if (UserOfficeRole == null)
-            throw new NullReferenceException("UserOfficeRole Id Not Found!");
+        if (userOfficeRole == null)
+            throw new NullReferenceException("userOfficeRole Id Not Found!");
 
-        Guid idMedicalStaff = UserOfficeRole;
+        Guid medicalStaffId = userOfficeRole.Id;
 
-        return idMedicalStaff;
+        return medicalStaffId;
     }
-    public async Task<bool> SearchMedicalStaff(Guid searchid)
+
+    public Task<IReadOnlyList<Permission>> GetPermissionDetailsByMedicalStaffID(Guid Id)
     {
-        var idSearchMedicalStaff = await _dbContext.Permissiones.Where(p => p.UserOfficeRoleId == searchid).FirstOrDefaultAsync();
-
-        if(idSearchMedicalStaff != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        throw new NotImplementedException();
     }
-    public async Task<IReadOnlyList<Permission>> GetPermissionDetailsByMedicalStaffID(Guid Id)
+
+    public Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id)
     {
-        return (IReadOnlyList<Permission>)await _dbContext.Permissiones.Where(srv => srv.UserOfficeRoleId == Id).ToListAsync();
+        throw new NotImplementedException();
     }
 
+    public Task<bool> UserHasPermission(Guid userId, Guid officeId, string permission)
+    {
+
+        var result = _dbContext.UserOfficePermissions.Include(m => m.Permission).Where(x=>x.UserId==userId && x.OfficeId==officeId).Select(x => x.Permission).Any(x => x != null ? x.Name == permission : false);
+
+        return Task.FromResult(result);
+    }
 }

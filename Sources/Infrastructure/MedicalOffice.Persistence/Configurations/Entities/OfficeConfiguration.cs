@@ -64,6 +64,33 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .WithOne(UserOfficeRole => UserOfficeRole.Office)
                 .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasData(new[]
+                {
+                    new Office()
+                    {
+                        Id=Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0"),
+                        Name = "officeA",
+                        Tel = "02112345678",
+                        Address="officeA",
+                    },
+                    new Office
+                    {
+                        Id=Guid.Parse("300649ef-fbc7-42d0-b13d-539e0597eebe"),
+                        Name = "officeB",
+                        Tel = "02123456789",
+                        Address="officeB"
+                    },
+                    new Office
+                    {
+                        Id=Guid.Parse("1abfa749-a9b0-413d-8fda-e3674fc942c0"),
+                        Name = "officeC",
+                        Tel = "02134567891",
+                        Address="officeC"
+                    },
+                });
+            builder
+                .HasQueryFilter(o => o.IsDeleted == false);
         }
     }
 }

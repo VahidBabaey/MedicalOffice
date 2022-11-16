@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handlers.Commands
 {
 
-    public class EditMedicalStaffWorkHoursProgramHandler : IRequestHandler<EditMedicalStaffWorkHoursProgramCommand, BaseCommandResponse>
+    public class EditMedicalStaffWorkHoursProgramHandler : IRequestHandler<EditMedicalStaffWorkHoursProgramCommand, BaseResponse>
     {
         private readonly IMedicalStaffWorkHourProgramRepository _repository;
         private readonly IMapper _mapper;
@@ -30,9 +30,9 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(EditMedicalStaffWorkHoursProgramCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(EditMedicalStaffWorkHoursProgramCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             Log log = new();
 
@@ -46,21 +46,21 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
                 }
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
+                response.StatusDescription = $"{_requestTitle} succeded";
 
                 log.Type = LogType.Success;
             }
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
 
-            log.Header = response.Message;
-            log.Messages = response.Errors;
+            log.Header = response.StatusDescription;
+            log.AdditionalData = response.Errors;
 
             await _logger.Log(log);
 

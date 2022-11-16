@@ -1,17 +1,20 @@
-﻿using MedicalOffice.Domain.Common;
+﻿using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Domain.Common;
 using MedicalOffice.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 {
     public DbSet<Allergy> Allergies => Set<Allergy>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<AppointmentService> AppointmentServices => Set<AppointmentService>();
     public DbSet<AppointmentType> AppointmentTypes => Set<AppointmentType>();
     public DbSet<BasicInfo> BasicInfos => Set<BasicInfo>();
-    public DbSet<Permission> Permissiones => Set<Permission>();
+    public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<BasicInfoDetail> BasicInfoDetail => Set<BasicInfoDetail>();
     public DbSet<Diagnose> Diagnoses => Set<Diagnose>();
     public DbSet<DiscountType> DiscountTypes => Set<DiscountType>();
@@ -52,7 +55,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<ReceptionDetail> ReceptionDetails => Set<ReceptionDetail>();
     public DbSet<ReceptionDiscount> ReceptionDiscounts => Set<ReceptionDiscount>();
     public DbSet<ReceptionMedicalStaff> ReceptionMedicalStaffs => Set<ReceptionMedicalStaff>();
-    public DbSet<Role> Roles => Set<Role>();
     public DbSet<RoutineMedication> RoutineMedications => Set<RoutineMedication>();
     public DbSet<RVU3> RVU3 => Set<RVU3>();
     public DbSet<Section> Sections => Set<Section>();
@@ -62,31 +64,68 @@ public class ApplicationDbContext : DbContext
     public DbSet<SocialHistory> SocialHistories => Set<SocialHistory>();
     public DbSet<Specialization> Specializations => Set<Specialization>();
     public DbSet<Tariff> Tariffs => Set<Tariff>();
-    public DbSet<User> Users => Set<User>();
     public DbSet<MedicalStaffRole> MedicalStaffRoles => Set<MedicalStaffRole>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
+    public DbSet<UserOfficePermission> UserOfficePermissions => Set<UserOfficePermission>();
     public DbSet<MedicalStaffOfficeSpecialization> MedicalStaffOfficeSpecializations => Set<MedicalStaffOfficeSpecialization>();
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    { }
+    //public UserResolverService UserService { get; }
+
+    private readonly IUserResolverService _userResolver;
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolverService userResolver) : base(options)
+    {
+        //Database.EnsureDeleted();
+        Database.EnsureCreated();
+        _userResolver = userResolver;
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // https://learn.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?source=recommendations&view=aspnetcore-6.0#customize-the-model
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<User>().ToTable("Users");
+        modelBuilder.Entity<Role>().ToTable("Roles");
+        modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRole");
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        //TODO: Save current MedicalStaff as updatedby and createdby
+        var userId = _userResolver.GetUserId().Result;
+
+        foreach (var entry in ChangeTracker.Entries<IPrimaryKeyEntity<Guid>>())
+        {
+            if (entry.State == EntityState.Added && entry.Entity.Id == default)
+                entry.Entity.Id = Guid.NewGuid();
+        }
+
+        foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
+        {
+            entry.Entity.LastUpdatedDate = DateTime.Now;
+            entry.Entity.LastUpdatedById = Guid.Parse(userId);
+
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedDate = DateTime.Now;
+                entry.Entity.CreatedById = Guid.Parse(userId);
+            }
+
+        }
+
+        //TODO: Save current User as updatedby and createdby
         foreach (var entry in ChangeTracker.Entries<BaseDomainEntity<Guid>>())
         {
             entry.Entity.LastUpdatedDate = DateTime.Now;
+            entry.Entity.LastUpdatedById = Guid.Parse(userId);
 
             if (entry.State == EntityState.Added)
+            {
                 entry.Entity.CreatedDate = DateTime.Now;
+                entry.Entity.CreatedById = Guid.Parse(userId);
+            }
         }
 
         return base.SaveChangesAsync(cancellationToken);

@@ -9,6 +9,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
     {
         public override void ConfigureEntity(EntityTypeBuilder<MedicalStaff> builder)
         {
+            builder
+                .HasQueryFilter(m => m.IsDeleted == false);
             //builder
             //    .HasMany(MedicalStaff => MedicalStaff.UserOfficeRoles)
             //    .WithOne(e => e.MedicalStaff)

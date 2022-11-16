@@ -9,7 +9,7 @@ namespace MedicalOffice.Domain.Enums
     /// <summary>
     /// عنوان
     /// </summary>
-     public enum DoctorTopic
+     public enum Title
     {
         /// <summary>
         /// جناب آقای دکتر

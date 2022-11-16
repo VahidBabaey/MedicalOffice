@@ -21,6 +21,7 @@ using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Dtos.SpecializationDTO;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO;
 using MedicalOffice.Application.Dtos.Reception;
@@ -103,6 +104,9 @@ public class MappingProfile : Profile
         CreateMap<Picture, PictureUploadDTO>().ReverseMap();
         CreateMap<Picture, AddPictureDTO>().ReverseMap();
         CreateMap<Picture, PatientPicturesDTO>().ReverseMap();
+        CreateMap<User, RegisterUserDTO>().ReverseMap();
+        CreateMap<User, AuthenticatedUserDTO>().ReverseMap();
+        CreateMap<User, MedicalStaffDTO>().ReverseMap();
         CreateMap<Membership, MembershipNamesDTO>().ReverseMap();
         CreateMap<ReceptionDiscount, ReceptionDiscountDTO>().ReverseMap();
     }

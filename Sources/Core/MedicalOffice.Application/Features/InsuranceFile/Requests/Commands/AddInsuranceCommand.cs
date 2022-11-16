@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 
 
-public class AddInsuranceCommand : IRequest<BaseCommandResponse>
+public class AddInsuranceCommand : IRequest<BaseResponse>
 {
     public InsuranceDTO DTO { get; set; } = new InsuranceDTO();
 }

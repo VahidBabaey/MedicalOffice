@@ -12,23 +12,28 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// عکس کادر درمان
         /// </summary>
-        public byte[]? ProfilePicture { get; set; }
+        //public byte[]? ProfilePicture { get; set; }
+
         /// <summary>
         /// نام
         /// </summary>
         public string FirstName { get; set; } = string.Empty;
+
         /// <summary>
         /// نام خانوادگی
         /// </summary>
         public string LastName { get; set; } = string.Empty;
+
         /// <summary>
         /// شماره تلفن
         /// </summary>
-        public string Mobile { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+
         /// <summary>
         /// آیدی تخصص
         /// </summary>
         public Guid? SpecializationId { get; set; }
+
         /// <summary>
         /// نام تخصص
         /// </summary>

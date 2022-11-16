@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.SpecializationFile.Requests.Commands
 {
-    public class AddSpecializationCommand : IRequest<BaseCommandResponse>
+    public class AddSpecializationCommand : IRequest<BaseResponse>
     {
         public SpecializationDTO DTO { get; set; } = new SpecializationDTO();
     }

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.ExperimentDTO.Validators;
+using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Features.Experiment.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -16,7 +18,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
 {
 
-    public class AddExperimentCommandHandler : IRequestHandler<AddExperimentCommand, BaseCommandResponse>
+    public class AddExperimentCommandHandler : IRequestHandler<AddExperimentCommand, BaseResponse>
     {
         private readonly IExperimentRepository _repository;
         private readonly IMapper _mapper;
@@ -31,9 +33,9 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(AddExperimentCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(AddExperimentCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             AddExperimentValidator validator = new();
 
@@ -44,7 +46,7 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
             if (!validationResult.IsValid)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
@@ -58,23 +60,23 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
                     experiment = await _repository.Add(experiment);
 
                     response.Success = true;
-                    response.Message = $"{_requestTitle} succeded";
-                    response.Data.Add(new { Id = experiment.Id });
+                    response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = experiment.Id });
 
                     log.Type = LogType.Success;
                 }
                 catch (Exception error)
                 {
                     response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 
                     log.Type = LogType.Error;
                 }
             }
 
-            log.Header = response.Message;
-            log.Messages = response.Errors;
+            log.Header = response.StatusDescription;
+            log.AdditionalData = response.Errors;
 
             await _logger.Log(log);
 

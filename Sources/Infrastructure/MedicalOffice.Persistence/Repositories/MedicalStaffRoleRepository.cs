@@ -6,28 +6,15 @@ namespace MedicalOffice.Persistence.Repositories;
 
 public class MedicalStaffRoleRepository : GenericRepository<MedicalStaffRole, Guid>, IMedicalStaffRoleRepository
 {
-    private readonly IGenericRepository<MedicalStaffRole, Guid> _repositoryMedicalStaffRole;
     private readonly ApplicationDbContext _dbContext;
 
-    public MedicalStaffRoleRepository(IGenericRepository<MedicalStaffRole, Guid> repositoryMedicalStaffRole, ApplicationDbContext dbContext) : base(dbContext)
+    public MedicalStaffRoleRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
-        _repositoryMedicalStaffRole = repositoryMedicalStaffRole;
     }
-    public async Task<MedicalStaffRole> InsertToMedicalStaffRole(Guid roleid, Guid medicalstaffid)
+    public async Task InsertToMedicalStaffRole(List<MedicalStaffRole> medicalStaffRole)
     {
-        MedicalStaffRole MedicalStaffRole = new()
-        {
-            RoleId = roleid,
-            MedicalStaffId = medicalstaffid
-        };
-
-        if (MedicalStaffRole == null)
-            throw new NullReferenceException(nameof(MedicalStaffRole));
-
-        await _repositoryMedicalStaffRole.Add(MedicalStaffRole);
-
-        return MedicalStaffRole;
+        await _dbContext.MedicalStaffRoles.AddRangeAsync(medicalStaffRole);
+        await _dbContext.SaveChangesAsync();
     }
-
 }

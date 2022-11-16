@@ -9,8 +9,11 @@ using MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Queries;
 using MedicalOffice.Application.Features.BasicInfoFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
+using MedicalOffice.WebApi.Attributes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
@@ -35,7 +38,9 @@ public class BasicInfoDetailController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, Guid basicinfoId)
+    [Authorize]
+    [PermissionCheck("ReceptionEdit")]
+    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, Guid basicinfoId,string officeId)
     {
         var response = await _mediator.Send(new GetAllBasicInfoDetailQuery() { DTO = dto, BasicInfoId = basicinfoId });
 

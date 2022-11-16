@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Commands
 {
-    public class AddServicetoMembershipCommandHandler : IRequestHandler<AddServicetoMembershipCommand, BaseCommandResponse>
+    public class AddServicetoMembershipCommandHandler : IRequestHandler<AddServicetoMembershipCommand, BaseResponse>
     {
         private readonly IMemberShipServiceRepository _repository;
         private readonly IMapper _mapper;
@@ -33,10 +33,10 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
 
         }
 
-        public async Task<BaseCommandResponse> Handle(AddServicetoMembershipCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(AddServicetoMembershipCommand request, CancellationToken cancellationToken)
         {
 
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
 
             AddMemberShipServiceValidator validator = new();
 
@@ -47,7 +47,7 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
             if (!validationResult.IsValid)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
@@ -69,22 +69,22 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
                     }
 
                     response.Success = true;
-                    response.Message = $"{_requestTitle} succeded";
+                    response.StatusDescription = $"{_requestTitle} succeded";
                     
                     log.Type = LogType.Success;
                 }
                 catch (Exception error)
                 {
                     response.Success = false;
-                    response.Message = $"{_requestTitle} failed";
+                    response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 
                     log.Type = LogType.Error;
                 }
             }
 
-            log.Header = response.Message;
-            log.Messages = response.Errors;
+            log.Header = response.StatusDescription;
+            log.AdditionalData = response.Errors;
 
             await _logger.Log(log);
 

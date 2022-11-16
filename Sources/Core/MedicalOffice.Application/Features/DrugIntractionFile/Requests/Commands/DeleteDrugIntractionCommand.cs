@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.DrugIntractionFile.Requests.Commands
 {
-    public class DeleteDrugIntractionCommand : IRequest<BaseCommandResponse>
+    public class DeleteDrugIntractionCommand : IRequest<BaseResponse>
     {
         public Guid DrugIntractionID { get; set; }
     }

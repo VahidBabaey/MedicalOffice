@@ -8,13 +8,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\MedicalStaffFile\Handlers\**" />
+    <Compile Remove="Features\MedicalStaffFile\Requests\**" />
+    <EmbeddedResource Remove="Features\MedicalStaffFile\Handlers\**" />
+    <EmbeddedResource Remove="Features\MedicalStaffFile\Requests\**" />
+    <None Remove="Features\MedicalStaffFile\Handlers\**" />
+    <None Remove="Features\MedicalStaffFile\Requests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.2" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.23.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,8 +43,10 @@
   <ItemGroup>
     <Folder Include="Features\BasicInfoFile\Handlers\Commands\" />
     <Folder Include="Features\BasicInfoFile\Requests\Commands\" />
+    <Folder Include="Features\OfficeFeature\Handlers\Commands\" />
+    <Folder Include="Features\OfficeFeature\Requests\Commands\" />
     <Folder Include="Features\RoleFile\Handlers\Commands\" />
-    <Folder Include="Features\RoleFile\Requests\Commands\" />
+	<Folder Include="Features\RoleFile\Requests\Commands\" />
   </ItemGroup>
 
 </Project>

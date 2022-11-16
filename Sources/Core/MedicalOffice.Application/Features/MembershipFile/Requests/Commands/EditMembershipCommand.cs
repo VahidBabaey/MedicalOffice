@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MembershipFile.Requests.Commands
 {
-    public class EditMembershipCommand : IRequest<BaseCommandResponse>
+    public class EditMembershipCommand : IRequest<BaseResponse>
     {
         public UpdateMembershipDTO DTO { get; set; } = new UpdateMembershipDTO();
     }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Commands
 {
-    public class DeleteFormCommitmentCommandHandler : IRequestHandler<DeleteFormCommitmentCommand, BaseCommandResponse>
+    public class DeleteFormCommitmentCommandHandler : IRequestHandler<DeleteFormCommitmentCommand, BaseResponse>
     {
         private readonly IFormCommitmentRepository _repository;
         private readonly ILogger _logger;
@@ -26,9 +26,9 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseCommandResponse> Handle(DeleteFormCommitmentCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(DeleteFormCommitmentCommand request, CancellationToken cancellationToken)
         {
-            BaseCommandResponse response = new();
+            BaseResponse response = new();
             Log log = new();
 
             try
@@ -36,22 +36,22 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
                 await _repository.Delete(request.FormCommitmentID);
 
                 response.Success = true;
-                response.Message = $"{_requestTitle} succeded";
-                response.Data.Add(new { Id = request.FormCommitmentID });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = request.FormCommitmentID });
 
                 log.Type = LogType.Success;
             }
             catch (Exception error)
             {
                 response.Success = false;
-                response.Message = $"{_requestTitle} failed";
+                response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }
 
-            log.Header = response.Message;
-            log.Messages = response.Errors;
+            log.Header = response.StatusDescription;
+            log.AdditionalData = response.Errors;
 
             await _logger.Log(log);
 

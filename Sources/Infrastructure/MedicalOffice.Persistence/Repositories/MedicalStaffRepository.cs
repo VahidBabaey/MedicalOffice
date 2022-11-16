@@ -55,13 +55,13 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
             Id = p.Id,
             FirstName = p.FirstName,
             LastName = p.LastName,
-            Mobile = p.Mobile,
-            ProfilePicture = p.ProfilePicture,
+            PhoneNumber = p.PhoneNumber,
+            //ProfilePicture = p.ProfilePicture,
             SpecializationId = p.SpecializationId,
-            SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Title }).Where(x => x.Id == p.SpecializationId).FirstOrDefault().Title
+            SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Name }).Where(x => x.Id == p.SpecializationId).FirstOrDefault().Name
         }).ToListAsync();
 
-        return (IEnumerable<MedicalStaffListDTO>)_list;
+        return _list;
     }
 
     public async Task<IEnumerable<MedicalStaffNameListDTO>> GetAllMedicalStaffsName()
@@ -81,7 +81,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         List<MedicalStaffNamesDTO> medicalStaffNamesDTO = new();
 
         var _list = _dbContext.MedicalStaffRoles
-            .Include(p => p.MedicalStaff).Include(x => x.Role).Where(x => x.Role.ShowinReception == true);
+            .Include(p => p.MedicalStaff).Include(x => x.Role).Where(x => x.Role.ShowInReception == true);
 
         foreach (var item in _list)
         {
@@ -98,4 +98,19 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         return medicalStaffNamesDTO;
     }
 
+    public async Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber)
+        {
+            bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.PhoneNumber == phoneNumber);
+            return isExist;
+        }
+
+    public Task<IEnumerable<MedicalStaffNameListDTO>> GetAllUsersName()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId)
+    {
+        throw new NotImplementedException();
+    }
 }
