@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.Permission
+namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
 {
-    public class UpdateMedicalStaffPermissionsDTO
+    public class MedicalStaffPermissionsDTO
     {
         public Guid MedicalStaffId { get; set; }
 
-        public Guid[] PermissionIds{ get; set; } = new Guid[0];
+        public Guid[] PermissionIds { get; set; } = new Guid[0];
     }
 }

@@ -68,11 +68,6 @@ namespace MedicalOffice.Domain.Entities
         public Office? Office { get; set; }
 
         /// <summary>
-        /// ارتباط چند به چند کاربر مطب و دسترسی هایش
-        /// </summary>
-        public ICollection<MedicalStaffPermission> MedicalStaffPermissions { get; set; } = new List<MedicalStaffPermission>();
-
-        /// <summary>
         /// شناسه نقش کاربر مطب 
         /// </summary>
         public Guid? RoleId { get; set; }
@@ -96,6 +91,7 @@ namespace MedicalOffice.Domain.Entities
         /// برنامه کادر درمان
         /// </summary>
         public ICollection<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms { get; set; } = new List<MedicalStaffWorkHourProgram>();
+        
         /// <summary>
         /// پذیرش ها
         /// </summary>
@@ -105,10 +101,12 @@ namespace MedicalOffice.Domain.Entities
         /// کاربران پذیرش
         /// </summary>
         public ICollection<ReceptionMedicalStaff>? ReceptionMedicalStaffs { get; set; }
+        
         /// <summary>
         /// وقت دهی ها
         /// </summary>
         public ICollection<Appointment>? Appointments { get; set; }
+        
         /// <summary>
         /// کادر درمان - نقش
         /// </summary>

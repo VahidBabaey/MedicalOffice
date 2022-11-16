@@ -15,39 +15,27 @@ namespace MedicalOffice.Domain.Entities
         /// </summary>
         public string? Name { get; set; }
 
-
-
         /// <summary>
         /// نام فارسی دسترسی
         /// </summary>
         public string? PersianName { get; set; }
-
-
 
         /// <summary>
         /// شناسه دسته بندی دسترسی
         /// </summary>
         public Guid PermissionCategoryId { get; set; }
 
-
         /// <summary>
         ///  ارتباط یک به چند با دسته بندی دسترسی 
         /// </summary>
         public PermissionCategory? PermissionCategory { get; set; }
 
+
+
+
         /// <summary>
         /// ارتباط چند به چند کاربران مطب و دسترسی هایشان
         /// </summary>
-        public ICollection<MedicalStaffPermission>? MedicalStaffPermissions { get; set; } = new List<MedicalStaffPermission>();
-
-        /// <summary>
-        /// آیدی کاربر
-        /// </summary>
-        public Guid? UserOfficeRoleId { get; set; }
-
-        /// <summary>
-        /// کاربر
-        /// </summary>
-        public ICollection<UserOfficeRole>? UserOfficeRole { get; set; }
+        public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; } = new List<UserOfficePermission>();
     }
 }

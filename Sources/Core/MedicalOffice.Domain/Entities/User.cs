@@ -1,16 +1,20 @@
-﻿using MedicalOffice.Domain.Entities;
+﻿using MedicalOffice.Domain.Common;
+using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace MedicalOffice.Domain.Entities
 {
-    public class User: IdentityUser<Guid>
+    public class User :
+        IdentityUser<Guid>,
+        IPrimaryKeyEntity<Guid>,
+        IAuditableEntity,
+        ISoftDeletableEntity
     {
         public User()
         {
-            Id = Guid.NewGuid();
             SecurityStamp = Guid.NewGuid().ToString();
-            PasswordHash = string.Empty;   
+            PasswordHash = string.Empty;
         }
 
         /// <summary>
@@ -31,6 +35,17 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// ارتباط چند به چند با جدول کاربران مطب ها رول ها
         /// </summary>
-        public ICollection<UserOfficeRole>? UserOfficeRoles{ get; set; } 
+        public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
+
+        /// <summary>
+        /// ارتباط چند به چند با جدول کاربران مطب ها و دسترسی ها
+        /// </summary>
+        public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public Guid CreatedById { get; set; }
+        public DateTime LastUpdatedDate { get; set; }
+        public Guid LastUpdatedById { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

@@ -12,9 +12,5 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         Task<IReadOnlyList<Permission>> GetPermissionDetailsByMedicalStaffID(Guid Id);
 
-        Task<bool> SearchMedicalStaff(Guid searchid);
-        
-        //Task<bool> SearchMedicalStaff(Guid searchId);
-
     }
 }

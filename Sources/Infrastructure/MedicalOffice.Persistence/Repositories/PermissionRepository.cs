@@ -35,24 +35,10 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
         throw new NotImplementedException();
     }
 
-    public async Task<bool> SearchMedicalStaff(Guid searchid)
-    {
-        var idSearchMedicalStaff = await _dbContext.Permissions.Where(p => p.UserOfficeRoleId == searchid).FirstOrDefaultAsync();
-
-        if(idSearchMedicalStaff != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     public Task<bool> UserHasPermission(Guid userId, Guid officeId, string permission)
     {
 
-        var result = _dbContext.MedicalStaffPermissions.Include(m => m.Permission).Select(x => x.Permission).Any(x => x != null ? x.Name == permission : false);
+        var result = _dbContext.UserOfficePermissions.Include(m => m.Permission).Where(x=>x.UserId==userId && x.OfficeId==officeId).Select(x => x.Permission).Any(x => x != null ? x.Name == permission : false);
 
         return Task.FromResult(result);
     }

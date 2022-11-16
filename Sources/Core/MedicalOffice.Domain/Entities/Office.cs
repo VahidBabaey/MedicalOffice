@@ -81,4 +81,10 @@ public class Office : BaseDomainEntity<Guid>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و کاربر-مطب-نقش استفاده می شود
     /// </summary>
     public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
+
+
+    /// <summary>
+    /// از این مدل برای برقراری ارتباط یک به چند بین مطب و دسترسی های کاربر مطب استفاده می شود
+    /// </summary>
+    public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; }
 }

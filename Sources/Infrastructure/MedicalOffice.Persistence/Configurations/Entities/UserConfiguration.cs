@@ -22,10 +22,12 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                         NationalID = "0210210210",
                         PhoneNumber = "09126592427",
                         UserName = "09126592427",
+                        NormalizedUserName = "09126592427",
                         FirstName = "پرستو",
                         LastName =  "هاشمی"
                     }
                 });
+            builder.HasQueryFilter(u => u.IsDeleted == false);
         }
     }
 }

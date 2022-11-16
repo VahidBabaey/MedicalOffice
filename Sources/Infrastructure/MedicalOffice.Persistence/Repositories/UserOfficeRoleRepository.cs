@@ -30,17 +30,10 @@ public class UserOfficeRoleRepository : GenericRepository<UserOfficeRole, Guid>,
         return UserOfficeRole;
     }
 
-    public async Task<bool> AddUserOfficeRoles(List<UserOfficeRole> userOfficeRoles)
+    public async Task AddUserOfficeRoles(List<UserOfficeRole> userOfficeRoles)
     {
-        try
-        {
-            await _dbContext.UserOfficeRoles.AddRangeAsync(userOfficeRoles);
-            return true;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
+        await _dbContext.UserOfficeRoles.AddRangeAsync(userOfficeRoles);
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<List<UserOfficeRole>> GetByUserId(Guid userId)

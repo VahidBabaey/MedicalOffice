@@ -2,22 +2,17 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Features.PermissionFile.Requests.Commands;
+using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
+namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 {
     public class UpdateMedicalStaffPermissionsCommandHandler : IRequestHandler<UpdateMedicalStaffCommand, BaseResponse>
     {
-        private readonly IMedicalStaffPermissionRepository _medicalStaffPermissionRepository;
+        private readonly IUserOfficePermissionRepository _userOfficePermissionRepository;
         private readonly IPermissionRepository _permissionRepository;
         private readonly IMedicalStaffRepository _medicalStaffRepository;
         private readonly ILogger _logger;
@@ -27,13 +22,13 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
             ILogger loggre,
             IMedicalStaffRepository medicalStaffRepository,
             IPermissionRepository permissionRepository,
-            IMedicalStaffPermissionRepository medicalStaffPermissionRepository
+            IUserOfficePermissionRepository userOfficePermissionRepository
             )
         {
             _logger = loggre;
             _medicalStaffRepository = medicalStaffRepository;
             _permissionRepository = permissionRepository;
-            _medicalStaffPermissionRepository = medicalStaffPermissionRepository;
+            _userOfficePermissionRepository = userOfficePermissionRepository;
 
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
@@ -48,43 +43,28 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
                 return await Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
-            var existingpermissions = _medicalStaffPermissionRepository.GetAll().Result.Where(mp => mp.MedicalStaffId == medicalStaff.Id);
+            var existingpermissions = _userOfficePermissionRepository.GetAll().Result.Where(uop => uop.UserId == medicalStaff.UserId && uop.OfficeId == request.OffceId).ToList();
 
             var newPermissionIds = _permissionRepository.GetAll().Result.Where(m => request.DTO.PermissionIds.Contains(m.Id))
                 .Select(p => p.Id);
 
-            var medicalStaffPermissions = new List<MedicalStaffPermission>();
+            var userOfficePermissions = new List<UserOfficePermission>();
 
             foreach (var permissionId in newPermissionIds)
             {
-                medicalStaffPermissions.Add(new MedicalStaffPermission
+                userOfficePermissions.Add(new UserOfficePermission
                 {
-                    MedicalStaffId = medicalStaff.Id,
+                    OfficeId = request.OffceId,
+                    UserId = medicalStaff.UserId,
                     PermissionId = permissionId
                 });
             };
 
-            if (existingpermissions != null)
-            {
-                foreach (var permission in existingpermissions)
-                {
-                    await _medicalStaffPermissionRepository.Delete(permission);
-                }
-            };
-
-            foreach (var permissionId in newPermissionIds)
-            {
-                await _medicalStaffPermissionRepository.Add(new MedicalStaffPermission
-                {
-                    MedicalStaffId = medicalStaff.Id,
-                    PermissionId = permissionId
-                });
-            };
+            await _userOfficePermissionRepository.AddUserOfficePermissions(existingpermissions, userOfficePermissions);
 
             return await Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", new
             {
-                medicalStaff
-                .Id
+                medicalStaff.Id
             });
         }
 
