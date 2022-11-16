@@ -7,6 +7,7 @@ using MedicalOffice.Application.Features.OfficeFeature.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Queries
 {
@@ -14,35 +15,51 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Queries
     {
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
-        private readonly IOfficeRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly string _requestTitle;
 
         public GetByUserIdQueryHandler(IMapper mapper, ILogger logger, IOfficeRepository repository)
         {
             _mapper = mapper;
             _logger = logger;
+            _officeRepository = repository;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
-            _repository = repository;
         }
 
         public async Task<BaseResponse> Handle(GetByUserIdQuery request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
-            Log log = new();
+            var offices = await _officeRepository.GetByUserId(request.UserId);
+            if (offices == null)
+            {
+                var error = $"No office found";
+                return await Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+            }  
+            
+            var result = _mapper.Map<HashSet<Office?>>(offices);
 
-            var offices = await _repository.GetByUserId(request.UserId);
-            var result = _mapper.Map<List<Office>>(offices);
+            return await Success(HttpStatusCode.OK, $"{_requestTitle} succeded",result);
+        }
 
-            response.Success = true;
-            response.StatusDescription = $"{_requestTitle} succeded";
-            response.Data = (result);
+        private async Task<BaseResponse> Success(HttpStatusCode statusCode, string message, params object[] data)
+        {
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = message,
+                AdditionalData = data
+            });
+            return new() { StatusCode = statusCode, Success = true, StatusDescription = message, Data = data.ToList() };
+        }
 
-            log.Header = $"{_requestTitle} succeded";
-            log.Type = LogType.Success;
-
-            await _logger.Log(log);
-
-            return response;
+        private async Task<BaseResponse> Faild(HttpStatusCode statusCode, string message, params string[] errors)
+        {
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = message,
+                AdditionalData = errors
+            });
+            return new() { StatusCode = statusCode, Success = false, StatusDescription = message, Errors = errors.ToList() };
         }
     }
 }

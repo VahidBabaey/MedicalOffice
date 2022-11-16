@@ -1,22 +1,18 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
-using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Dtos.OfficeDTO;
-using MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Commands;
-using MedicalOffice.Application.Features.Experiment.Requests.Queries;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Queries;
+using MedicalOffice.Application.Responses;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OfficeController : ControllerBase
     {
-
         private readonly IMediator _mediator;
 
         public OfficeController(IMediator mediator)
@@ -24,13 +20,19 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<List<OfficeDTO>>> GetByUserId([FromQuery] Guid userId)
+        private new ObjectResult Response(BaseResponse response)
         {
-            var response = await _mediator.Send(new GetByUserIdQuery { UserId = userId });
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
 
-            return Ok(response);
+        [HttpGet]
+        public async Task<ActionResult<List<OfficeDTO>>> GetByUserId()
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var response = await _mediator.Send(new GetByUserIdQuery { UserId = Guid.Parse(userId)});
+
+            return Response(response);
         }
     }
 }

@@ -4,6 +4,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IOfficeRepository : IGenericRepository<Office, Guid>
     {
-        Task<List<Office>> GetByUserId(Guid userId);
+        Task<List<Office?>> GetByUserId(Guid userId);
     }
 }
