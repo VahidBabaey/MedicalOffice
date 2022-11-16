@@ -56,7 +56,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             }
             try
             {
-
                 var user = _mapper.Map<User>(request.DTO);
                 user.Id = Guid.NewGuid();
                 user.UserName = request.DTO.PhoneNumber;
@@ -72,28 +71,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
                 var userOfficeRoles = new List<UserOfficeRole>();
                 var roleName = new List<string>();
-                //TODO: check current user
-                if (request.DTO.RoleIds != null)
-                {
-                    //MakeSureUserIsSuperAdminOrThrowException();
-                    foreach (var roleId in request.DTO.RoleIds)
-                    {
-                        Role role = await _roleManager.FindByIdAsync(roleId.ToString());
-                        if (role != null)
-                        {
-                            userOfficeRoles.Add(new UserOfficeRole
-                            {
-                                RoleId = roleId,
-                                UserId = user.Id,
-                                OfficeId = request.DTO.OfficeId
-                            });
-
-                            roleName.Add(role.NormalizedName);
-                        }
-                    }
-                    await _userManager.AddToRolesAsync(user, roleName);
-                    await _userOfficeRoleRepository.AddUserOfficeRoles(userOfficeRoles);
-                }
 
                 var patientRole = _roleManager.FindByNameAsync("PATIENT").Result;
 

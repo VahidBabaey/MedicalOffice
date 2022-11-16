@@ -38,7 +38,7 @@ namespace MedicalOffice.WebApi.Crypto
         }
     }
 
-    public static class CryptoServiceProviderRegisteration
+    public static class ServiceCollectionExtention
     {
         public static IServiceCollection AddCryptography(this IServiceCollection services, IConfiguration configuration)
         {

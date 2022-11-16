@@ -16,7 +16,7 @@ namespace MedicalOffice.WebApi.Totp
 
             var totp = new OtpNet.Totp(bytes, step: 30);
 
-            return totp.ComputeTotp();
+            return totp.ComputeTotp(DateTime.UtcNow);
         }
 
         public bool Verify(string phoneNumber, string code)

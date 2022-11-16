@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using static MedicalOffice.Persistence.ApplicationDbContext;
 
 namespace MedicalOffice.Persistence;
 
@@ -25,6 +26,28 @@ public static class ServiceRegistration
         services.AddIdentity<User, Role>()
         .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
+        services
+        .AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(o =>
+        {
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                ValidIssuer = configuration["JwtSettings:Issuer"],
+                ValidAudience = configuration["JwtSettings:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]))
+            };
+        });
+
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
         services.AddScoped<IOfficeRepository, OfficeRepository>();
@@ -38,7 +61,7 @@ public static class ServiceRegistration
         services.AddScoped<IInsuranceRepository, InsuranceRepository>();
         services.AddScoped<ISpecializationRepository, SpecializationRepository>();
         services.AddScoped<IShiftRepository, ShiftRepository>();
-        services.AddScoped<IMembershipRepository, MembershipRepository>();        
+        services.AddScoped<IMembershipRepository, MembershipRepository>();
         services.AddScoped<IDrugRepository, DrugRepository>();
         services.AddScoped<IDrugShapeRepository, DrugShapeRepository>();
         services.AddScoped<IDrugSectionRepository, DrugSectionRepository>();
@@ -61,7 +84,7 @@ public static class ServiceRegistration
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IFormCommitmentRepository, FormCommitmentRepository>();
         services.AddScoped<IPictureRepository, PictureRepository>();
-        services.AddScoped<IMedicalStaffPermissionRepository, MedicalStaffPermissionRepository>();
+        services.AddScoped<IUserOfficePermissionRepository, UserOfficePermissionRepository>();
         services.AddScoped<IMemberShipServiceRepository, MemberShipServiceRepository>();
         services.AddScoped<IReceptionRepository, ReceptionRepository>();
         services.AddScoped<IReceptionDiscountRepository, ReceptionDiscountRepository>();

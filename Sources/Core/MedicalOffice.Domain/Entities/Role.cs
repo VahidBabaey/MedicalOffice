@@ -1,18 +1,19 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MedicalOffice.Domain.Common;
+using Microsoft.AspNetCore.Identity;
 
 namespace MedicalOffice.Domain.Entities;
 
 /// <summary>
 /// نقش
 /// </summary>
-public class Role : IdentityRole<Guid> // BaseDomainEntity<Guid>
+public class Role : IdentityRole<Guid>
 {
     public Role()
     {
         UserOfficeRoles = new List<UserOfficeRole>();
     }
 
-    public string PersianName { get; set; } = string.Empty;
+    public string PersianName { get; set; }
 
     /// <summary>
     /// نمایش در پذیرش
@@ -22,9 +23,7 @@ public class Role : IdentityRole<Guid> // BaseDomainEntity<Guid>
     /// <summary>
     /// کادر درمان - نقش
     /// </summary>
-    public ICollection<MedicalStaffRole>? MedicalStaffRoles { get; set; }
-
-    //public string Name { get; set; } = string.Empty;
+    public ICollection<MedicalStaffRole> MedicalStaffRoles { get; set; }
 
     /// <summary>
     /// کاربر - آفیس - نقش
@@ -34,5 +33,5 @@ public class Role : IdentityRole<Guid> // BaseDomainEntity<Guid>
     /// <summary>
     /// برای ارتباط چند به چند دسته دسترسی ها با نقش
     /// </summary>
-    public ICollection<PermissionCategory>? Permission{ get; set; }
+    public ICollection<PermissionCategory> PermissionCategory{ get; set; }
 }

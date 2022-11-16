@@ -9,21 +9,23 @@ namespace MedicalOffice.Persistence.Configurations.Entities
     {
         public override void ConfigureEntity(EntityTypeBuilder<UserOfficeRole> builder)
         {
-            //builder
-            //   .HasOne(e => e.MedicalStaff)
-            //   .WithMany(e => e.UserOfficeRoles)
-            //   .HasForeignKey(e => e.MedicalStaffId)
-            //   .OnDelete(DeleteBehavior.NoAction);
             builder
-               .HasOne(e => e.Office)
-               .WithMany(e => e.UserOfficeRoles)
-               .HasForeignKey(e => e.OfficeId)
+               .HasOne(uor => uor.User)
+               .WithMany(u => u.UserOfficeRoles)
+               .HasForeignKey(uor => uor.UserId)
                .OnDelete(DeleteBehavior.NoAction);
             builder
-               .HasOne(e => e.Role)
-               .WithMany(e => e.UserOfficeRoles)
-               .HasForeignKey(e => e.RoleId)
+               .HasOne(uor => uor.Office)
+               .WithMany(o => o.UserOfficeRoles)
+               .HasForeignKey(uor => uor.OfficeId)
                .OnDelete(DeleteBehavior.NoAction);
+            builder
+               .HasOne(uor => uor.Role)
+               .WithMany(r => r.UserOfficeRoles)
+               .HasForeignKey(uor => uor.RoleId)
+               .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasQueryFilter(uor => uor.IsDeleted == false);
         }
     }
 }

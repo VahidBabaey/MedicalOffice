@@ -39,9 +39,4 @@ public class UserOfficeRole : BaseDomainEntity<Guid>
     /// سهم و درصد کاربران
     /// </summary>
     public ICollection<MedicalStaffServiceSharePercent>? MedicalStaffServiceSharePercents { get; set; }
-
-    /// <summary>
-    /// دسترسی ها
-    /// </summary>
-    //public ICollection<Permission>? Permissiones { get; set; }
 }

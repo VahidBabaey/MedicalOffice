@@ -26,7 +26,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
         private readonly IMedicalStaffRoleRepository _medicalStaffRoleRepository;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly IMedicalStaffRepository _medicalStaffrepository;
-        private readonly IMedicalStaffPermissionRepository _mediicalStaffPermissionRepository;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly string _requestTitle;
@@ -38,8 +37,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             UserManager<User> userManager,
             IMedicalStaffRepository medicalStaffrepository,
             IUserOfficeRoleRepository userOfficeRoleRepository,
-            IMedicalStaffRoleRepository medicalStaffRoleRepository, 
-            IMedicalStaffPermissionRepository mediicalStaffPermissionRepository
+            IMedicalStaffRoleRepository medicalStaffRoleRepository
             )
         {
             _mapper = mapper;
@@ -51,7 +49,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             _medicalStaffRoleRepository = medicalStaffRoleRepository;
 
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
-            _mediicalStaffPermissionRepository = mediicalStaffPermissionRepository;
         }
 
         public async Task<BaseResponse> Handle(AddMedicalStaffCommand request, CancellationToken cancellationToken)

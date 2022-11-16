@@ -1,7 +1,5 @@
-﻿using Ghasedak.Core;
-using MediatR;
+﻿using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
-using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
@@ -51,7 +49,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
                 var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
 
-                //TODO: add ghasedak sms provider to send sms to user.
+                //TODO: add sms provider to send sms to user.
                 //var totpSms = new TotpSms()
                 //{
                 //    Type = 1,

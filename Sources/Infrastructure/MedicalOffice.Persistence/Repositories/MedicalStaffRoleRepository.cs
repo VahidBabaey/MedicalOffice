@@ -12,11 +12,9 @@ public class MedicalStaffRoleRepository : GenericRepository<MedicalStaffRole, Gu
     {
         _dbContext = dbContext;
     }
-    public Task InsertToMedicalStaffRole(List<MedicalStaffRole> medicalStaffRole)
+    public async Task InsertToMedicalStaffRole(List<MedicalStaffRole> medicalStaffRole)
     {
-        _dbContext.MedicalStaffRoles.AddRangeAsync(medicalStaffRole);
-
-        return Task.CompletedTask;
+        await _dbContext.MedicalStaffRoles.AddRangeAsync(medicalStaffRole);
+        await _dbContext.SaveChangesAsync();
     }
-
 }

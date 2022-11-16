@@ -10,15 +10,9 @@ using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Security.Claims;
-using Ghasedak.Core;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {

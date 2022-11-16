@@ -21,9 +21,5 @@ namespace MedicalOffice.Application.Dtos.Identity
         [Required]
         public string NationalID { get; set; } = string.Empty;
 
-        public Guid? OfficeId { get; set; }
-
-        public Guid[]? RoleIds{ get; set; }
-
     }
 }

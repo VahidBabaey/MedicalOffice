@@ -58,7 +58,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                     await _repository.DeleteUserOfficeRoleAsync(MedicalStaff.Id);
                     foreach (var roleid in request.DTO.RoleIds)
                     {
-                        //await _repository.InsertToUserOfficeRole(roleid, MedicalStaff.Id);
+                        //await _officeRepository.InsertToUserOfficeRole(roleid, MedicalStaff.Id);
                     }
                 }
 

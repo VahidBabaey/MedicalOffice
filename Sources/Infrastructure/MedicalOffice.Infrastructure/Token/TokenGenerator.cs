@@ -43,33 +43,12 @@ namespace MedicalOffice.WebApi.Token
         }
     }
 
-    public static class TokenGeneratorServiceRegistration
+    public static class ServiceCollectionExtention
     {
         public static IServiceCollection AddTokenGenerator(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtSettings>(configuration.GetSection("jwtSettings"));
             services.AddTransient<ITokenGenerator, TokenGenerator>();
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(o =>
-            {
-                o.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = configuration["JwtSettings:Issuer"],
-                    ValidAudience = configuration["JwtSettings:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]))
-                };
-            });
 
             return services;
         }
