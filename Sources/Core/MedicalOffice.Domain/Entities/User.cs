@@ -14,7 +14,6 @@ namespace MedicalOffice.Domain.Entities
         public User()
         {
             SecurityStamp = Guid.NewGuid().ToString();
-            PasswordHash = string.Empty;
         }
 
         /// <summary>

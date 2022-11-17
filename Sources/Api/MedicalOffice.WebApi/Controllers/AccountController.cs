@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Identity;
+using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : Controller
+    public partial class AccountController : Controller
     {
         private readonly IMediator _mediator;
         public AccountController(IMediator mediator)
@@ -63,6 +64,23 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return Response(response);
         }
 
-        //[HttpPatch("reset-password")]
+        [Authorize]
+        [HttpPatch("reset-password")]
+        public async Task<ActionResult<Guid>> ResetPassword(ResetPassWordDTO dto)
+        {
+            var response = await _mediator.Send(new ResetPasswordCommand() { DTO = dto });
+
+            return Response(response);
+        }
+
+        [Authorize]
+        [HttpPatch("set-password")]
+        public async Task<ActionResult<Guid>> SetPassword([FromBody]SetPassWordDTO dto)
+        {
+            var response = await _mediator.Send(new SetPasswordCommand() { DTO = dto });
+
+            return Response(response);
+        }
+
     }
 }
