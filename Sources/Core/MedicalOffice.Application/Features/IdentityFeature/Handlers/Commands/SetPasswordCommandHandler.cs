@@ -33,10 +33,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 return await Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
-<<<<<<< HEAD
-=======
-            //await _userManagr.AddPasswordAsync(user, request.DTO.Password);
->>>>>>> a3243a5620405bf0795fd0be44b0aa611301c8c0
             var changePassword = await _userManagr.AddPasswordAsync(user, request.DTO.Password);
 
             if (!changePassword.Succeeded)
