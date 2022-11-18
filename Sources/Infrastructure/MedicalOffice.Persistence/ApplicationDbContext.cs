@@ -105,26 +105,33 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
         {
             entry.Entity.LastUpdatedDate = DateTime.Now;
-            entry.Entity.LastUpdatedById = Guid.Parse(userId);
+
+            if (userId != null)
+                entry.Entity.LastUpdatedById = Guid.Parse(userId);
 
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedDate = DateTime.Now;
-                entry.Entity.CreatedById = Guid.Parse(userId);
+
+                if (userId != null)
+                    entry.Entity.CreatedById = Guid.Parse(userId);
             }
 
         }
 
-        //TODO: Save current User as updatedby and createdby
         foreach (var entry in ChangeTracker.Entries<BaseDomainEntity<Guid>>())
         {
             entry.Entity.LastUpdatedDate = DateTime.Now;
-            entry.Entity.LastUpdatedById = Guid.Parse(userId);
+
+            if (userId != null)
+                entry.Entity.LastUpdatedById = Guid.Parse(userId);
 
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedDate = DateTime.Now;
-                entry.Entity.CreatedById = Guid.Parse(userId);
+
+                if (userId != null)
+                    entry.Entity.CreatedById = Guid.Parse(userId);
             }
         }
 
