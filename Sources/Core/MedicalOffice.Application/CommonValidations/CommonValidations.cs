@@ -1,34 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.CommonValidations
 {
-    public class CommonValidators : 
+    public class CommonValidators : ICommonValidators
     {
-        private bool ValidPhoneNumber(string phoneNumber)
+        public Task<bool> ValidPhoneNumber(string phoneNumber)
         {
             Regex regex = new Regex(@"^(?:0|98|\+98|\+980|0098|098|00980)?(9\d{9})$");
 
-            return regex.IsMatch(phoneNumber);
+            return Task.FromResult(regex.IsMatch(phoneNumber));
         }
 
-        private bool validTelePhoneNumber(string telePhoneNumber)
+        public Task<bool> validTelePhoneNumber(string telePhoneNumber)
         {
             Regex regex = new Regex(@"^0[0-9]{2,}[0-9]{7,}$");
 
-            return regex.IsMatch(telePhoneNumber);
+            return Task.FromResult(regex.IsMatch(telePhoneNumber));
         }
 
-        private bool ValidNationalId(string NationalId)
+        public Task<bool> ValidNationalId(string NationalId)
         {
             Regex regex = new Regex("^(\\d)(?!\\1{9})\\d{9}$");
 
             if (!regex.IsMatch(NationalId))
-                return false;
+                return Task.FromResult(false);
 
             char[] charArray = NationalId.ToCharArray();
             int[] nationalIdNumArray = new int[charArray.Length];
@@ -59,12 +59,21 @@ namespace MedicalOffice.Application.CommonValidations
 
             if ((conditionA || conditionB) || (conditionC && conditionD))
             {
-                return true;
+                return Task.FromResult(true);
             }
             else
             {
-                return false;
+                return Task.FromResult(false);
             }
         }
+    }
+
+    public interface ICommonValidators
+    {
+        Task<bool> ValidPhoneNumber(string phoneNumber);
+
+        Task<bool> validTelePhoneNumber(string telePhoneNumber);
+
+        Task<bool> ValidNationalId(string NationalId);
     }
 }

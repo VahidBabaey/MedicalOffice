@@ -1,72 +1,22 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.CommonValidations;
 using System.Text.RegularExpressions;
 
 namespace MedicalOffice.Application.Dtos.Identity.Validators;
 
 public class RegisterUserValidator : AbstractValidator<RegisterUserDTO>
 {
-    public RegisterUserValidator()
+    private readonly ICommonValidators _validator;
+    public RegisterUserValidator(ICommonValidators validator)
     {
-        RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage("NationalId is required").MaximumLength(11)
-            .WithMessage("maximum length of phoneNumber should be equal or less than 11").Must(x => ValidPhoneNumber(x));
-        RuleFor(x => x.NationalID).NotEmpty().WithMessage("NationalId is required").MaximumLength(10).Must(x => ValidNationalId(x));
-    }
-
-    private bool ValidPhoneNumber(string phoneNumber)
-    {
-        Regex regex = new Regex(@"^(?:0|98|\+98|\+980|0098|098|00980)?(9\d{9})$");
-
-        return regex.IsMatch(phoneNumber);
-    }
-
-    private bool validTelePhoneNumber(string telePhoneNumber)
-    {
-        Regex regex = new Regex(@"^0[0-9]{2,}[0-9]{7,}$");
-
-        return regex.IsMatch(telePhoneNumber);
-    }
-
-    private bool ValidNationalId(string NationalId)
-    {
-        Regex regex = new Regex("^(\\d)(?!\\1{9})\\d{9}$");
-
-        if (!regex.IsMatch(NationalId))
-            return false;
-
-        char[] charArray = NationalId.ToCharArray();
-        int[] nationalIdNumArray = new int[charArray.Length];
-        for (int i = 0; i < charArray.Length; i++)
-        {
-            nationalIdNumArray[i] = (int)char.GetNumericValue(charArray[i]);
-        }
-
-        int A = nationalIdNumArray[9];
-
-        int B =
-            (nationalIdNumArray[0] * 10) +
-            (nationalIdNumArray[1] * 9) +
-            (nationalIdNumArray[2] * 8) +
-            (nationalIdNumArray[3] * 7) +
-            (nationalIdNumArray[4] * 6) +
-            (nationalIdNumArray[5] * 5) +
-            (nationalIdNumArray[6] * 4) +
-            (nationalIdNumArray[7] * 3) +
-            (nationalIdNumArray[8] * 2);
-
-        int C = B - ((B / 11) * 11);
-
-        var conditionA = (C == 0) && (A == C);
-        var conditionB = (C == 1) && (A == 1);
-        var conditionC = (C > 1);
-        var conditionD = (A == Math.Abs((int)(C - 11)));
-
-        if ((conditionA || conditionB) || (conditionC && conditionD))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        _validator = validator; 
+        RuleFor(x => x.PhoneNumber)
+            .NotEmpty().WithMessage("The PhoneNumber is required")
+            .MaximumLength(11).WithMessage("Maximum length of phone number is 11")
+            .Must(x => _validator.ValidPhoneNumber(x).Result).WithMessage("Phone number is not valid");
+        RuleFor(x => x.NationalID)
+            .NotEmpty().WithMessage("NationalId is required")
+            .MaximumLength(10).WithMessage("Maximum length of national id is 10")
+            .Must(x => _validator.ValidNationalId(x).Result).WithMessage("National id is not valid");
     }
 }
