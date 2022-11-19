@@ -10,10 +10,12 @@ public class RegisterUserValidator : AbstractValidator<RegisterUserDTO>
     public RegisterUserValidator(ICommonValidators validator)
     {
         _validator = validator; 
+
         RuleFor(x => x.PhoneNumber)
             .NotEmpty().WithMessage("The PhoneNumber is required")
             .MaximumLength(11).WithMessage("Maximum length of phone number is 11")
             .Must(x => _validator.ValidPhoneNumber(x).Result).WithMessage("Phone number is not valid");
+
         RuleFor(x => x.NationalID)
             .NotEmpty().WithMessage("NationalId is required")
             .MaximumLength(10).WithMessage("Maximum length of national id is 10")

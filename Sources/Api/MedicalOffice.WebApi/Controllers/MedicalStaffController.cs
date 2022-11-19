@@ -59,7 +59,11 @@ public class MedicalStaffController : Controller
     }
 
     [Authorize]
-    [PermissionCheck("DoctorPermissionLightPen")]
+    [
+        Permission("DoctorPermissionLightPen"),
+        Permission("dgdg"),
+        Permission("hkxdhkjh")
+      ]
     [HttpPatch("permissions")]
     public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] MedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)
     {

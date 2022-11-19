@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
@@ -9,12 +11,14 @@ using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Net;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, BaseResponse>
     {
+        private readonly IValidator<RegisterUserDTO> _validator;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
@@ -22,6 +26,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly IMapper _mapper;
         private readonly string _requestTitle;
         public RegisterUserCommandHandler(
+            IValidator<RegisterUserDTO> validator,
             IUserOfficeRoleRepository userOfficeRoleRepository,
             ILogger logger,
             IMapper mapper,
@@ -29,6 +34,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             RoleManager<Role> roleManager
             )
         {
+            _validator = validator;
             _userOfficeRoleRepository = userOfficeRoleRepository;
             _userManager = userManager;
             _roleManager = roleManager;
@@ -40,8 +46,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var validator = new RegisterUserValidator();
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            //var validator = new RegisterUserValidator();
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
                 return await Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
 

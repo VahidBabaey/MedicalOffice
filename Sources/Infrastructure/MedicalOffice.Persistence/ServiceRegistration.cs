@@ -12,6 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using static MedicalOffice.Persistence.ApplicationDbContext;
+using FluentValidation;
+using System;
+using MedicalOffice.Application.Dtos.Identity;
+using MedicalOffice.Application.Dtos.Identity.Validators;
 
 namespace MedicalOffice.Persistence;
 

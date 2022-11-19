@@ -9,16 +9,12 @@ namespace MedicalOffice.Application.Dtos.Identity
 {
     public class RegisterUserDTO
     {
-        [Required]
         public string PhoneNumber { get; set; } = string.Empty;
 
-        [Required]
         public string FirstName { get; set; } = string.Empty;
 
-        [Required]
         public string LastName { get; set; } = string.Empty;
 
-        [Required]
         public string NationalID { get; set; } = string.Empty;
 
     }

@@ -30,11 +30,12 @@ namespace MedicalOffice.Application.CommonValidations
             if (!regex.IsMatch(NationalId))
                 return Task.FromResult(false);
 
-            char[] charArray = NationalId.ToCharArray();
-            int[] nationalIdNumArray = new int[charArray.Length];
-            for (int i = 0; i < charArray.Length; i++)
+            char[] nationalIdCharArray = NationalId.ToCharArray();
+            int[] nationalIdNumArray = new int[nationalIdCharArray.Length];
+
+            for (int i = 0; i < nationalIdCharArray.Length; i++)
             {
-                nationalIdNumArray[i] = (int)char.GetNumericValue(charArray[i]);
+                nationalIdNumArray[i] = (int)char.GetNumericValue(nationalIdCharArray[i]);
             }
 
             int A = nationalIdNumArray[9];
@@ -66,14 +67,5 @@ namespace MedicalOffice.Application.CommonValidations
                 return Task.FromResult(false);
             }
         }
-    }
-
-    public interface ICommonValidators
-    {
-        Task<bool> ValidPhoneNumber(string phoneNumber);
-
-        Task<bool> validTelePhoneNumber(string telePhoneNumber);
-
-        Task<bool> ValidNationalId(string NationalId);
     }
 }
