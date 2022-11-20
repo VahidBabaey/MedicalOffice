@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -11,6 +13,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class SetPasswordCommandHandler : IRequestHandler<SetPasswordCommand, BaseResponse>
     {
+        private readonly IValidator<SetPasswordDTO> _validator;
         readonly ILogger _logger;
         readonly UserManager<User> _userManagr;
         readonly string _requestTitle;

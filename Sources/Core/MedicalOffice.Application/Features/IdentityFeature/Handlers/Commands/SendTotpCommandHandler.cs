@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
@@ -14,16 +16,19 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class SendTotpCommandHandler : IRequestHandler<SendTotpCommand, BaseResponse>
     {
+        private readonly IValidator<PhoneNumberDTO> _validator;
         private readonly ISmsSender _smsSender;
         private readonly ITotpHandler _totpHandler;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
         public SendTotpCommandHandler(
+            IValidator<PhoneNumberDTO> validator,
             ISmsSender smsSender,
             ITotpHandler totpHandler, 
             ILogger logger)
         {
+            _validator = validator;
             _smsSender = smsSender;
             _totpHandler = totpHandler;
             _logger = logger;
@@ -32,12 +37,11 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         public async Task<BaseResponse> Handle(SendTotpCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
-            PhoneNumberValidator validator = new();
             Log log = new Log();
 
             try
             {
-                var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+                var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
                 if (!validationResult.IsValid)
                 {
                     response.Success = false;

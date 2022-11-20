@@ -1,13 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MedicalOffice.Application.Dtos.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class AuthenticateByPasswordDTO
+    public class AuthenticateByPasswordDTO : IPhoneNumberDTO
     {
-        [Required]
-        public string? PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
-        [Required]
-        public string? Password { get; set; }
+        public string Password { get; set; }
     }
 }

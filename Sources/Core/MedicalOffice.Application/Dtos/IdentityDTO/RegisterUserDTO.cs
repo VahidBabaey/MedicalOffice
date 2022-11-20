@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MedicalOffice.Application.Dtos.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class RegisterUserDTO
+    public class RegisterUserDTO : IPhoneNumberDTO, INationalIdDTO
     {
         public string PhoneNumber { get; set; } = string.Empty;
 

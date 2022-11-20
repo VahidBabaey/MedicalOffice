@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Dtos.Common.CommonValidators;
 using MedicalOffice.Application.Dtos.Identity;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
 {
-    public class AuthenticateByPasswordValidator: AbstractValidator<AuthenticateByPasswordDTO>
+    public class AuthenticateByPasswordValidator : AbstractValidator<AuthenticateByPasswordDTO>
     {
         public AuthenticateByPasswordValidator()
         {
-                
+            Include(new IPhoneNumberValidator());
         }
     }
 }

@@ -6,6 +6,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands
 {
     public class SetPasswordCommand : IRequest<BaseResponse>
     {
-        public SetPassWordDTO DTO { get; set; }
+        public SetPasswordDTO DTO { get; set; }
     }
 }
