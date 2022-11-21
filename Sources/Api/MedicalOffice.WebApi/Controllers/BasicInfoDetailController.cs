@@ -39,8 +39,8 @@ public class BasicInfoDetailController : Controller
 
     [HttpGet]
     [Authorize]
-    [Permission("ReceptionEdit")]
-    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, Guid basicinfoId,string officeId)
+    [Permission(new string[] { "ReceptionEdit" })]
+    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, Guid basicinfoId, string officeId)
     {
         var response = await _mediator.Send(new GetAllBasicInfoDetailQuery() { DTO = dto, BasicInfoId = basicinfoId });
 

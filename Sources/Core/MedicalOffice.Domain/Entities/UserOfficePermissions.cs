@@ -20,7 +20,7 @@ namespace MedicalOffice.Domain.Entities
 
         public Guid PermissionId { get; set; }
 
-        public Permission? Permission { get; set; }
+        public Permission Permission { get; set; }
 
         public bool IsDeleted { get; set; }
 

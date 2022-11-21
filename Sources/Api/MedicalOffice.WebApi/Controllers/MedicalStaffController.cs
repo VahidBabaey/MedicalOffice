@@ -5,6 +5,7 @@ using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
+using MedicalOffice.Domain.Constants;
 using MedicalOffice.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -59,11 +60,7 @@ public class MedicalStaffController : Controller
     }
 
     [Authorize]
-    [
-        Permission("DoctorPermissionLightPen"),
-        Permission("dgdg"),
-        Permission("hkxdhkjh")
-      ]
+    [Permission(new string[] {"DoctorTopic","khkhsk","bhjgjh"})]
     [HttpPatch("permissions")]
     public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] MedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)
     {

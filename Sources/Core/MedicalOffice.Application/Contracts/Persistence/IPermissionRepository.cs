@@ -8,7 +8,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         Guid GetId(Guid id);
 
-        Task<bool> UserHasPermission(Guid userId, Guid officeId, string permission);
+        Task<bool> UserHasPermission(Guid userId, Guid officeId, string[] permission);
 
         Task<IReadOnlyList<Permission>> GetPermissionDetailsByMedicalStaffID(Guid Id);
 

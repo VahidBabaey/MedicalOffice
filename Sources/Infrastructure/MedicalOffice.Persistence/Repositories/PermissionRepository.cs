@@ -2,6 +2,7 @@
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Security;
 
 namespace MedicalOffice.Persistence.Repositories;
 
@@ -15,7 +16,10 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     }
     public Guid GetId (Guid id)
     {
-        var userOfficeRole =  _dbContext.UserOfficeRoles.Select(p => new {p.Id, p.UserId}).Where(p => p.UserId == id).FirstOrDefault();
+        var userOfficeRole =  _dbContext.UserOfficeRoles
+            .Select(p => new {p.Id, p.UserId})
+            .Where(p => p.UserId == id)
+            .FirstOrDefault();
 
         if (userOfficeRole == null)
             throw new NullReferenceException("userOfficeRole Id Not Found!");
@@ -35,10 +39,12 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
         throw new NotImplementedException();
     }
 
-    public Task<bool> UserHasPermission(Guid userId, Guid officeId, string permission)
+    public Task<bool> UserHasPermission(Guid userId, Guid officeId, string[] permission)
     {
 
-        var result = _dbContext.UserOfficePermissions.Include(m => m.Permission).Where(x=>x.UserId==userId && x.OfficeId==officeId).Select(x => x.Permission).Any(x => x != null ? x.Name == permission : false);
+        var result = _dbContext.UserOfficePermissions.Include(m => m.Permission)
+            .Where(x => x.UserId == userId && x.OfficeId == officeId)
+            .Any(x => permission.Contains(x.Permission.Name));
 
         return Task.FromResult(result);
     }
