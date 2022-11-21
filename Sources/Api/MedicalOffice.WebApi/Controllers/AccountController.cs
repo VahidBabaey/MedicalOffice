@@ -64,7 +64,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return Response(response);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPatch("reset-password")]
         public async Task<ActionResult<Guid>> ResetPassword(ResetPassWordDTO dto)
         {
@@ -73,7 +73,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return Response(response);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPatch("set-password")]
         public async Task<ActionResult<Guid>> SetPassword([FromBody]SetPassWordDTO dto)
         {

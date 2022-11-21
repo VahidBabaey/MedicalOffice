@@ -7,6 +7,7 @@ using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Features.SpecializationFile.Requests.Commands;
 using MedicalOffice.Application.Features.SpecializationFile.Requests.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -22,6 +23,7 @@ public class SpecializationController : Controller
         _mediator = mediator;
     }
 
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] SpecializationDTO dto)
     {
@@ -30,6 +32,7 @@ public class SpecializationController : Controller
         return Ok(response);
     }
 
+    //[Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
     {
