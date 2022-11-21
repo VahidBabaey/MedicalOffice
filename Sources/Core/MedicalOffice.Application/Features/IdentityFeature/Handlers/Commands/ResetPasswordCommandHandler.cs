@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Dtos.Identity;
+using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -12,12 +15,17 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, BaseResponse>
     {
-        readonly ILogger _logger;
-        readonly UserManager<User> _userManagr;
-        readonly string _requestTitle;
+        private readonly IValidator<ResetPasswordDTO> _validator;
+        private readonly ILogger _logger;
+        private readonly UserManager<User> _userManagr;
+        private readonly string _requestTitle;
 
-        public ResetPasswordCommandHandler(ILogger logger, UserManager<User> userManagr)
+        public ResetPasswordCommandHandler(
+            IValidator<ResetPasswordDTO> validator,
+            ILogger logger,
+            UserManager<User> userManagr)
         {
+            _validator = validator;
             _logger = logger;
             _userManagr = userManagr;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -25,6 +33,11 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            if (!validationResult.IsValid)
+                return await Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                    validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
+
             var user = await _userManagr.FindByNameAsync(request.DTO.PhoneNumber);
 
             if (user == null)

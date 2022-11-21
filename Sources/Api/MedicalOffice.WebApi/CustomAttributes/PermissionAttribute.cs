@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace MedicalOffice.WebApi.Attributes
 {
-    public class PermissionCheckAttribute : TypeFilterAttribute
+    public class PermissionAttribute : TypeFilterAttribute
     {
-        public PermissionCheckAttribute(string Permission) : base(typeof(PermissionFilter))
+        public PermissionAttribute(string Permission) : base(typeof(PermissionFilter))
         {
             Arguments = new object[] { Permission };
         }

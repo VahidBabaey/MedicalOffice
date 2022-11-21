@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity;
@@ -18,6 +19,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class AuthenticateByTotpCommandHandler : IRequestHandler<AuthenticateByTotpCommand, BaseResponse>
     {
+        private readonly IValidator<AuthenticateByTotpDTO> _validator;
         private readonly UserManager<User> _userManager;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly ITotpHandler _totpHandler;
@@ -26,12 +28,14 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly string _requestTitle;
 
         public AuthenticateByTotpCommandHandler(
+            IValidator<AuthenticateByTotpDTO> validator,
             UserManager<User> userManager,
             ITokenGenerator tokenGenerator,
             ITotpHandler totpHandler,
             ILogger logger,
             IMapper mapper)
         {
+            _validator = validator;
             _userManager = userManager;
             _tokenGenerator = tokenGenerator;
             _totpHandler = totpHandler;
@@ -42,10 +46,9 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         public async Task<BaseResponse> Handle(AuthenticateByTotpCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new BaseResponse();
-            AuthenticateByTotpValidator validator = new();
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
                 response.Success = false;

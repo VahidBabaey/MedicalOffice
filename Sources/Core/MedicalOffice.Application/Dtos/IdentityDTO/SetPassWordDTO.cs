@@ -1,6 +1,8 @@
-﻿namespace MedicalOffice.Application.Dtos.IdentityDTO
+﻿using MedicalOffice.Application.Dtos.Common;
+
+namespace MedicalOffice.Application.Dtos.IdentityDTO
 {
-    public class SetPassWordDTO
+    public class SetPasswordDTO: IPhoneNumberDTO
     {
         public string PhoneNumber { get; set; }
 

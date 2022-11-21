@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MedicalOffice.Application.Dtos.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,12 +8,10 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class AuthenticateByTotpDTO
+    public class AuthenticateByTotpDTO: IPhoneNumberDTO
     {
-        [Required]
         public string PhoneNumber { get; set; }=string.Empty;
 
-        [Required]
         public string Totp { get; set; } = string.Empty;
     }
 }

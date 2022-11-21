@@ -17,11 +17,13 @@ using System.IdentityModel.Tokens.Jwt;
 using MedicalOffice.Application.Dtos.Identity;
 using System.Net;
 using System.Security.Claims;
+using FluentValidation;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class AuthenticateByPasswordCommandHandler : IRequestHandler<AuthenticateByPasswordCommand, BaseResponse>
     {
+        private readonly IValidator<AuthenticateByPasswordDTO> _validator;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly ITokenGenerator _tokenGenerator;
@@ -30,12 +32,14 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly string _requestTitle;
 
         public AuthenticateByPasswordCommandHandler(
+            IValidator<AuthenticateByPasswordDTO> validator,
             SignInManager<User> signInManager,
             UserManager<User> userManager,
             ITokenGenerator tokenGenerator,
             ILogger logger,
             IMapper mapper)
         {
+            _validator = validator;
             _signInManager = signInManager;
             _userManager = userManager;
             _tokenGenerator = tokenGenerator;
@@ -47,10 +51,9 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         public async Task<BaseResponse> Handle(AuthenticateByPasswordCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new BaseResponse();
-            AuthenticateByPasswordValidator validator = new();
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
                 response.Success = false;
