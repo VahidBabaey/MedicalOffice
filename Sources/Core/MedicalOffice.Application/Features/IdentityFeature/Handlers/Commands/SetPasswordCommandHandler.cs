@@ -28,7 +28,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(SetPasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManagr.FindByNameAsync(request.DTO.PhoneNumber);
+            var user = await _userManagr.FindByNameAsync(request.Dto.PhoneNumber);
 
             if (user == null)
             {
@@ -36,7 +36,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 return await Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
-            var changePassword = await _userManagr.AddPasswordAsync(user, request.DTO.Password);
+            var changePassword = await _userManagr.AddPasswordAsync(user, request.Dto.Password);
 
             if (!changePassword.Succeeded)
             {

@@ -11,6 +11,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands
 {
     public class RegisterUserCommand : IRequest<BaseResponse>
     {
-        public RegisterUserDTO DTO { get; set; } = new();
+        public RegisterUserDTO Dto { get; set; } = new();
     }
 }

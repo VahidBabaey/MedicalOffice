@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.OfficeDTO;
+using MedicalOffice.Application.Features.OfficeFeature.Requests.Commands;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Queries;
 using MedicalOffice.Application.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -8,15 +10,16 @@ using System.Security.Claims;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OfficeController : ControllerBase
     {
+        private readonly IUserResolverService _userResolverService;
         private readonly IMediator _mediator;
 
-        public OfficeController(IMediator mediator)
+        public OfficeController(IMediator mediator, IUserResolverService userResolverService)
         {
+            _userResolverService = userResolverService;
             _mediator = mediator;
         }
 
@@ -25,12 +28,22 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [Authorize]
         [HttpGet]
-        public async Task<ActionResult<List<OfficeDTO>>> GetByUserId()
+        public async Task<ActionResult<List<OfficeListDTO>>> GetByUserId()
         {
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = _userResolverService.GetUserId().Result;
 
-            var response = await _mediator.Send(new GetByUserIdQuery { UserId = Guid.Parse(userId)});
+            var response = await _mediator.Send(new GetByUserIdQuery { UserId = Guid.Parse(userId) });
+
+            return Response(response);
+        }
+
+        [Authorize(Roles = "SuperAdmin")]
+        [HttpPost]
+        public async Task<ActionResult<Guid>> AddOffice([FromBody] OfficeDTO dto)
+        {
+            var response = await _mediator.Send(new AddOfficeCommand { Dto = dto});
 
             return Response(response);
         }

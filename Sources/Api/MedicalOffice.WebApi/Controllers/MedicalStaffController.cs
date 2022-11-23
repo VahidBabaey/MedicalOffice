@@ -5,7 +5,6 @@ using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
-using MedicalOffice.Domain.Constants;
 using MedicalOffice.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

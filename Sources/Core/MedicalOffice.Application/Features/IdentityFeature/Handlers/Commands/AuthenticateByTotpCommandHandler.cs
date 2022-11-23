@@ -48,7 +48,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             BaseResponse response = new BaseResponse();
             Log log = new();
 
-            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
             if (!validationResult.IsValid)
             {
                 response.Success = false;
@@ -61,12 +61,12 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             {
                 try
                 {
-                    var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber);
+                    var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.Dto.PhoneNumber);
                     if (user == null)
                     {
                         response.Success = false;
                         response.StatusDescription = $"{_requestTitle} failed";
-                        response.Errors.Add($"User with phone number '{request.DTO.PhoneNumber}' is't exist.");
+                        response.Errors.Add($"User with phone number '{request.Dto.PhoneNumber}' is't exist.");
 
                         log.Type = LogType.Error;
                     }
@@ -76,14 +76,14 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     }
                     else
                     {
-                        var isVerify = _totpHandler.Verify(request.DTO.PhoneNumber, request.DTO.Totp);
+                        var isVerify = _totpHandler.Verify(request.Dto.PhoneNumber, request.Dto.Totp);
 
                         if (!isVerify)
                         {
                             response.StatusCode = HttpStatusCode.NotAcceptable;
                             response.Success = false;
                             response.StatusDescription = $"{_requestTitle} failed";
-                            response.Errors.Add($"Totp for {request.DTO.PhoneNumber} are'nt valid");
+                            response.Errors.Add($"Totp for {request.Dto.PhoneNumber} are'nt valid");
 
                             log.Type = LogType.Error;
                         }

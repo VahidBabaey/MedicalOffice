@@ -6,6 +6,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands
 {
     public class AuthenticateByTotpCommand : IRequest<BaseResponse>
     {
-        public AuthenticateByTotpDTO DTO { get; set; } = new();
+        public AuthenticateByTotpDTO Dto { get; set; } = new();
     }
 }

@@ -6,6 +6,6 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 {
     public class AuthenticateByPasswordCommand : IRequest<BaseResponse>
     {
-        public AuthenticateByPasswordDTO DTO { get; set; } = new();
+        public AuthenticateByPasswordDTO Dto { get; set; } = new();
     }
 }

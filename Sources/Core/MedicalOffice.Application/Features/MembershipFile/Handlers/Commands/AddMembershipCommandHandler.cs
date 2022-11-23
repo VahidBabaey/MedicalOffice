@@ -64,13 +64,13 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                     response.Success = true;
                     response.StatusDescription = $"{_requestTitle} succeded";
                     response.Data=(new { Id = membership.Id });
-                    //if (request.DTO.ServiceIDs == null)
+                    //if (request.Dto.ServiceIDs == null)
                     //{
 
                     //}
                     //else
                     //{
-                    //    foreach (var srvid in request.DTO.ServiceIDs)
+                    //    foreach (var srvid in request.Dto.ServiceIDs)
                     //    {                   
                     //    await _officeRepository.InsertMembershipIdofServiceAsync(membership.Discount, srvid, membership.Id);
                     //    }

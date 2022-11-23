@@ -47,12 +47,12 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         {
             var responseBuilder = new ResponseBuilder();
 
-            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
             if (!validationResult.IsValid)
             {
                 await _logger.Log(new Log
                 {
-                    Type = LogType.Success,
+                    Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 }); 
@@ -62,16 +62,16 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             }
 
             var existingUser = await _userManager.Users.SingleOrDefaultAsync(p =>
-                p.PhoneNumber == request.DTO.PhoneNumber ||
-                p.NationalID == request.DTO.NationalID);
+                p.PhoneNumber == request.Dto.PhoneNumber ||
+                p.NationalID == request.Dto.NationalID);
 
             if (existingUser != null)
             {
-                var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";
+                var error = $"PhoneNumber: '{request.Dto.PhoneNumber}' or nationalId: '{request.Dto.NationalID}' already exists.";
 
                 await _logger.Log(new Log
                 {
-                    Type = LogType.Success,
+                    Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
@@ -80,9 +80,9 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             }
             try
             {
-                var user = _mapper.Map<User>(request.DTO);
+                var user = _mapper.Map<User>(request.Dto);
                 user.Id = Guid.NewGuid();
-                user.UserName = request.DTO.PhoneNumber;
+                user.UserName = request.Dto.PhoneNumber;
 
                 var userCreation = await _userManager.CreateAsync(user);
 
@@ -93,7 +93,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
                     await _logger.Log(new Log
                     {
-                        Type = LogType.Success,
+                        Type = LogType.Error,
                         Header = $"{_requestTitle} failed",
                         AdditionalData = error
                     });
@@ -113,7 +113,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
                     await _logger.Log(new Log
                     {
-                        Type = LogType.Success,
+                        Type = LogType.Error,
                         Header = $"{_requestTitle} failed",
                         AdditionalData = error
                     });
@@ -141,7 +141,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             {
                 await _logger.Log(new Log
                 {
-                    Type = LogType.Success,
+                    Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error.Message
                 });

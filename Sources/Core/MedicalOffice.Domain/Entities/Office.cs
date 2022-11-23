@@ -20,7 +20,7 @@ public class Office : BaseDomainEntity<Guid>
     /// <summary>
     /// شماره ثابت
     /// </summary>
-    public string Tel { get; set; } = string.Empty;
+    public string TelePhoneNumber { get; set; } = string.Empty;
 
     /// <summary>
     /// نوع تخفیف ها
@@ -81,7 +81,6 @@ public class Office : BaseDomainEntity<Guid>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و کاربر-مطب-نقش استفاده می شود
     /// </summary>
     public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
-
 
     /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و دسترسی های کاربر مطب استفاده می شود
