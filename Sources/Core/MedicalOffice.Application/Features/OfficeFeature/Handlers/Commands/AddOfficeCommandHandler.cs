@@ -60,11 +60,39 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
+            var existingOffice = _officeRepository.GetAll().Result.Any(x => x.TelePhoneNumber == request.Dto.TelePhoneNumber);
+
+            if (existingOffice)
+            {
+                var error = "An office with this phone number exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+
+                return responseBuilder.Success(HttpStatusCode.Conflict,
+                    $"{_requestTitle} succeeded",
+                    error);
+            }
+
             try
             {
                 var office = _mapper.Map<Office>(request.Dto);
 
                 var newOffice = _officeRepository.Add(office);
+
+                if (request.Roles.Any(x=>x.Equals("Admin")))
+                {
+
+                    var userOfficeRoles = _userOfficeRoleRepository.Add(new UserOfficeRole
+                    {
+                        UserId = request.UserId,
+                        RoleId = Statics.AdminRoleId,
+                        OfficeId = newOffice.Result.Id,
+                    });
+                }
 
                 await _logger.Log(new Log
                 {
@@ -73,14 +101,13 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     AdditionalData = newOffice
                 });
 
-                return responseBuilder.Success(HttpStatusCode.BadRequest,
+                return responseBuilder.Success(HttpStatusCode.OK,
                     $"{_requestTitle} succeeded",
                     newOffice.Result.Id);
 
             }
             catch (Exception error)
             {
-
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
@@ -88,7 +115,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     AdditionalData = error.Message
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest,
+                return responseBuilder.Faild(HttpStatusCode.InternalServerError,
                     $"{_requestTitle} failed",
                     error.Message);
             }

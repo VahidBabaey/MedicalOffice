@@ -39,11 +39,13 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return Response(response);
         }
 
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<ActionResult<Guid>> AddOffice([FromBody] OfficeDTO dto)
         {
-            var response = await _mediator.Send(new AddOfficeCommand { Dto = dto});
+            var userId = Guid.Parse(_userResolverService.GetUserId().Result);
+            var roles = _userResolverService.GetUserRoles().Result;
+            var response = await _mediator.Send(new AddOfficeCommand { Dto = dto, Roles = roles , UserId  = userId });
 
             return Response(response);
         }
