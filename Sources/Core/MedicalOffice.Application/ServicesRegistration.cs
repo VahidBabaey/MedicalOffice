@@ -9,6 +9,8 @@ using MedicalOffice.Application.Dtos.Common.CommonValidators;
 using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
 using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Application.Dtos.OfficeDTO;
+using MedicalOffice.Application.Dtos.OfficeDTO.Validators;
 
 namespace MedicalOffice.Application;
 
@@ -27,7 +29,12 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<PhoneNumberDTO>, PhoneNumberValidator>();
         services.AddScoped<IValidator<SetPasswordDTO>, SetPasswordValidator>();
         services.AddScoped<IValidator<ResetPasswordDTO>, ResetPasswordValidator>();
+        services.AddScoped<IValidator<UserRoleDTO>, UserRoleValidator>();
         #endregion Identity
+
+        #region Office
+        services.AddScoped<IValidator<OfficeDTO>, OfficeValidator>();
+        #endregion Office
 
         return services;
     }

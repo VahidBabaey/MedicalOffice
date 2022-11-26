@@ -41,7 +41,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
             try
             {
-                var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+                var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
                 if (!validationResult.IsValid)
                 {
                     response.Success = false;
@@ -51,13 +51,13 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     log.Type = LogType.Error;
                 }
 
-                var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
+                var totp = _totpHandler.Generate(request.Dto.PhoneNumber);
 
                 //TODO: add sms provider to send sms to user.
                 //var totpSms = new TotpSms()
                 //{
                 //    Type = 1,
-                //    Receptor = new string[] { request.DTO.PhoneNumber },
+                //    Receptor = new string[] { request.Dto.PhoneNumber },
                 //    Code = totp
                 //};
 
