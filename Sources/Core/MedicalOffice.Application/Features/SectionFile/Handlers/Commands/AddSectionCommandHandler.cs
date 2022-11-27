@@ -48,6 +48,7 @@ public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseR
             try
             {
                 var section = _mapper.Map<Section>(request.Dto);
+                section.OfficeId = request.OfficeId;
 
                 section = await _repository.Add(section);
 

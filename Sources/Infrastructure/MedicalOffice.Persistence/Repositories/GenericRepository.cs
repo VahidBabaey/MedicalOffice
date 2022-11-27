@@ -1,6 +1,9 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Domain.Common;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using System.Linq.Expressions;
 
 namespace MedicalOffice.Persistence.Repositories;
 
@@ -35,10 +38,8 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
         if (entity != null)
             await Delete(entity);
-        else 
+        else
             throw new Exception($"Can not find an entity with following id: {id}");
-        
-
     }
 
     public async Task<T1?> Get(T2 id)
@@ -103,6 +104,18 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
             this._dbContext.Entry(entity).State = EntityState.Detached;
         }
         return entity;
+    }
+
+    public async Task SoftDelete<T1> (T2 id) where T1 : IPrimaryKeyEntity<T2>
+    {
+        var entity = await _dbContext.Set<T1>().FindAsync(id);
+
+        if (entity != null)
+        {
+            entity.IsDeleted = true;
+            _dbContext.Update(entity);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
     public IQueryable<T1> TableNoTracking => this._dbContext.Set<T1>().AsNoTracking();

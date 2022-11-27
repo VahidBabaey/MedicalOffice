@@ -4,11 +4,12 @@ using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class SectionController : Controller
@@ -20,32 +21,34 @@ public class SectionController : Controller
         _mediator = mediator;
     }
 
-     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] SectionDTO dto)
+    [HttpPost]
+    public async Task<ActionResult<Guid>> Create([FromBody] SectionDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddSectionCommand() { Dto = dto });
+        var response = await _mediator.Send(new AddSectionCommand() { Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
+
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> RemoveAsync(Guid id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteSectionCommand() { SectionId = id });
+        var response = await _mediator.Send(new DeleteSectionCommand() { SectionId = id, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
+
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateSectionDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateSectionDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditSectionCommand() { Dto = dto });
+        var response = await _mediator.Send(new EditSectionCommand() { Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllSectionQuery() { Dto = dto });
+        var response = await _mediator.Send(new GetAllSectionQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
