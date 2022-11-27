@@ -19,13 +19,13 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
         private readonly string _requestTitle;
 
         public UpdateMedicalStaffPermissionsCommandHandler(
-            ILogger loggre,
+            ILogger logger,
             IMedicalStaffRepository medicalStaffRepository,
             IPermissionRepository permissionRepository,
             IUserOfficePermissionRepository userOfficePermissionRepository
             )
         {
-            _logger = loggre;
+            _logger = logger;
             _medicalStaffRepository = medicalStaffRepository;
             _permissionRepository = permissionRepository;
             _userOfficePermissionRepository = userOfficePermissionRepository;
@@ -42,7 +42,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 var error = $"The user didn't registered in this office";
                 return await Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
-
             var existingpermissions = _userOfficePermissionRepository.GetAll().Result.Where(uop => uop.UserId == medicalStaff.UserId && uop.OfficeId == request.OffceId).ToList();
 
             var newPermissionIds = _permissionRepository.GetAll().Result.Where(m => request.DTO.PermissionIds.Contains(m.Id))

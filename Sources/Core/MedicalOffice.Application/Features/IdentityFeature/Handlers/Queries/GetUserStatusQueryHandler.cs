@@ -36,7 +36,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
             PhoneNumberValidator validator = new();
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await validator.ValidateAsync(request.Dto, cancellationToken);
             if (!validationResult.IsValid)
             {
                 response.Success = false;
@@ -50,7 +50,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
                 try
                 {
                     UserStatusDTO userStatus = new();
-                    var user = await _userManager.Users.SingleOrDefaultAsync(u => u.PhoneNumber == request.DTO.PhoneNumber);
+                    var user = await _userManager.Users.SingleOrDefaultAsync(u => u.PhoneNumber == request.Dto.PhoneNumber);
 
                     if (user == null)
                     {

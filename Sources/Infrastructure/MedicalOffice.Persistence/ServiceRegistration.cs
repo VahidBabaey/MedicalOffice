@@ -92,6 +92,7 @@ public static class ServiceRegistration
         services.AddScoped<IMemberShipServiceRepository, MemberShipServiceRepository>();
         services.AddScoped<IReceptionRepository, ReceptionRepository>();
         services.AddScoped<IReceptionDiscountRepository, ReceptionDiscountRepository>();
+        services.AddScoped<IOfficeRepository, OfficeRepository>();
 
         return services;
     }

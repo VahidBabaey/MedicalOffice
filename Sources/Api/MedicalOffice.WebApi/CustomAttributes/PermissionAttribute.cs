@@ -8,7 +8,7 @@ namespace MedicalOffice.WebApi.Attributes
 {
     public class PermissionAttribute : TypeFilterAttribute
     {
-        public PermissionAttribute(string Permission) : base(typeof(PermissionFilter))
+        public PermissionAttribute(string[] Permission) : base(typeof(PermissionFilter))
         {
             Arguments = new object[] { Permission };
         }
@@ -16,11 +16,11 @@ namespace MedicalOffice.WebApi.Attributes
 
     public class PermissionFilter : IAuthorizationFilter
     {
-        readonly string _permission;
+        readonly string[] _permission;
         private readonly IPermissionRepository _repository;
 
         public PermissionFilter(
-            string permission,
+            string[] permission,
             IPermissionRepository repository)
         {
             _permission = permission;
@@ -34,10 +34,10 @@ namespace MedicalOffice.WebApi.Attributes
             if (!Roles.Any(x => x.Value == "Admin"))
             {
                 var officeId = QueryHelpers.ParseQuery(context.HttpContext.Request.QueryString.Value)
-                .ToDictionary(x => x.Key, x => x.Value)["officeId"];
+
+                    .ToDictionary(x => x.Key, x => x.Value)["officeId"];
 
                 var hasPermission = await _repository.UserHasPermission(Guid.Parse(userId), Guid.Parse(officeId), _permission);
-
                 if (!hasPermission)
                 {
                     context.Result = new ForbidResult();

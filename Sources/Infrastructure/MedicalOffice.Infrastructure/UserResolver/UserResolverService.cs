@@ -13,14 +13,23 @@ public class UserResolverService : IUserResolverService
 
     public Task<string> GetUserId()
     {
-        return Task.FromResult(_context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        if (_context.HttpContext != null)
+        {
+            return Task.FromResult(_context.HttpContext.User
+                .FindFirstValue(ClaimTypes.NameIdentifier));
+        }
+
+        return Task.FromResult(string.Empty);
+    }
+
+    public Task<List<string>> GetUserRoles()
+    {
+        if (_context.HttpContext != null)
+        {
+            var roles = Task.FromResult(_context.HttpContext.User.FindAll(ClaimTypes.Role).Select(x=>x.Value).ToList());   
+            return roles;   
+        }
+
+        return Task.FromResult(new List<string>());
     }
 }
-
-//public static class HttpContextExtentions
-//{
-//    public static string GetUserId(this HttpContext httpContext)
-//    {
-//        return httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-//    }
-//}

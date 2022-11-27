@@ -33,12 +33,12 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
             if (!validationResult.IsValid)
                 return await Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
 
-            var user = await _userManagr.FindByNameAsync(request.DTO.PhoneNumber);
+            var user = await _userManagr.FindByNameAsync(request.Dto.PhoneNumber);
 
             if (user == null)
             {
@@ -46,7 +46,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 return await Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
-            var changePassword = await _userManagr.ChangePasswordAsync(user, request.DTO.CurrentPassword, request.DTO.NewPassword);
+            var changePassword = await _userManagr.ChangePasswordAsync(user, request.Dto.CurrentPassword, request.Dto.NewPassword);
 
             if (!changePassword.Succeeded)
             {
