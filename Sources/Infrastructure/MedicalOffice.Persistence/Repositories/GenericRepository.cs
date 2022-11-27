@@ -106,7 +106,7 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
         return entity;
     }
 
-    public async Task SoftDelete<T1> (T2 id) where T1 : IPrimaryKeyEntity<T2>
+    public async Task SoftDelete<T1> (T2 id) where T1 : BaseDomainEntity<T2>
     {
         var entity = await _dbContext.Set<T1>().FindAsync(id);
 
