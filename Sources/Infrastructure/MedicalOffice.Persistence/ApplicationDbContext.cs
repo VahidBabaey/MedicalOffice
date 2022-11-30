@@ -55,6 +55,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<ReceptionDetail> ReceptionDetails => Set<ReceptionDetail>();
     public DbSet<ReceptionDiscount> ReceptionDiscounts => Set<ReceptionDiscount>();
     public DbSet<ReceptionMedicalStaff> ReceptionMedicalStaffs => Set<ReceptionMedicalStaff>();
+    public DbSet<ReceptionDetailService> ReceptionDetailServices => Set<ReceptionDetailService>();
     public DbSet<RoutineMedication> RoutineMedications => Set<RoutineMedication>();
     public DbSet<RVU3> RVU3 => Set<RVU3>();
     public DbSet<Section> Sections => Set<Section>();

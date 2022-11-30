@@ -79,7 +79,7 @@ public class Service : BaseDomainEntity<Guid>
     /// <summary>
     /// جزئیات پذیرش و سرویس
     /// </summary>
-    public ICollection<ReceptionDetailService>? ReceptionDetails { get; set; }
+    public ICollection<ReceptionDetailService>? ReceptionDetailServices { get; set; }
     /// <summary>
     /// خدمات وقت دهی ها
     /// </summary>

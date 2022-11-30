@@ -32,11 +32,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
-                .HasMany(e => e.ReceptionDetails)
-                .WithOne(e => e.Service)
-                .HasForeignKey(e => e.ServiceId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder
                 .HasMany(e => e.AppointmentServices)
                 .WithOne(e => e.Service)
                 .HasForeignKey(e => e.ServiceId)

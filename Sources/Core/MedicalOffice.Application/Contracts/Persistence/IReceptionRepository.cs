@@ -20,8 +20,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
         (
         Guid serviceId,
         int serviceCount,
-        Guid insuranceId,
-        Guid additionalInsuranceId
+        Guid insuranceId
         );
     Task<Guid> AddReceptionService
         (
@@ -31,7 +30,6 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
         Guid insuranceId,
         Guid additionalInsuranceId,
         long received,
-        long discount,
         Guid discountTypeId,
         Guid[] MedicalStaffs
         );
@@ -56,4 +54,6 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
 
     Task<decimal> GetReceptionTotal(Guid id);
     Task<IEnumerable<MembershipNamesDTO>> GetAllMembershipNames();
+    Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId);
+    Task<List<ReceptionDetailListDTO>> GetReceptionDetailList(Guid patientId);
 }

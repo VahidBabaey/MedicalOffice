@@ -4,6 +4,7 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 
@@ -27,7 +28,10 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
 
         try
         {
-            await _repository.Delete(request.SectionId);
+            //var sec = _repository.GetByID(request.SectionId);
+            //sec.IsDeleted = true;
+
+            //_repository.SoftDelete<Section>(request.SectionId);
 
             response.Success = true;
             response.StatusDescription = $"{_requestTitle} succeded";

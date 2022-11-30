@@ -111,6 +111,8 @@ public class MappingProfile : Profile
         CreateMap<User, MedicalStaffDTO>().ReverseMap();
         CreateMap<Membership, MembershipNamesDTO>().ReverseMap();
         CreateMap<ReceptionDiscount, ReceptionDiscountDTO>().ReverseMap();
+        CreateMap<Reception, ReceptionDTO>().ReverseMap();
+        //CreateMap<ReceptionDetail, DetailsofAllReceptionsDTO>().ReverseMap();
         CreateMap<User, UserRoleDTO>().ReverseMap();
         CreateMap<Office, OfficeDTO>().ReverseMap();
     }

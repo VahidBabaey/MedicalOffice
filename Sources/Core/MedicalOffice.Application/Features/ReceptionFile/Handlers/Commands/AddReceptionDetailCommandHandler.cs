@@ -2,6 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.Reception;
 using MedicalOffice.Application.Dtos.SectionDTO.Validators;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
@@ -15,14 +16,14 @@ using System.Text;
 using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
 
-public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, BaseResponse>
+public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDetailCommand, BaseResponse>
 {
     private readonly IReceptionRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddReceptionCommandHandler(IReceptionRepository repository, IMapper mapper, ILogger logger)
+    public AddReceptionDetailCommandHandler(IReceptionRepository repository, IMapper mapper, ILogger logger)
     {
         _repository = repository;
         _mapper = mapper;
@@ -30,11 +31,11 @@ public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, B
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseResponse> Handle(AddReceptionCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(AddReceptionDetailCommand request, CancellationToken cancellationToken)
     {
         BaseResponse response = new();
 
-        AddReceptionValidator validator = new();
+        AddReceptionDetailValidator validator = new();
 
         Log log = new();
 
@@ -52,13 +53,13 @@ public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, B
         {
             try
             {
-                var reception = _mapper.Map<Reception>(request.DTO);
+                //var reception = _mapper.Map<Reception>(request.DTO);
 
-                await _repository.CreateNewReception(request.DTO.LoggedInMedicalStaffId, request.DTO.ShiftId, request.DTO.OfficeId, request.DTO.PatientId, request.DTO.ReceptionType);
+                await _repository.AddReceptionService(request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.Cost, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
 
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = reception.Id });
+                //response.Data = (new { Id = reception.Id });
 
                 log.Type = LogType.Success;
             }

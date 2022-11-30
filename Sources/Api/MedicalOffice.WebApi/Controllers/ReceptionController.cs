@@ -36,8 +36,8 @@ public class ReceptionController : Controller
 
         return Ok(response);
     }
-    [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] ReceptionDiscountDTO dto)
+    [HttpPost("Discount")]
+    public async Task<ActionResult<Guid>> CreateReceptionDiscount([FromBody] ReceptionDiscountDTO dto)
     {
         var response = await _mediator.Send(new AddReceptionDiscountCommand() { DTO = dto });
 
@@ -64,6 +64,36 @@ public class ReceptionController : Controller
     public async Task<ActionResult<List<MedicalStaffNamesDTO>>> GetAllMedicalStaffs()
     {
         var response = await _mediator.Send(new GetAllMedicalStaffsNamesandRolesQuery());
+
+        return Ok(response);
+    }
+
+    [HttpPost("Reception")]
+    public async Task<ActionResult<Guid>> CreateReception([FromBody] ReceptionDTO dto)
+    {
+        var response = await _mediator.Send(new AddReceptionCommand() { DTO = dto });
+
+        return Ok(response);
+    }
+
+    [HttpPost("ReceptionDetail")]
+    public async Task<ActionResult<Guid>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto)
+    {
+        var response = await _mediator.Send(new AddReceptionDetailCommand() { DTO = dto });
+
+        return Ok(response);
+    }
+    [HttpGet("dtails")]
+    public async Task<ActionResult<List<DetailsofAllReceptionsDTO>>> GetAllDetails([FromQuery] Guid patientId)
+    {
+        var response = await _mediator.Send(new GetDetailsOfAllReceptionsQuery() { PatientId = patientId});
+
+        return Ok(response);
+    }
+    [HttpGet("dtailsLsit")]
+    public async Task<ActionResult<List<ReceptionDetailListDTO>>> GetDetailsList([FromQuery] Guid patientId)
+    {
+        var response = await _mediator.Send(new GetReceptionDetailsListQuery() { PatientId = patientId });
 
         return Ok(response);
     }

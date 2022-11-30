@@ -16,6 +16,10 @@ public class ServiceTariffDTO
     /// </summary>
     public Guid? InsuranceId { get; set; }
     /// <summary>
+    /// آیدی بیمه تکمیلی
+    /// </summary>
+    public Guid? AdditionalInsuranceId { get; set; }
+    /// <summary>
     /// آیدی سزویس
     /// </summary>
     public Guid? ServiceId { get; set; }

@@ -9,5 +9,7 @@ public class RegisterUserValidator : AbstractValidator<RegisterUserDTO>
     {
         Include(new IPhoneNumberValidator());
         Include(new INationalIdValidator());
+
+        RuleFor(p=>p.FirstName).NotEmpty().WithMessage("{PropertyName} is required");
     }
 }

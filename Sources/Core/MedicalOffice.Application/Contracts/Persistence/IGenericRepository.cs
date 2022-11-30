@@ -1,4 +1,6 @@
-﻿namespace MedicalOffice.Application.Contracts.Persistence;
+﻿using MedicalOffice.Domain.Common;
+
+namespace MedicalOffice.Application.Contracts.Persistence;
 
 public interface IGenericRepository<T1, T2> where T1 : class where T2 : struct
 {
@@ -23,5 +25,6 @@ public interface IGenericRepository<T1, T2> where T1 : class where T2 : struct
     Task<IReadOnlyList<T1>> GetAllBySearchClauseWithPagination(object searchCaluse, int skip, int take);
     T1 GetByID(params object[] ids);
     Task<T1?> GetByIDNoTrackingAsync(params object[] ids);
+    Task SoftDelete(T2 id);
 }
 

@@ -4,12 +4,12 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.Reception;
 
-public class ReceptionDTO : BaseDto<Guid>
+public class ReceptionDTO 
 {
     /// <summary>
     /// تایپ پذیرش : پرداخت مبلغ امانی - پرداخت بدهی - برگشتی - پکیج - بدون فرانشیز - عادی
     /// </summary>
-    public ReceptionType? ReceptionType { get; set; }
+    public ReceptionType ReceptionType { get; set; }
     /// <summary>
     /// تاریخ پذیرش
     /// </summary>

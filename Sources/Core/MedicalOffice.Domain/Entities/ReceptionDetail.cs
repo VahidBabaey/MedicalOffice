@@ -24,17 +24,9 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// </summary>
     public Guid OfficeId { get; set; }
     /// <summary>
-    /// خدمت
-    /// </summary>
-    public Service Service { get; set; } = new();
-    /// <summary>
-    /// آیدی خدمت
-    /// </summary>
-    public Guid ServiceId { get; set; }
-    /// <summary>
     /// تعداد
     /// </summary>
-    public float ServiceCount { get; set; }
+    public int ServiceCount { get; set; }
     /// <summary>
     /// بیمه - بیمه تکمیلی
     /// </summary>
@@ -75,4 +67,8 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// جمع کل
     /// </summary>
     public long Received { get; set; }
+    /// <summary>
+    /// جزئیات پذیرش - سرویس ها
+    /// </summary>
+    public ICollection<ReceptionDetailService> ReceptionDetailServices { get; set; } = new List<ReceptionDetailService>();
 }
