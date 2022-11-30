@@ -84,6 +84,8 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 
                 var newOffice = _officeRepository.Add(office);
 
+                await _officeRepository.SoftDelete(newOffice.Result.Id);
+
                 if (request.Roles.Any(x=>x.Equals(AdminRole.Name)))
                 {
                     var userOfficeRoles = _userOfficeRoleRepository.Add(new UserOfficeRole
@@ -104,7 +106,6 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                 return responseBuilder.Success(HttpStatusCode.OK,
                     $"{_requestTitle} succeeded",
                     newOffice.Result.Id);
-
             }
             catch (Exception error)
             {

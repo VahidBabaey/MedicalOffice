@@ -106,16 +106,28 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
         return entity;
     }
 
-    public async Task SoftDelete<T1> (T2 id) where T1 : BaseDomainEntity<T2>
+    public async Task SoftDelete(T2 id)
     {
-        var entity = await _dbContext.Set<T1>().FindAsync(id);
+        var entity = await Get(id);
 
-        if (entity != null)
+        if (entity is BaseDomainEntity<T2> baseEntity)
         {
-            entity.IsDeleted = true;
-            _dbContext.Update(entity);
+            baseEntity.IsDeleted = true;
             await _dbContext.SaveChangesAsync();
         }
+
+        //if (entity == null)
+        //    throw new ArgumentException("id does not exist!");
+
+        //var property = entity.GetType().GetProperty("IsDeleted");
+
+        //if (property == null)
+        //    throw new ArgumentException("entity is not recognized!");
+
+        //property.SetValue(entity, true);
+
+        //_dbContext.Update(entity);
+        //await _dbContext.SaveChangesAsync();
     }
 
     public IQueryable<T1> TableNoTracking => this._dbContext.Set<T1>().AsNoTracking();
