@@ -92,23 +92,6 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
         return result;
     }
-    public async Task SoftDelete(T2 id)
-    {
-        var entity = await Get(id);
-
-        if (entity == null)
-            throw new ArgumentException("id does not exist!");
-
-        var property = entity.GetType().GetProperty("IsDeleted");
-
-        if (property == null)
-            throw new ArgumentException("entity is not recognized!");
-
-        property.SetValue(entity, true);
-
-        _dbContext.Update(entity);
-        await _dbContext.SaveChangesAsync();
-    }
 
     public async Task<IReadOnlyList<T1>> GetAllBySearchClauseWithPagination(object searchCaluse, int skip, int take)
     {
