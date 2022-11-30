@@ -41,10 +41,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Dtos\ServiceDurationDTO\Validators\" />
     <Folder Include="Features\BasicInfoFile\Handlers\Commands\" />
     <Folder Include="Features\BasicInfoFile\Requests\Commands\" />
     <Folder Include="Features\RoleFile\Handlers\Commands\" />
 	<Folder Include="Features\RoleFile\Requests\Commands\" />
+	<Folder Include="Features\ServiceDurationScheduling\Handlers\Queries\" />
   </ItemGroup>
 
 </Project>

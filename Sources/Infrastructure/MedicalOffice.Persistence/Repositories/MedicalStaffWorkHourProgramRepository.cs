@@ -24,11 +24,11 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
         {
             item.MaxAppointmentCount = MedicalStaffWorkHoursProgramDTO.MaxAppointmentCount;
 
-            foreach (var items in MedicalStaffWorkHoursProgramDTO.StaffWorkHours)
+            foreach (var items in MedicalStaffWorkHoursProgramDTO.MedicalStaffWorkHours)
             {
-                if ((int)items.Day == day)
+                if ((int)items.WeekDay == day)
                 {
-                item.WeekDay = items.Day;
+                item.WeekDay = items.WeekDay;
                 item.MorningStart = items.MorningStart;
                 item.MorningEnd = items.MorningEnd;
                 item.EveningStart = items.EveningStart;
