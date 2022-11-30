@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
 using MedicalOffice.Application.Dtos.BasicInfoListDTO;
 using MedicalOffice.Application.Dtos.Common;
@@ -39,7 +40,7 @@ public class BasicInfoDetailController : Controller
 
     [HttpGet]
     [Authorize]
-    [Permission(new string[] { "ReceptionEdit" })]
+    [Permission(BasicInfoPermissions.GetAllDetails)]
     public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, Guid basicinfoId, string officeId)
     {
         var response = await _mediator.Send(new GetAllBasicInfoDetailQuery() { DTO = dto, BasicInfoId = basicinfoId });
@@ -62,7 +63,4 @@ public class BasicInfoDetailController : Controller
 
         return Ok(response);
     }
-
-
-
 }

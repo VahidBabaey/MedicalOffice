@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.OfficeDTO;
@@ -83,13 +84,12 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 
                 var newOffice = _officeRepository.Add(office);
 
-                if (request.Roles.Any(x=>x.Equals("Admin")))
+                if (request.Roles.Any(x=>x.Equals(AdminRole.Name)))
                 {
-
                     var userOfficeRoles = _userOfficeRoleRepository.Add(new UserOfficeRole
                     {
                         UserId = request.UserId,
-                        RoleId = Statics.AdminRoleId,
+                        RoleId = AdminRole.Id,
                         OfficeId = newOffice.Result.Id,
                     });
                 }
