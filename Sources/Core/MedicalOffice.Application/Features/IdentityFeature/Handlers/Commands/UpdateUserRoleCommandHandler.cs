@@ -83,7 +83,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     $"{_requestTitle} failed", error);
             }
 
-            var office = _officeRepository.Get(request.Dto.OfficeId);
+            var office = _officeRepository.GetById(request.Dto.OfficeId);
             if (office == null)
             {
                 var error = "Office not found";

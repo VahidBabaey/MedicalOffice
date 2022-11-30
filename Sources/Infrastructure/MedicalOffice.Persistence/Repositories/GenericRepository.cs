@@ -34,17 +34,26 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
     public async Task Delete(T2 id)
     {
-        var entity = await Get(id);
+        var entity = await GetById(id);
 
         if (entity != null)
             await Delete(entity);
         else
             throw new Exception($"Can not find an entity with following id: {id}");
+
+
     }
 
-    public async Task<T1?> Get(T2 id)
+    public async Task<T1> GetById(T2 id)
     {
-        return await _dbContext.Set<T1>().FindAsync(id);
+        var entity = await _dbContext.Set<T1>().FindAsync(id);
+
+        if (entity == null)
+        {
+            throw new ArgumentException("id does not exist!");
+        }
+
+        return entity;
     }
 
     public async Task<IReadOnlyList<T1>> GetAll()
@@ -92,10 +101,19 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
         return all.Skip(skip).Take(take).ToList();
     }
-    public virtual T1 GetByID(params object[] ids)
+
+    public virtual T1 GetByIds(params object[] ids)
     {
-        return _dbContext.Set<T1>().Find(ids);
+        var entities = _dbContext.Set<T1>().Find(ids);
+
+        if (entities == null)
+        {
+            return null;
+        }
+
+        return entities;
     }
+
     public async virtual Task<T1?> GetByIDNoTrackingAsync(params object[] ids)
     {
         var entity = await _dbContext.Set<T1>().FindAsync(ids);
@@ -108,26 +126,20 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
     public async Task SoftDelete(T2 id)
     {
-        var entity = await Get(id);
+        var entity = await GetById(id);
 
-        if (entity is BaseDomainEntity<T2> baseEntity)
-        {
-            baseEntity.IsDeleted = true;
-            await _dbContext.SaveChangesAsync();
-        }
+        if (entity == null)
+            throw new ArgumentException("id does not exist!");
 
-        //if (entity == null)
-        //    throw new ArgumentException("id does not exist!");
+        var property = entity.GetType().GetProperty("IsDeleted");
 
-        //var property = entity.GetType().GetProperty("IsDeleted");
+        if (property == null)
+            throw new ArgumentException("entity is not recognized!");
 
-        //if (property == null)
-        //    throw new ArgumentException("entity is not recognized!");
+        property.SetValue(entity, true);
 
-        //property.SetValue(entity, true);
-
-        //_dbContext.Update(entity);
-        //await _dbContext.SaveChangesAsync();
+        _dbContext.Update(entity);
+        await _dbContext.SaveChangesAsync();
     }
 
     public IQueryable<T1> TableNoTracking => this._dbContext.Set<T1>().AsNoTracking();
