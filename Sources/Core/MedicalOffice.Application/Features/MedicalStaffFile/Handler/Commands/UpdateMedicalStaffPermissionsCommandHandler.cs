@@ -35,14 +35,14 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
         public async Task<BaseResponse> Handle(UpdateMedicalStaffCommand request, CancellationToken cancellationToken)
         {
-            var medicalStaff = _medicalStaffRepository.GetByID(request.DTO.MedicalStaffId);
+            var medicalStaff = _medicalStaffRepository.GetById(request.DTO.MedicalStaffId);
 
             if (medicalStaff == null)
             {
                 var error = $"The user didn't registered in this office";
                 return await Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
-            var existingpermissions = _userOfficePermissionRepository.GetAll().Result.Where(uop => uop.UserId == medicalStaff.UserId && uop.OfficeId == request.OffceId).ToList();
+            var existingpermissions = _userOfficePermissionRepository.GetAll().Result.Where(uop => uop.UserId == medicalStaff.Result.UserId && uop.OfficeId == request.OffceId).ToList();
 
             var newPermissionIds = _permissionRepository.GetAll().Result.Where(m => request.DTO.PermissionIds.Contains(m.Id))
                 .Select(p => p.Id);
@@ -54,7 +54,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 userOfficePermissions.Add(new UserOfficePermission
                 {
                     OfficeId = request.OffceId,
-                    UserId = medicalStaff.UserId,
+                    UserId = medicalStaff.Result.UserId,
                     PermissionId = permissionId
                 });
             };

@@ -6,7 +6,7 @@ public interface IGenericRepository<T1, T2> where T1 : class where T2 : struct
 {
     IQueryable<T1> TableNoTracking { get; }
 
-    Task<T1?> Get(T2 id);
+    Task<T1> GetById(T2 id);
 
     Task<IReadOnlyList<T1>> GetAll();
 
@@ -23,11 +23,11 @@ public interface IGenericRepository<T1, T2> where T1 : class where T2 : struct
     Task<IReadOnlyList<T1>> GetAllBySearchClause(object searchCaluse);
 
     Task<IReadOnlyList<T1>> GetAllBySearchClauseWithPagination(object searchCaluse, int skip, int take);
-    
-    T1 GetByID(params object[] ids);
+
+    T1 GetByIds(params object[] ids);
 
     Task<T1?> GetByIDNoTrackingAsync(params object[] ids);
 
-    Task SoftDelete<T1>(T2 id) where T1 : BaseDomainEntity<T2>;
+    Task SoftDelete(T2 id);
 }
 
