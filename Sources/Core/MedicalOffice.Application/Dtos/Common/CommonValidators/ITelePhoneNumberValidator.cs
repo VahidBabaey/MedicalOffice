@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,8 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
         public ITelePhoneNumberValidator()
         {
             RuleFor(p => p.TelePhoneNumber)
-           .NotEmpty().WithMessage("{PropertyName} is required")
-           .Must(p => IsValidTelePhoneNumber(p)).WithMessage("{PropertyName} is not valid");
+           .NotEmpty().WithMessage(ValidationErrorMessages.NotEmpty)
+           .Must(p => IsValidTelePhoneNumber(p)).WithMessage(ValidationErrorMessages.NotValid);
         }
         bool IsValidTelePhoneNumber(string telePhoneNumber)
         {

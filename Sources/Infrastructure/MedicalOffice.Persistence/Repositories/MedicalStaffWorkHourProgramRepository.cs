@@ -10,11 +10,11 @@ namespace MedicalOffice.Persistence.Repositories;
 public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalStaffWorkHourProgram, Guid>, IMedicalStaffWorkHourProgramRepository
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly MedicalStaffWorkHoursProgramListDTO MedicalStaffWorkHoursProgramListDTO = null;
+    //private readonly MedicalStaffWorkHoursProgramListDTO MedicalStaffWorkHoursProgramListDTO = null;
     public MedicalStaffWorkHourProgramRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
-        MedicalStaffWorkHoursProgramListDTO = new MedicalStaffWorkHoursProgramListDTO();
+        //MedicalStaffWorkHoursProgramListDTO = new MedicalStaffWorkHoursProgramListDTO();
     }
     public async Task UpdateMedicalStaffsWorkHoursProgram(Guid MedicalStaffid,int day, MedicalStaffWorkHoursProgramDTO MedicalStaffWorkHoursProgramDTO)
     {
@@ -29,10 +29,10 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
                 if ((int)items.WeekDay == day)
                 {
                 item.WeekDay = items.WeekDay;
-                item.MorningStart = items.MorningStart;
-                item.MorningEnd = items.MorningEnd;
-                item.EveningStart = items.EveningStart;
-                item.EveningEnd = items.EveningEnd;
+                item.MorningStart = items.MorningStart.ToTimeSpan();
+                item.MorningEnd = items.MorningEnd.ToTimeSpan();
+                item.EveningStart = items.EveningStart.ToTimeSpan();
+                item.EveningEnd = items.EveningEnd.ToTimeSpan();
                 _dbContext.MedicalStaffWorkHourPrograms.Update(item);
                 }
             }   
@@ -50,7 +50,7 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
     }
     public async Task<IReadOnlyList<MedicalStaffWorkHourProgram>> GetMedicalStaffWorkHourProgramByID(Guid Id)
     {
-        return (IReadOnlyList<MedicalStaffWorkHourProgram>)await _dbContext.MedicalStaffWorkHourPrograms.Where(srv => srv.MedicalStaffId == Id).ToListAsync();
+        return await _dbContext.MedicalStaffWorkHourPrograms.Where(srv => srv.MedicalStaffId == Id).ToListAsync();
     }
 
 }

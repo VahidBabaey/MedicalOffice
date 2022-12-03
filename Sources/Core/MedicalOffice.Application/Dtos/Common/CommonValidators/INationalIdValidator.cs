@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
         public INationalIdValidator()
         {
             RuleFor(x => x.NationalID)
-                .NotEmpty().WithMessage("{PropertyName} is required")
-                .MaximumLength(10).WithMessage("Maximum length of {PropertyName} is 10")
-                .Must(x => IsValidNationalId(x)).WithMessage("{PropertyName} is not valid");
+                .NotEmpty().WithMessage(ValidationErrorMessages.NotEmpty)
+                .MaximumLength(10).WithMessage($"{ValidationErrorMessages.MaximumLength} 10")
+                .Must(x => IsValidNationalId(x)).WithMessage(ValidationErrorMessages.NotValid);
         }
 
         bool IsValidNationalId(string NationalId)

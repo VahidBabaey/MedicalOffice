@@ -25,7 +25,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Guid>> Create(ServiceDurationDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new AddServiceDurationCommand() { Dto = dto });
+            var response = await _mediator.Send(new AddServiceDurationCommand() { Dto = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -33,7 +33,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<ServiceDurationListDTO>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new GetAllServiceDurationQuery() { Dto = dto });
+            var response = await _mediator.Send(new GetAllServiceDurationQuery() { Dto = dto , OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

@@ -2,6 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
 using MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -40,9 +41,10 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
             {
                 foreach (var item in request.DTO.MedicalStaffWorkHours)
                 {
-
-                await _repository.UpdateMedicalStaffsWorkHoursProgram(request.DTO.MedicalStaffId, (int)item.WeekDay, request.DTO);
-
+                    await _repository.UpdateMedicalStaffsWorkHoursProgram(
+                        request.DTO.MedicalStaffId, 
+                        (int)item.WeekDay, 
+                        request.DTO);
                 }
 
                 response.Success = true;

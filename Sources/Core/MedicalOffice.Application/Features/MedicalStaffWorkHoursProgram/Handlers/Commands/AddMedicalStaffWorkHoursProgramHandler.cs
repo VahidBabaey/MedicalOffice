@@ -54,26 +54,21 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
                     var workHourProgram = new List<Guid>();
                     foreach (var item in request.DTO.MedicalStaffWorkHours)
                     {
-                        MedicalStaffworkhourprogram = _mapper.Map<MedicalStaffWorkHourProgram>(item);
                         MedicalStaffworkhourprogram.MedicalStaffId = request.DTO.MedicalStaffId;
                         MedicalStaffworkhourprogram.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
+                        MedicalStaffworkhourprogram.WeekDay = item.WeekDay;
+                        MedicalStaffworkhourprogram.MorningStart = item.MorningStart.ToTimeSpan();
+                        MedicalStaffworkhourprogram.MorningEnd = item.MorningEnd.ToTimeSpan();
+                        MedicalStaffworkhourprogram.EveningStart = item.EveningStart.ToTimeSpan();
+                        MedicalStaffworkhourprogram.EveningEnd = item.EveningEnd.ToTimeSpan();
 
                         var MedicalStaffprogram = await _repository.Add(MedicalStaffworkhourprogram);
-                        
                         workHourProgram.Add(MedicalStaffprogram.Id);
-                        //MedicalStaffworkhourprogram.Id = new Guid();
-                        //MedicalStaffworkhourprogram.MedicalStaffId = request.DTO.MedicalStaffId;
-                        //MedicalStaffworkhourprogram.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
-                        //MedicalStaffworkhourprogram.WeekDay = item.WeekDay;
-                        //MedicalStaffworkhourprogram.MorningStart = item.MorningStart;
-                        //MedicalStaffworkhourprogram.MorningEnd = item.MorningEnd;
-                        //MedicalStaffworkhourprogram.EveningStart = item.EveningStart;
-                        //MedicalStaffworkhourprogram.EveningEnd = item.EveningEnd;
                     }
-                    
+
                     response.Success = true;
                     response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data=workHourProgram;
+                    response.Data = workHourProgram;
 
                     log.Type = LogType.Success;
                 }

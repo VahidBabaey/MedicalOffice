@@ -84,8 +84,6 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 
                 var newOffice = _officeRepository.Add(office);
 
-                await _officeRepository.SoftDelete(newOffice.Result.Id);
-
                 if (request.Roles.Any(x=>x.Equals(AdminRole.Name)))
                 {
                     var userOfficeRoles = _userOfficeRoleRepository.Add(new UserOfficeRole

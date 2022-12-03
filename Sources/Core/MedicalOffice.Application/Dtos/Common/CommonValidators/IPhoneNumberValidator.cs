@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
         public IPhoneNumberValidator()
         {
             RuleFor(x => x.PhoneNumber)
-                .NotEmpty().WithMessage("The PhoneNumber is required")
-                .MaximumLength(11).WithMessage("Maximum length of phone number is 11")
-                .Must(x => IsValidPhoneNumber(x)).WithMessage("Phone number is not valid");
+                .NotEmpty().WithMessage(ValidationErrorMessages.NotEmpty)
+                .MaximumLength(11).WithMessage($"{ValidationErrorMessages.MaximumLength} 11")
+                .Must(x => IsValidPhoneNumber(x)).WithMessage(ValidationErrorMessages.NotValid);
         }
         bool IsValidPhoneNumber(string phoneNumber)
         {

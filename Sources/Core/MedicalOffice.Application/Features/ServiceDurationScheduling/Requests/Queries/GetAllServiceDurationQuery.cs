@@ -7,5 +7,6 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
     public class GetAllServiceDurationQuery : IRequest<BaseResponse>
     {
         public ListDto Dto { get; set; }
+        public Guid OfficeId{ get; set; }
     }
 }
