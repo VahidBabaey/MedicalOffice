@@ -69,6 +69,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<UserOfficePermission> UserOfficePermissions => Set<UserOfficePermission>();
     public DbSet<MedicalStaffOfficeSpecialization> MedicalStaffOfficeSpecializations => Set<MedicalStaffOfficeSpecialization>();
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
+    public DbSet<ServiceDuration> ServiceDurations=> Set<ServiceDuration>();
 
     //public UserResolverService UserService { get; }
 

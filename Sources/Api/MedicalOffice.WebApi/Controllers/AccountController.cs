@@ -20,18 +20,13 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         {
             _mediator = mediator;
         }
-        
-        private new ObjectResult Response(BaseResponse response)
-        {
-            return StatusCode(Convert.ToInt32(response.StatusCode), response);
-        }
 
         [HttpPost("register")]
         public async Task<ActionResult<Guid>> Register(RegisterUserDTO dto)
         {
             var response = await _mediator.Send(new RegisterUserCommand() { Dto = dto });
 
-            return Response(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [HttpPost("send-Totp")]
@@ -39,7 +34,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         {
             var response = await _mediator.Send(new SendTotpCommand() { Dto = dto });
 
-            return Response(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [HttpGet("status")]
@@ -47,7 +42,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         {
             var response = await _mediator.Send(new GetUserStatusQuery() { Dto = dto });
 
-            return Response(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [HttpPost("authenticate/totp")]
@@ -55,7 +50,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         {
             var response = await _mediator.Send(new AuthenticateByTotpCommand() { Dto = dto });
 
-            return Response(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [HttpPost("authenticate/password")]
@@ -64,7 +59,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
             var response = await _mediator.Send(new AuthenticateByPasswordCommand() { Dto = dto });
 
-            return Response(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [Authorize]
@@ -73,7 +68,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         {
             var response = await _mediator.Send(new ResetPasswordCommand() { Dto = dto });
 
-            return Response(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [Authorize]
@@ -82,7 +77,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         {
             var response = await _mediator.Send(new SetPasswordCommand() { Dto = dto });
 
-            return Response(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [Authorize(Roles ="SuperAdmin")]
@@ -91,7 +86,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         {
             var response = await _mediator.Send(new UpdateUserRoleCommand() { Dto = dto });
 
-            return Response(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
     }
 }

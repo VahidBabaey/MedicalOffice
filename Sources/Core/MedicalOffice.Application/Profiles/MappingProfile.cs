@@ -113,6 +113,7 @@ public class MappingProfile : Profile
         CreateMap<ReceptionDiscount, ReceptionDiscountDTO>().ReverseMap();
         CreateMap<User, UserRoleDTO>().ReverseMap();
         CreateMap<Office, OfficeDTO>().ReverseMap();
+        CreateMap<MedicalStaffWorkHourProgram, MedicalStaffWorkHour>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDto>

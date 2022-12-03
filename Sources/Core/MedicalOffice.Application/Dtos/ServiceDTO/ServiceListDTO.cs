@@ -13,10 +13,12 @@ public class ServiceListDTO : BaseDto<Guid>
     /// آیدی بخش
     /// </summary>
     public Guid? SectionId { get; set; }
+    
     /// <summary>
     /// نام خدمت
     /// </summary>
     public string Name { get; set; } = string.Empty;
+    
     /// <summary>
     /// کد ژنریک
     /// </summary>

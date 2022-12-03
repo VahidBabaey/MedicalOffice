@@ -38,10 +38,10 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
 
             try
             {
-                foreach (var item in request.DTO.StaffWorkHours)
+                foreach (var item in request.DTO.MedicalStaffWorkHours)
                 {
 
-                await _repository.UpdateMedicalStaffsWorkHoursProgram(request.DTO.MedicalStaffId, (int)item.Day, request.DTO);
+                await _repository.UpdateMedicalStaffsWorkHoursProgram(request.DTO.MedicalStaffId, (int)item.WeekDay, request.DTO);
 
                 }
 

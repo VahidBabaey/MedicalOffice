@@ -51,23 +51,29 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
             {
                 try
                 {
-                    foreach (var item in request.DTO.StaffWorkHours)
+                    var workHourProgram = new List<Guid>();
+                    foreach (var item in request.DTO.MedicalStaffWorkHours)
                     {
-                        MedicalStaffworkhourprogram.Id = new Guid();
+                        MedicalStaffworkhourprogram = _mapper.Map<MedicalStaffWorkHourProgram>(item);
                         MedicalStaffworkhourprogram.MedicalStaffId = request.DTO.MedicalStaffId;
                         MedicalStaffworkhourprogram.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
-                        MedicalStaffworkhourprogram.WeekDay = item.Day;
-                        MedicalStaffworkhourprogram.MorningStart = item.MorningStart;
-                        MedicalStaffworkhourprogram.MorningEnd = item.MorningEnd;
-                        MedicalStaffworkhourprogram.EveningStart = item.EveningStart;
-                        MedicalStaffworkhourprogram.EveningEnd = item.EveningEnd;
-                        var MedicalStaffprogram = await _repository.Add(MedicalStaffworkhourprogram);
 
+                        var MedicalStaffprogram = await _repository.Add(MedicalStaffworkhourprogram);
+                        
+                        workHourProgram.Add(MedicalStaffprogram.Id);
+                        //MedicalStaffworkhourprogram.Id = new Guid();
+                        //MedicalStaffworkhourprogram.MedicalStaffId = request.DTO.MedicalStaffId;
+                        //MedicalStaffworkhourprogram.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
+                        //MedicalStaffworkhourprogram.WeekDay = item.WeekDay;
+                        //MedicalStaffworkhourprogram.MorningStart = item.MorningStart;
+                        //MedicalStaffworkhourprogram.MorningEnd = item.MorningEnd;
+                        //MedicalStaffworkhourprogram.EveningStart = item.EveningStart;
+                        //MedicalStaffworkhourprogram.EveningEnd = item.EveningEnd;
                     }
                     
                     response.Success = true;
                     response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data=(new { Id = MedicalStaffworkhourprogram.Id });
+                    response.Data=workHourProgram;
 
                     log.Type = LogType.Success;
                 }

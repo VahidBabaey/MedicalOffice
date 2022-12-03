@@ -23,11 +23,6 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             _mediator = mediator;
         }
 
-        private new ObjectResult Response(BaseResponse response)
-        {
-            return StatusCode(Convert.ToInt32(response.StatusCode), response);
-        }
-
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<OfficeListDTO>>> GetByUserId()
@@ -36,7 +31,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
             var response = await _mediator.Send(new GetByUserIdQuery { UserId = Guid.Parse(userId) });
 
-            return Response(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [Authorize(Roles = "SuperAdmin,Admin")]
@@ -47,7 +42,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             var roles = _userResolverService.GetUserRoles().Result;
             var response = await _mediator.Send(new AddOfficeCommand { Dto = dto, Roles = roles , UserId  = userId });
 
-            return Response(response);
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
     }
 }
