@@ -40,7 +40,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         {
             var userId = Guid.Parse(_userResolverService.GetUserId().Result);
             var roles = _userResolverService.GetUserRoles().Result;
-            var response = await _mediator.Send(new AddOfficeCommand { Dto = dto, Roles = roles , UserId  = userId });
+            var response = await _mediator.Send(new AddOfficeCommand { DTO = dto, Roles = roles , UserId  = userId });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

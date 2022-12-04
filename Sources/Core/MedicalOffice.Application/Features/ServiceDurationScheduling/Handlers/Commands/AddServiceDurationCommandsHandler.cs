@@ -19,10 +19,10 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 {
     public class AddServiceDurationCommandsHandler : IRequestHandler<AddServiceDurationCommand, BaseResponse>
     {
+        private readonly IValidator<ServiceDurationDTO> _validator;
         private readonly IServiceDurationRepositopry _serviceDurationRepository;
         private readonly IMedicalStaffRepository _medicalStaffRepository;
         private readonly IServiceRepository _serviceRepository;
-        private readonly IValidator<ServiceDurationDTO> _validator;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
@@ -49,7 +49,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
         public async Task<BaseResponse> Handle(AddServiceDurationCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
-            var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
                 await _logger.Log(new Log
@@ -64,7 +64,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var existingMedicalStaff = await _medicalStaffRepository.CheckExistByIdAndOfficeId(request.Dto.MedicalStaffId, request.OfficeId);
+            var existingMedicalStaff = await _medicalStaffRepository.CheckExistByIdAndOfficeId(request.DTO.MedicalStaffId, request.OfficeId);
             if (!existingMedicalStaff)
             {
                 var error = new ArgumentException("This MedicalStaff does not exist!");
@@ -81,7 +81,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
             }
 
             var existingService = _serviceRepository.GetAll().Result.Any(x =>
-            x.Id == request.Dto.ServiceId &&
+            x.Id == request.DTO.ServiceId &&
             x.OfficeId == request.OfficeId);
 
             if (!existingService)
@@ -99,7 +99,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     error.Message);
             }
 
-            var serviceDuration = _mapper.Map<ServiceDuration>(request.Dto);
+            var serviceDuration = _mapper.Map<ServiceDuration>(request.DTO);
 
             try
             {
@@ -125,7 +125,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     AdditionalData = error.Message
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.NotFound,
+                return responseBuilder.Faild(HttpStatusCode.InternalServerError,
                     $"{_requestTitle} failed",
                     error.Message);
             }

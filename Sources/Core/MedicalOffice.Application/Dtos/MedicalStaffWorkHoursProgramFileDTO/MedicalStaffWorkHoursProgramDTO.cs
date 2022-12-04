@@ -3,7 +3,7 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
 
-public class MedicalStaffWorkHoursProgramDTO 
+public class MedicalStaffWorkHoursProgramDTO
 {
     public Guid MedicalStaffId { get; set; }
 
@@ -16,12 +16,12 @@ public class MedicalStaffWorkHour
 {
     public WeekDay WeekDay { get; set; }
 
-    public TimeOnly MorningStart { get; set; } = TimeOnly.MinValue;
+    public string MorningStart { get; set; }
 
-    public TimeOnly MorningEnd { get; set; } = TimeOnly.MinValue;
+    public string MorningEnd { get; set; }
 
-    public TimeOnly EveningStart { get; set; } = TimeOnly.MinValue;
+    public string EveningStart { get; set; }
 
-    public TimeOnly EveningEnd { get; set; } = TimeOnly.MinValue;
+    public string EveningEnd { get; set; }
 }
 

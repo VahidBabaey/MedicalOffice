@@ -29,22 +29,22 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// ساعت شروع صبح
         /// </summary>
-        public TimeSpan MorningStart { get; set; }
+        public string MorningStart { get; set; }
         
         /// <summary>
         /// ساعت پایان صبح
         /// </summary>
-        public TimeSpan MorningEnd { get; set; }
+        public string MorningEnd { get; set; }
         
         /// <summary>
         /// ساعت شروع عصر
         /// </summary>
-        public TimeSpan EveningStart { get; set; }
+        public string EveningStart { get; set; }
         
         /// <summary>
         /// ساعت پایان عصر
         /// </summary>
-        public TimeSpan EveningEnd { get; set; }
+        public string EveningEnd { get; set; }
 
     }
 }

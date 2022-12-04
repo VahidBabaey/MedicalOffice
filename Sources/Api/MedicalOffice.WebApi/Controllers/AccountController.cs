@@ -24,7 +24,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<Guid>> Register(RegisterUserDTO dto)
         {
-            var response = await _mediator.Send(new RegisterUserCommand() { Dto = dto });
+            var response = await _mediator.Send(new RegisterUserCommand() { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -32,7 +32,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpPost("send-Totp")]
         public async Task<ActionResult<string>> SendOtp(PhoneNumberDTO dto)
         {
-            var response = await _mediator.Send(new SendTotpCommand() { Dto = dto });
+            var response = await _mediator.Send(new SendTotpCommand() { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -40,7 +40,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpGet("status")]
         public async Task<ActionResult<UserStatusDTO>> GetUserStatus([FromQuery] PhoneNumberDTO dto)
         {
-            var response = await _mediator.Send(new GetUserStatusQuery() { Dto = dto });
+            var response = await _mediator.Send(new GetUserStatusQuery() { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -48,7 +48,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpPost("authenticate/totp")]
         public async Task<ActionResult<AuthenticatedUserDTO>> AuthenticateByTotp(AuthenticateByTotpDTO dto)
         {
-            var response = await _mediator.Send(new AuthenticateByTotpCommand() { Dto = dto });
+            var response = await _mediator.Send(new AuthenticateByTotpCommand() { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -57,7 +57,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         public async Task<ActionResult<AuthenticatedUserDTO>> AuthenticateByPassword(AuthenticateByPasswordDTO dto)
         {
 
-            var response = await _mediator.Send(new AuthenticateByPasswordCommand() { Dto = dto });
+            var response = await _mediator.Send(new AuthenticateByPasswordCommand() { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -66,7 +66,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpPatch("reset-password")]
         public async Task<ActionResult<Guid>> ResetPassword(ResetPasswordDTO dto)
         {
-            var response = await _mediator.Send(new ResetPasswordCommand() { Dto = dto });
+            var response = await _mediator.Send(new ResetPasswordCommand() { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -75,7 +75,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpPatch("set-password")]
         public async Task<ActionResult<Guid>> SetPassword([FromBody]SetPasswordDTO dto)
         {
-            var response = await _mediator.Send(new SetPasswordCommand() { Dto = dto });
+            var response = await _mediator.Send(new SetPasswordCommand() { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -84,7 +84,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpPatch("role")]
         public async Task<ActionResult<Guid>> UpdateUserRole([FromBody] UserRoleDTO dto)
         {
-            var response = await _mediator.Send(new UpdateUserRoleCommand() { Dto = dto });
+            var response = await _mediator.Send(new UpdateUserRoleCommand() { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

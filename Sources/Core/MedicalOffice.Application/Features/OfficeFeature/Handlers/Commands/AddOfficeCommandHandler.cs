@@ -46,7 +46,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
         {
             var responseBuilder = new ResponseBuilder();
 
-            var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
                 await _logger.Log(new Log
@@ -61,7 +61,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var existingOffice = _officeRepository.GetAll().Result.Any(x => x.TelePhoneNumber == request.Dto.TelePhoneNumber);
+            var existingOffice = _officeRepository.GetAll().Result.Any(x => x.TelePhoneNumber == request.DTO.TelePhoneNumber);
 
             if (existingOffice)
             {
@@ -80,7 +80,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 
             try
             {
-                var office = _mapper.Map<Office>(request.Dto);
+                var office = _mapper.Map<Office>(request.DTO);
 
                 var newOffice = _officeRepository.Add(office);
 

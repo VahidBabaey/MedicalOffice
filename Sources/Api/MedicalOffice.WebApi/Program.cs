@@ -7,7 +7,6 @@ using FluentValidation;
 using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Dtos.Identity;
 using Microsoft.AspNetCore.Mvc;
-using awesomemovie.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,11 +42,6 @@ builder.Services.AddSwaggerGen(c =>
             new List<string>()
         }
     });
-});
-
-builder.Services.Configure<JsonOptions>(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new TimeOnlyConverter());
 });
 
 builder.Services.AddApplicationServices();

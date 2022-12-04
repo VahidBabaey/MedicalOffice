@@ -18,7 +18,6 @@ namespace MedicalOffice.Application.Constants
 
         public static readonly string GreaterOrEqual = "{PropertyName} shoud be greater than or equal";
 
-
-
+        public static readonly string TimeOnlyPattern = "{PropertyName} should match with HH:MM pattern";
     }
 }

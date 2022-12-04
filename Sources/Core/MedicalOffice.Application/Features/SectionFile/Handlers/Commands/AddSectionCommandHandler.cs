@@ -33,7 +33,7 @@ public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseR
 
         Log log = new();
 
-        var validationResult = await validator.ValidateAsync(request.Dto, cancellationToken);
+        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
@@ -47,7 +47,7 @@ public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseR
         {
             try
             {
-                var section = _mapper.Map<Section>(request.Dto);
+                var section = _mapper.Map<Section>(request.DTO);
                 section.OfficeId = request.OfficeId;
 
                 section = await _repository.Add(section);

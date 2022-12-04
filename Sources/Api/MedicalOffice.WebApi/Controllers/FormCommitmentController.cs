@@ -48,7 +48,7 @@ public class FormCommitmentController : Controller
     [HttpGet]
     public async Task<ActionResult<List<FormCommitmentListDTO>>> GetAll([FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GatAllFormCommitmentQuery() { Dto = dto });
+        var response = await _mediator.Send(new GatAllFormCommitmentQuery() { DTO = dto });
 
         return Ok(response);
     }

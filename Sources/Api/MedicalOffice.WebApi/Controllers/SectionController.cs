@@ -24,7 +24,7 @@ public class SectionController : Controller
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] SectionDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddSectionCommand() { Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new AddSectionCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -40,7 +40,7 @@ public class SectionController : Controller
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateSectionDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditSectionCommand() { Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new EditSectionCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -48,7 +48,7 @@ public class SectionController : Controller
     [HttpGet]
     public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllSectionQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllSectionQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

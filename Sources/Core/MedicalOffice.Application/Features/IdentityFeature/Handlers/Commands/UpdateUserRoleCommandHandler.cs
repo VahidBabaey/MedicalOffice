@@ -51,7 +51,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         {
             var responseBuilder = new ResponseBuilder();
 
-            var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -67,7 +67,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     validationResult.Errors.Select(x => x.ErrorMessage).ToArray());
             }
 
-            var user = await _userManager.FindByNameAsync(request.Dto.PhoneNumber);
+            var user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
             if (user == null)
             {
                 var error = "User not found";
@@ -83,7 +83,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     $"{_requestTitle} failed", error);
             }
 
-            var office = _officeRepository.GetById(request.Dto.OfficeId);
+            var office = _officeRepository.GetById(request.DTO.OfficeId);
             if (office == null)
             {
                 var error = "Office not found";
@@ -99,7 +99,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     $"{_requestTitle} failed", error);
             }
 
-            var role = await _roleManager.FindByIdAsync(request.Dto.RoleId.ToString());
+            var role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
             if (role == null)
             {
                 var error = "Role not found";
@@ -118,8 +118,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 .GetAll().Result
                 .Any(uor =>
                     uor.UserId == user.Id &&
-                    uor.OfficeId == request.Dto.OfficeId &&
-                    uor.RoleId == request.Dto.RoleId);
+                    uor.OfficeId == request.DTO.OfficeId &&
+                    uor.RoleId == request.DTO.RoleId);
             if (IsuserOfficeRoleExist)
             {
                 var error = "This UserOfficeRole is Exist";
@@ -154,8 +154,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 var updateUserOfficeRole = await _usercOfficeRoleRepository.Add(new UserOfficeRole
                 {
                     UserId = user.Id,
-                    RoleId = request.Dto.RoleId,
-                    OfficeId = request.Dto.OfficeId
+                    RoleId = request.DTO.RoleId,
+                    OfficeId = request.DTO.OfficeId
                 });
 
                 await _logger.Log(new Log

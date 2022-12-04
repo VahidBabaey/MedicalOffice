@@ -1,28 +1,36 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO.Validators;
 using MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
-
+using MedicalOffice.Domain.Enums;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handlers.Commands
 {
 
     public class AddMedicalStaffWorkHoursProgramHandler : IRequestHandler<AddMedicalStaffWorkHoursProgramCommand, BaseResponse>
     {
+        private readonly IValidator<MedicalStaffWorkHoursProgramDTO> _validator;
         private readonly IMedicalStaffWorkHourProgramRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
-        private readonly string _requestTitle;
-        MedicalStaffWorkHourProgram MedicalStaffworkhourprogram = null;
 
-        public AddMedicalStaffWorkHoursProgramHandler(IMedicalStaffWorkHourProgramRepository repository, IMapper mapper, ILogger logger)
+        private readonly string _requestTitle;
+
+        public AddMedicalStaffWorkHoursProgramHandler(
+            IValidator<MedicalStaffWorkHoursProgramDTO> validator,
+            IMedicalStaffWorkHourProgramRepository repository,
+            IMapper mapper,
+            ILogger logger)
         {
-            MedicalStaffworkhourprogram = new MedicalStaffWorkHourProgram();
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -31,64 +39,95 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
 
         public async Task<BaseResponse> Handle(AddMedicalStaffWorkHoursProgramCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
+            var responseBuilder = new ResponseBuilder();
 
-            AddMedicalStaffWorkHoursProgramValidator validator = new();
-
-            Log log = new();
-
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                log.Type = LogType.Error;
-            }
-            else
-            {
-                try
+                await _logger.Log(new Log
                 {
-                    var workHourProgram = new List<Guid>();
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
+                });
+
+                return responseBuilder.Faild(HttpStatusCode.BadRequest,
+                    $"{_requestTitle} failed",
+                    validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
+            }
+
+            try
+            {
+                var existingMedicalStaffWorkHours = _repository.GetMedicalStaffWorkHourProgramByID(request.DTO.MedicalStaffId).Result.ToList();
+
+                if (existingMedicalStaffWorkHours != null)
+                {
+                    List<WeekDay> weekDays = existingMedicalStaffWorkHours.Select(x => x.WeekDay)
+                        .Intersect(request.DTO.MedicalStaffWorkHours.Select(x => x.WeekDay)).ToList();
+
+                    if (weekDays != null)
+                    {
+                        foreach (var weekDay in weekDays)
+                        {
+                            var existingWeekDayWorkHour = existingMedicalStaffWorkHours.SingleOrDefault(x => x.WeekDay == weekDay);
+
+                            var newWeekDayWorkHour = request.DTO.MedicalStaffWorkHours.SingleOrDefault(x => x.WeekDay == weekDay);
+
+                            existingWeekDayWorkHour.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
+                            existingWeekDayWorkHour.MorningStart = newWeekDayWorkHour.MorningStart;
+                            existingWeekDayWorkHour.MorningEnd = newWeekDayWorkHour.MorningEnd;
+                            existingWeekDayWorkHour.EveningStart = newWeekDayWorkHour.EveningStart;
+                            existingWeekDayWorkHour.EveningEnd = newWeekDayWorkHour.EveningEnd;
+
+                            await _repository.Update(existingWeekDayWorkHour);
+
+                            request.DTO.MedicalStaffWorkHours.Remove(newWeekDayWorkHour);
+                        }
+                    }
+                }
+
+                if (request.DTO.MedicalStaffWorkHours.Count != 0)
+                {
+                    var medicalStaffworkhourprogram = new List<MedicalStaffWorkHourProgram>();
                     foreach (var item in request.DTO.MedicalStaffWorkHours)
                     {
-                        MedicalStaffworkhourprogram.MedicalStaffId = request.DTO.MedicalStaffId;
-                        MedicalStaffworkhourprogram.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
-                        MedicalStaffworkhourprogram.WeekDay = item.WeekDay;
-                        MedicalStaffworkhourprogram.MorningStart = item.MorningStart.ToTimeSpan();
-                        MedicalStaffworkhourprogram.MorningEnd = item.MorningEnd.ToTimeSpan();
-                        MedicalStaffworkhourprogram.EveningStart = item.EveningStart.ToTimeSpan();
-                        MedicalStaffworkhourprogram.EveningEnd = item.EveningEnd.ToTimeSpan();
+                        var workHourPrograms = _mapper.Map<MedicalStaffWorkHourProgram>(item);
+                        workHourPrograms.MedicalStaffId = request.DTO.MedicalStaffId;
+                        workHourPrograms.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
 
-                        var MedicalStaffprogram = await _repository.Add(MedicalStaffworkhourprogram);
-                        workHourProgram.Add(MedicalStaffprogram.Id);
+                        medicalStaffworkhourprogram.Add(workHourPrograms);
                     }
 
-                    response.Success = true;
-                    response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data = workHourProgram;
-
-                    log.Type = LogType.Success;
+                    await _repository.AddRangle(medicalStaffworkhourprogram);
                 }
-                catch (Exception error)
+
+                var result = _repository.GetAll().Result.Select(x => x.MedicalStaffId = request.DTO.MedicalStaffId);
+
+                await _logger.Log(new Log
                 {
-                    response.Success = false;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeeded",
+                    AdditionalData = result
+                }); ;
 
-                    log.Type = LogType.Error;
-                }
+                return responseBuilder.Success(HttpStatusCode.OK,
+                    $"{_requestTitle} succeeded",
+                    result);
             }
+            catch (Exception error)
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} faild",
+                    AdditionalData = error.Message
+                });
 
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
+                return responseBuilder.Faild(HttpStatusCode.InternalServerError,
+                    $"{_requestTitle} failed",
+                    error.Message);
+            }
         }
     }
-
 }

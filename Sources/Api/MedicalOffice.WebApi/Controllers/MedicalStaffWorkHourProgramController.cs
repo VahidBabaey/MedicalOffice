@@ -34,6 +34,7 @@ public class MedicalStaffWorkHourProgramController : Controller
 
         return Ok(response);
     }
+
     [HttpPatch]
     public async Task<ActionResult<Guid>> UpdateMedicalStaffWorkHoursProgram([FromBody] MedicalStaffWorkHoursProgramDTO dto)
     {
@@ -41,6 +42,7 @@ public class MedicalStaffWorkHourProgramController : Controller
 
         return Ok(response);
     }
+
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
@@ -48,6 +50,7 @@ public class MedicalStaffWorkHourProgramController : Controller
 
         return Ok(response);
     }
+
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffWorkHoursProgramListDTO>>> GetAll(Guid id)
     {
@@ -55,5 +58,4 @@ public class MedicalStaffWorkHourProgramController : Controller
 
         return Ok(response);
     }
-
 }

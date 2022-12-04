@@ -71,8 +71,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
     public DbSet<ServiceDuration> ServiceDurations=> Set<ServiceDuration>();
 
-    //public UserResolverService UserService { get; }
-
     private readonly IUserResolverService _userResolver;
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolverService userResolver) : base(options)
     {
@@ -91,6 +89,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<User>().ToTable("Users");
         modelBuilder.Entity<Role>().ToTable("Roles");
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRole");
+
+        modelBuilder.Entity<MedicalStaffWorkHourProgram>().HasKey(entity=>entity.Id);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

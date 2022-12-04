@@ -10,11 +10,9 @@ namespace MedicalOffice.Persistence.Repositories;
 public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalStaffWorkHourProgram, Guid>, IMedicalStaffWorkHourProgramRepository
 {
     private readonly ApplicationDbContext _dbContext;
-    //private readonly MedicalStaffWorkHoursProgramListDTO MedicalStaffWorkHoursProgramListDTO = null;
     public MedicalStaffWorkHourProgramRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
-        //MedicalStaffWorkHoursProgramListDTO = new MedicalStaffWorkHoursProgramListDTO();
     }
     public async Task UpdateMedicalStaffsWorkHoursProgram(Guid MedicalStaffid,int day, MedicalStaffWorkHoursProgramDTO MedicalStaffWorkHoursProgramDTO)
     {
@@ -29,10 +27,10 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
                 if ((int)items.WeekDay == day)
                 {
                 item.WeekDay = items.WeekDay;
-                item.MorningStart = items.MorningStart.ToTimeSpan();
-                item.MorningEnd = items.MorningEnd.ToTimeSpan();
-                item.EveningStart = items.EveningStart.ToTimeSpan();
-                item.EveningEnd = items.EveningEnd.ToTimeSpan();
+                item.MorningStart = items.MorningStart;
+                item.MorningEnd = items.MorningEnd;
+                item.EveningStart = items.EveningStart;
+                item.EveningEnd = items.EveningEnd;
                 _dbContext.MedicalStaffWorkHourPrograms.Update(item);
                 }
             }   
@@ -53,4 +51,9 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
         return await _dbContext.MedicalStaffWorkHourPrograms.Where(srv => srv.MedicalStaffId == Id).ToListAsync();
     }
 
+    public async Task AddRangle(List<MedicalStaffWorkHourProgram> medicalStaffWorkHourPrograms)
+    {
+        await _dbContext.MedicalStaffWorkHourPrograms.AddRangeAsync(medicalStaffWorkHourPrograms);
+        _dbContext.SaveChanges();
+    }
 }
