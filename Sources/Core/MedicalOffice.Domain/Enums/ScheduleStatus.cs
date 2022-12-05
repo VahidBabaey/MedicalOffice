@@ -6,16 +6,13 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Domain.Enums
 {
-    public enum SchedulingTypes
+    public enum ScheduleStatus
     {
-        Confirmed = 1,
-
+        Approved = 1,
         BetweenPatients,
-        
         Canceled,
-        
         FreeTime,
-
-        FinalApproval
+        FinalApproval,
+        waiting
     }
 }

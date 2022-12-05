@@ -38,7 +38,7 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// شماره همراه
     /// </summary>
-    public string Mobile { get; set; } = string.Empty;
+    public List<string> PhoneNumber { get; set; }
     /// <summary>
     /// کد ملی
     /// </summary>
@@ -50,15 +50,15 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// بیمه
     /// </summary>
-    public Insurance? Insurance { get; set; }
+    //public Insurance? Insurance { get; set; }
     /// <summary>
     /// آیدی بیمه
     /// </summary>
-    public Guid InsId { get; set; }
+    //public Guid InsId { get; set; }
     /// <summary>
     /// کد رفرنس
     /// </summary>
-    public string ReferenceCode { get; set; } = string.Empty;
+    //public string ReferenceCode { get; set; } = string.Empty;
     /// <summary>
     /// تاربخ وفت دهی
     /// </summary>
