@@ -37,7 +37,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Queries
 
             try
             {
-                var insurances = await _repository.GetAllWithPaggination(request.Dto.Skip, request.Dto.Take);
+                var insurances = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
 
                 result = _mapper.Map<List<InsuranceListDTO>>(insurances);
 

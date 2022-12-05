@@ -40,7 +40,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.Dto, cancellationToken);
+            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -54,7 +54,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
             {
                 try
                 {
-                    var service = _mapper.Map<Service>(request.Dto);
+                    var service = _mapper.Map<Service>(request.DTO);
 
                     service = await _repository.Add(service);
 

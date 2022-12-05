@@ -53,7 +53,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             BaseResponse response = new BaseResponse();
             Log log = new();
 
-            var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
                 response.Success = false;
@@ -64,23 +64,23 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             }
             else
             {
-                var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.Dto.PhoneNumber);
+                var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber);
                 if (user == null)
                 {
                     response.Success = false;
                     response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add($"User with phone number '{request.Dto.PhoneNumber}' is't exist.");
+                    response.Errors.Add($"User with phone number '{request.DTO.PhoneNumber}' is't exist.");
 
                     log.Type = LogType.Error;
                 }
                 else
                 {
-                    var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Dto.Password, false, lockoutOnFailure: false);
+                    var result = await _signInManager.PasswordSignInAsync(user.UserName, request.DTO.Password, false, lockoutOnFailure: false);
                     if (!result.Succeeded)
                     {
                         response.Success = false;
                         response.StatusDescription = $"{_requestTitle} failed";
-                        response.Errors.Add($"credencial for {request.Dto.PhoneNumber} are'nt valid");
+                        response.Errors.Add($"credencial for {request.DTO.PhoneNumber} are'nt valid");
 
                         log.Type = LogType.Error;
                     }

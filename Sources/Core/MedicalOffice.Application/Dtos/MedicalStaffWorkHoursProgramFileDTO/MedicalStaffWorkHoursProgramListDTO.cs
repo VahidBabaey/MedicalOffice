@@ -9,10 +9,15 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO
     public class MedicalStaffWorkHoursProgramListDTO
     {
         public Guid MedicalStaffId { get; set; }
+
         public int MaxAppointmentCount { get; set; }
-        public string MorningStart { get; set; } = string.Empty;
-        public string MorningEnd { get; set; } = string.Empty;
-        public string EveningStart { get; set; } = string.Empty;
-        public string EveningEnd { get; set; } = string.Empty;
+
+        public TimeOnly MorningStart { get; set; } = TimeOnly.MinValue;
+
+        public TimeOnly MorningEnd { get; set; } = TimeOnly.MinValue;
+
+        public TimeOnly EveningStart { get; set; } = TimeOnly.MinValue;
+
+        public TimeOnly EveningEnd { get; set; } = TimeOnly.MinValue;
     }
 }

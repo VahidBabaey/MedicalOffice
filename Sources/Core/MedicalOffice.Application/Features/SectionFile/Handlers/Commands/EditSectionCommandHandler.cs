@@ -32,7 +32,7 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
 
         try
         {
-            var section = _mapper.Map<Section>(request.Dto);
+            var section = _mapper.Map<Section>(request.DTO);
 
             await _repository.Update(section);
 

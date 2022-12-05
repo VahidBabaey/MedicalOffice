@@ -10,13 +10,11 @@ namespace MedicalOffice.Persistence.Repositories;
 public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalStaffWorkHourProgram, Guid>, IMedicalStaffWorkHourProgramRepository
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly MedicalStaffWorkHoursProgramListDTO MedicalStaffWorkHoursProgramListDTO = null;
     public MedicalStaffWorkHourProgramRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
-        MedicalStaffWorkHoursProgramListDTO = new MedicalStaffWorkHoursProgramListDTO();
     }
-    public async Task UpdateMedicalStaffsWorkHoursProgram(Guid MedicalStaffid,int day, MedicalStaffWorkHoursProgramDTO MedicalStaffWorkHoursProgramDTO)
+    public async Task UpdateMedicalStaffsWorkHoursProgram(Guid MedicalStaffid, int day, MedicalStaffWorkHoursProgramDTO MedicalStaffWorkHoursProgramDTO)
     {
         var _list = await _dbContext.MedicalStaffWorkHourPrograms.Where(p => p.MedicalStaffId == MedicalStaffid && (int)p.WeekDay == day).ToListAsync();
 
@@ -24,21 +22,21 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
         {
             item.MaxAppointmentCount = MedicalStaffWorkHoursProgramDTO.MaxAppointmentCount;
 
-            foreach (var items in MedicalStaffWorkHoursProgramDTO.StaffWorkHours)
+            foreach (var items in MedicalStaffWorkHoursProgramDTO.MedicalStaffWorkHours)
             {
-                if ((int)items.Day == day)
+                if ((int)items.WeekDay == day)
                 {
-                item.WeekDay = items.Day;
-                item.MorningStart = items.MorningStart;
-                item.MorningEnd = items.MorningEnd;
-                item.EveningStart = items.EveningStart;
-                item.EveningEnd = items.EveningEnd;
-                _dbContext.MedicalStaffWorkHourPrograms.Update(item);
+                    item.WeekDay = items.WeekDay;
+                    item.MorningStart = items.MorningStart;
+                    item.MorningEnd = items.MorningEnd;
+                    item.EveningStart = items.EveningStart;
+                    item.EveningEnd = items.EveningEnd;
+                    _dbContext.MedicalStaffWorkHourPrograms.Update(item);
                 }
-            }   
+            }
         }
     }
-    public async Task DeleteMedicalStaffWorkHourProgram (Guid id)
+    public async Task DeleteMedicalStaffWorkHourProgram(Guid id)
     {
         var _list = await _dbContext.MedicalStaffWorkHourPrograms.Where(p => p.MedicalStaffId == id).ToListAsync();
 
@@ -50,7 +48,24 @@ public class MedicalStaffWorkHourProgramRepository : GenericRepository<MedicalSt
     }
     public async Task<IReadOnlyList<MedicalStaffWorkHourProgram>> GetMedicalStaffWorkHourProgramByID(Guid Id)
     {
-        return (IReadOnlyList<MedicalStaffWorkHourProgram>)await _dbContext.MedicalStaffWorkHourPrograms.Where(srv => srv.MedicalStaffId == Id).ToListAsync();
+        return await _dbContext.MedicalStaffWorkHourPrograms.Where(srv => srv.MedicalStaffId == Id).ToListAsync();
     }
 
+    public async Task<List<Guid>> AddRangle(List<MedicalStaffWorkHourProgram> medicalStaffWorkHourPrograms)
+    {
+        await _dbContext.MedicalStaffWorkHourPrograms.AddRangeAsync(medicalStaffWorkHourPrograms);
+
+        var addedEntities = _dbContext.ChangeTracker.Entries<MedicalStaffWorkHourProgram>().Select(entry => entry.Entity.Id).ToList();
+        _dbContext.SaveChanges();
+
+        return addedEntities;
+    }
+
+    public Task DeleteRangle(List<MedicalStaffWorkHourProgram> medicalStaffWorkHourPrograms)
+    {
+        _dbContext.RemoveRange(medicalStaffWorkHourPrograms);
+        _dbContext.SaveChanges();
+
+        return Task.CompletedTask;
+    }
 }

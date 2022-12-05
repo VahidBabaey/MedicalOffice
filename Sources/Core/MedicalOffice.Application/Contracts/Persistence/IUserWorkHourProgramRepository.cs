@@ -6,7 +6,13 @@ namespace MedicalOffice.Application.Contracts.Persistence
     public interface IMedicalStaffWorkHourProgramRepository : IGenericRepository<MedicalStaffWorkHourProgram, Guid>
     {
         Task DeleteMedicalStaffWorkHourProgram(Guid id);
+        
         Task<IReadOnlyList<MedicalStaffWorkHourProgram>> GetMedicalStaffWorkHourProgramByID(Guid Id);
+        
         Task UpdateMedicalStaffsWorkHoursProgram(Guid MedicalStaffid, int day, MedicalStaffWorkHoursProgramDTO MedicalStaffWorkHoursProgramDTO);
+
+        Task<List<Guid>> AddRangle(List<MedicalStaffWorkHourProgram> medicalStaffWorkHourPrograms);
+
+        Task DeleteRangle(List<MedicalStaffWorkHourProgram> medicalStaffWorkHourPrograms);   
     }
 }

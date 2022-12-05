@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using FluentValidation;
 using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Dtos.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
