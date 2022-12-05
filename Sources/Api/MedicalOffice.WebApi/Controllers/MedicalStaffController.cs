@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
@@ -59,7 +60,7 @@ public class MedicalStaffController : Controller
     }
 
     //[Authorize]
-    [Permission("DoctorTopic,khkhsk,bhjgjh")]
+    [Permission(BasicInfoPermissions.GetAllDetails)]
     [HttpPatch("permissions")]
     public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] MedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)
     {

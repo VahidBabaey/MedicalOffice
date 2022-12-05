@@ -11,12 +11,13 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
 {
     public class INationalIdValidator : AbstractValidator<INationalIdDTO>
     {
+        private static readonly int MaximumLength = 10;
         public INationalIdValidator()
         {
             RuleFor(x => x.NationalID)
-                .NotEmpty().WithMessage(ValidationErrorMessages.NotEmpty)
-                .MaximumLength(10).WithMessage($"{ValidationErrorMessages.MaximumLength} 10")
-                .Must(x => IsValidNationalId(x)).WithMessage(ValidationErrorMessages.NotValid);
+                .NotEmpty().WithMessage(ValidationMessage.Required.For<INationalIdDTO>(p => p.NationalID))
+                .MaximumLength(10).WithMessage(ValidationMessage.MaximumLength.For<INationalIdDTO>(p => p.NationalID, t => t.Equals(MaximumLength)))
+                .Must(x => IsValidNationalId(x)).WithMessage(ValidationMessage.NotValid.For<INationalIdDTO>(p => p.NationalID));
         }
 
         bool IsValidNationalId(string NationalId)

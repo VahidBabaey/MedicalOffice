@@ -14,7 +14,6 @@ using System.Net;
 
 namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handlers.Commands
 {
-
     public class AddMedicalStaffWorkHoursProgramHandler : IRequestHandler<AddMedicalStaffWorkHoursProgramCommand, BaseResponse>
     {
         private readonly IValidator<MedicalStaffWorkHoursProgramDTO> _validator;
@@ -41,6 +40,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
         {
             var responseBuilder = new ResponseBuilder();
 
+            #region CheckValidation
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
@@ -56,40 +56,46 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
                     $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
+            #endregion
 
             try
             {
-                var existingMedicalStaffWorkHours = _repository.GetMedicalStaffWorkHourProgramByID(request.DTO.MedicalStaffId).Result.ToList();
-
-                if (existingMedicalStaffWorkHours != null)
+                #region UpdateExistingWorkHours
+                var existingWorkHours = _repository.GetMedicalStaffWorkHourProgramByID(request.DTO.MedicalStaffId).Result.ToList();
+                if (existingWorkHours != null)
                 {
-                    List<WeekDay> weekDays = existingMedicalStaffWorkHours.Select(x => x.WeekDay)
+                    List<WeekDay> weekDays = existingWorkHours.Select(x => x.WeekDay)
                         .Intersect(request.DTO.MedicalStaffWorkHours.Select(x => x.WeekDay)).ToList();
 
                     if (weekDays != null)
                     {
-                        foreach (var weekDay in weekDays)
+                        foreach (var day in weekDays)
                         {
-                            var existingWeekDayWorkHour = existingMedicalStaffWorkHours.SingleOrDefault(x => x.WeekDay == weekDay);
+                            var dayWorkHour = existingWorkHours.SingleOrDefault(x => x.WeekDay == day);
 
-                            var newWeekDayWorkHour = request.DTO.MedicalStaffWorkHours.SingleOrDefault(x => x.WeekDay == weekDay);
+                            var requestedWorkHour = request.DTO.MedicalStaffWorkHours.SingleOrDefault(x => x.WeekDay == day);
 
-                            existingWeekDayWorkHour.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
-                            existingWeekDayWorkHour.MorningStart = newWeekDayWorkHour.MorningStart;
-                            existingWeekDayWorkHour.MorningEnd = newWeekDayWorkHour.MorningEnd;
-                            existingWeekDayWorkHour.EveningStart = newWeekDayWorkHour.EveningStart;
-                            existingWeekDayWorkHour.EveningEnd = newWeekDayWorkHour.EveningEnd;
+                            dayWorkHour.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
+                            dayWorkHour.MorningStart = requestedWorkHour.MorningStart;
+                            dayWorkHour.MorningEnd = requestedWorkHour.MorningEnd;
+                            dayWorkHour.EveningStart = requestedWorkHour.EveningStart;
+                            dayWorkHour.EveningEnd = requestedWorkHour.EveningEnd;
 
-                            await _repository.Update(existingWeekDayWorkHour);
+                            await _repository.Update(dayWorkHour);
 
-                            request.DTO.MedicalStaffWorkHours.Remove(newWeekDayWorkHour);
+                            request.DTO.MedicalStaffWorkHours.Remove(requestedWorkHour);
                         }
                     }
                 }
+                #endregion
+
+                #region AddNewWorkHours
+                var newWorkHours = new List<Guid>();
 
                 if (request.DTO.MedicalStaffWorkHours.Count != 0)
                 {
                     var medicalStaffworkhourprogram = new List<MedicalStaffWorkHourProgram>();
+
                     foreach (var item in request.DTO.MedicalStaffWorkHours)
                     {
                         var workHourPrograms = _mapper.Map<MedicalStaffWorkHourProgram>(item);
@@ -98,22 +104,23 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
 
                         medicalStaffworkhourprogram.Add(workHourPrograms);
                     }
-
-                    await _repository.AddRangle(medicalStaffworkhourprogram);
+                    newWorkHours = await _repository.AddRangle(medicalStaffworkhourprogram);
                 }
+                #endregion
 
-                var result = _repository.GetAll().Result.Select(x => x.MedicalStaffId = request.DTO.MedicalStaffId);
-
+                #region FinalResponse
                 await _logger.Log(new Log
                 {
                     Type = LogType.Success,
                     Header = $"{_requestTitle} succeeded",
-                    AdditionalData = result
+                    AdditionalData = newWorkHours
                 }); ;
 
                 return responseBuilder.Success(HttpStatusCode.OK,
                     $"{_requestTitle} succeeded",
-                    result);
+                    newWorkHours);
+
+                #endregion
             }
             catch (Exception error)
             {

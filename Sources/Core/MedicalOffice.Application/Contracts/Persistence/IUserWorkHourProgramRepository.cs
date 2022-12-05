@@ -11,6 +11,8 @@ namespace MedicalOffice.Application.Contracts.Persistence
         
         Task UpdateMedicalStaffsWorkHoursProgram(Guid MedicalStaffid, int day, MedicalStaffWorkHoursProgramDTO MedicalStaffWorkHoursProgramDTO);
 
-        Task AddRangle(List<MedicalStaffWorkHourProgram> medicalStaffWorkHourPrograms);
+        Task<List<Guid>> AddRangle(List<MedicalStaffWorkHourProgram> medicalStaffWorkHourPrograms);
+
+        Task DeleteRangle(List<MedicalStaffWorkHourProgram> medicalStaffWorkHourPrograms);   
     }
 }

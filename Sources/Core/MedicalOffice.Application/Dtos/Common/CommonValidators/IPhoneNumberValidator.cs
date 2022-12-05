@@ -9,14 +9,15 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Common.CommonValidators
 {
-    public class IPhoneNumberValidator: AbstractValidator<IPhoneNumberDTO>
+    public class IPhoneNumberValidator : AbstractValidator<IPhoneNumberDTO>
     {
+        private static readonly int MaximumLength = 11;
         public IPhoneNumberValidator()
         {
             RuleFor(x => x.PhoneNumber)
-                .NotEmpty().WithMessage(ValidationErrorMessages.NotEmpty)
-                .MaximumLength(11).WithMessage($"{ValidationErrorMessages.MaximumLength} 11")
-                .Must(x => IsValidPhoneNumber(x)).WithMessage(ValidationErrorMessages.NotValid);
+                .NotEmpty().WithMessage(ValidationMessage.Required.For<IPhoneNumberDTO>(p => p.PhoneNumber))
+                .MaximumLength(11).WithMessage(ValidationMessage.MaximumLength.For<IPhoneNumberDTO>(p => p.PhoneNumber, t => t.Equals(MaximumLength)))
+                .Must(x => IsValidPhoneNumber(x)).WithMessage(ValidationMessage.NotValid.For<IPhoneNumberDTO>(p => p.PhoneNumber));
         }
         bool IsValidPhoneNumber(string phoneNumber)
         {

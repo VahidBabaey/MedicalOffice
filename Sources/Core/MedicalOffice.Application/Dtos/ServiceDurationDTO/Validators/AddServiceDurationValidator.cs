@@ -10,21 +10,22 @@ namespace MedicalOffice.Application.Dtos.ServiceDurationDTO.Validators
 {
     public class ServiceDurationValidator : AbstractValidator<ServiceDurationDTO>
     {
+        private static readonly int minDuration = 1;
         public ServiceDurationValidator()
         {
             RuleFor(x => x.MedicalStaffId)
                 .NotEmpty()
-                .WithMessage(ValidationErrorMessages.NotEmpty);
+                .WithMessage(ValidationMessage.Required.For<ServiceDurationDTO>(p => p.MedicalStaffId));
 
             RuleFor(x => x.ServiceId)
                .NotEmpty()
-               .WithMessage(ValidationErrorMessages.NotEmpty);
+               .WithMessage(ValidationMessage.Required.For<ServiceDurationDTO>(p => p.ServiceId));
 
             RuleFor(x => x.Duration)
                .NotEmpty()
-               .WithMessage(ValidationErrorMessages.NotEmpty)
+               .WithMessage(ValidationMessage.Required.For<ServiceDurationDTO>(p => p.Duration))
                .GreaterThanOrEqualTo(1)
-               .WithMessage($"{ValidationErrorMessages.GreaterOrEqual} '1'");
+               .WithMessage(ValidationMessage.GreaterOrEqual.For<ServiceDurationDTO>(p => p.Duration, p => p.Equals(minDuration)));
         }
     }
 }
