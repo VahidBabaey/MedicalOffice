@@ -11,6 +11,6 @@ namespace MedicalOffice.Application.Features.RoleFile.Handlers.Queries
 {
     public class GetAllRolesQuery : IRequest<List<RoleListDTO>>
     {
-        public ListDto Dto { get; set; } = new ListDto();
+        public ListDto DTO { get; set; } = new ListDto();
     }
 }

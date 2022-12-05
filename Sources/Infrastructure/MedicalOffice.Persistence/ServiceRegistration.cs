@@ -93,6 +93,7 @@ public static class ServiceRegistration
         services.AddScoped<IReceptionRepository, ReceptionRepository>();
         services.AddScoped<IReceptionDiscountRepository, ReceptionDiscountRepository>();
         services.AddScoped<IOfficeRepository, OfficeRepository>();
+        services.AddScoped<IServiceDurationRepositopry, ServiceDurationRepository>();
 
         return services;
     }

@@ -12,6 +12,6 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Requests.Queries
 {
     public class GatAllFormCommitmentQuery : IRequest<List<FormCommitmentListDTO>>
     {
-        public ListDto Dto { get; set; } = new ListDto();
+        public ListDto DTO { get; set; } = new ListDto();
     }
 }

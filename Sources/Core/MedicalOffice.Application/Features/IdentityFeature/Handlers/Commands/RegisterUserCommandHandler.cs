@@ -47,7 +47,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         {
             var responseBuilder = new ResponseBuilder();
 
-            var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
                 await _logger.Log(new Log
@@ -62,12 +62,12 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             }
 
             var existingUser = await _userManager.Users.SingleOrDefaultAsync(p =>
-                p.PhoneNumber == request.Dto.PhoneNumber ||
-                p.NationalID == request.Dto.NationalID);
+                p.PhoneNumber == request.DTO.PhoneNumber ||
+                p.NationalID == request.DTO.NationalID);
 
             if (existingUser != null)
             {
-                var error = $"PhoneNumber: '{request.Dto.PhoneNumber}' or nationalId: '{request.Dto.NationalID}' already exists.";
+                var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";
 
                 await _logger.Log(new Log
                 {
@@ -80,9 +80,9 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             }
             try
             {
-                var user = _mapper.Map<User>(request.Dto);
+                var user = _mapper.Map<User>(request.DTO);
                 user.Id = Guid.NewGuid();
-                user.UserName = request.Dto.PhoneNumber;
+                user.UserName = request.DTO.PhoneNumber;
 
                 var userCreation = await _userManager.CreateAsync(user);
 

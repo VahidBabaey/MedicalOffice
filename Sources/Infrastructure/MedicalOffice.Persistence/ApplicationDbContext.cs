@@ -69,8 +69,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<UserOfficePermission> UserOfficePermissions => Set<UserOfficePermission>();
     public DbSet<MedicalStaffOfficeSpecialization> MedicalStaffOfficeSpecializations => Set<MedicalStaffOfficeSpecialization>();
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
-
-    //public UserResolverService UserService { get; }
+    public DbSet<ServiceDuration> ServiceDurations=> Set<ServiceDuration>();
 
     private readonly IUserResolverService _userResolver;
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolverService userResolver) : base(options)
@@ -90,9 +89,11 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<User>().ToTable("Users");
         modelBuilder.Entity<Role>().ToTable("Roles");
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRole");
+
+        modelBuilder.Entity<MedicalStaffWorkHourProgram>().HasKey(entity=>entity.Id);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    private void HandleAuditing()
     {
         var userId = _userResolver.GetUserId().Result;
 
@@ -134,7 +135,29 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
                     entry.Entity.CreatedById = Guid.Parse(userId);
             }
         }
+    }
 
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        HandleAuditing();
         return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        HandleAuditing();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        HandleAuditing();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override int SaveChanges()
+    {
+        HandleAuditing();
+        return base.SaveChanges();
     }
 }

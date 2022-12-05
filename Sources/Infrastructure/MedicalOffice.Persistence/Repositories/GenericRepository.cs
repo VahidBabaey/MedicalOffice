@@ -1,6 +1,9 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Domain.Common;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using System.Linq.Expressions;
 
 namespace MedicalOffice.Persistence.Repositories;
 
@@ -37,8 +40,6 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
             await Delete(entity);
         else
             throw new Exception($"Can not find an entity with following id: {id}");
-
-
     }
 
     public async Task<T1> GetById(T2 id)

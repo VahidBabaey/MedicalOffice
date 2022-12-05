@@ -6,7 +6,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Requests.Commands
 {
     public class AddOfficeCommand : IRequest<BaseResponse>
     {
-        public OfficeDTO Dto { get; set; }
+        public OfficeDTO DTO { get; set; }
 
         public List<string> Roles { get; set; }
 

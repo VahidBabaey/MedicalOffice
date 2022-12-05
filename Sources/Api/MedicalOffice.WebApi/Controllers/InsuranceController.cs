@@ -49,7 +49,7 @@ public class InsuranceController : Controller
     [HttpGet]
     public async Task<ActionResult<List<InsuranceListDTO>>> GetAll([FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllInsuranceQuery() { Dto = dto });
+        var response = await _mediator.Send(new GetAllInsuranceQuery() { DTO = dto });
 
         return Ok(response);
     }

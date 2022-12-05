@@ -36,7 +36,7 @@ namespace MedicalOffice.Application.Features.RoleFile.Handlers.Queries
 
             try
             {
-                var role = await _repository.GetAllWithPaggination(request.Dto.Skip, request.Dto.Take);
+                var role = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
 
                 result = _mapper.Map<List<RoleListDTO>>(role);
 

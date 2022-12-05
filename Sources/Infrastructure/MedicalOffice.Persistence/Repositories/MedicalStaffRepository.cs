@@ -99,18 +99,14 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
     }
 
     public async Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber)
-        {
-            bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.PhoneNumber == phoneNumber);
-            return isExist;
-        }
-
-    public Task<IEnumerable<MedicalStaffNameListDTO>> GetAllUsersName()
     {
-        throw new NotImplementedException();
+        bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.PhoneNumber == phoneNumber);
+        return isExist;
     }
 
-    public Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId)
+    public async Task<bool> CheckExistByIdAndOfficeId(Guid MedicalStaffId, Guid officeId)
     {
-        throw new NotImplementedException();
+        bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.Id == MedicalStaffId);
+        return isExist;
     }
 }
