@@ -5,7 +5,7 @@ namespace MedicalOffice.Domain.Entities;
 /// <summary>
 /// نوع وقت دهی
 /// </summary>
-public class AppointmentType : BaseDomainEntity<Guid>
+public class AppointmentTypePast : BaseDomainEntity<Guid>
 {
     /// <summary>
     /// عنوان نوع وقت دهی

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Domain.Enums
 {
-    public enum ScheduleStatus
+    public enum AppointmentType
     {
         Approved = 1,
         BetweenPatients,

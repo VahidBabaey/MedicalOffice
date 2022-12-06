@@ -26,7 +26,7 @@ namespace MedicalOffice.Domain.Entities
 
         public Service Service { get; set; }
 
-        public ScheduleStatus Status { get; set; }
+        public Enums.AppointmentType Status { get; set; }
 
         public string StartTime { get; set; } = string.Empty;
 

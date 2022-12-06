@@ -13,11 +13,11 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServiceDurationScheduleController : ControllerBase
+    public class ServiceDurationController : Controller
     {
         private readonly IMediator _mediator;
 
-        public ServiceDurationScheduleController(IMediator mediator)
+        public ServiceDurationController(IMediator mediator)
         {
             _mediator = mediator;
         }
