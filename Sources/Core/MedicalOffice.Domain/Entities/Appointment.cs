@@ -16,7 +16,7 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// پزشک
     /// </summary>
-    public MedicalStaff? MedicalStaff { get; set; }
+    public MedicalStaff MedicalStaff { get; set; }
     
     /// <summary>
     /// آیدی پزشک
@@ -32,6 +32,16 @@ public class Appointment : BaseDomainEntity<Guid>
     /// آیدی سرویس
     /// </summary>
     public Guid ServiceId{ get; set; }
+
+    /// <summary>
+    /// اتاق یا بخش
+    /// </summary>
+    public Section Section{ get; set; }
+
+    /// <summary>
+    /// آیدی اتاق یا بخش
+    /// </summary>
+    public Guid SectionId{ get; set; }
 
     /// <summary>
     /// نام بیمار
@@ -54,14 +64,9 @@ public class Appointment : BaseDomainEntity<Guid>
     public string NationalId { get; set; } = string.Empty;
     
     /// <summary>
-    /// خدمات وقت دهی
-    /// </summary>
-    public ICollection<AppointmentService>? AppointmentServices { get; set; }
-    
-    /// <summary>
     /// تاریخ وفت دهی
     /// </summary>
-    public string Date { get; set; } = string.Empty;
+    public DateTime Date { get; set; } = default;
     
     /// <summary>
     /// تایم شروع
@@ -72,6 +77,11 @@ public class Appointment : BaseDomainEntity<Guid>
     /// تایم پایان
     /// </summary>
     public string EndTime { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// خدمات وقت دهی
+    /// </summary>
+    public ICollection<AppointmentService>? AppointmentServices { get; set; }
 
     #region UnnecessaryProperties
     ///// <summary>
