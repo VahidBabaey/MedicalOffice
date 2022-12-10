@@ -1,6 +1,7 @@
 ﻿using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO
+namespace MedicalOffice.Application.Dtos
 {
     public class AppointmentDto
     {
