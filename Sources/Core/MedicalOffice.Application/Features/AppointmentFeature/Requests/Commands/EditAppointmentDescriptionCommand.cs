@@ -2,7 +2,7 @@
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Responses;
 
-namespace MedicalOffice.Application.Features.Appointment.Requests.Commands
+namespace MedicalOffice.Application.Features.AppointmentFeature.Requests.Commands
 {
     public class EditAppointmentDescriptionCommand : IRequest<BaseResponse>
     {

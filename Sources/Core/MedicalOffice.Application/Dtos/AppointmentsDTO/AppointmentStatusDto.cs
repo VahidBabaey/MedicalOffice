@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class AppointmentStatusDto
+    public class AppointmentStatusDTO
     {
         public Guid AppointmentId { get; set; }
 

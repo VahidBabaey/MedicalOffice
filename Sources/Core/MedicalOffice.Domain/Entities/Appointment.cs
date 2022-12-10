@@ -56,12 +56,12 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// شماره همراه
     /// </summary>
-    public List<string> PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; }
     
     /// <summary>
     /// کد ملی
     /// </summary>
-    public string NationalId { get; set; } = string.Empty;
+    public string NationalID { get; set; } = string.Empty;
     
     /// <summary>
     /// تاریخ وفت دهی

@@ -70,7 +70,7 @@ namespace MedicalOffice.Application.Constants
         public static string For<T>(this ValidationError error, params Expression<Func<T, object>>[] expressions)
         {
             var propertyNames = expressions.Select(exp => GetPropertyName(exp)).ToArray();
-            var result = string.Format(error.Message, propertyNames);
+            var result = string.Format(error.Message, expressions);
 
             return result;
         }

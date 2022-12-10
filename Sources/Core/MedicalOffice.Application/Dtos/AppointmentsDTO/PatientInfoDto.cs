@@ -1,6 +1,6 @@
 ﻿namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class PatientInfoDto
+    public class PatientInfoDTO
     {
         public string Name { get; set; }
 
@@ -8,7 +8,7 @@
         
         public string PhoneNumbers { get; set; }
 
-        public string NationalId { get; set; }
+        public string NationalID { get; set; }
 
         public string ReferrerId{ get; set; }
 

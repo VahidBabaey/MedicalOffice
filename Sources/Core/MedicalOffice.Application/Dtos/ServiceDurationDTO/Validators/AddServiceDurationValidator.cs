@@ -24,7 +24,7 @@ namespace MedicalOffice.Application.Dtos.ServiceDurationDTO.Validators
             RuleFor(x => x.Duration)
                .NotEmpty()
                .WithMessage(ValidationMessage.Required.For<ServiceDurationDTO>(p => p.Duration))
-               .GreaterThanOrEqualTo(1)
+               .GreaterThanOrEqualTo(minDuration)
                .WithMessage(ValidationMessage.GreaterOrEqual.For<ServiceDurationDTO>(p => p.Duration, p => p.Equals(minDuration)));
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class DateAppointmentDto
+    public class DateAppointmentDTO
     {
         public DateTime Date { get; set; }
 
