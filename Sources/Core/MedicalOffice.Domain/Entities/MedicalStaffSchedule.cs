@@ -4,7 +4,7 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Domain.Entities
 {
-    public class MedicalStaffWorkHourProgram : BaseDomainEntity<Guid>
+    public class MedicalStaffSchedule : BaseDomainEntity<Guid>
     {
         /// <summary>
         /// کادر درمان

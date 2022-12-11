@@ -2,7 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Commands;
+using MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using System;
@@ -11,17 +11,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handlers.Commands
+namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handlers.Commands
 {
 
-    public class DeleteMedicalStaffWorkHoursProgramHandler : IRequestHandler<DeleteMedicalStaffWorkHoursProgramCommand, BaseResponse>
+    public class DeleteMedicalStaffScheduleHandler : IRequestHandler<DeleteMedicalStaffScheduleCommand, BaseResponse>
     {
-        private readonly IMedicalStaffWorkHourProgramRepository _repository;
+        private readonly IMedicalStaffScheduleRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public DeleteMedicalStaffWorkHoursProgramHandler(IMedicalStaffWorkHourProgramRepository repository, IMapper mapper, ILogger logger)
+        public DeleteMedicalStaffScheduleHandler(IMedicalStaffScheduleRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -29,14 +29,14 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(DeleteMedicalStaffWorkHoursProgramCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(DeleteMedicalStaffScheduleCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
             Log log = new();
 
             try
             {
-                await _repository.DeleteMedicalStaffWorkHourProgram(request.MedicalStaffId);
+                await _repository.DeleteMedicalStaffSchedule(request.MedicalStaffId);
 
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";

@@ -1,18 +1,18 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Domain.Enums;
 
-namespace MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
+namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 
-public class MedicalStaffWorkHoursProgramDTO
+public class MedicalStaffScheduleDTO
 {
     public Guid MedicalStaffId { get; set; }
 
     public int MaxAppointmentCount { get; set; }
 
-    public List<MedicalStaffWorkHour> MedicalStaffWorkHours { get; set; } = new();
+    public List<MedicalStaffDaySchedule> MedicalStaffSchedule { get; set; } = new();
 }
 
-public class MedicalStaffWorkHour
+public class MedicalStaffDaySchedule
 {
     public WeekDay WeekDay { get; set; }
 

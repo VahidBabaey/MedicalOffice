@@ -36,7 +36,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<KMultiplierDetail> KMultiplierDetails => Set<KMultiplierDetail>();
     public DbSet<MedicalAction> MedicalActions => Set<MedicalAction>();
     public DbSet<MedicalStaff> MedicalStaffs => Set<MedicalStaff>();
-    public DbSet<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms => Set<MedicalStaffWorkHourProgram>();
+    public DbSet<MedicalStaffSchedule> MedicalStaffSchedules => Set<MedicalStaffSchedule>();
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<MemberShipService> MemberShipServices => Set<MemberShipService>();
     public DbSet<Office> Offices => Set<Office>();
@@ -90,7 +90,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<Role>().ToTable("Roles");
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRole");
 
-        modelBuilder.Entity<MedicalStaffWorkHourProgram>().HasKey(entity=>entity.Id);
+        modelBuilder.Entity<MedicalStaffSchedule>().HasKey(entity=>entity.Id);
     }
 
     private void HandleAuditing()

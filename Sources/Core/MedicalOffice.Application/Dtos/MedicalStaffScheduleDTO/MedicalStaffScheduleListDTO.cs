@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO
+namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO
 {
-    public class MedicalStaffWorkHoursProgramListDTO
+    public class MedicalStaffScheduleListDTO
     {
         public Guid MedicalStaffId { get; set; }
 

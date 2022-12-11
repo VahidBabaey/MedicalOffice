@@ -2,8 +2,8 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
-using MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Queries;
+using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
+using MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Requests.Queries;
 using MedicalOffice.Application.Models;
 using System;
 using System.Collections.Generic;
@@ -11,17 +11,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handlers.Queries
+namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handlers.Queries
 {
 
-    public class GetAllMedicalStaffWorkHoursProgramHandler : IRequestHandler<GetAllMedicalStaffWorkHoursQuery, List<MedicalStaffWorkHoursProgramListDTO>>
+    public class GetAllMedicalStaffScheduleHandler : IRequestHandler<GetAllMedicalStaffScheduleQuery, List<MedicalStaffScheduleListDTO>>
     {
-        private readonly IMedicalStaffWorkHourProgramRepository _repository;
+        private readonly IMedicalStaffScheduleRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllMedicalStaffWorkHoursProgramHandler(IMedicalStaffWorkHourProgramRepository repository, IMapper mapper, ILogger logger)
+        public GetAllMedicalStaffScheduleHandler(IMedicalStaffScheduleRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -29,17 +29,17 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<MedicalStaffWorkHoursProgramListDTO>> Handle(GetAllMedicalStaffWorkHoursQuery request, CancellationToken cancellationToken)
+        public async Task<List<MedicalStaffScheduleListDTO>> Handle(GetAllMedicalStaffScheduleQuery request, CancellationToken cancellationToken)
         {
-            List<MedicalStaffWorkHoursProgramListDTO> result = new();
+            List<MedicalStaffScheduleListDTO> result = new();
 
             Log log = new();
 
             try
             {
-                var MedicalStaffworkhoursprograms = await _repository.GetMedicalStaffWorkHourProgramByID(request.MedicalStaffId);
+                var MedicalStaffworkhoursprograms = await _repository.GetMedicalStaffScheduleByID(request.MedicalStaffId);
 
-                result = _mapper.Map<List<MedicalStaffWorkHoursProgramListDTO>>(MedicalStaffworkhoursprograms);
+                result = _mapper.Map<List<MedicalStaffScheduleListDTO>>(MedicalStaffworkhoursprograms);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

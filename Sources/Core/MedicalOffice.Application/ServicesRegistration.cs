@@ -13,9 +13,9 @@ using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Dtos.OfficeDTO.Validators;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO.Validators;
-using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Domain.Entities;
-using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO.Validators;
+using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators;
 
 namespace MedicalOffice.Application;
 
@@ -44,10 +44,11 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<ServiceDurationDTO>, ServiceDurationValidator>();
         #endregion
 
-        #region MedicalStaffWorkHourProgram
-        services.AddScoped<IValidator<MedicalStaffWorkHoursProgramDTO>, MedicalStaffWorkHoursProgramValidator>();
-        services.AddScoped<IValidator<MedicalStaffWorkHour>, MedicalStaffWorkHourValidator>();
+        #region MedicalStaffSchedule
+        services.AddScoped<IValidator<MedicalStaffScheduleDTO>, MedicalStaffScheduleValidator>();
+        services.AddScoped<IValidator<MedicalStaffDaySchedule>, MedicalStaffDayScheduleValidator>();
         #endregion
+
 
         return services;
     }

@@ -8,7 +8,7 @@ using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Dtos.FormCommitmentDTO;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
-using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormDTO;
@@ -80,8 +80,8 @@ public class MappingProfile : Profile
         CreateMap<MedicalStaff, MedicalStaffListDTO>().ReverseMap();
         CreateMap<MedicalStaff, MedicalStaffNameListDTO>().ReverseMap();
         CreateMap<MedicalStaff, MedicalStaffNamesDTO>().ReverseMap();
-        CreateMap<MedicalStaffWorkHourProgram, MedicalStaffWorkHoursProgramDTO>().ReverseMap();
-        CreateMap<MedicalStaffWorkHourProgram, MedicalStaffWorkHoursProgramListDTO>().ReverseMap();
+        CreateMap<MedicalStaffSchedule, MedicalStaffScheduleDTO>().ReverseMap();
+        CreateMap<MedicalStaffSchedule, MedicalStaffScheduleListDTO>().ReverseMap();
         CreateMap<BasicInfo, BasicInfoListDTO>().ReverseMap();
         CreateMap<BasicInfoDetail, BasicInfoDetailDTO>().ReverseMap();
         CreateMap<BasicInfoDetail, illnessNamesListDTO>()
@@ -114,7 +114,7 @@ public class MappingProfile : Profile
         CreateMap<ReceptionDiscount, ReceptionDiscountDTO>().ReverseMap();
         CreateMap<User, UserRoleDTO>().ReverseMap();
         CreateMap<Office, OfficeDTO>().ReverseMap();
-        CreateMap<MedicalStaffWorkHourProgram, MedicalStaffWorkHour>().ReverseMap();
+        CreateMap<MedicalStaffSchedule, MedicalStaffDaySchedule>().ReverseMap();
         CreateMap<ServiceDuration, ServiceDurationDTO>().ReverseMap();
     }
 

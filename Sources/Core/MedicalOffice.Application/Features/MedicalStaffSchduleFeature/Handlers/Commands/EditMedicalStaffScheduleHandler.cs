@@ -2,8 +2,8 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
-using MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Commands;
+using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
+using MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
@@ -13,17 +13,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handlers.Commands
+namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handlers.Commands
 {
 
-    public class EditMedicalStaffWorkHoursProgramHandler : IRequestHandler<EditMedicalStaffWorkHoursProgramCommand, BaseResponse>
+    public class EditMedicalStaffScheduleHandler : IRequestHandler<EditMedicalStaffScheduleCommand, BaseResponse>
     {
-        private readonly IMedicalStaffWorkHourProgramRepository _repository;
+        private readonly IMedicalStaffScheduleRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditMedicalStaffWorkHoursProgramHandler(IMedicalStaffWorkHourProgramRepository repository, IMapper mapper, ILogger logger)
+        public EditMedicalStaffScheduleHandler(IMedicalStaffScheduleRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -31,7 +31,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(EditMedicalStaffWorkHoursProgramCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(EditMedicalStaffScheduleCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
 
@@ -39,9 +39,9 @@ namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Handle
 
             try
             {
-                foreach (var item in request.DTO.MedicalStaffWorkHours)
+                foreach (var item in request.DTO.MedicalStaffSchedule)
                 {
-                    await _repository.UpdateMedicalStaffsWorkHoursProgram(
+                    await _repository.UpdateMedicalStaffsSchedule(
                         request.DTO.MedicalStaffId, 
                         (int)item.WeekDay, 
                         request.DTO);

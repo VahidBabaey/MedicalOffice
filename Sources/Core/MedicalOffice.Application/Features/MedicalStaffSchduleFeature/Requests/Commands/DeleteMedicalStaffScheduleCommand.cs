@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.MedicalStaffWorkHoursProgram.Requests.Commands
+namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Requests.Commands
 {
-    public class DeleteMedicalStaffWorkHoursProgramCommand : IRequest<BaseResponse>
+    public class DeleteMedicalStaffScheduleCommand : IRequest<BaseResponse>
     {
         public Guid MedicalStaffId { get; set; }
     }

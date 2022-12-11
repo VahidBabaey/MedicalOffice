@@ -68,6 +68,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         public async Task<ActionResult<List<DateAppointmentDTO>>> GetAllDoctorTimes([FromQuery] DoctorTimesDTO dto)
         {
             var response = await _mediator.Send(new GetDoctorDateTimesQuery() { DTO = dto });
+
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 

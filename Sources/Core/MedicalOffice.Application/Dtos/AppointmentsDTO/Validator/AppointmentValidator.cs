@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Dtos.Common.CommonValidators;
-using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
