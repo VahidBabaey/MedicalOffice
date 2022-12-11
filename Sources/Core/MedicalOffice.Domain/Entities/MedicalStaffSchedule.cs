@@ -24,7 +24,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// روزهای هفته
         /// </summary>
-        public WeekDay WeekDay { get; set; }
+        public DayOfWeek WeekDay { get; set; }
         
         /// <summary>
         /// ساعت شروع صبح

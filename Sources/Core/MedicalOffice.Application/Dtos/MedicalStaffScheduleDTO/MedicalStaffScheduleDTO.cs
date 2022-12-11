@@ -14,7 +14,7 @@ public class MedicalStaffScheduleDTO
 
 public class MedicalStaffDaySchedule
 {
-    public WeekDay WeekDay { get; set; }
+    public DayOfWeek WeekDay { get; set; }
 
     public string MorningStart { get; set; }
 

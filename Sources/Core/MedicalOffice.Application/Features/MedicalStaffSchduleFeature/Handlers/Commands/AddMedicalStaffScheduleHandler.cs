@@ -64,7 +64,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
                 var existingSchedule = _repository.GetMedicalStaffScheduleByID(request.DTO.MedicalStaffId).Result.ToList();
                 if (existingSchedule != null)
                 {
-                    List<WeekDay> weekDays = existingSchedule.Select(x => x.WeekDay)
+                    List<DayOfWeek> weekDays = existingSchedule.Select(x => x.WeekDay)
                         .Intersect(request.DTO.MedicalStaffSchedule.Select(x => x.WeekDay)).ToList();
 
                     if (weekDays != null)

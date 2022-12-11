@@ -2,7 +2,7 @@
 {
     public class SearchAppointmentsDTO
     {
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
         public List<FilterFields> FilterFields { get; set; }
     }
 
