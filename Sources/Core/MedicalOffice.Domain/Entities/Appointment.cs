@@ -46,12 +46,12 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// نام بیمار
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public string PatientName { get; set; } = string.Empty;
 
     /// <summary>
     /// نام خانوادگی بیمار
     /// </summary>
-    public string LastName { get; set; } = string.Empty;
+    public string PatientLastName { get; set; } = string.Empty;
 
     /// <summary>
     /// شماره همراه

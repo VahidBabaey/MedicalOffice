@@ -3,6 +3,7 @@ using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
 using MedicalOffice.Application.Models;
@@ -15,6 +16,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+#nullable disable
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 {
@@ -72,130 +74,141 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
+            var appointments = new List<AppointmentListDTO>();
+            if (request.DTO.FilterFields.Count == 0)
+            {
+                //get all appointments of date
+                appointments = _appointmentRepository.GetByDate(request.DTO.Date).Result;
+                return await response(responseBuilder, appointments);
+            }
             if (request.DTO.FilterFields.Count == 1)
             {
-
-            }
-            var appointments = new List<IReadOnlyList<Appointment>>();
-            foreach (var requestedField in request.DTO.FilterFields)
-            {
-                //Get all appointments
-                var existingAppointments = _appointmentRepository
-                    .GetAllBySearchClause(new { requestedField, request.DTO.Date }).Result
-                    .OrderBy(x => TimeOnly.Parse(x.StartTime)).ToList();
-
-                //Create staffFreeTimes object for each requested field
-                var staffFreeTimes = _mapper.Map<StaffFreeTimes>(requestedField);
-
-                //Get staff schedule by  
-                var staffSchedule = _staffScheduleRepository.GetAllBySearchClause(new
+                if (request.DTO.FilterFields[0].MedicalStaffId == null &&
+                    request.DTO.FilterFields[0].ServiceId != null)
                 {
-                    requestedField.MedicalStaffId,
-                    request.DTO.Date.DayOfWeek
-                });
-
-                var serviceDuration = _serviceDurationRepository.GetAllBySearchClause(new
-                {
-                    requestedField.MedicalStaffId,
-                    requestedField.ServiceId
-                }).Result.Select(x => x.Duration).First();
-
-                if (staffSchedule != null)
-                {
-                    var staffShift = _mapper.Map<staffShift>(staffSchedule);
-                    if (existingAppointments != null)
-                    {
-                        var times = new List<TimeOnly>();
-                        for (int i = 0; i < existingAppointments.Count; i++)
-                        {
-                            if (i == 0 &&
-                                TimeOnly.Parse(existingAppointments[i].StartTime) > TimeOnly.Parse(staffShift.MorningStart))
-                            {
-                                var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(staffShift.MorningStart),
-                                    TimeOnly.Parse(existingAppointments[i].StartTime)
-                                };
-                                times.AddRange(freeTimes);
-                            }
-                            else if (i == existingAppointments.Count - 1 &&
-                                TimeOnly.Parse(existingAppointments[i].EndTime) < TimeOnly.Parse(staffShift.EveningEnd))
-                            {
-                                var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(existingAppointments[i].EndTime),
-                                    TimeOnly.Parse(staffShift.EveningEnd)
-                                };
-                                times.AddRange(freeTimes);
-                            }
-                            else
-                            {
-                                var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(existingAppointments[i - 1].EndTime),
-                                    TimeOnly.Parse(existingAppointments[i].StartTime)
-                                };
-                                times.AddRange(freeTimes);
-                            }
-                        }
-
-                        foreach (var item in times)
-                        {
-                            if (item.IsBetween
-                                (TimeOnly.Parse(staffShift.MorningEnd),
-                                TimeOnly.Parse(staffShift.EveningStart)))
-                            {
-                                times.Remove(item);
-                            }
-                        }
-
-                        for (int i = 0; i < times.Count; i++)
-                        {
-                            freeTimeGenerator(staffFreeTimes, serviceDuration, times[i], times[i + 1]);
-                            //int x = 0;
-                            //x += (int)(times[i + 1] - times[i]).TotalMinutes / serviceDuration;
-
-                            //time[] freeTimes = new time[x];
-
-                            //for (int j = 0; j <= freeTimes.Length; j++)
-                            //{
-                            //    if (j == 0)
-                            //    {
-                            //        freeTimes[j] = new time
-                            //        {
-                            //            StartTime = times[i],
-                            //            EndTime = times[i].AddMinutes(serviceDuration)
-                            //        };
-                            //    }
-                            //    else
-                            //    {
-                            //        freeTimes[j] = new time
-                            //        {
-                            //            StartTime = freeTimes[j - 1].EndTime,
-                            //            EndTime = freeTimes[j - 1].EndTime.AddMinutes(serviceDuration)
-                            //        };
-                            //    }
-
-                            //    staffFreeTimes.FreeTimes.Add(freeTimes[j]);
-                            //}
-                        }
-                    }
-                    else
-                    {
-                        var morningStart = TimeOnly.Parse(staffSchedule.Result.Select(x => x.MorningStart).First());
-                        var morningEnd = TimeOnly.Parse(staffSchedule.Result.Select(x => x.MorningEnd).First());
-                        var eveningStart = TimeOnly.Parse(staffSchedule.Result.Select(x => x.EveningStart).First());
-                        var eveningEnd = TimeOnly.Parse(staffSchedule.Result.Select(x => x.EveningEnd).First());
-
-                        freeTimeGenerator(staffFreeTimes, serviceDuration, morningStart, morningEnd);
-                        freeTimeGenerator(staffFreeTimes, serviceDuration, eveningStart, eveningEnd);
-                    }
+                    appointments = _appointmentRepository.GetByDate(request.DTO.Date, serviceId: request.DTO.FilterFields[0].ServiceId).Result;
+                    return await response(responseBuilder, appointments);
                 }
 
+                if (request.DTO.FilterFields[0].MedicalStaffId != null &&
+                    request.DTO.FilterFields[0].ServiceId == null)
+                {
+                    appointments = _appointmentRepository.GetByDate(request.DTO.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
+
+                    return await response(responseBuilder, appointments);
+                }
+
+                if (request.DTO.FilterFields[0].MedicalStaffId != null &&
+                    request.DTO.FilterFields[0].ServiceId != null)
+                {
+                    appointments = _appointmentRepository.GetByDate(request.DTO.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
+
+                    var serviceName = _serviceRepository.GetAllBySearchClause(new { request.DTO.FilterFields[0].ServiceId }).Result.Select(x => x.Name).First();
+
+                    var staffSchedule = _staffScheduleRepository.GetStaffScheduleByDate(
+                        request.DTO.FilterFields[0].MedicalStaffId,
+                        request.DTO.Date.DayOfWeek).Result;
+
+                    var service = _serviceDurationRepository.GetService(
+                        request.DTO.FilterFields[0].MedicalStaffId,
+                        request.DTO.FilterFields[0].ServiceId
+                   ).Result;
+
+                    if (staffSchedule != null)
+                    {
+                        var staffFreeTimes = new List<time>();
+                        if (appointments != null)
+                        {
+                            var times = new List<TimeOnly>();
+                            for (int i = 0; i < appointments.Count; i++)
+                            {
+                                if (i == 0 &&
+                                TimeOnly.Parse(appointments[i].StartTime) > TimeOnly.Parse(staffSchedule.MorningStart))
+                                {
+                                    var freeTimes = new List<TimeOnly> {
+                                    TimeOnly.Parse(staffSchedule.MorningStart),
+                                    TimeOnly.Parse(appointments[i].StartTime)
+                                };
+                                    times.AddRange(freeTimes);
+                                }
+                                else if (i == appointments.Count - 1 &&
+                                    TimeOnly.Parse(appointments[i].EndTime) < TimeOnly.Parse(staffSchedule.EveningEnd))
+                                {
+                                    var freeTimes = new List<TimeOnly> {
+                                    TimeOnly.Parse(appointments[i].EndTime),
+                                    TimeOnly.Parse(staffSchedule.EveningEnd)
+                                };
+                                    times.AddRange(freeTimes);
+                                }
+                                else
+                                {
+                                    var freeTimes = new List<TimeOnly> {
+                                    TimeOnly.Parse(appointments[i - 1].EndTime),
+                                    TimeOnly.Parse(appointments[i].StartTime)
+                                };
+                                    times.AddRange(freeTimes);
+                                }
+                            }
+
+                            foreach (var item in times)
+                            {
+                                if (item.IsBetween
+                                    (TimeOnly.Parse(staffSchedule.MorningEnd),
+                                    TimeOnly.Parse(staffSchedule.EveningStart)))
+                                {
+                                    times.Remove(item);
+                                }
+                            }
+
+                            for (int i = 0; i < times.Count; i++)
+                            {
+                                freeTimeGenerator(staffFreeTimes, service.Duration, times[i], times[i + 1]);
+                            }
+                        }
+                        else
+                        {
+                            var morningStart = TimeOnly.Parse(staffSchedule.MorningStart);
+                            var morningEnd = TimeOnly.Parse(staffSchedule.MorningEnd);
+                            var eveningStart = TimeOnly.Parse(staffSchedule.EveningStart);
+                            var eveningEnd = TimeOnly.Parse(staffSchedule.EveningEnd);
+
+                            freeTimeGenerator(staffFreeTimes, service.Duration, morningStart, morningEnd);
+                            freeTimeGenerator(staffFreeTimes, service.Duration, eveningStart, eveningEnd);
+                        }
+
+                        foreach (var item in staffFreeTimes)
+                        {
+                            appointments.Add(new AppointmentListDTO
+                            {
+                                StaffName = staffSchedule.StaffName,
+                                StaffLastName = staffSchedule.StaffLastName,
+                                StartTime = item.StartTime.ToString(),
+                                EndTime = item.EndTime.ToString(),
+                                ServiceName =service.ServiceName
+                            });
+                        }
+                    }
+                }
             }
 
-
             throw new NotImplementedException();
+
+            async Task<BaseResponse> response(ResponseBuilder responseBuilder, List<AppointmentListDTO> appointments)
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} Succeded",
+                    AdditionalData = appointments
+                });
+
+                return responseBuilder.Success(HttpStatusCode.OK,
+                    $"{_requestTitle} succeeded",
+                    appointments);
+            }
         }
 
-        private static void freeTimeGenerator(StaffFreeTimes staffFreeTimes, int serviceDuration, TimeOnly startTime, TimeOnly endTime)
+        private static void freeTimeGenerator(List<time> staffFreeTimes, int serviceDuration, TimeOnly startTime, TimeOnly endTime)
         {
             int x = 0;
             x += (int)(endTime - startTime).TotalMinutes / serviceDuration;
@@ -221,16 +234,8 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     };
                 }
 
-                staffFreeTimes.FreeTimes.Add(freeTimes[j]);
+                staffFreeTimes.Add(freeTimes[j]);
             }
-        }
-
-        private class StaffFreeTimes
-        {
-            public Guid MedicalStaffId { get; set; }
-            public Guid ServiceId { get; set; }
-            public Guid RoomId { get; set; }
-            public List<time> FreeTimes { get; set; }
         }
 
         private class time
@@ -239,12 +244,24 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
             public TimeOnly EndTime { get; set; }
         }
 
-        private class staffShift
+        public class Range<T> where T : IComparable
         {
-            public string MorningStart { get; set; }
-            public string MorningEnd { get; set; }
-            public string EveningStart { get; set; }
-            public string EveningEnd { get; set; }
+            readonly T min;
+            readonly T max;
+
+            public Range(T min, T max)
+            {
+                this.min = min;
+                this.max = max;
+            }
+
+            public bool IsOverlapped(Range<T> other)
+            {
+                return Min.CompareTo(other.Max) < 0 && other.Min.CompareTo(Max) < 0;
+            }
+
+            public T Min { get { return min; } }
+            public T Max { get { return max; } }
         }
     }
 }

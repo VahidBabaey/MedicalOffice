@@ -15,6 +15,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         Task DeleteRangle(List<MedicalStaffSchedule> MedicalStaffSchedules);   
 
-        Task<MedicalStaffScheduleDayOfWeekDTO> GetStaffScheduleByDate(Guid medicalStaffId,DayOfWeek dayOfweek);    
+        Task<MedicalStaffScheduleDayOfWeekDTO> GetStaffScheduleByDate(Guid? medicalStaffId,DayOfWeek dayOfweek);    
     }
 }

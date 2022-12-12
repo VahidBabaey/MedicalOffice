@@ -28,6 +28,7 @@ using MedicalOffice.Application.Dtos.Reception;
 using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
+using MedicalOffice.Application.Dtos;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -116,6 +117,7 @@ public class MappingProfile : Profile
         CreateMap<Office, OfficeDTO>().ReverseMap();
         CreateMap<MedicalStaffSchedule, MedicalStaffDaySchedule>().ReverseMap();
         CreateMap<ServiceDuration, ServiceDurationDTO>().ReverseMap();
+        CreateMap<AppointmentListDTO, Appointment>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDto>

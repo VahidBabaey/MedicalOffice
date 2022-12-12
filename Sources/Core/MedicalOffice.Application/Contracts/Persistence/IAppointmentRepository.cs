@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Domain.Entities;
+﻿using MedicalOffice.Application.Dtos;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Contracts.Persistence
 {
-    public interface IAppointmentRepository: IGenericRepository<Appointment, Guid>
+    public interface IAppointmentRepository : IGenericRepository<Appointment, Guid>
     {
-        Task<List<Appointment>> GetByDate(DateTime date);   
+        Task<List<AppointmentListDTO>> GetByDate(DateTime dateTime, Guid? serviceId = null, Guid? medicalStaffId = null);
     }
 }

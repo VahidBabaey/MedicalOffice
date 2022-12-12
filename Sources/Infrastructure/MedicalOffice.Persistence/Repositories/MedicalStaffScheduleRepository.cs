@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Application.Contracts.Persistence;
+﻿using AutoMapper;
+using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
@@ -9,9 +10,12 @@ namespace MedicalOffice.Persistence.Repositories;
 
 public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSchedule, Guid>, IMedicalStaffScheduleRepository
 {
+    private readonly IMapper _mapper;
     private readonly ApplicationDbContext _dbContext;
-    public MedicalStaffScheduleRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public MedicalStaffScheduleRepository(ApplicationDbContext dbContext, IMapper mapper
+        ) : base(dbContext)
     {
+        _mapper = mapper;
         _dbContext = dbContext;
     }
     public async Task UpdateMedicalStaffsSchedule(Guid MedicalStaffid, int day, MedicalStaffScheduleDTO MedicalStaffWorkHoursProgramDTO)
@@ -67,5 +71,14 @@ public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSche
         _dbContext.SaveChanges();
 
         return Task.CompletedTask;
+    }
+
+    public async Task<MedicalStaffScheduleDayOfWeekDTO> GetStaffScheduleByDate(Guid? medicalStaffId, DayOfWeek dayOfweek)
+    {
+        var medicalStaffSchedule =await _dbContext.MedicalStaffSchedules
+            .Include(x => x.MedicalStaff)
+            .SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId && x.WeekDay == dayOfweek);
+
+        return _mapper.Map<MedicalStaffScheduleDayOfWeekDTO>(medicalStaffSchedule);
     }
 }
