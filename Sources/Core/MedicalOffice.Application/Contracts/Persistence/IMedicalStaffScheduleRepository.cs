@@ -14,5 +14,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<List<Guid>> AddRangle(List<MedicalStaffSchedule> MedicalStaffSchedules);
 
         Task DeleteRangle(List<MedicalStaffSchedule> MedicalStaffSchedules);   
+
+        Task<MedicalStaffScheduleDayOfWeekDTO> GetStaffScheduleByDate(Guid medicalStaffId,DayOfWeek dayOfweek);    
     }
 }

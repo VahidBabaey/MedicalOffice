@@ -72,6 +72,10 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
+            if (request.DTO.FilterFields.Count == 1)
+            {
+
+            }
             var appointments = new List<IReadOnlyList<Appointment>>();
             foreach (var requestedField in request.DTO.FilterFields)
             {
@@ -80,7 +84,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     .GetAllBySearchClause(new { requestedField, request.DTO.Date }).Result
                     .OrderBy(x => TimeOnly.Parse(x.StartTime)).ToList();
 
-                //Create staffFreeTimesObjectForEachRequestedField
+                //Create staffFreeTimes object for each requested field
                 var staffFreeTimes = _mapper.Map<StaffFreeTimes>(requestedField);
 
                 //Get staff schedule by  

@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO
+﻿namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO
 {
-    public class MedicalStaffScheduleListDTO
+    public class MedicalStaffScheduleDayOfWeekDTO
     {
         public Guid MedicalStaffId { get; set; }
+
+        public string StaffName{ get; set; }
+
+        public string StaffLastName { get; set; }
+
+        public DayOfWeek DayOfWeek{ get; set; }
 
         public int MaxAppointmentCount { get; set; }
 
