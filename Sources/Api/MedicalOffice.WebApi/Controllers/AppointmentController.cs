@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application;
 using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Dtos.Identity;
@@ -8,6 +9,7 @@ using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -73,7 +75,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<AppointmentListDTO>>> SearchByRequestedFeilds([FromQuery] SearchAppointmentsDTO dto)
+        public async Task<ActionResult<List<AppointmentDetailsDTO>>> SearchByRequestedFeilds([FromQuery] SearchAppointmentsDTO dto)
         {
             var response = await _mediator.Send(new SearchByRequestedFieldsQuery { DTO = dto });
 
@@ -81,11 +83,19 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpGet("patient-appointments")]
-        public async Task<ActionResult<List<AppointmentListDTO>>> searchByPatient([FromQuery] SearchByPatientDTO dto, [FromQuery] string officeId)
+        public async Task<ActionResult<List<AppointmentDetailsDTO>>> searchByPatient([FromQuery] SearchByPatientDTO dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new SearchByPatientQuery { DTO=dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
+
+        //[HttpGet("status")]
+        //public async Task<ActionResult<AppointmentType>> GetAllStatus()
+        //{
+        //    var response = await _mediator.Send(new GetAllStatusQuery {});
+
+        //    return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        //}
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace MedicalOffice.Domain.Common;
+﻿using MedicalOffice.Domain.Entities;
+
+namespace MedicalOffice.Domain.Common;
 
 public class BaseDomainEntity<T> where T : struct
 {
@@ -6,8 +8,10 @@ public class BaseDomainEntity<T> where T : struct
 
     public DateTime CreatedDate { get; set; } = default;
     public Guid CreatedById { get; set; } = default;
+    public User CreatedBy { get; set; }
     public DateTime LastUpdatedDate { get; set; } = default;
     public Guid LastUpdatedById { get; set; } = default;
+    public User LastUpdatedBy { get; set; }
 
     public bool IsDeleted { get; set; } = default;
 }

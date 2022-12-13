@@ -7,6 +7,7 @@ using FluentValidation;
 using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Dtos.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MedicalOffice.WebApi.WebApi.CustomFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,7 @@ builder.Services.AddSwaggerGen(c =>
             new List<string>()
         }
     });
+    c.SchemaFilter<EnumSchemaFilter>();
 });
 
 builder.Services.AddApplicationServices();

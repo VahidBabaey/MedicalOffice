@@ -3,6 +3,7 @@ using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Commands;
@@ -80,7 +81,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             //add warning to data
             #endregion
 
-            bool isValidTime(Appointment x)
+            bool isValidTime(AppointmentDetailsDTO x)
             {
                 if (TimeOnly.Parse(x.StartTime) >= TimeOnly.Parse(request.DTO.StartTime) &&
                     TimeOnly.Parse(x.EndTime) <= TimeOnly.Parse(request.DTO.EndTime))

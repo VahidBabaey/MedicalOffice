@@ -24,35 +24,43 @@ namespace MedicalOffice.Persistence.Repositories
             _mapper = mapper;
         }
 
-        public async Task<List<AppointmentListDTO>> GetByDate(DateTime date, Guid? serviceId, Guid? medicalStaffId)
+        public async Task<List<AppointmentDetailsDTO>> GetByDate(DateTime date, Guid? serviceId, Guid? medicalStaffId)
         {
-            var appointments = await _dbcontext.Appointments.Include(x => x.MedicalStaff).Where(x => x.Date == date).ToListAsync();
+            var appointments = await _dbcontext.Appointments
+                .Include(x => x.MedicalStaff)
+                .Include(x => x.CreatedBy)
+                .Where(x => x.Date == date).ToListAsync();
 
             if (serviceId != null)
-                appointments = await _dbcontext.Appointments.Include(x => x.MedicalStaff).Where(x => x.Date == date && x.ServiceId == serviceId).ToListAsync();
+                appointments = await _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
+                    .Include(x => x.CreatedBy)
+                    .Where(x => x.Date == date && x.ServiceId == serviceId).ToListAsync();
 
             if (medicalStaffId != null)
-                appointments = await _dbcontext.Appointments.Include(x => x.MedicalStaff).Where(x => x.Date == date && x.MedicalStaffId == medicalStaffId).ToListAsync();
+                appointments = await _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
+                    .Include(x=>x.CreatedBy)
+                    .Where(x => x.Date == date && x.MedicalStaffId == medicalStaffId).ToListAsync();
 
             if (serviceId != null && medicalStaffId != null)
                 appointments = await _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
+                    .Include(x => x.CreatedBy)
                     .Where(x => x.Date == date
                         && x.MedicalStaffId == medicalStaffId
                         && x.ServiceId == serviceId)
                     .ToListAsync();
 
-            var result = new List<AppointmentListDTO>();
+            var result = new List<AppointmentDetailsDTO>();
 
             foreach (var item in appointments)
             {
-                var creator = _dbcontext.Users.SingleOrDefault(x => x.Id == item.CreatedById);
-
-                var appointmentDetails = _mapper.Map<AppointmentListDTO>(item);
+                var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
                 appointmentDetails.StaffName = item.MedicalStaff.FirstName;
                 appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
-                appointmentDetails.CreatorName = creator?.FirstName;
-                appointmentDetails.CreatorName = creator?.LastName;
+                appointmentDetails.CreatorName = item.CreatedBy.FirstName;
+                appointmentDetails.CreatorName = item.CreatedBy.LastName;
 
                 result.Add(appointmentDetails);
             }

@@ -10,6 +10,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IAppointmentRepository : IGenericRepository<Appointment, Guid>
     {
-        Task<List<AppointmentListDTO>> GetByDate(DateTime dateTime, Guid? serviceId = null, Guid? medicalStaffId = null);
+        Task<List<AppointmentDetailsDTO>> GetByDate(DateTime dateTime, Guid? serviceId = null, Guid? medicalStaffId = null);
     }
 }

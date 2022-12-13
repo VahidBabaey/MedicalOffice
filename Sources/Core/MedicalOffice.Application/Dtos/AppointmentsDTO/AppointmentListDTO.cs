@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos
 {
-    public class AppointmentListDTO
+    public class AppointmentDetailsDTO
     {
         public string StaffName { get; set; }
 

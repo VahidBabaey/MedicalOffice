@@ -74,7 +74,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var appointments = new List<AppointmentListDTO>();
+            var appointments = new List<AppointmentDetailsDTO>();
             if (request.DTO.FilterFields.Count == 0)
             {
                 //get all appointments of date
@@ -178,7 +178,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                         foreach (var item in staffFreeTimes)
                         {
-                            appointments.Add(new AppointmentListDTO
+                            appointments.Add(new AppointmentDetailsDTO
                             {
                                 StaffName = staffSchedule.StaffName,
                                 StaffLastName = staffSchedule.StaffLastName,
@@ -193,7 +193,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
             throw new NotImplementedException();
 
-            async Task<BaseResponse> response(ResponseBuilder responseBuilder, List<AppointmentListDTO> appointments)
+            async Task<BaseResponse> response(ResponseBuilder responseBuilder, List<AppointmentDetailsDTO> appointments)
             {
                 await _logger.Log(new Log
                 {
