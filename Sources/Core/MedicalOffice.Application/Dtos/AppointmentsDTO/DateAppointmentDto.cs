@@ -12,5 +12,4 @@
 
         public bool Full { get; set; } = false;
     }
-
 }

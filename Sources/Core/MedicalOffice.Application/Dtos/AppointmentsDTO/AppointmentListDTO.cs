@@ -26,6 +26,10 @@ namespace MedicalOffice.Application.Dtos
 
         public string? NationalID { get; set; }
 
+        public string DeviceName { get; set; }
+
+        public string RoomName { get; set; }
+
         public AppointmentType? status { get; set; }
     }
 }

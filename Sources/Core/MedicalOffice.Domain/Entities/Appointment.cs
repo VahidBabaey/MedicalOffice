@@ -8,20 +8,31 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class Appointment : BaseDomainEntity<Guid>
 {
+
     /// <summary>
-    /// نوع وقت دهی
+    /// شناسه مطب
     /// </summary>
-    public AppointmentType AppointmentType { get; set; }
-    
+    public Guid OfficeId { get; set; }
+
     /// <summary>
-    /// پزشک
+    /// ارتباط یک به چند مطب و وقت
     /// </summary>
-    public MedicalStaff MedicalStaff { get; set; }
-    
+    public Office Office { get; set; }
+
     /// <summary>
     /// آیدی پزشک
     /// </summary>
     public Guid MedicalStaffId { get; set; }
+
+    /// <summary>
+    /// پزشک
+    /// </summary>
+    public MedicalStaff MedicalStaff { get; set; }
+
+    /// <summary>
+    /// آیدی سرویس
+    /// </summary>
+    public Guid ServiceId { get; set; }
 
     /// <summary>
     /// سرویس
@@ -29,19 +40,24 @@ public class Appointment : BaseDomainEntity<Guid>
     public Service Service { get; set; }
 
     /// <summary>
-    /// آیدی سرویس
+    /// آیدی اتاق
     /// </summary>
-    public Guid ServiceId{ get; set; }
+    public Guid RoomId { get; set; }
 
     /// <summary>
-    /// اتاق یا بخش
+    /// اتاق
     /// </summary>
-    public Section Section{ get; set; }
+    public Room Room{ get; set; }
 
     /// <summary>
-    /// آیدی اتاق یا بخش
+    /// شناسه  دستگاه
     /// </summary>
-    public Guid SectionId{ get; set; }
+    public Guid DeviceId { get; set; }
+
+    /// <summary>
+    /// دستگاه
+    /// </summary>
+    public Device Device { get; set; }
 
     /// <summary>
     /// نام بیمار
@@ -77,7 +93,12 @@ public class Appointment : BaseDomainEntity<Guid>
     /// تایم پایان
     /// </summary>
     public string EndTime { get; set; } = string.Empty;
-    
+
+    /// <summary>
+    /// نوع وقت دهی
+    /// </summary>
+    public AppointmentType AppointmentType { get; set; }
+
     /// <summary>
     /// خدمات وقت دهی
     /// </summary>

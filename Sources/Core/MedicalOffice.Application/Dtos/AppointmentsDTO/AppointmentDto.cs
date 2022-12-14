@@ -1,13 +1,15 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Domain;
+using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
     public class AppointmentDTO : IPhoneNumberDTO, INationalIdDTO
     {
-        public string Name { get; set; }
+        public string PatientName { get; set; }
 
-        public string LastName { get; set; }
+        public string PatientLastName { get; set; }
 
         public string PhoneNumber { get; set; }
 
@@ -23,10 +25,12 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 
         public Guid ServiceId { get; set; }
 
-        public Guid SectionId { get; set; }
+        public Guid RoomId { get; set; }
+
+        public Guid DeviceId { get; set; }
 
         public Guid? ReferrerId { get; set; }
 
-        public AppointmentType? Status { get; set; } = AppointmentType.Approved;
+        public AppointmentType Status{ get; set; }
     }
 }
