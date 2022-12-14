@@ -98,7 +98,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             if (request.DTO.DeviceId != null)
             {
-                var deviceExistingAppointments = _appointmentRepository.GetByDateAndDevice(request.DTO.date, deviseId: request.DTO.DeviceId, roomId: request.DTO.RoomId).Result;
+                var deviceExistingAppointments = _appointmentRepository.GetByDateAndDevice(request.DTO.date, deviceId: request.DTO.DeviceId, roomId: request.DTO.RoomId).Result;
                 validAppointment = deviceExistingAppointments.FirstOrDefault(x => !isValidTime(x, request));
 
                 if (validAppointment != null)

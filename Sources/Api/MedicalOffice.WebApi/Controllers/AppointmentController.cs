@@ -4,6 +4,7 @@ using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO;
+using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Commands;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
@@ -25,7 +26,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         {
             _mediator = mediator;
         }
-        
+
         [HttpPost]
         public async Task<ActionResult<Guid>> Create([FromBody] AppointmentDTO dto, [FromQuery] string officeId)
         {
@@ -33,7 +34,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
-        
+
         [HttpPatch("status")]
         public async Task<ActionResult<Guid>> EditAppointmentStatus([FromBody] AppointmentStatusDTO dto, [FromQuery] string officeId)
         {
@@ -65,7 +66,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
-        
+
         [HttpGet("doctor-times")]
         public async Task<ActionResult<List<DateAppointmentDTO>>> GetAllDoctorTimes([FromQuery] DoctorTimesDTO dto)
         {
@@ -85,7 +86,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpGet("patient-appointments")]
         public async Task<ActionResult<List<AppointmentDetailsDTO>>> searchByPatient([FromQuery] SearchByPatientDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new SearchByPatientQuery { DTO=dto, OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new SearchByPatientQuery { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -97,5 +98,13 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
+
+        //[HttpGet("patient")]
+        //public async Task<ActionResult<PatientDTO>> FilterPatientByPhoneOrNationalId([FromQuery] string? phoneNumber, [FromQuery] string? nationalId)
+        //{
+        //    var response = await _mediator.Send(new FilterPatientByPhoneOrNationalIdQuery { PhoneNumber = phoneNumber ,NationalID = nationalId});
+
+        //    return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        //}
     }
 }

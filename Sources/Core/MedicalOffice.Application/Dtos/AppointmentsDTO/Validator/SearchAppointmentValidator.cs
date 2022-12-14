@@ -22,15 +22,25 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
     {
         public FilterFieldsValidator()
         {
-            RuleFor(x => x.MedicalStaffId)
-                .NotEmpty()
-                .When(m => m.ServiceId == null)
-                .WithMessage("{PropertyName} is required if serviceId is null");
+            //RuleFor(x => x.MedicalStaffId)
+            //    .NotEmpty()
+            //    .When(m => m.ServiceId == null)
+            //    .WithMessage("{PropertyName} is required if serviceId is null");
 
-            RuleFor(x => x.ServiceId)
+            //RuleFor(x => x.ServiceId)
+            //    .NotEmpty()
+            //    .When(m => m.MedicalStaffId == null)
+            //    .WithMessage("{PropertyName} is required if medcalStaffId is null");
+
+            RuleFor(x => x.DeviceId)
                 .NotEmpty()
-                .When(m => m.MedicalStaffId == null)
-                .WithMessage("{PropertyName} is required if medcalStaffId is null");
+                .When(m => m.RoomId != null)
+                .WithMessage("{PropertyName} is required if {ComparedPropertyName} is null");
+
+            RuleFor(x => x.RoomId)
+             .NotEmpty()
+             .When(m => m.DeviceId != null)
+             .WithMessage("{PropertyName} is required if {ComparedPropertyName} is null");
         }
     }
 }

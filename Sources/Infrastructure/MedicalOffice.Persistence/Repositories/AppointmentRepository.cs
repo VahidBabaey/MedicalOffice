@@ -115,5 +115,15 @@ namespace MedicalOffice.Persistence.Repositories
             }
             return result;
         }
+
+        public Task<List<AppointmentDetailsDTO>> GetByStaffAndDevice(DateTime date, Guid? deviceId = null, Guid? medicalStaffId = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<AppointmentDetailsDTO>> GetByServiceAndDevice(DateTime date, Guid? serviceId, Guid? deviceId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
