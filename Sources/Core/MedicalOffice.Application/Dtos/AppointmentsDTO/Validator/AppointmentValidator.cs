@@ -17,13 +17,13 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
             Include(new IPhoneNumberValidator());
             Include(new INationalIdValidator());
 
-            RuleFor(x => x.Name)
+            RuleFor(x => x.PatientName)
                 .NotEmpty()
-                    .WithMessage(ValidationMessage.Required.For<AppointmentDTO>(p => p.Name));
+                    .WithMessage(ValidationMessage.Required.For<AppointmentDTO>(p => p.PatientName));
 
-            RuleFor(x => x.Name)
+            RuleFor(x => x.PatientLastName)
                 .NotEmpty()
-                    .WithMessage(ValidationMessage.Required.For<AppointmentDTO>(p => p.LastName));
+                    .WithMessage(ValidationMessage.Required.For<AppointmentDTO>(p => p.PatientLastName));
 
             RuleFor(x => x.StartTime)
                 .NotEmpty()
@@ -44,6 +44,16 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
             RuleFor(x => TimeOnly.Parse(x.EndTime))
                .GreaterThan(x => TimeOnly.Parse(x.StartTime))
                   .WithMessage(ValidationMessage.GreaterThan.For<AppointmentDTO>(p => p.EndTime, x => x.StartTime));
+
+            RuleFor(x => x.DeviceId)
+               .Empty()
+               .When(m => m.RoomId == null)
+               .WithMessage("{PropertyName} is required if serviceId is null");
+
+            RuleFor(x => x.RoomId)
+                .Empty()
+                .When(m => m.DeviceId == null)
+                .WithMessage("{PropertyName} is required if serviceId is null");
         }
     }
 }

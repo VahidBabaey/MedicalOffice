@@ -24,12 +24,12 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
         {
             RuleFor(x => x.MedicalStaffId)
                 .NotEmpty()
-                .When(m => m.ServiceId != null)
+                .When(m => m.ServiceId == null)
                 .WithMessage("{PropertyName} is required if serviceId is null");
 
             RuleFor(x => x.ServiceId)
                 .NotEmpty()
-                .When(m => m.MedicalStaffId != null)
+                .When(m => m.MedicalStaffId == null)
                 .WithMessage("{PropertyName} is required if medcalStaffId is null");
         }
     }

@@ -80,16 +80,45 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             //add warning to data
             #endregion
 
-            var validAppointment = _appointmentRepository.GetByDate(request.DTO.date).Result.FirstOrDefault(x => !isValidTime(x, request));
+            var staffExistingAppointments = _appointmentRepository.GetByDateAndStaff(request.DTO.date, medicalStaffId: request.DTO.MedicalStaffId).Result;
+            var validAppointment = staffExistingAppointments.FirstOrDefault(x => !isValidTime(x, request));
+
             if (validAppointment != null)
             {
-                throw new Exception();
+                var error = "Staff isn't free in requested time";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            if (request.DTO.DeviceId != null)
+            {
+                var deviceExistingAppointments = _appointmentRepository.GetByDateAndDevice(request.DTO.date, deviseId: request.DTO.DeviceId, roomId: request.DTO.RoomId).Result;
+                validAppointment = deviceExistingAppointments.FirstOrDefault(x => !isValidTime(x, request));
+
+                if (validAppointment != null)
+                {
+                    var error = "Room or device isn't free in requested time";
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error
+                    });
+
+                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                }
             }
 
             var medicalStaff = _medicalStaffRepository.GetAll().Result.FirstOrDefault(x => x.Id == request.DTO.MedicalStaffId);
             if (medicalStaff == null)
             {
-                var error = "medicalStaffId does not exist!";
+                var error = "MedicalStaffId does not exist!";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

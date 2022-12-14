@@ -78,7 +78,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
             if (request.DTO.FilterFields.Count == 0)
             {
                 //get all appointments of date
-                appointments = _appointmentRepository.GetByDate(request.DTO.Date).Result;
+                appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date).Result;
                 return await response(responseBuilder, appointments);
             }
             if (request.DTO.FilterFields.Count == 1)
@@ -86,14 +86,14 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                 if (request.DTO.FilterFields[0].MedicalStaffId == null &&
                     request.DTO.FilterFields[0].ServiceId != null)
                 {
-                    appointments = _appointmentRepository.GetByDate(request.DTO.Date, serviceId: request.DTO.FilterFields[0].ServiceId).Result;
+                    appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, serviceId: request.DTO.FilterFields[0].ServiceId).Result;
                     return await response(responseBuilder, appointments);
                 }
 
                 if (request.DTO.FilterFields[0].MedicalStaffId != null &&
                     request.DTO.FilterFields[0].ServiceId == null)
                 {
-                    appointments = _appointmentRepository.GetByDate(request.DTO.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
+                    appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
 
                     return await response(responseBuilder, appointments);
                 }
@@ -101,7 +101,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                 if (request.DTO.FilterFields[0].MedicalStaffId != null &&
                     request.DTO.FilterFields[0].ServiceId != null)
                 {
-                    appointments = _appointmentRepository.GetByDate(request.DTO.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
+                    appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
 
                     var serviceName = _serviceRepository.GetAllBySearchClause(new { request.DTO.FilterFields[0].ServiceId }).Result.Select(x => x.Name).First();
 

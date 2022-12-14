@@ -24,7 +24,7 @@ namespace MedicalOffice.Persistence.Repositories
             _mapper = mapper;
         }
 
-        public async Task<List<AppointmentDetailsDTO>> GetByDate(DateTime date, Guid? serviceId, Guid? medicalStaffId)
+        public async Task<List<AppointmentDetailsDTO>> GetByDateAndStaff(DateTime date, Guid? serviceId, Guid? medicalStaffId)
         {
             var appointments = await _dbcontext.Appointments
                 .Include(x => x.MedicalStaff)
@@ -40,7 +40,7 @@ namespace MedicalOffice.Persistence.Repositories
             if (medicalStaffId != null)
                 appointments = await _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
-                    .Include(x=>x.CreatedBy)
+                    .Include(x => x.CreatedBy)
                     .Where(x => x.Date == date && x.MedicalStaffId == medicalStaffId).ToListAsync();
 
             if (serviceId != null && medicalStaffId != null)
@@ -61,6 +61,55 @@ namespace MedicalOffice.Persistence.Repositories
                 appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
                 appointmentDetails.CreatorName = item.CreatedBy.FirstName;
                 appointmentDetails.CreatorName = item.CreatedBy.LastName;
+
+                result.Add(appointmentDetails);
+            }
+            return result;
+        }
+
+        public async Task<List<AppointmentDetailsDTO>> GetByDateAndDevice(DateTime date, Guid? deviceId = null, Guid? roomId = null)
+        {
+            var appointments = await _dbcontext.Appointments
+                .Include(x => x.MedicalStaff)
+                .Include(x => x.CreatedBy)
+                .Include(x => x.Room)
+                .Include(x => x.Device)
+                .Where(x => x.Date == date).ToListAsync();
+
+            if (deviceId != null)
+                appointments = await _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
+                    .Include(x => x.CreatedBy)
+                    .Include(x => x.Room)
+                    .Include(x => x.Device)
+                    .Where(x => x.Date == date && x.DeviceId == deviceId).ToListAsync();
+
+            if (roomId != null)
+                appointments = await _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
+                    .Include(x => x.CreatedBy)
+                    .Where(x => x.Date == date && x.RoomId == roomId).ToListAsync();
+
+            if (deviceId != null && roomId != null)
+                appointments = await _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
+                    .Include(x => x.CreatedBy)
+                    .Include(x => x.Room)
+                    .Include(x => x.Device)
+                    .Where(x => x.Date == date && x.DeviceId == deviceId && x.RoomId == roomId)
+                    .ToListAsync();
+
+            var result = new List<AppointmentDetailsDTO>();
+
+            foreach (var item in appointments)
+            {
+                var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
+                appointmentDetails.StaffName = item.MedicalStaff.FirstName;
+                appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
+                appointmentDetails.CreatorName = item.CreatedBy.FirstName;
+                appointmentDetails.CreatorName = item.CreatedBy.LastName;
+                appointmentDetails.RoomName = item.Room.Name;
+                appointmentDetails.DeviceName = item.Device.Name;
 
                 result.Add(appointmentDetails);
             }

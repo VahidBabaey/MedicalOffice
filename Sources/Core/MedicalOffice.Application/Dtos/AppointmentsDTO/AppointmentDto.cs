@@ -25,9 +25,9 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 
         public Guid ServiceId { get; set; }
 
-        public Guid RoomId { get; set; }
+        public Guid? RoomId { get; set; }
 
-        public Guid DeviceId { get; set; }
+        public Guid? DeviceId { get; set; }
 
         public Guid? ReferrerId { get; set; }
 
