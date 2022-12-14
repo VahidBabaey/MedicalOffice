@@ -68,7 +68,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-
             #region checkValidTimeApi
             //get staff date time
             //bool validTime = _staffWorkHourRepository.checkTimeIsInStaffWorkHours();
@@ -81,20 +80,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             //add warning to data
             #endregion
 
-            bool isValidTime(AppointmentDetailsDTO x)
-            {
-                if (TimeOnly.Parse(x.StartTime) >= TimeOnly.Parse(request.DTO.StartTime) &&
-                    TimeOnly.Parse(x.EndTime) <= TimeOnly.Parse(request.DTO.EndTime))
-                    return false;
-
-                if (TimeOnly.Parse(x.StartTime) == TimeOnly.Parse(request.DTO.StartTime) ||
-                    TimeOnly.Parse(x.EndTime) == TimeOnly.Parse(request.DTO.EndTime))
-                    return false;
-
-                return true;
-            }
-
-            var validAppointment = _appointmentRepository.GetByDate(request.DTO.date).Result.FirstOrDefault(x => !isValidTime(x));
+            var validAppointment = _appointmentRepository.GetByDate(request.DTO.date).Result.FirstOrDefault(x => !isValidTime(x, request));
             if (validAppointment != null)
             {
                 throw new Exception();
@@ -103,18 +89,62 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             var medicalStaff = _medicalStaffRepository.GetAll().Result.FirstOrDefault(x => x.Id == request.DTO.MedicalStaffId);
             if (medicalStaff == null)
             {
-                throw new Exception();
+                var error = "medicalStaffId does not exist!";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             var serviceId = _serviceRepository.GetAll().Result.FirstOrDefault(x => x.Id == request.DTO.ServiceId);
             if (serviceId == null)
             {
-                throw new Exception();
+                var error = "Service id does not exist!";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             var appointment = _mapper.Map<Appointment>(request.DTO);
             var result = _appointmentRepository.Add(appointment);
-            throw new NotImplementedException();
+
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = new { result.Id }
+            });
+
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { result.Id });
+        }
+
+        static bool isValidTime(AppointmentDetailsDTO time, AddAppointmentCommand request)
+        {
+            var serviceTime = TimeOnly.Parse(request.DTO.EndTime) - TimeOnly.Parse(request.DTO.StartTime);
+
+            if (TimeOnly.Parse(time.StartTime) < TimeOnly.Parse(request.DTO.EndTime) &&
+                TimeOnly.Parse(request.DTO.StartTime) < TimeOnly.Parse(time.EndTime))
+                return false;
+
+            if (TimeOnly.Parse(time.StartTime) == TimeOnly.Parse(request.DTO.StartTime) ||
+                TimeOnly.Parse(time.EndTime) == TimeOnly.Parse(request.DTO.EndTime))
+                return false;
+
+            if (
+                TimeOnly.Parse(request.DTO.StartTime) - TimeOnly.Parse(time.StartTime) < serviceTime ||
+                TimeOnly.Parse(request.DTO.EndTime) - TimeOnly.Parse(time.EndTime) < serviceTime)
+                return false;
+
+            return true;
         }
     }
 }

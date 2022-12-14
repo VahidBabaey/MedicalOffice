@@ -43,7 +43,7 @@ builder.Services.AddSwaggerGen(c =>
             new List<string>()
         }
     });
-    c.SchemaFilter<EnumSchemaFilter>();
+    //c.SchemaFilter<EnumSchemaFilter>();
 });
 
 builder.Services.AddApplicationServices();

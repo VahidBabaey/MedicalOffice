@@ -90,12 +90,12 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        //[HttpGet("status")]
-        //public async Task<ActionResult<AppointmentType>> GetAllStatus()
-        //{
-        //    var response = await _mediator.Send(new GetAllStatusQuery {});
+        [HttpGet("status")]
+        public async Task<ActionResult<AppointmentType>> GetAllStatus()
+        {
+            var response = await _mediator.Send(new GetAllStatusQuery { });
 
-        //    return StatusCode(Convert.ToInt32(response.StatusCode), response);
-        //}
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
     }
 }
