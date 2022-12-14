@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Entities;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,39 +44,29 @@ public static class ValidationMessage
 
     public static readonly ValidationError NotValid = new("{0} is not valid",ValidationErrorCode.NotValid);
 
-    public static readonly ValidationError GreaterThan = new("{0} shoud be Greater than {1}", ValidationErrorCode.GreaterThan);
+    public static readonly ValidationError GreaterThan = new("{0} should be Greater than {1}", ValidationErrorCode.GreaterThan);
 
-    public static readonly ValidationError GreaterOrEqual = new("{0} shoud be greater than or equal {1}", ValidationErrorCode.GreaterOrEqual);
+    public static readonly ValidationError GreaterOrEqual = new("{0} should be greater than or equal {1}", ValidationErrorCode.GreaterOrEqual);
 
-    public static readonly ValidationError LessThan = new("{0} shoud be Less than {1}", ValidationErrorCode.LessThan);
+    public static readonly ValidationError LessThan = new("{0} should be Less than {1}", ValidationErrorCode.LessThan);
 
-    public static readonly ValidationError LessOrEqual = new("{0} shoud be less than or equal {1}", ValidationErrorCode.LessOrEqual);
+    public static readonly ValidationError LessOrEqual = new("{0} should be less than or equal {1}", ValidationErrorCode.LessOrEqual);
 
     public static readonly ValidationError TimeOnlyPattern = new("{0} should match with HH:MM pattern", ValidationErrorCode.TimeOnlyPattern);
 }
 public static class ValidationErrorExtensions
 {
-    private static string GetPropertyName<T>(Expression<Func<T, object>> property)
-    {
-        LambdaExpression lambda = property;
-        MemberExpression memberExpression;
-
-        if (lambda.Body is UnaryExpression unaryExpression)
-            memberExpression = (MemberExpression)(unaryExpression.Operand);
-        else
-            memberExpression = (MemberExpression)(lambda.Body);
-
-        return ((PropertyInfo)memberExpression.Member).Name;
-    }
-
     public static string For(this ValidationError error, params object?[]? inputs)
     {
-        return string.Format(error.Message, inputs);
+        if (inputs != null)
+            return string.Format(error.Message, inputs);
+        else
+            return string.Empty;
     }
 
     public static string For<T>(this ValidationError error, params Expression<Func<T, object>>[] expressions)
     {
-        var propertyNames = expressions.Select(exp => GetPropertyName(exp)).ToArray();
+        var propertyNames = expressions.Select(exp => exp.GetPropertyAccess().Name).ToArray();
         var result = string.Format(error.Message, propertyNames);
 
         return result;
