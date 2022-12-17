@@ -18,6 +18,7 @@ using MedicalOffice.Domain.Entities;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Dtos.AppointmentsDTO.Validator;
+using MedicalOffice.WebApi.WebApi.Controllers;
 
 namespace MedicalOffice.Application;
 
@@ -55,6 +56,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<AppointmentDTO>, AppointmentValidator>();
         services.AddScoped<IValidator<SearchAppointmentsDTO>, SearchAppointmentValidator>();
         services.AddScoped<IValidator<FilterFields>, FilterFieldsValidator>();
+        services.AddScoped< IValidator < SpecificDateAppointmentDTO >,SpecificDateAppointmentValidator>();
         #endregion
 
         return services;

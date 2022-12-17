@@ -125,5 +125,10 @@ namespace MedicalOffice.Persistence.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public Task<List<Appointment>> GetByTimePeriodAndStaff(DateTime startDate, DateTime endDate, Guid? medicalStaffId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

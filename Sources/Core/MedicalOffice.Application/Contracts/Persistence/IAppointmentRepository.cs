@@ -9,5 +9,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<List<AppointmentDetailsDTO>> GetByDateAndDevice(DateTime date, Guid? deviceId = null, Guid? roomId = null);
         Task<List<AppointmentDetailsDTO>> GetByStaffAndDevice(DateTime date, Guid? deviceId = null, Guid? medicalStaffId = null);
         Task<List<AppointmentDetailsDTO>> GetByServiceAndDevice(DateTime date, Guid? serviceId, Guid? deviceId);
+        Task<List<Appointment>> GetByTimePeriodAndStaff(DateTime startDate, DateTime endDate, Guid? medicalStaffId);
     }
 }

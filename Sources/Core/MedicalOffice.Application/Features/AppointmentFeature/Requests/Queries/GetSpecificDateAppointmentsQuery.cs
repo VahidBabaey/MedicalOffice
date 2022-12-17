@@ -5,8 +5,10 @@ using MedicalOffice.WebApi.WebApi.Controllers;
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries
 {
-    public class GetDoctorDateTimesQuery : IRequest<BaseResponse>
+    public class GetSpecificDateAppointmentsQuery : IRequest<BaseResponse>
     {
-        public DoctorTimesDTO DTO { get; set; }
+        public SpecificDateAppointmentDTO DTO { get; set; }
+
+        public Guid OfficeId { get; set; }
     }
 }

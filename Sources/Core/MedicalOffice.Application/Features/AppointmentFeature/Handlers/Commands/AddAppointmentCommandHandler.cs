@@ -76,7 +76,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             //get service duration time
             //var serviceDuration = await _serviceDurationRepository.getByIdAndMedicalStaffId();
-            //if(serviceDuration>EndTime-StartTime)
+            //if(serviceDuration>EndDate-StartDate)
             //add warning to data
             #endregion
 

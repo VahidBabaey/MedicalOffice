@@ -29,8 +29,9 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
         private readonly IMedicalStaffRepository _medicalStaffRepository;
         private readonly IServiceRepository _serviceRepository;
         private readonly IMedicalStaffScheduleRepository _staffScheduleRepository;
-        private readonly string _requestTitle;
         private readonly IServiceDurationRepositopry _serviceDurationRepository;
+        
+        private readonly string _requestTitle;
 
         public SearchByRequestedFieldsQueryHandler(
             IValidator<SearchAppointmentsDTO> validator,
@@ -175,7 +176,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         }
                     }
 
-                    var serviceName = _serviceRepository.GetAllBySearchClause(new { request.DTO.FilterFields[0].ServiceId }).Result.Select(x => x.Name).First();
+                    var serviceName = _serviceRepository.GetAllBySearchClause(new { Id = request.DTO.FilterFields[0].ServiceId }).Result.Select(x => x.Name).First();
 
                     var staffSchedule = _staffScheduleRepository.GetStaffScheduleByDate(
                         request.DTO.FilterFields[0].MedicalStaffId,
