@@ -74,6 +74,41 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
+            bool isServiceRequested =
+                request.DTO.FilterFields[0].MedicalStaffId == null &&
+                request.DTO.FilterFields[0].ServiceId != null &&
+                request.DTO.FilterFields[0].DeviceId == null;
+
+            bool isStaffRequested =
+                request.DTO.FilterFields[0].MedicalStaffId != null &&
+                request.DTO.FilterFields[0].ServiceId == null &&
+                request.DTO.FilterFields[0].DeviceId == null;
+
+            bool isDeviceRequested =
+                request.DTO.FilterFields[0].MedicalStaffId == null &&
+                request.DTO.FilterFields[0].ServiceId == null &&
+                request.DTO.FilterFields[0].DeviceId != null;
+
+            bool isStaffAndServiceRequested =
+                request.DTO.FilterFields[0].MedicalStaffId != null &&
+                request.DTO.FilterFields[0].ServiceId != null &&
+                request.DTO.FilterFields[0].DeviceId == null;
+
+            bool isStaffAndDeviceRequested =
+                request.DTO.FilterFields[0].MedicalStaffId != null &&
+                request.DTO.FilterFields[0].ServiceId == null &&
+                request.DTO.FilterFields[0].DeviceId != null;
+
+            bool isServiceAndDeviceRequested =
+                request.DTO.FilterFields[0].MedicalStaffId == null &&
+                request.DTO.FilterFields[0].ServiceId != null &&
+                request.DTO.FilterFields[0].DeviceId != null;
+
+            bool isAllRequested =
+                request.DTO.FilterFields[0].MedicalStaffId != null &&
+                request.DTO.FilterFields[0].ServiceId != null &&
+                request.DTO.FilterFields[0].DeviceId != null;
+
             var appointments = new List<AppointmentDetailsDTO>();
             if (request.DTO.FilterFields.Count == 0)
             {
@@ -93,41 +128,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
             if (request.DTO.FilterFields.Count == 1)
             {
-                bool isServiceRequested =
-                    request.DTO.FilterFields[0].MedicalStaffId == null &&
-                    request.DTO.FilterFields[0].ServiceId != null &&
-                    request.DTO.FilterFields[0].DeviceId == null;
-
-                bool isStaffRequested =
-                    request.DTO.FilterFields[0].MedicalStaffId != null &&
-                    request.DTO.FilterFields[0].ServiceId == null &&
-                    request.DTO.FilterFields[0].DeviceId == null;
-
-                bool isDeviceRequested =
-                    request.DTO.FilterFields[0].MedicalStaffId == null &&
-                    request.DTO.FilterFields[0].ServiceId == null &&
-                    request.DTO.FilterFields[0].DeviceId != null;
-
-                bool isStaffAndServiceRequested =
-                    request.DTO.FilterFields[0].MedicalStaffId != null &&
-                    request.DTO.FilterFields[0].ServiceId != null &&
-                    request.DTO.FilterFields[0].DeviceId == null;
-
-                bool isStaffAndDeviceRequested =
-                    request.DTO.FilterFields[0].MedicalStaffId != null &&
-                    request.DTO.FilterFields[0].ServiceId == null &&
-                    request.DTO.FilterFields[0].DeviceId != null;
-
-                bool isServiceAndDeviceRequested =
-                    request.DTO.FilterFields[0].MedicalStaffId == null &&
-                    request.DTO.FilterFields[0].ServiceId != null &&
-                    request.DTO.FilterFields[0].DeviceId != null;
-
-                bool isAllRequested =
-                    request.DTO.FilterFields[0].MedicalStaffId != null &&
-                    request.DTO.FilterFields[0].ServiceId != null &&
-                    request.DTO.FilterFields[0].DeviceId != null;
-
                 if (isServiceRequested)
                 {
                     appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, serviceId: request.DTO.FilterFields[0].ServiceId).Result;
@@ -274,6 +274,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     $"{_requestTitle} succeeded",
                     appointments);
             }
+
             else
             {
                 await _logger.Log(new Log
