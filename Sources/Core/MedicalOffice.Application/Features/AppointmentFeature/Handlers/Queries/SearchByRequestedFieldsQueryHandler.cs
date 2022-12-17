@@ -74,14 +74,23 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var staffAppointments = new List<AppointmentDetailsDTO>();
-            var deviceAppointments = new List<AppointmentDetailsDTO>();
+            var appointments = new List<AppointmentDetailsDTO>();
             if (request.DTO.FilterFields.Count == 0)
             {
-                //get all staffAppointments of date
-                staffAppointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date).Result;
-                return await response(responseBuilder, staffAppointments);
+                appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date).Result;
+
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = appointments
+                });
+
+                return responseBuilder.Success(HttpStatusCode.OK,
+                    $"{_requestTitle} succeeded",
+                    appointments);
             }
+
             if (request.DTO.FilterFields.Count == 1)
             {
                 bool isServiceRequested =
@@ -119,28 +128,52 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     request.DTO.FilterFields[0].ServiceId != null &&
                     request.DTO.FilterFields[0].DeviceId != null;
 
-
                 if (isServiceRequested)
                 {
-                    staffAppointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, serviceId: request.DTO.FilterFields[0].ServiceId).Result;
-                    return await response(responseBuilder, staffAppointments);
+                    appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, serviceId: request.DTO.FilterFields[0].ServiceId).Result;
                 }
 
                 if (isStaffRequested)
                 {
-                    staffAppointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
-                    return await response(responseBuilder, staffAppointments);
+                    appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
                 }
 
                 if (isDeviceRequested)
                 {
-                    deviceAppointments = _appointmentRepository.GetByDateAndDevice(request.DTO.Date, deviceId: request.DTO.FilterFields[0].DeviceId).Result;
-                    return await response(responseBuilder, deviceAppointments);
+                    appointments = _appointmentRepository.GetByDateAndDevice(request.DTO.Date, deviceId: request.DTO.FilterFields[0].DeviceId).Result;
                 }
 
-                if (isStaffAndServiceRequested)
+                if (isStaffAndDeviceRequested)
                 {
-                    staffAppointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
+                    appointments = _appointmentRepository.GetByStaffAndDevice(
+                        request.DTO.Date,
+                        medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId,
+                        deviceId: request.DTO.FilterFields[0].DeviceId).Result;
+                }
+
+                if (isServiceAndDeviceRequested)
+                {
+                    appointments = _appointmentRepository.GetByServiceAndDevice(
+                        request.DTO.Date,
+                        serviceId: request.DTO.FilterFields[0].ServiceId,
+                        deviceId: request.DTO.FilterFields[0].DeviceId).Result;
+
+                }
+
+                if (isAllRequested || isStaffAndServiceRequested)
+                {
+                    appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
+
+                    if (request.DTO.FilterFields[0].DeviceId != null)
+                    {
+                        var deviceAppointments = _appointmentRepository.GetByDateAndDevice(request.DTO.Date, deviceId: request.DTO.FilterFields[0].DeviceId).Result
+                            .FindAll(x => x.MedicalStaffId != request.DTO.FilterFields[0].MedicalStaffId).ToList();
+
+                        if (deviceAppointments.Count != 0)
+                        {
+                            appointments.AddRange(deviceAppointments);
+                        }
+                    }
 
                     var serviceName = _serviceRepository.GetAllBySearchClause(new { request.DTO.FilterFields[0].ServiceId }).Result.Select(x => x.Name).First();
 
@@ -155,25 +188,26 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     if (staffSchedule != null)
                     {
                         var staffFreeTimes = new List<time>();
-                        if (staffAppointments != null)
+
+                        if (appointments != null)
                         {
                             var times = new List<TimeOnly>();
-                            for (int i = 0; i < staffAppointments.Count; i++)
+                            for (int i = 0; i < appointments.Count; i++)
                             {
                                 if (i == 0 &&
-                                TimeOnly.Parse(staffAppointments[i].StartTime) > TimeOnly.Parse(staffSchedule.MorningStart))
+                                TimeOnly.Parse(appointments[i].StartTime) > TimeOnly.Parse(staffSchedule.MorningStart))
                                 {
                                     var freeTimes = new List<TimeOnly> {
                                     TimeOnly.Parse(staffSchedule.MorningStart),
-                                    TimeOnly.Parse(staffAppointments[i].StartTime)
+                                    TimeOnly.Parse(appointments[i].StartTime)
                                 };
                                     times.AddRange(freeTimes);
                                 }
-                                else if (i == staffAppointments.Count - 1 &&
-                                    TimeOnly.Parse(staffAppointments[i].EndTime) < TimeOnly.Parse(staffSchedule.EveningEnd))
+                                else if (i == appointments.Count - 1 &&
+                                    TimeOnly.Parse(appointments[i].EndTime) < TimeOnly.Parse(staffSchedule.EveningEnd))
                                 {
                                     var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(staffAppointments[i].EndTime),
+                                    TimeOnly.Parse(appointments[i].EndTime),
                                     TimeOnly.Parse(staffSchedule.EveningEnd)
                                 };
                                     times.AddRange(freeTimes);
@@ -181,8 +215,8 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                                 else
                                 {
                                     var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(staffAppointments[i - 1].EndTime),
-                                    TimeOnly.Parse(staffAppointments[i].StartTime)
+                                    TimeOnly.Parse(appointments[i - 1].EndTime),
+                                    TimeOnly.Parse(appointments[i].StartTime)
                                 };
                                     times.AddRange(freeTimes);
                                 }
@@ -203,6 +237,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                                 freeTimeGenerator(staffFreeTimes, service.Duration, times[i], times[i + 1]);
                             }
                         }
+
                         else
                         {
                             var morningStart = TimeOnly.Parse(staffSchedule.MorningStart);
@@ -216,7 +251,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                         foreach (var item in staffFreeTimes)
                         {
-                            staffAppointments.Add(new AppointmentDetailsDTO
+                            appointments.Add(new AppointmentDetailsDTO
                             {
                                 StaffName = staffSchedule.StaffName,
                                 StaffLastName = staffSchedule.StaffLastName,
@@ -228,40 +263,10 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     }
                 }
 
-                if (isStaffAndDeviceRequested)
-                {
-                    staffAppointments = _appointmentRepository.GetByStaffAndDevice(
-                        request.DTO.Date, 
-                        medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId, 
-                        deviceId: request.DTO.FilterFields[0].DeviceId).Result;
-
-                    return await response(responseBuilder, staffAppointments);
-                }
-
-                if (isServiceAndDeviceRequested)
-                {
-                    deviceAppointments = _appointmentRepository.GetByServiceAndDevice(
-                        request.DTO.Date,
-                        serviceId: request.DTO.FilterFields[0].ServiceId,
-                        deviceId: request.DTO.FilterFields[0].DeviceId).Result;
-
-                    return await response(responseBuilder, staffAppointments);
-                }
-
-                if (isAllRequested)
-                {
-
-                }
-            }
-
-            throw new NotImplementedException();
-
-            async Task<BaseResponse> response(ResponseBuilder responseBuilder, List<AppointmentDetailsDTO> appointments)
-            {
                 await _logger.Log(new Log
                 {
                     Type = LogType.Success,
-                    Header = $"{_requestTitle} Succeded",
+                    Header = $"{_requestTitle} succeded",
                     AdditionalData = appointments
                 });
 
@@ -269,7 +274,17 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     $"{_requestTitle} succeeded",
                     appointments);
             }
+            else
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed"
+                });
 
+                return responseBuilder.Faild(HttpStatusCode.BadRequest,
+                    $"{_requestTitle} failed");
+            }
         }
 
         private static void freeTimeGenerator(List<time> staffFreeTimes, int serviceDuration, TimeOnly startTime, TimeOnly endTime)

@@ -13,6 +13,6 @@ namespace MedicalOffice.Domain.Entities
 
         public Guid DeviceId{ get; set; }
 
-        public Device Device{ get; set; }
+        public List<Device> Device{ get; set; }
     }
 }
