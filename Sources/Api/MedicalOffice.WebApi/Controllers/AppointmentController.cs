@@ -67,7 +67,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        [HttpGet("doctor-times")]
+        [HttpGet("period-appointments")]
         public async Task<ActionResult<List<SpecificPeriodAppointmentResDTO>>> GetSpecificPeriodAppointmnet([FromQuery] SpecificPeriodAppointmentDTO dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new GetSpecificPeriodAppointmentsQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
