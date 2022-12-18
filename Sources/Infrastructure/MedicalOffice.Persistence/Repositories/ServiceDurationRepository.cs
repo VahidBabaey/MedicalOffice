@@ -22,7 +22,7 @@ namespace MedicalOffice.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<ServiceNameDurationDTO> GetService(Guid? medicalStaffId, Guid? serviceId)
+        public Task<ServiceNameDurationDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId)
         {
             var service = _dbContext.ServiceDurations.Include(x => x.Service).SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId && x.ServiceId == serviceId).Result;
             var result = _mapper.Map<ServiceNameDurationDTO>(service);

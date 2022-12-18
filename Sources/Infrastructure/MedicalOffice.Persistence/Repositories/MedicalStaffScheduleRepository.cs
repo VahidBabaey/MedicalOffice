@@ -50,7 +50,7 @@ public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSche
             _dbContext.SaveChanges();
         }
     }
-    public async Task<IReadOnlyList<MedicalStaffSchedule>> GetMedicalStaffScheduleByID(Guid Id)
+    public async Task<IReadOnlyList<MedicalStaffSchedule>> GetMedicalStaffScheduleByID(Guid? Id)
     {
         return await _dbContext.MedicalStaffSchedules.Where(srv => srv.MedicalStaffId == Id).ToListAsync();
     }

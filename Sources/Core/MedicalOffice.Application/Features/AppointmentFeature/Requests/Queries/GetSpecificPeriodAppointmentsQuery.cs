@@ -5,9 +5,9 @@ using MedicalOffice.WebApi.WebApi.Controllers;
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries
 {
-    public class GetSpecificDateAppointmentsQuery : IRequest<BaseResponse>
+    public class GetSpecificPeriodAppointmentsQuery : IRequest<BaseResponse>
     {
-        public SpecificDateAppointmentDTO DTO { get; set; }
+        public SpecificPeriodAppointmentDTO DTO { get; set; }
 
         public Guid OfficeId { get; set; }
     }

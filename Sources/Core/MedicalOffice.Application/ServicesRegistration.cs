@@ -56,7 +56,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<AppointmentDTO>, AppointmentValidator>();
         services.AddScoped<IValidator<SearchAppointmentsDTO>, SearchAppointmentValidator>();
         services.AddScoped<IValidator<FilterFields>, FilterFieldsValidator>();
-        services.AddScoped< IValidator < SpecificDateAppointmentDTO >,SpecificDateAppointmentValidator>();
+        services.AddScoped< IValidator < SpecificPeriodAppointmentDTO >,SpecificPeriodAppointmentValidator>();
         #endregion
 
         return services;

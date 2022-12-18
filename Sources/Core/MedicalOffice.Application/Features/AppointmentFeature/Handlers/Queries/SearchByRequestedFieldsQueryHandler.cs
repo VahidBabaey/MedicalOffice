@@ -182,7 +182,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         request.DTO.FilterFields[0].MedicalStaffId,
                         request.DTO.Date.DayOfWeek).Result;
 
-                    var service = _serviceDurationRepository.GetService(
+                    var service = _serviceDurationRepository.GetByServiceAndStaffId(
                         request.DTO.FilterFields[0].MedicalStaffId,
                         request.DTO.FilterFields[0].ServiceId).Result;
 

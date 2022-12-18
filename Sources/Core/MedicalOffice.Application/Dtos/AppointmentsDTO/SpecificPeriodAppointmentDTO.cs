@@ -1,6 +1,6 @@
 ﻿namespace MedicalOffice.WebApi.WebApi.Controllers
 {
-    public class SpecificDateAppointmentDTO
+    public class SpecificPeriodAppointmentDTO
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

@@ -7,7 +7,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
     {
         Task DeleteMedicalStaffSchedule(Guid id);
         
-        Task<IReadOnlyList<MedicalStaffSchedule>> GetMedicalStaffScheduleByID(Guid Id);
+        Task<IReadOnlyList<MedicalStaffSchedule>> GetMedicalStaffScheduleByID(Guid? Id);
         
         Task UpdateMedicalStaffsSchedule(Guid MedicalStaffid, int day, MedicalStaffScheduleDTO MedicalStaffSchedule);
 

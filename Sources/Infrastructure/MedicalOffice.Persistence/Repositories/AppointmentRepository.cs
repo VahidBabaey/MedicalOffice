@@ -130,5 +130,10 @@ namespace MedicalOffice.Persistence.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public Task<List<Appointment>> GetByPeriodAndDeviceId(DateTime startDate, DateTime endDate, Guid? deviceId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

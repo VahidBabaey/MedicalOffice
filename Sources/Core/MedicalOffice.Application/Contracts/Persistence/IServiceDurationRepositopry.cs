@@ -6,6 +6,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IServiceDurationRepositopry : IGenericRepository<ServiceDuration, Guid>
     {
-        Task<ServiceNameDurationDTO> GetService(Guid? MedicalStaffId, Guid? ServiceId);
+        Task<ServiceNameDurationDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId);
     }
 }
