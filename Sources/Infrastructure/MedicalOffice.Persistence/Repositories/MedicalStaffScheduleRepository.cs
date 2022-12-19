@@ -81,4 +81,9 @@ public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSche
 
         return _mapper.Map<MedicalStaffScheduleDayOfWeekDTO>(medicalStaffSchedule);
     }
+
+    public Task<bool> CheckTimeIsInStaffSchedule(Guid? medicalStaffId, DateTime date)
+    {
+        throw new NotImplementedException();
+    }
 }

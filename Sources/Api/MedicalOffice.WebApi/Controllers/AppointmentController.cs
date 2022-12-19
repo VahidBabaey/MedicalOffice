@@ -35,10 +35,10 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        [HttpPatch("status")]
-        public async Task<ActionResult<Guid>> EditAppointmentStatus([FromBody] AppointmentStatusDTO dto, [FromQuery] string officeId)
+        [HttpPatch("type")]
+        public async Task<ActionResult<Guid>> EditAppointmentStatus([FromBody] AppointmentTypeDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new EditAppointmentStatusCommand { DTO = dto, OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new EditAppointmentTypeCommand { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -91,10 +91,34 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        [HttpGet("status")]
+        [HttpGet("types")]
         public async Task<ActionResult<AppointmentType>> GetAllStatus()
         {
             var response = await _mediator.Send(new GetAllStatusQuery { });
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
+        [HttpGet("isValidTime")]
+        public async Task<ActionResult<bool>> IsValidTime(
+            [FromQuery] string startTime,
+            [FromQuery] string endTime,
+            [FromQuery] Guid? medicalStaffId,
+            [FromQuery] Guid serviceId,
+            [FromQuery] Guid? deviceId,
+            [FromQuery] Guid? roomId,
+            [FromQuery] DateTime date)
+        {
+            var response = await _mediator.Send(new IsValidTimeQuery
+            {
+                StartTime = startTime,
+                EndTime = endTime,
+                MedicalStaffId = medicalStaffId,
+                ServiceId = serviceId,
+                DeviceId = deviceId,
+                RoomId = roomId,
+                Date = date 
+            });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

@@ -8,7 +8,6 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class Appointment : BaseDomainEntity<Guid>
 {
-
     /// <summary>
     /// شناسه مطب
     /// </summary>
@@ -60,6 +59,16 @@ public class Appointment : BaseDomainEntity<Guid>
     public Device Device { get; set; }
 
     /// <summary>
+    ///شناسه معرف
+    /// </summary>
+    public Guid? ReferrerId { get; set; }
+
+    /// <summary>
+    /// همه یوزرها
+    /// </summary>
+    public Referrer Referrer{ get; set; }
+
+    /// <summary>
     /// نام بیمار
     /// </summary>
     public string PatientName { get; set; } = string.Empty;
@@ -87,12 +96,17 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// تایم شروع
     /// </summary>
-    public string StartTime { get; set; } = string.Empty;
+    public string? StartTime { get; set; } = string.Empty;
     
     /// <summary>
     /// تایم پایان
     /// </summary>
-    public string EndTime { get; set; } = string.Empty;
+    public string? EndTime { get; set; } = string.Empty;
+
+    /// <summary>
+    /// توضیحات وقت
+    /// </summary>
+    public string Description { get; set; }
 
     /// <summary>
     /// نوع وقت دهی

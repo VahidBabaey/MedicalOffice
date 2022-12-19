@@ -14,12 +14,12 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
         public string PhoneNumber { get; set; }
 
         public string NationalID { get; set; }
+        
+        public DateTime Date { get; set; }
 
-        public string StartTime { get; set; }
+        public string? StartTime { get; set; }
 
-        public string EndTime { get; set; }
-
-        public DateTime date { get; set; }
+        public string? EndTime { get; set; }
 
         public Guid MedicalStaffId { get; set; }
 
@@ -31,6 +31,6 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 
         public Guid? ReferrerId { get; set; }
 
-        public AppointmentType Status{ get; set; }
+        public AppointmentType AppointmentType{ get; set; }
     }
 }

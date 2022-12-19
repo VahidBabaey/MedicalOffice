@@ -29,6 +29,7 @@ using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
 using MedicalOffice.Application.Dtos;
+using MedicalOffice.Application.Dtos.AppointmentsDTO;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -118,6 +119,11 @@ public class MappingProfile : Profile
         CreateMap<MedicalStaffSchedule, MedicalStaffDaySchedule>().ReverseMap();
         CreateMap<ServiceDuration, ServiceDurationDTO>().ReverseMap();
         CreateMap<AppointmentDetailsDTO, Appointment>().ReverseMap();
+        CreateMap<Appointment, TransferAppointmentDto>()
+            .ReverseMap()
+            .ForAllMembers(x=>x.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<Appointment, AppointmentDescriptionDTO>().ReverseMap();
+        CreateMap<Appointment, AppointmentTypeDTO>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDto>
