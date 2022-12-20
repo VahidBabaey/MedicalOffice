@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 {
-    public class TransferAppointmentValidator : AbstractValidator<TransferAppointmentDTO>   
+    public class PatientInfoValidator:AbstractValidator<PatientInfoDTO>
     {
-        public TransferAppointmentValidator()
+        public PatientInfoValidator()
         {
 
         }

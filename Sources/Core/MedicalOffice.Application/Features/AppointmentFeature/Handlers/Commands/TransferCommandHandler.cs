@@ -8,6 +8,7 @@ using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 {
     public class TransferCommandHandler : IRequestHandler<TransferCommand, BaseResponse>
     {
-        private readonly IValidator<TransferAppointmentDto> _validator;
+        private readonly IValidator<TransferAppointmentDTO> _validator;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IAppointmentRepository _appointmentRepository;
@@ -32,7 +33,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
         private readonly string _requestTitle;
 
         public TransferCommandHandler(
-            IValidator<TransferAppointmentDto> validator,
+            IValidator<TransferAppointmentDTO> validator,
             ILogger logger,
             IMapper mapper,
             IAppointmentRepository appointmentRepository,
@@ -70,14 +71,31 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             }
 
             var existingAppointment = _appointmentRepository.GetById(request.DTO.AppointmentId).Result;
-
             if (existingAppointment == null)
             {
-                throw new ArgumentException("");
+                var error = "The appointment isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             var newAppointment = _mapper.Map<Appointment>(existingAppointment);
             newAppointment = _mapper.Map<Appointment>(request.DTO);
+
+            if (request.DTO.RoomId != null && request.DTO.DeviceId == null)
+            {
+                var roomHasDevice = _deviceRepository.GetDevicesByRoomId((Guid)request.DTO.RoomId).Result
+                    .Contains(new Device { Id = existingAppointment.DeviceId });
+
+                if (!roomHasDevice)
+                {
+                    newAppointment.DeviceId = default;
+                }
+            }
 
             //if (request.DTO.ServiceId != null)
             //{
@@ -182,7 +200,13 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             await _appointmentRepository.Update(newAppointment);
 
-            throw new NotImplementedException();
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = newAppointment.Id
+            });
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", newAppointment.Id);
         }
 
         static bool isValidTime(AppointmentDetailsDTO time, string startTime, string endTime)

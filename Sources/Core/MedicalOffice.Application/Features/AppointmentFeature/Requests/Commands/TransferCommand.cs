@@ -6,7 +6,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Requests.Command
 {
     public class TransferCommand : IRequest<BaseResponse>
     {
-        public TransferAppointmentDto DTO { get; set; }
+        public TransferAppointmentDTO DTO { get; set; }
         public Guid OfficeId { get; set; }
     }
 }

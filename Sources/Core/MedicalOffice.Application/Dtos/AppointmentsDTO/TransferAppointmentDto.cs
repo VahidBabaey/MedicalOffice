@@ -1,6 +1,6 @@
 ﻿namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class TransferAppointmentDto
+    public class TransferAppointmentDTO
     {
         public Guid AppointmentId { get; set; }
 

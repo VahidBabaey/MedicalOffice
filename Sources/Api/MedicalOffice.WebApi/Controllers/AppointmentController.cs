@@ -44,7 +44,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpPatch("transfer")]
-        public async Task<ActionResult<Guid>> TransferAppointment([FromBody] TransferAppointmentDto dto, [FromQuery] string officeId)
+        public async Task<ActionResult<Guid>> TransferAppointment([FromBody] TransferAppointmentDTO dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new TransferCommand { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
@@ -67,18 +67,18 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        [HttpGet("period-appointments")]
-        public async Task<ActionResult<List<SpecificPeriodAppointmentResDTO>>> GetSpecificPeriodAppointmnet([FromQuery] SpecificPeriodAppointmentDTO dto, [FromQuery] string officeId)
+        [HttpPost("search")]
+        public async Task<ActionResult<List<AppointmentDetailsDTO>>> SearchByRequestedFeilds([FromBody] SearchAppointmentsDTO dto)
         {
-            var response = await _mediator.Send(new GetSpecificPeriodAppointmentsQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new SearchByRequestedFieldsQuery { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<AppointmentDetailsDTO>>> SearchByRequestedFeilds([FromQuery] SearchAppointmentsDTO dto)
+        [HttpGet("period-appointments")]
+        public async Task<ActionResult<List<SpecificPeriodAppointmentResDTO>>> GetSpecificPeriodAppointmnet([FromQuery] SpecificPeriodAppointmentDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new SearchByRequestedFieldsQuery { DTO = dto });
+            var response = await _mediator.Send(new GetSpecificPeriodAppointmentsQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

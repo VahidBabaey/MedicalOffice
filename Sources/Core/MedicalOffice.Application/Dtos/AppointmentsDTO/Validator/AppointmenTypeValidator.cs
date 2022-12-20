@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 {
-    public class AppointmenTypeValidator : AbstractValidator<AppointmentTypeDTO>
+    public class AppointmentTypeValidator : AbstractValidator<AppointmentTypeDTO>
     {
-        public AppointmenTypeValidator()
+        public AppointmentTypeValidator()
         {
             var validTypesToUpadete= new AppointmentType[] { AppointmentType.FinalApproval, AppointmentType.Canceled};
 

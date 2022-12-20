@@ -70,8 +70,16 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             await _appointmentRepository.Update(newAppointment);
 
-            throw new NotImplementedException();
+            await _appointmentRepository.Update(newAppointment);
 
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = newAppointment.Id
+            });
+
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", newAppointment.Id);
         }
     }
 }

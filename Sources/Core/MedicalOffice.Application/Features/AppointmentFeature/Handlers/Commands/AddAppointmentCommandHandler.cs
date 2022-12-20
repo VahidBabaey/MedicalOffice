@@ -9,6 +9,7 @@ using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -114,18 +115,26 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            if (request.DTO.DeviceId != null)
+            if (request.DTO.RoomId != null && request.DTO.DeviceId != null)
             {
-                var device = _deviceRepository.GetById((Guid)request.DTO.DeviceId);
+                var roomHasDevice = _deviceRepository.GetDevicesByRoomId((Guid)request.DTO.RoomId).Result
+                    .Contains(new Device { Id = (Guid)request.DTO.DeviceId });
 
-                if (device==null)
+                if (!roomHasDevice)
                 {
-                    throw new ArgumentNullException();
+                    var error = "Device isn't exist in this room";
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error
+                    });
+                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
                 }
 
                 var deviceExistingAppointments = _appointmentRepository.GetByDateAndDevice(
-                    request.DTO.Date, 
-                    deviceId: request.DTO.DeviceId, 
+                    request.DTO.Date,
+                    deviceId: request.DTO.DeviceId,
                     roomId: request.DTO.RoomId).Result;
 
                 invalidAppointment = deviceExistingAppointments.FirstOrDefault(x => !isValidTime(x, request.DTO.StartTime, request.DTO.EndTime));
@@ -143,8 +152,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 }
             }
 
-            if (request.DTO.DeviceId == null &&
-                request.DTO.RoomId != null)
+            if (request.DTO.DeviceId == null && request.DTO.RoomId != null)
             {
                 var deviceExistingAppointments = _appointmentRepository.GetByDateAndDevice(request.DTO.Date, roomId: request.DTO.RoomId).Result;
                 invalidAppointment = deviceExistingAppointments.FirstOrDefault(x => !isValidTime(x, request.DTO.StartTime, request.DTO.EndTime));

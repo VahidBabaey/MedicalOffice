@@ -76,7 +76,7 @@ namespace MedicalOffice.Persistence.Repositories
                 .Include(x => x.Device)
                 .Where(x => x.Date == date).ToListAsync();
 
-            if (deviceId != null)
+            if (deviceId != null || deviceId != default)
                 appointments = await _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
@@ -84,13 +84,14 @@ namespace MedicalOffice.Persistence.Repositories
                     .Include(x => x.Device)
                     .Where(x => x.Date == date && x.DeviceId == deviceId).ToListAsync();
 
-            if (roomId != null)
+            if (roomId != null || roomId != default)
                 appointments = await _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
                     .Where(x => x.Date == date && x.RoomId == roomId).ToListAsync();
 
-            if (deviceId != null && roomId != null)
+            if ((deviceId != null || deviceId != default) &&
+                (roomId != null || roomId != default))
                 appointments = await _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)

@@ -95,6 +95,7 @@ public static class ServiceRegistration
         services.AddScoped<IOfficeRepository, OfficeRepository>();
         services.AddScoped<IServiceDurationRepositopry, ServiceDurationRepository>();
         services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+        services.AddScoped<IDeviceRepository, DeviceRepository>();
 
         return services;
     }

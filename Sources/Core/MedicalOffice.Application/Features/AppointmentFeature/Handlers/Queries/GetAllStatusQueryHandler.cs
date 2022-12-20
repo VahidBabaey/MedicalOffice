@@ -18,20 +18,13 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
         public async Task<BaseResponse> Handle(GetAllStatusQuery request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
-
-            var appointmentTypeEnum = new List<AppointmentTypeClass>();
-            foreach (int item in Enum.GetValues(typeof(AppointmentType)))
+            var appointmentTypes = Enum.GetValues<AppointmentType>().ToList().Select(a => new 
             {
-                appointmentTypeEnum.Add(new AppointmentTypeClass { code = item, Type = Enum.GetName(typeof(AppointmentType),item) });
-            }
+                Key = a.ToString(),
+                Value = Convert.ToInt32(a)
+            });
 
-            return responseBuilder.Success(HttpStatusCode.OK, "succeded", appointmentTypeEnum);
+            return responseBuilder.Success(HttpStatusCode.OK, "succeded", appointmentTypes);
         }
-    }
-
-    internal class AppointmentTypeClass
-    {
-        public int code { get; set; }
-        public string Type{ get; set; }
     }
 }
