@@ -15,6 +15,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<AppointmentType> AppointmentTypes => Set<AppointmentType>();
     public DbSet<BasicInfo> BasicInfos => Set<BasicInfo>();
     public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<Cash> Cashes => Set<Cash>();
+    public DbSet<CashPos> CashPoses => Set<CashPos>();
+    public DbSet<CashCart> CashCarts => Set<CashCart>();
+    public DbSet<CashCheck> CashChecks => Set<CashCheck>();
     public DbSet<BasicInfoDetail> BasicInfoDetail => Set<BasicInfoDetail>();
     public DbSet<Diagnose> Diagnoses => Set<Diagnose>();
     public DbSet<DiscountType> DiscountTypes => Set<DiscountType>();
@@ -53,6 +57,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<PMH> PMH => Set<PMH>();
     public DbSet<Reception> Receptions => Set<Reception>();
     public DbSet<ReceptionDetail> ReceptionDetails => Set<ReceptionDetail>();
+    public DbSet<ReceptionDebt> ReceptionDebts => Set<ReceptionDebt>();
     public DbSet<ReceptionDiscount> ReceptionDiscounts => Set<ReceptionDiscount>();
     public DbSet<ReceptionMedicalStaff> ReceptionMedicalStaffs => Set<ReceptionMedicalStaff>();
     public DbSet<ReceptionDetailService> ReceptionDetailServices => Set<ReceptionDetailService>();

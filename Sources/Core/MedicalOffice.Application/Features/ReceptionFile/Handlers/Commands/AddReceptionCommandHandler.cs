@@ -2,9 +2,8 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.SectionDTO.Validators;
+using MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;

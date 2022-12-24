@@ -43,15 +43,15 @@ public class Reception : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی شیفت
     /// </summary>
-    public Guid ShiftId { get; set; }
+    public Guid? ShiftId { get; set; }
     /// <summary>
     /// یوزر لاگین شده
     /// </summary>
-    public MedicalStaff? MedicalStaff { get; set; }
+    public MedicalStaff? LoggedInMedicalStaff { get; set; }
     /// <summary>
     /// آیدی یوزر لاگین شده
     /// </summary>
-    public Guid LoggedInMedicalStaffId { get; set; }
+    public Guid? LoggedInMedicalStaffId { get; set; }
     /// <summary>
     /// شماره فاکتور
     /// </summary>
@@ -64,6 +64,14 @@ public class Reception : BaseDomainEntity<Guid>
     /// جزئیات پذیرش
     /// </summary>
     public ICollection<ReceptionDetail> ReceptionDetails { get; set; } = new List<ReceptionDetail>();
+    /// <summary>
+    /// پرداخت
+    /// </summary>
+    public ICollection<Cash> Cashs { get; set; } = new List<Cash>();
+    /// <summary>
+    /// بدهی
+    /// </summary>
+    public ICollection<ReceptionDebt> ReceptionDebts { get; set; } = new List<ReceptionDebt>();
     /// <summary>
     /// جمع کلی هزینه
     /// </summary>
@@ -88,4 +96,8 @@ public class Reception : BaseDomainEntity<Guid>
     /// پذیرش به طور کامل برگشت خورده یا خیر
     /// </summary>
     public bool IsReturned { get; set; }
+    /// <summary>
+    /// پرداخت بدهی
+    /// </summary>
+    public bool IsDebt { get; set; }
 }

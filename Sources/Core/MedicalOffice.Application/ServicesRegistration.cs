@@ -19,7 +19,7 @@ public static class ServicesRegistration
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        //services.AddMediatR(Assembly.GetExecutingAssembly());
 
 
         #region Identity
@@ -37,5 +37,10 @@ public static class ServicesRegistration
         #endregion Office
 
         return services;
+    }
+    public static IServiceCollection AddApplication(this IServiceCollection services)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        return services.AddMediatR(assembly);
     }
 }

@@ -91,8 +91,13 @@ public static class ServiceRegistration
         services.AddScoped<IUserOfficePermissionRepository, UserOfficePermissionRepository>();
         services.AddScoped<IMemberShipServiceRepository, MemberShipServiceRepository>();
         services.AddScoped<IReceptionRepository, ReceptionRepository>();
+        services.AddScoped<IReceptionDebtRepository, ReceptionDebtRepository>();
         services.AddScoped<IReceptionDiscountRepository, ReceptionDiscountRepository>();
         services.AddScoped<IOfficeRepository, OfficeRepository>();
+        services.AddScoped<ICashRepository, CashRepository>();
+        services.AddScoped<ICashPosRepository, CashPosRepository>();
+        services.AddScoped<ICashCartRepository, CashCartRepository>();
+        services.AddScoped<ICashCheckRepository, CashCheckRepository>();
 
         return services;
     }

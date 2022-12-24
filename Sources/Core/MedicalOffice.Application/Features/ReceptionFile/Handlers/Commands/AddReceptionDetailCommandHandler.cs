@@ -2,7 +2,8 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Reception;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
+using MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
 using MedicalOffice.Application.Dtos.SectionDTO.Validators;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
@@ -19,15 +20,19 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
 public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDetailCommand, BaseResponse>
 {
     private readonly IReceptionRepository _repository;
+    private readonly ICashRepository _repositoryCash;
+    private readonly IReceptionDebtRepository _repositoryDebt;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddReceptionDetailCommandHandler(IReceptionRepository repository, IMapper mapper, ILogger logger)
+    public AddReceptionDetailCommandHandler(IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository repository, IMapper mapper, ILogger logger)
     {
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
+        _repositoryCash = repositoryCash;
+        _repositoryDebt = repositoryDebt;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
@@ -53,13 +58,20 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
         {
             try
             {
-                //var reception = _mapper.Map<Reception>(request.DTO);
+                var receptionDetail = await _repository.AddReceptionService(request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.Cost, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
 
-                await _repository.AddReceptionService(request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.Cost, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
+                await _repositoryCash.AddCashForAnyReceptionDetail(receptionDetail.OfficeId, receptionDetail.ReceptionId, receptionDetail.Cost);
+
+                if (receptionDetail.Debt > 0)
+                {
+
+                    //await _repositoryDebt.AddReceptionDebt(receptionDetail.ReceptionId, receptionDetail.Id, receptionDetail.OfficeId, receptionDetail.Debt);
+
+                }
 
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
-                //response.Data = (new { Id = reception.Id });
+                response.Data = (new { Id = receptionDetail });
 
                 log.Type = LogType.Success;
             }

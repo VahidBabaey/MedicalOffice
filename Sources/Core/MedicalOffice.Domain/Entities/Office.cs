@@ -66,24 +66,25 @@ public class Office : BaseDomainEntity<Guid>
     /// جزئیات پذیرش
     /// </summary>
     public ICollection<ReceptionDetail>? ReceptionDetails { get; set; }
-
     /// <summary>
     /// دسترسی ها
     /// </summary>
     public ICollection<Picture>? Pictures { get; set; }
-
     /// <summary>
     /// ارتباط یک به چند مطب با کاربرانش
     /// </summary>
     public ICollection<MedicalStaff> MedicalStaffs { get; set; } = new HashSet<MedicalStaff>();
-
     /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و کاربر-مطب-نقش استفاده می شود
     /// </summary>
     public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
-
     /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و دسترسی های کاربر مطب استفاده می شود
     /// </summary>
     public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; }
+    /// <summary>
+    /// ارتباط یک به چند مطب با صندوق
+    /// </summary>
+    public ICollection<Cash>? Cashes { get; set; }
+
 }

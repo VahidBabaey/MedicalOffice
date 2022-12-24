@@ -3,7 +3,7 @@ using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.Reception;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Dtos.RoleDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
@@ -69,7 +69,7 @@ public class ReceptionController : Controller
     }
 
     [HttpPost("Reception")]
-    public async Task<ActionResult<Guid>> CreateReception([FromBody] ReceptionDTO dto)
+    public async Task<ActionResult<Guid>> CreateReception([FromBody] ReceptionsDTO dto)
     {
         var response = await _mediator.Send(new AddReceptionCommand() { DTO = dto });
 

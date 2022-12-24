@@ -24,9 +24,10 @@ using MedicalOffice.Domain.Entities;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO;
-using MedicalOffice.Application.Dtos.Reception;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Dtos.OfficeDTO;
+using MedicalOffice.Application.Dtos.CashDTO;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -111,10 +112,16 @@ public class MappingProfile : Profile
         CreateMap<User, MedicalStaffDTO>().ReverseMap();
         CreateMap<Membership, MembershipNamesDTO>().ReverseMap();
         CreateMap<ReceptionDiscount, ReceptionDiscountDTO>().ReverseMap();
-        CreateMap<Reception, ReceptionDTO>().ReverseMap();
-        //CreateMap<ReceptionDetail, DetailsofAllReceptionsDTO>().ReverseMap();
+        CreateMap<Reception, ReceptionsDTO>().ReverseMap();
         CreateMap<User, UserRoleDTO>().ReverseMap();
         CreateMap<Office, OfficeDTO>().ReverseMap();
+        CreateMap<Cash, CashesDTO>().ReverseMap();
+        CreateMap<CashCart, CashCartDTO>().ReverseMap();
+        CreateMap<CashCart, UpdateCashCartDTO>().ReverseMap();
+        CreateMap<CashCheck, CashCheckDTO>().ReverseMap();
+        CreateMap<CashCheck, UpdateCashCheckDTO>().ReverseMap();
+        CreateMap<CashPos, CashPosDTO>().ReverseMap();
+        CreateMap<CashPos, UpdateCashPosDTO>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDto>

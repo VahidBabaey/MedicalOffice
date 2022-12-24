@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Reception;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
 
 
 namespace MedicalOffice.Application.Dtos.Discount;
