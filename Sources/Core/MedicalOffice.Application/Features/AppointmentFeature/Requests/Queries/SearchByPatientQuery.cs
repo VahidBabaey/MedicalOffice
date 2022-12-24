@@ -6,7 +6,8 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries
 {
     public class SearchByPatientQuery : IRequest<BaseResponse>
     {
-        public SearchByPatientDTO DTO { get; set; }
+        public string Input{ get; set; }
+        public DateTime? Date{ get; set; }
         public Guid OfficeId { get; set; }
     }
 }

@@ -84,9 +84,9 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpGet("patient-appointments")]
-        public async Task<ActionResult<List<AppointmentDetailsDTO>>> searchByPatient([FromQuery] SearchByPatientDTO dto, [FromQuery] string officeId)
+        public async Task<ActionResult<List<AppointmentDetailsDTO>>> searchByPatient([FromQuery] string input, DateTime? date, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new SearchByPatientQuery { DTO = dto, OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new SearchByPatientQuery { Input=input, Date = date, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -117,7 +117,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
                 ServiceId = serviceId,
                 DeviceId = deviceId,
                 RoomId = roomId,
-                Date = date 
+                Date = date
             });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);

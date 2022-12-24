@@ -9,6 +9,7 @@ using MedicalOffice.Application.Dtos.ServiceDurationDTO;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.WebApi.WebApi.Controllers;
 using System;
@@ -29,6 +30,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
         private readonly IServiceRepository _serviceRepository;
         private readonly IMedicalStaffScheduleRepository _staffScheduleRepository;
         private readonly IServiceDurationRepositopry _serviceDurationRepository;
+        private readonly IDeviceRepository _deviceRepository;
 
         private readonly string _requestTitle;
 
@@ -38,7 +40,8 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
             IAppointmentRepository appointmentRepository,
             IServiceRepository serviceRepository,
             IMedicalStaffScheduleRepository staffScheduleRepository,
-            IServiceDurationRepositopry serviceDurationRepository)
+            IServiceDurationRepositopry serviceDurationRepository,
+            IDeviceRepository deviceRepository)
         {
             _validator = validator;
             _logger = logger;
@@ -48,6 +51,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
             _serviceDurationRepository = serviceDurationRepository;
 
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
+            _deviceRepository = deviceRepository;
         }
 
         public async Task<BaseResponse> Handle(GetSpecificPeriodAppointmentsQuery request, CancellationToken cancellationToken)
@@ -70,11 +74,41 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
             var result = new List<SpecificPeriodAppointmentResDTO>();
 
+            //TODO: it should go to validator
+            if (request.DTO.RoomId != null && request.DTO.DeviceId != null)
+            {
+                var roomHasDevice = _deviceRepository.GetDevicesByRoomId((Guid)request.DTO.RoomId).Result
+                    .Contains(new Device { Id = (Guid)request.DTO.DeviceId });
+
+                if (!roomHasDevice)
+                {
+                    var error = "Device isn't exist in this room";
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error
+                    });
+                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                }
+            }
+
             if (request.DTO.MedicalStaffId == null && request.DTO.DeviceId == null)
             {
+                //TODO: It should go to validator
                 var existingService = _serviceRepository.GetById(request.DTO.ServiceId);
                 if (existingService == null)
-                    throw new ArgumentException("Sevice id doesnt exist!");
+                {
+                    var error = "Service isn't exist in this room";
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error
+                    });
+
+                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                }
 
                 var serviceDuration = _serviceDurationRepository.GetAllBySearchClause(new { ServiceId = request.DTO.ServiceId }).Result.ToList();
 
@@ -90,11 +124,11 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         .GetByServiceAndStaffId(serviceId: request.DTO.ServiceId, medicalStaffId: staffId).Result;
                     if (service == null)
                     {
-                        throw new ArgumentException("There is no service for this staff");
+                        continue;
                     }
 
                     var appointments = new List<Appointment>();
-                    appointments = _appointmentRepository.GetByTimePeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, staffId).Result.ToList();
+                    appointments = _appointmentRepository.GetByPeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, staffId).Result.ToList();
 
                     var staffSchedule = new List<MedicalStaffSchedule>();
                     staffSchedule = _staffScheduleRepository.GetAllBySearchClause(new MedicalStaffSchedule { MedicalStaffId = staffId }).Result.ToList();
@@ -138,7 +172,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                 var appointments = new List<Appointment>();
                 appointments = _appointmentRepository
-                    .GetByTimePeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, request.DTO.MedicalStaffId).Result.ToList();
+                    .GetByPeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, request.DTO.MedicalStaffId).Result.ToList();
 
                 var staffSchedule = new List<MedicalStaffSchedule>();
                 staffSchedule = _staffScheduleRepository.GetMedicalStaffScheduleByID(request.DTO.MedicalStaffId).Result.ToList();
@@ -156,12 +190,20 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     .GetByServiceAndStaffId(serviceId: request.DTO.ServiceId, medicalStaffId: request.DTO.MedicalStaffId).Result;
                 if (service == null)
                 {
-                    throw new ArgumentException("There is no service for this staff");
+                    var error = "Service isn't exist";
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error
+                    });
+
+                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
                 }
 
                 var appointments = new List<Appointment>();
                 appointments = _appointmentRepository
-                    .GetByTimePeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, request.DTO.MedicalStaffId).Result.ToList();
+                    .GetByPeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, request.DTO.MedicalStaffId).Result.ToList();
 
                 var deviceAppointments = new List<Appointment>();
                 deviceAppointments = _appointmentRepository
@@ -174,7 +216,15 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                 if (staffSchedule == null)
                 {
-                    throw new ArgumentException("There is no schedule for this staff");
+                    var error = "There is no schedule for this staff";
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error
+                    });
+
+                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
                 }
 
                 eachStaffPeriodAppointmetsCounts(result, service, appointments, staffSchedule);
