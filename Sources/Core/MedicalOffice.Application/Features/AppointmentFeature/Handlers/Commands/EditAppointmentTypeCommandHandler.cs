@@ -36,13 +36,12 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
-
         public async Task<BaseResponse> Handle(EditAppointmentTypeCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
-            if (!validationResult.IsValid)
+
             {
                 await _logger.Log(new Log
                 {
@@ -57,31 +56,52 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             var existingAppointment = _appointmentRepository.GetById(request.DTO.AppointmentId).Result;
 
-            if (existingAppointment == null)
-            {
-                throw new ArgumentException("");
-            }
-
             var validToChangeToFinalApproval = new AppointmentType[] { AppointmentType.Approved, AppointmentType.BetweenPatients };
             var validToChangeToCanceled = new AppointmentType[] { AppointmentType.Approved, AppointmentType.BetweenPatients, AppointmentType.FinalApproval };
 
             if (request.DTO.AppointmentType == AppointmentType.FinalApproval &&
                 !validToChangeToFinalApproval.Contains(existingAppointment.AppointmentType))
             {
-                throw new ArgumentException();
+                var error = $"existing type to change for this new type should be {validToChangeToFinalApproval}";
+
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
+                });
+
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                    validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
             if (request.DTO.AppointmentType == AppointmentType.Canceled &&
                 !validToChangeToCanceled.Contains(existingAppointment.AppointmentType))
             {
-                throw new ArgumentException();
+                var error = $"existing type to change for this new type should be {validToChangeToCanceled}";
+
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var newAppointment = _mapper.Map<Appointment>(request.DTO);
+            existingAppointment = _mapper.Map<Appointment>(request.DTO);
 
-            await _appointmentRepository.Update(newAppointment);
+            await _appointmentRepository.Update(existingAppointment);
 
-            throw new NotImplementedException();
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = existingAppointment.Id
+            });
+
+            return responseBuilder.Success(HttpStatusCode.BadRequest, $"{_requestTitle} succeeded", existingAppointment.Id);
         }
     }
 }

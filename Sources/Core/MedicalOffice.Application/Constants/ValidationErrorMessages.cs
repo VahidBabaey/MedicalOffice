@@ -64,11 +64,11 @@ public static class ValidationErrorExtensions
             return string.Empty;
     }
 
-    public static string For<T>(this ValidationError error, params Expression<Func<T, object>>[] expressions)
-    {
-        var propertyNames = expressions.Select(exp => exp.GetPropertyAccess().Name).ToArray();
-        var result = string.Format(error.Message, propertyNames);
+    //public static string For<T>(this ValidationError error, params Expression<Func<T, object>>[] expressions)
+    //{
+    //    var propertyNames = expressions.Select(exp => exp.GetPropertyAccess().Name).ToArray();
+    //    var result = string.Format(error.Message, propertyNames);
 
-        return result;
-    }
+    //    return result;
+    //}
 }

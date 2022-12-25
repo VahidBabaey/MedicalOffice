@@ -14,5 +14,7 @@ namespace MedicalOffice.Domain
         public Guid RoomId { get; set; }
 
         public Room Room { get; set; }
+
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }

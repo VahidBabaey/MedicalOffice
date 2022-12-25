@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Domain;
 using MedicalOffice.Domain.Common;
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -70,6 +71,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<MedicalStaffOfficeSpecialization> MedicalStaffOfficeSpecializations => Set<MedicalStaffOfficeSpecialization>();
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
     public DbSet<ServiceDuration> ServiceDurations=> Set<ServiceDuration>();
+    public DbSet<Room> Rooms=> Set<Room>();
+    public DbSet<Device> Devices=> Set<Device>();
 
     private readonly IUserResolverService _userResolver;
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolverService userResolver) : base(options)

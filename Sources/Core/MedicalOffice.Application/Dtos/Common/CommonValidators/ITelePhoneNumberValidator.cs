@@ -13,11 +13,11 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
     {
         public ITelePhoneNumberValidator()
         {
-            RuleFor(p => p.TelePhoneNumber)
-           .NotEmpty().WithMessage(ValidationMessage.Required.For<ITelePhoneNumberDTO>(p => p.TelePhoneNumber))
-           .Must(p => IsValidTelePhoneNumber(p)).WithMessage(ValidationMessage.NotValid.For<ITelePhoneNumberDTO>(p => p.TelePhoneNumber));
+            RuleFor(x=>x.TelePhoneNumber)
+           .NotEmpty().WithMessage(ValidationMessage.Required.For("TelePhoneNumber"))
+           .Must(p => IsValidTelePhoneNumber(p)).WithMessage(ValidationMessage.NotValid.For("TelePhoneNumber"));
         }
-        bool IsValidTelePhoneNumber(string telePhoneNumber)
+        private static bool IsValidTelePhoneNumber(string telePhoneNumber)
         {
             Regex regex = new Regex(@"^0[0-9]{2,}[0-9]{7,}$");
 

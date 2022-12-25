@@ -1,6 +1,8 @@
-﻿namespace MedicalOffice.Application.Dtos.AppointmentsDTO
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+
+namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class AppointmentDescriptionDTO
+    public class AppointmentDescriptionDTO: IAppointmentIdDTO
     {
         public Guid AppointmentId { get; set; }
         public string Description { get; set; }

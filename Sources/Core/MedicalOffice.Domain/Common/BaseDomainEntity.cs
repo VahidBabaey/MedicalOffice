@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MedicalOffice.Domain.Common;
 
@@ -8,9 +9,13 @@ public class BaseDomainEntity<T> where T : struct
 
     public DateTime CreatedDate { get; set; } = default;
     public Guid CreatedById { get; set; } = default;
+
+    [NotMapped]
     public User CreatedBy { get; set; }
     public DateTime LastUpdatedDate { get; set; } = default;
     public Guid LastUpdatedById { get; set; } = default;
+    
+    [NotMapped]
     public User LastUpdatedBy { get; set; }
 
     public bool IsDeleted { get; set; } = default;

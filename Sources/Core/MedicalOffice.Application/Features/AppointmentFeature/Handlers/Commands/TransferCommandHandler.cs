@@ -5,6 +5,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
+using MedicalOffice.Application.Features.AppointmentFeature.Helper;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -97,74 +98,8 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 }
             }
 
-            //if (request.DTO.ServiceId != null)
-            //{
-            //    var serviceId = _serviceRepository.GetAll().Result.FirstOrDefault(x => x.Id == request.DTO.ServiceId);
-            //    if (serviceId == null)
-            //    {
-            //        var error = "Service id does not exist!";
-            //        await _logger.Log(new Log
-            //        {
-            //            Type = LogType.Error,
-            //            Header = $"{_requestTitle} failed",
-            //            AdditionalData = error
-            //        });
-
-            //        return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            //    }
-            //}
-            //else
-            //{
-            //    newAppointment.ServiceId = existingAppointment.ServiceId;
-            //}
-
-            //if (request.DTO.MedicalStaffId != null)
-            //{
-            //    var medicalStaff = _medicalStaffRepository.GetAll().Result.FirstOrDefault(x => x.Id == request.DTO.MedicalStaffId);
-            //    if (medicalStaff == null)
-            //    {
-            //        var error = "MedicalStaffId does not exist!";
-            //        await _logger.Log(new Log
-            //        {
-            //            Type = LogType.Error,
-            //            Header = $"{_requestTitle} failed",
-            //            AdditionalData = error
-            //        });
-
-            //        return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            //    }
-            //}
-            //else
-            //{
-            //    newAppointment.MedicalStaffId = existingAppointment.MedicalStaffId;
-            //}
-
-            //if (request.DTO.DeviceId != null)
-            //{
-            //    var device = _deviceRepository.GetById((Guid)request.DTO.DeviceId);
-
-            //    if (device == null)
-            //    {
-            //        throw new ArgumentNullException();
-            //    }
-            //}
-            //else
-            //{
-            //    newAppointment.DeviceId = existingAppointment.DeviceId;
-            //}
-
-            //if (request.DTO.StartTime == null)
-            //{
-            //    newAppointment.StartTime = existingAppointment.StartTime;
-            //}
-
-            //if (request.DTO.EndTime == null)
-            //{
-            //    newAppointment.EndTime = existingAppointment.EndTime;
-            //}
-
             var staffExistingAppointments = _appointmentRepository.GetByDateAndStaff(newAppointment.Date, medicalStaffId: newAppointment.MedicalStaffId).Result;
-            var invalidAppointment = staffExistingAppointments.FirstOrDefault(x => !isValidTime(x, newAppointment.StartTime, newAppointment.EndTime));
+            var invalidAppointment = staffExistingAppointments.FirstOrDefault(x => !TimeHelper.isTimeValid(x, newAppointment.StartTime, newAppointment.EndTime));
 
             if (invalidAppointment != null)
             {
@@ -184,7 +119,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 deviceId: newAppointment.DeviceId,
                 roomId: newAppointment.RoomId).Result;
 
-            invalidAppointment = deviceExistingAppointments.FirstOrDefault(x => !isValidTime(x, newAppointment.StartTime, newAppointment.EndTime));
+            invalidAppointment = deviceExistingAppointments.FirstOrDefault(x => !TimeHelper.isTimeValid(x, newAppointment.StartTime, newAppointment.EndTime));
 
             if (invalidAppointment != null)
             {
@@ -207,26 +142,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 AdditionalData = newAppointment.Id
             });
             return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", newAppointment.Id);
-        }
-
-        static bool isValidTime(AppointmentDetailsDTO time, string startTime, string endTime)
-        {
-            var serviceTime = (TimeOnly.Parse(endTime) - TimeOnly.Parse(startTime)).TotalMinutes;
-
-            if (TimeOnly.Parse(time.StartTime) < TimeOnly.Parse(endTime) &&
-                TimeOnly.Parse(startTime) < TimeOnly.Parse(time.EndTime))
-                return false;
-
-            if (TimeOnly.Parse(time.StartTime) == TimeOnly.Parse(startTime) ||
-                TimeOnly.Parse(time.EndTime) == TimeOnly.Parse(endTime))
-                return false;
-
-            if (
-                (TimeOnly.Parse(startTime) - TimeOnly.Parse(time.StartTime)).TotalMinutes < serviceTime ||
-                (TimeOnly.Parse(endTime) - TimeOnly.Parse(time.EndTime)).TotalMinutes < serviceTime)
-                return false;
-
-            return true;
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class AppointmentDTO : IPhoneNumberDTO, INationalIdDTO
+    public class AppointmentDTO : IPhoneNumberDTO, INationalIdDTO, IServiceIdDTO, IMedicalStaffDTO
     {
         public string PatientName { get; set; }
 
@@ -14,7 +15,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
         public string PhoneNumber { get; set; }
 
         public string NationalID { get; set; }
-        
+
         public DateTime Date { get; set; }
 
         public string? StartTime { get; set; }
@@ -31,6 +32,6 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 
         public Guid? ReferrerId { get; set; }
 
-        public AppointmentType AppointmentType{ get; set; }
+        public AppointmentType AppointmentType { get; set; }
     }
 }

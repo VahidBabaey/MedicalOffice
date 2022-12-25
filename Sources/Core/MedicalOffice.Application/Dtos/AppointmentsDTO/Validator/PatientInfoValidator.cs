@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Common.CommonValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,9 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
     {
         public PatientInfoValidator()
         {
-
+            Include(new IAppointmentIdValidator());
+            Include(new IPhoneNumberValidator());
+            Include(new INationalIdValidator());
         }
     }
 }

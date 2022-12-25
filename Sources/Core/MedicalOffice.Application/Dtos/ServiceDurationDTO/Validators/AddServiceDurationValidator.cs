@@ -15,17 +15,17 @@ namespace MedicalOffice.Application.Dtos.ServiceDurationDTO.Validators
         {
             RuleFor(x => x.MedicalStaffId)
                 .NotEmpty()
-                .WithMessage(ValidationMessage.Required.For<ServiceDurationDTO>(p => p.MedicalStaffId));
+                .WithMessage(ValidationMessage.Required.For("MedicalStaffId"));
 
             RuleFor(x => x.ServiceId)
                .NotEmpty()
-               .WithMessage(ValidationMessage.Required.For<ServiceDurationDTO>(p => p.ServiceId));
+               .WithMessage(ValidationMessage.Required.For("ServiceId"));
 
             RuleFor(x => x.Duration)
                .NotEmpty()
-               .WithMessage(ValidationMessage.Required.For<ServiceDurationDTO>(p => p.Duration))
+               .WithMessage(ValidationMessage.Required.For("Duration"))
                .GreaterThanOrEqualTo(minDuration)
-               .WithMessage(ValidationMessage.GreaterOrEqual.For<ServiceDurationDTO>(p => p.Duration, p => p.Equals(minDuration)));
+               .WithMessage(ValidationMessage.GreaterOrEqual.For("Duration", minDuration));
         }
     }
 }

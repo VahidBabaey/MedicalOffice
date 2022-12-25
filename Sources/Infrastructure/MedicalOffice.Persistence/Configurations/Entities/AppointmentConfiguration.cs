@@ -20,6 +20,19 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .WithOne(e => e.Appointment)
                 .HasForeignKey(e => e.AppointmentId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .HasOne(e => e.Room)
+                .WithMany(e => e.Appointments)
+                .HasForeignKey(e => e.RoomId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .HasOne(e => e.Device)
+                .WithMany(e => e.Appointments)
+                .HasForeignKey(e => e.DeviceId)
+                .OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }

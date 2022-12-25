@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
     {
         public AppointmentDescriptionValidator()
         {
-            RuleFor(x=>x.AppointmentId).NotEmpty();
+            Include(new IAppointmentIdValidator());
             RuleFor(x=>x.Description).NotEmpty();   
         }
     }

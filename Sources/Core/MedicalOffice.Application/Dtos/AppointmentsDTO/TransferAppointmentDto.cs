@@ -1,6 +1,8 @@
-﻿namespace MedicalOffice.Application.Dtos.AppointmentsDTO
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+
+namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class TransferAppointmentDTO
+    public class TransferAppointmentDTO : IAppointmentIdDTO
     {
         public Guid AppointmentId { get; set; }
 
@@ -10,7 +12,7 @@
 
         public Guid? RoomId { get; set; }
 
-        public Guid? DeviceId{ get; set; }
+        public Guid? DeviceId { get; set; }
 
         public string StartTime { get; set; }
 
@@ -18,6 +20,6 @@
 
         public DateTime Date { get; set; }
 
-        public string? Description{ get; set; }
+        public string? Description { get; set; }
     }
 }

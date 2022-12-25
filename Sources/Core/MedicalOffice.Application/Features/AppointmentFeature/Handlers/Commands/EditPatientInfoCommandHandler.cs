@@ -40,7 +40,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
-
         public async Task<BaseResponse> Handle(EditAppointmentPatientCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
@@ -60,30 +59,29 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             }
 
             var existingAppointment = _appointmentRepository.GetById(request.DTO.AppointmentId).Result;
-            if (existingAppointment == null)
-            {
-                var error = "The appointment isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
+            //if (existingAppointment == null)
+            //{
+            //    var error = "The appointment isn't exist";
+            //    await _logger.Log(new Log
+            //    {
+            //        Type = LogType.Error,
+            //        Header = $"{_requestTitle} failed",
+            //        AdditionalData = error
+            //    });
+            //    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            //}
 
-            var newAppointment = _mapper.Map<Appointment>(existingAppointment);
-            newAppointment = _mapper.Map<Appointment>(request.DTO);
+            existingAppointment = _mapper.Map<Appointment>(request.DTO);
 
-            await _appointmentRepository.Update(newAppointment);
+            await _appointmentRepository.Update(existingAppointment);
 
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeeded",
-                AdditionalData = newAppointment.Id
+                AdditionalData = existingAppointment.Id
             });
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", newAppointment.Id);
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", existingAppointment.Id);
         }
     }
 }

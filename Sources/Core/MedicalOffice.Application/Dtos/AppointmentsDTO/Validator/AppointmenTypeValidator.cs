@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
 using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,12 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
         {
             var validTypesToUpadete= new AppointmentType[] { AppointmentType.FinalApproval, AppointmentType.Canceled};
 
+            Include(new IAppointmentIdValidator());
             RuleFor(x => x.AppointmentType)
                 .NotEmpty()
-                .WithMessage("{PropertyName} is required")
+                    .WithMessage("{PropertyName} is required")
                 .Must(m => validTypesToUpadete.Contains(m))
-                .WithMessage("AppointmentType to change should be choosen between finalApproval or Canceled type");
+                    .WithMessage("{PropertyName} to change should be choosen between finalApproval or Canceled type");
         }
     }
 }
