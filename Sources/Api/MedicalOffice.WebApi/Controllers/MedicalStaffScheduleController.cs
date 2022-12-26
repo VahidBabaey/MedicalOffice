@@ -35,17 +35,17 @@ public class MedicalStaffScheduleController : Controller
     }
 
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> RemoveAsync(Guid medicalStaffId)
     {
-        var response = await _mediator.Send(new DeleteMedicalStaffScheduleCommand() { MedicalStaffId = id });
+        var response = await _mediator.Send(new DeleteMedicalStaffScheduleCommand() { MedicalStaffId = medicalStaffId });
 
         return Ok(response);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffScheduleListDTO>>> GetAll(Guid id)
+    public async Task<ActionResult<List<MedicalStaffScheduleListDTO>>> GetAll(Guid medicalStaffId)
     {
-        var response = await _mediator.Send(new GetAllMedicalStaffScheduleQuery() { MedicalStaffId = id });
+        var response = await _mediator.Send(new GetAllMedicalStaffScheduleQuery() { MedicalStaffId = medicalStaffId });
 
         return Ok(response);
     }

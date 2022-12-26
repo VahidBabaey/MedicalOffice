@@ -12,16 +12,18 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
     {
         private readonly IServiceRepository _serviceRepository;
 
-        public IServiceIdValidator()
+        public IServiceIdValidator(IServiceRepository serviceRepository)
         {
+            _serviceRepository = serviceRepository;
+
             RuleFor(x => x.ServiceId)
                 .NotEmpty()
                 .WithMessage("{PropertyName} is required")
-                .Must(x => isServiceExist(x))
+                .Must(x => isServiceExist(x, _serviceRepository))
                 .WithMessage("{PropertyName} isn't exist");
         }
 
-        private bool isServiceExist(Guid serviceId)
+        private bool isServiceExist(Guid serviceId, IServiceRepository _serviceRepository)
         {
             var existingService = _serviceRepository.GetById(serviceId);
 

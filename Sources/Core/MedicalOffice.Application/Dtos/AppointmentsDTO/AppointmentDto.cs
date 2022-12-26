@@ -22,6 +22,8 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 
         public string? EndTime { get; set; }
 
+        public string? Description { get; set; }
+
         public Guid MedicalStaffId { get; set; }
 
         public Guid ServiceId { get; set; }
@@ -31,6 +33,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
         public Guid? DeviceId { get; set; }
 
         public Guid? ReferrerId { get; set; }
+
 
         public AppointmentType AppointmentType { get; set; }
     }

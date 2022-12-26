@@ -15,19 +15,25 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 {
     public class AppointmentValidator : AbstractValidator<AppointmentDTO>
     {
-        public AppointmentValidator()
+        private readonly IServiceRepository _serviceRepository;
+        private readonly IMedicalStaffRepository _medicalStaffRepository;
+
+        public AppointmentValidator(IServiceRepository serviceRepository, IMedicalStaffRepository medicalStaffRepository)
         {
+            _serviceRepository = serviceRepository;
+            _medicalStaffRepository = medicalStaffRepository;
+
             var validAppointmentTypeForNullTime = new AppointmentType[] { AppointmentType.waiting };
-            var invalidAppointmentTypes = new AppointmentType[] { AppointmentType.FinalApproval,AppointmentType.Canceled};
+            var invalidAppointmentTypes = new AppointmentType[] { AppointmentType.FinalApproval, AppointmentType.Canceled };
 
             Include(new IPhoneNumberValidator());
             Include(new INationalIdValidator());
-            Include(new IServiceIdValidator());
-            Include(new IMedicalStaffValidator());
+            Include(new IServiceIdValidator(_serviceRepository));
+            Include(new IMedicalStaffValidator(_medicalStaffRepository));
 
             RuleFor(x => x.AppointmentType)
                 .NotEmpty()
-                    .WithMessage("")
+                    .WithMessage("{PropertyName} is required")
                 .Must(x => !invalidAppointmentTypes.Contains(x))
                     .WithMessage("{FinalApproval and Canceled should not be used in adding appointment process}");
 
@@ -39,19 +45,19 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
                 .NotEmpty()
                     .WithMessage(ValidationMessage.Required.For("PatientLastName"));
 
-            RuleFor(x=>x.StartTime)
+            RuleFor(x => x.StartTime)
                 .Empty()
-                    .When(x=>validAppointmentTypeForNullTime.Contains(x.AppointmentType))
+                    .When(x => validAppointmentTypeForNullTime.Contains(x.AppointmentType))
                 .NotEmpty()
                     .WithMessage(ValidationMessage.Required.For("StartTime"))
                 .Must(x => TimeOnly.TryParse(x, out TimeOnly result))
                     .WithMessage(ValidationMessage.NotValid.For("StartTime"));
             RuleFor(x => TimeOnly.Parse(x.StartTime))
                 .LessThanOrEqualTo(x => TimeOnly.Parse(x.EndTime))
-                .When(x=>x.AppointmentType==AppointmentType.BetweenPatients)
+                .When(x => x.AppointmentType == AppointmentType.BetweenPatients)
                     .WithMessage(ValidationMessage.LessOrEqual.For("StartTime", "EndTime"))
-                .LessThan(x=> TimeOnly.Parse(x.EndTime))
-                .When(x=>x.AppointmentType!=AppointmentType.BetweenPatients)
+                .LessThan(x => TimeOnly.Parse(x.EndTime))
+                .When(x => x.AppointmentType != AppointmentType.BetweenPatients)
                     .WithMessage(ValidationMessage.LessThan.For("StartTime", "EndTime"));
 
             RuleFor(x => x.EndTime)
@@ -73,6 +79,8 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
                 .Empty()
                 .When(m => m.DeviceId == null)
                 .WithMessage("{PropertyName} is required if serviceId is null");
+            _serviceRepository = serviceRepository;
+            _medicalStaffRepository = medicalStaffRepository;
         }
     }
 }

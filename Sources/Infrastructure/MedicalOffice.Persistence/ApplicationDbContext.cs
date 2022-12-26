@@ -2,6 +2,7 @@
 using MedicalOffice.Domain;
 using MedicalOffice.Domain.Common;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Persistence.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -94,6 +95,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRole");
 
         modelBuilder.Entity<MedicalStaffSchedule>().HasKey(entity=>entity.Id);
+
+        //modelBuilder.Seed();
     }
 
     private void HandleAuditing()

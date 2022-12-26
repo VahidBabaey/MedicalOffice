@@ -124,6 +124,7 @@ public class MappingProfile : Profile
             .ForAllMembers(x=>x.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<Appointment, AppointmentDescriptionDTO>().ReverseMap();
         CreateMap<Appointment, AppointmentTypeDTO>().ReverseMap();
+        CreateMap<Appointment, AppointmentDTO>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDto>

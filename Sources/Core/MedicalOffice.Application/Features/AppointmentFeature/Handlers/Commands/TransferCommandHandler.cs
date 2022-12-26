@@ -89,12 +89,15 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             if (request.DTO.RoomId != null && request.DTO.DeviceId == null)
             {
-                var roomHasDevice = _deviceRepository.GetDevicesByRoomId((Guid)request.DTO.RoomId).Result
-                    .Contains(new Device { Id = existingAppointment.DeviceId });
-
-                if (!roomHasDevice)
+                if (existingAppointment.DeviceId != null)
                 {
-                    newAppointment.DeviceId = default;
+                    var roomHasDevice = _deviceRepository.GetDevicesByRoomId((Guid)request.DTO.RoomId).Result
+                        .Contains(new Device { Id = (Guid)existingAppointment.DeviceId });
+
+                    if (!roomHasDevice)
+                    {
+                        newAppointment.DeviceId = default;
+                    }
                 }
             }
 

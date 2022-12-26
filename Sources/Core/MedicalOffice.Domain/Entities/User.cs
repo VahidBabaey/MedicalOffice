@@ -41,6 +41,9 @@ namespace MedicalOffice.Domain.Entities
         /// </summary>
         public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; }
 
+        public ICollection<Appointment> AppointmentsCreatedBy { get; set; }
+        public ICollection<Appointment> AppointmentsLastUpdatedBy { get; set; }
+
         public DateTime CreatedDate { get; set; }
         public Guid CreatedById { get; set; }
         public DateTime LastUpdatedDate { get; set; }

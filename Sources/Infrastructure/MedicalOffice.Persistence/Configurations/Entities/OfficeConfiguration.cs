@@ -89,6 +89,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                         Address="officeC"
                     },
                 });
+
             builder
                 .HasQueryFilter(o => o.IsDeleted == false);
         }

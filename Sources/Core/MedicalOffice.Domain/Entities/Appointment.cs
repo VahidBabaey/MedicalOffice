@@ -41,22 +41,22 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی اتاق
     /// </summary>
-    public Guid RoomId { get; set; }
+    public Guid? RoomId { get; set; }
 
     /// <summary>
     /// اتاق
     /// </summary>
-    public Room Room{ get; set; }
+    public Room? Room{ get; set; }
 
     /// <summary>
     /// شناسه  دستگاه
     /// </summary>
-    public Guid DeviceId { get; set; }
+    public Guid? DeviceId { get; set; }
 
     /// <summary>
     /// دستگاه
     /// </summary>
-    public Device Device { get; set; }
+    public Device? Device { get; set; }
 
     /// <summary>
     ///شناسه معرف
@@ -106,7 +106,7 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// توضیحات وقت
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// نوع وقت دهی
@@ -117,6 +117,10 @@ public class Appointment : BaseDomainEntity<Guid>
     /// خدمات وقت دهی
     /// </summary>
     public ICollection<AppointmentService>? AppointmentServices { get; set; }
+
+    public User CreatedBy { get; set; }
+
+    public User LastUpdatedBy { get; set; }
 
     #region UnnecessaryProperties
     ///// <summary>

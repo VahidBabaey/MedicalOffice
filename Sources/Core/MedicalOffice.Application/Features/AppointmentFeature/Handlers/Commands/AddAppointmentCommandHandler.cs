@@ -29,8 +29,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IAppointmentRepository _appointmentRepository;
-        private readonly IMedicalStaffRepository _medicalStaffRepository;
-        private readonly IServiceRepository _serviceRepository;
         private readonly IDeviceRepository _deviceRepository;
 
         private readonly string _requestTitle;
@@ -40,17 +38,14 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             ILogger logger,
             IMapper mapper,
             IAppointmentRepository appointmentRepository,
-            IMedicalStaffRepository medicalStaffRepository,
-            IServiceRepository serviceRepository
+            IDeviceRepository deviceRepository
             )
         {
             _validator = validator;
             _logger = logger;
             _mapper = mapper;
             _appointmentRepository = appointmentRepository;
-            _medicalStaffRepository = medicalStaffRepository;
-            _serviceRepository = serviceRepository;
-
+            _deviceRepository = deviceRepository;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
@@ -100,88 +95,98 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             //    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             //}
 
-            var staffExistingAppointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, medicalStaffId: request.DTO.MedicalStaffId).Result;
-            var invalidAppointment = staffExistingAppointments.FirstOrDefault(x => !TimeHelper.isTimeValid(x, request.DTO.StartTime, request.DTO.EndTime));
-
-            if (invalidAppointment != null)
+            try
             {
-                var error = "Staff isn't free in requested time";
+                var staffExistingAppointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, medicalStaffId: request.DTO.MedicalStaffId).Result;
+                var invalidAppointment = staffExistingAppointments.FirstOrDefault(x => !TimeHelper.isTimeValid(x, request.DTO.StartTime, request.DTO.EndTime));
+
+                if (invalidAppointment != null)
+                {
+                    var error = "Staff isn't free in requested time";
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error
+                    });
+
+                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                }
+
+                if (request.DTO.RoomId != null && request.DTO.DeviceId != null)
+                {
+                    var roomHasDevice = _deviceRepository.GetDevicesByRoomId((Guid)request.DTO.RoomId).Result
+                        .Contains(new Device { Id = (Guid)request.DTO.DeviceId });
+
+                    if (!roomHasDevice)
+                    {
+                        var error = "Device isn't exist in this room";
+                        await _logger.Log(new Log
+                        {
+                            Type = LogType.Error,
+                            Header = $"{_requestTitle} failed",
+                            AdditionalData = error
+                        });
+                        return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                    }
+
+                    var deviceExistingAppointments = _appointmentRepository.GetByDateAndDevice(
+                        request.DTO.Date,
+                        deviceId: request.DTO.DeviceId,
+                        roomId: request.DTO.RoomId).Result;
+
+                    invalidAppointment = deviceExistingAppointments.FirstOrDefault(x => !TimeHelper.isTimeValid(x, request.DTO.StartTime, request.DTO.EndTime));
+
+                    if (invalidAppointment != null)
+                    {
+                        var error = "Device isn't free in requested time";
+                        await _logger.Log(new Log
+                        {
+                            Type = LogType.Error,
+                            Header = $"{_requestTitle} failed",
+                            AdditionalData = error
+                        });
+                        return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                    }
+                }
+
+                if (request.DTO.DeviceId == null && request.DTO.RoomId != null)
+                {
+                    var deviceExistingAppointments = _appointmentRepository.GetByDateAndDevice(request.DTO.Date, roomId: request.DTO.RoomId).Result;
+                    invalidAppointment = deviceExistingAppointments.FirstOrDefault(x => !TimeHelper.isTimeValid(x, request.DTO.StartTime, request.DTO.EndTime));
+
+                    if (invalidAppointment != null)
+                    {
+                        var error = "Room isn't free in requested time";
+                        await _logger.Log(new Log
+                        {
+                            Type = LogType.Error,
+                            Header = $"{_requestTitle} failed",
+                            AdditionalData = error
+                        });
+                        return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                    }
+                }
+
+                var appointment = _mapper.Map<Appointment>(request.DTO);
+                appointment.OfficeId = request.OfficeId;
+                var result = _appointmentRepository.Add(appointment).Result;
+
                 await _logger.Log(new Log
                 {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { result.Id }
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { result.Id });
+            }
+            catch (Exception error)
+            {
+
+                throw error;
             }
 
-            if (request.DTO.RoomId != null && request.DTO.DeviceId != null)
-            {
-                var roomHasDevice = _deviceRepository.GetDevicesByRoomId((Guid)request.DTO.RoomId).Result
-                    .Contains(new Device { Id = (Guid)request.DTO.DeviceId });
-
-                if (!roomHasDevice)
-                {
-                    var error = "Device isn't exist in this room";
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} failed",
-                        AdditionalData = error
-                    });
-                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-                }
-
-                var deviceExistingAppointments = _appointmentRepository.GetByDateAndDevice(
-                    request.DTO.Date,
-                    deviceId: request.DTO.DeviceId,
-                    roomId: request.DTO.RoomId).Result;
-
-                invalidAppointment = deviceExistingAppointments.FirstOrDefault(x => !TimeHelper.isTimeValid(x, request.DTO.StartTime, request.DTO.EndTime));
-
-                if (invalidAppointment != null)
-                {
-                    var error = "Device isn't free in requested time";
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} failed",
-                        AdditionalData = error
-                    });
-                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-                }
-            }
-
-            if (request.DTO.DeviceId == null && request.DTO.RoomId != null)
-            {
-                var deviceExistingAppointments = _appointmentRepository.GetByDateAndDevice(request.DTO.Date, roomId: request.DTO.RoomId).Result;
-                invalidAppointment = deviceExistingAppointments.FirstOrDefault(x => !TimeHelper.isTimeValid(x, request.DTO.StartTime, request.DTO.EndTime));
-
-                if (invalidAppointment != null)
-                {
-                    var error = "Room isn't free in requested time";
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} failed",
-                        AdditionalData = error
-                    });
-                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-                }
-            }
-
-            var appointment = _mapper.Map<Appointment>(request.DTO);
-            var result = _appointmentRepository.Add(appointment);
-
-            await _logger.Log(new Log
-            {
-                Type = LogType.Success,
-                Header = $"{_requestTitle} succeded",
-                AdditionalData = new { result.Id }
-            });
-
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { result.Id });
         }
     }
 }
