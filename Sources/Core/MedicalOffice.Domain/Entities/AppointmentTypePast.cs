@@ -11,8 +11,9 @@ public class AppointmentTypePast : BaseDomainEntity<Guid>
     /// عنوان نوع وقت دهی
     /// </summary>
     public string Title { get; set; } = string.Empty;
+
     /// <summary>
     /// وقت دهی ها
     /// </summary>
-    public ICollection<Appointment>? Appointments { get; set; }
+    //public ICollection<Appointment>? Appointments { get; set; }
 }

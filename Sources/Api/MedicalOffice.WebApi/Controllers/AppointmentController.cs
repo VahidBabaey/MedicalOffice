@@ -11,6 +11,7 @@ using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             _mediator = mediator;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Guid>> Create([FromBody] AppointmentDTO dto, [FromQuery] string officeId)
         {

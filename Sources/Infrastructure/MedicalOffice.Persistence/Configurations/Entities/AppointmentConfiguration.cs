@@ -35,7 +35,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
 
             builder
                 .HasOne(e => e.CreatedBy)
-                .WithMany(u=>u.AppointmentsCreatedBy)
+                .WithMany(u => u.AppointmentsCreatedBy)
                 .HasForeignKey(e => e.CreatedById)
                 .HasPrincipalKey(u => u.Id)
                 .OnDelete(DeleteBehavior.NoAction);
@@ -44,7 +44,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .HasOne(e => e.LastUpdatedBy)
                 .WithMany(u => u.AppointmentsLastUpdatedBy)
                 .HasForeignKey(e => e.LastUpdatedById)
-                .HasPrincipalKey(u=>u.Id)
+                .HasPrincipalKey(u => u.Id)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder

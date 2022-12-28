@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
@@ -15,21 +16,24 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 {
     public class AppointmentValidator : AbstractValidator<AppointmentDTO>
     {
-        private readonly IServiceRepository _serviceRepository;
-        private readonly IMedicalStaffRepository _medicalStaffRepository;
-
-        public AppointmentValidator(IServiceRepository serviceRepository, IMedicalStaffRepository medicalStaffRepository)
+        //private readonly IServiceRepository _serviceRepository;
+        //private readonly IMedicalStaffRepository _medicalStaffRepository;
+        private static readonly int minimumLength = 3;
+        public AppointmentValidator(
+            //IServiceRepository serviceRepository, 
+            //IMedicalStaffRepository medicalStaffRepository
+            )
         {
-            _serviceRepository = serviceRepository;
-            _medicalStaffRepository = medicalStaffRepository;
+            //_serviceRepository = serviceRepository;
+            //_medicalStaffRepository = medicalStaffRepository;
 
             var validAppointmentTypeForNullTime = new AppointmentType[] { AppointmentType.waiting };
             var invalidAppointmentTypes = new AppointmentType[] { AppointmentType.FinalApproval, AppointmentType.Canceled };
 
             Include(new IPhoneNumberValidator());
             Include(new INationalIdValidator());
-            Include(new IServiceIdValidator(_serviceRepository));
-            Include(new IMedicalStaffValidator(_medicalStaffRepository));
+            //Include(new IServiceIdValidator(_serviceRepository));
+            //Include(new IMedicalStaffValidator(_medicalStaffRepository));
 
             RuleFor(x => x.AppointmentType)
                 .NotEmpty()
@@ -39,7 +43,9 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 
             RuleFor(x => x.PatientName)
                 .NotEmpty()
-                    .WithMessage(ValidationMessage.Required.For("PatientName"));
+                    .WithMessage(ValidationMessage.Required.For("PatientName"))
+                .MinimumLength(minimumLength)
+                    .WithMessage(ValidationMessage.MinimumLength.For("PatientName", minimumLength));
 
             RuleFor(x => x.PatientLastName)
                 .NotEmpty()
@@ -79,8 +85,16 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
                 .Empty()
                 .When(m => m.DeviceId == null)
                 .WithMessage("{PropertyName} is required if serviceId is null");
-            _serviceRepository = serviceRepository;
-            _medicalStaffRepository = medicalStaffRepository;
+        }
+
+        protected override bool PreValidate(ValidationContext<AppointmentDTO> context, ValidationResult result)
+        {
+            if (context.InstanceToValidate == null)
+            {
+                result.Errors.Add(new ValidationFailure("", "Please ensure a model was supplied."));
+                return false;
+            }
+            return true;
         }
     }
 }

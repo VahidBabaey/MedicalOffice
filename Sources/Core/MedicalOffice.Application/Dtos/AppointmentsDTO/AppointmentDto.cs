@@ -34,7 +34,6 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 
         public Guid? ReferrerId { get; set; }
 
-
         public AppointmentType AppointmentType { get; set; }
     }
 }

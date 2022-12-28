@@ -75,9 +75,11 @@ public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSche
 
     public async Task<MedicalStaffScheduleDayOfWeekDTO> GetStaffScheduleByDate(Guid? medicalStaffId, DayOfWeek dayOfweek)
     {
-        var medicalStaffSchedule =await _dbContext.MedicalStaffSchedules
+        var medicalStaffSchedule = await _dbContext.MedicalStaffSchedules
             .Include(x => x.MedicalStaff)
-            .SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId && x.WeekDay == dayOfweek);
+            .SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId 
+            && x.WeekDay == dayOfweek
+            );
 
         return _mapper.Map<MedicalStaffScheduleDayOfWeekDTO>(medicalStaffSchedule);
     }
