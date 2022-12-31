@@ -22,15 +22,19 @@ namespace MedicalOffice.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<ServiceNameDurationDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId)
+        public Task<ServiceDurationDetailsDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId)
         {
-            var service = _dbContext.ServiceDurations.Include(x => x.Service).SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId && x.ServiceId == serviceId).Result;
-            var result = _mapper.Map<ServiceNameDurationDTO>(service);
+            var service = _dbContext.ServiceDurations.Include(x => x.Service).Include(x=>x.MedicalStaff).SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId && x.ServiceId == serviceId).Result;
+            var result = _mapper.Map<ServiceDurationDetailsDTO>(service);
 
             if (service != null)
             {
+                result.MedicalStaffId = service.MedicalStaffId;
                 result.ServiceName = service.Service.Name;
+                result.StaffName = service.MedicalStaff.FirstName;
+                result.StaffLastName = service.MedicalStaff.LastName;   
             }
+
             return Task.FromResult(result);
         }
     }

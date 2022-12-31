@@ -125,8 +125,8 @@ public class MappingProfile : Profile
         CreateMap<Appointment, AppointmentDescriptionDTO>().ReverseMap();
         CreateMap<Appointment, AppointmentTypeDTO>().ReverseMap();
         CreateMap<Appointment, AppointmentDTO>().ReverseMap();
-        CreateMap<MedicalStaffSchedule, MedicalStaffScheduleDayOfWeekDTO>().ReverseMap();
-        CreateMap<ServiceDuration, ServiceNameDurationDTO>().ReverseMap();
+        CreateMap<MedicalStaffSchedule, StaffDayScheduleDTO>().ReverseMap();
+        CreateMap<ServiceDuration, ServiceDurationDetailsDTO>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDto>

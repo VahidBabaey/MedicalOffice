@@ -81,7 +81,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             //    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             //}
 
-            //var medicalStaff = _medicalStaffRepository.GetAll().Result.FirstOrDefault(x => x.Id == request.DTO.MedicalStaffId);
+            //var medicalStaff = _medicalStaffScheduleRepository.GetAll().Result.FirstOrDefault(x => x.Id == request.DTO.MedicalStaffId);
             //if (medicalStaff == null)
             //{
             //    var error = "MedicalStaffId does not exist!";
@@ -183,7 +183,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             }
             catch (Exception error)
             {
-
                 throw error;
             }
 

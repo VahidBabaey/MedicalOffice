@@ -11,7 +11,6 @@ namespace MedicalOffice.Domain.Enums
         Approved = 1,
         BetweenPatients,
         Canceled,
-        FreeTime,
         FinalApproval,
         waiting
     }

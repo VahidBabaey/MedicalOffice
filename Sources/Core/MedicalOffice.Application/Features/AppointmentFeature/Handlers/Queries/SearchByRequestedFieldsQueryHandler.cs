@@ -6,6 +6,7 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
+using MedicalOffice.Application.Features.AppointmentFeature.Handlers.Helper;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -21,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 {
-    public class SearchByRequestedFieldsQueryHandler : IRequestHandler<SearchByRequestedFieldsQuery, BaseResponse>
+    public partial class SearchByRequestedFieldsQueryHandler : IRequestHandler<SearchByRequestedFieldsQuery, BaseResponse>
     {
         private readonly IValidator<SearchAppointmentsDTO> _validator;
         private readonly ILogger _logger;
@@ -132,17 +133,26 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
             {
                 if (isServiceRequested)
                 {
-                    appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date.Date, serviceId: request.DTO.FilterFields[0].ServiceId).Result;
+                    appointments = _appointmentRepository.GetByDateAndStaff(
+                        request.DTO.Date.Date, 
+                        serviceId: request.DTO.FilterFields[0].ServiceId)
+                        .Result;
                 }
 
                 if (isStaffRequested)
                 {
-                    appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
+                    appointments = _appointmentRepository.GetByDateAndStaff(
+                        request.DTO.Date.Date, 
+                        medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId)
+                        .Result;
                 }
 
                 if (isDeviceRequested)
                 {
-                    appointments = _appointmentRepository.GetByDateAndDevice(request.DTO.Date.Date, deviceId: request.DTO.FilterFields[0].DeviceId).Result;
+                    appointments = _appointmentRepository.GetByDateAndDevice(
+                        request.DTO.Date.Date, 
+                        deviceId: request.DTO.FilterFields[0].DeviceId)
+                        .Result;
                 }
 
                 if (isStaffAndDeviceRequested)
@@ -150,7 +160,8 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     appointments = _appointmentRepository.GetByStaffAndDevice(
                         request.DTO.Date.Date,
                         medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId,
-                        deviceId: request.DTO.FilterFields[0].DeviceId).Result;
+                        deviceId: request.DTO.FilterFields[0].DeviceId)
+                        .Result;
                 }
 
                 if (isServiceAndDeviceRequested)
@@ -158,17 +169,32 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     appointments = _appointmentRepository.GetByServiceAndDevice(
                         request.DTO.Date.Date,
                         serviceId: request.DTO.FilterFields[0].ServiceId,
-                        deviceId: request.DTO.FilterFields[0].DeviceId).Result;
-
+                        deviceId: request.DTO.FilterFields[0].DeviceId)
+                        .Result;
                 }
 
                 if (isAllRequested || isStaffAndServiceRequested)
                 {
-                    appointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date.Date, medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId).Result;
+                    appointments = _appointmentRepository.GetByDateAndStaff(
+                        request.DTO.Date.Date, 
+                        medicalStaffId: request.DTO.FilterFields[0].MedicalStaffId)
+                        .Result;
+
+                    var staffSchedule = _staffScheduleRepository.GetStaffScheduleByDate(
+                        request.DTO.FilterFields[0].MedicalStaffId,
+                        request.DTO.Date.DayOfWeek)
+                        .Result;
+
+                    var service = _serviceDurationRepository.GetByServiceAndStaffId(
+                        request.DTO.FilterFields[0].MedicalStaffId,
+                        request.DTO.FilterFields[0].ServiceId)
+                        .Result;
 
                     if (request.DTO.FilterFields[0].DeviceId != null)
                     {
-                        var deviceAppointments = _appointmentRepository.GetByDateAndDevice(request.DTO.Date.Date, deviceId: request.DTO.FilterFields[0].DeviceId).Result
+                        var deviceAppointments = _appointmentRepository.GetByDateAndDevice(
+                            request.DTO.Date.Date, 
+                            deviceId: request.DTO.FilterFields[0].DeviceId).Result
                             .FindAll(x => x.MedicalStaffId != request.DTO.FilterFields[0].MedicalStaffId).ToList();
 
                         if (deviceAppointments.Count != 0)
@@ -177,67 +203,20 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         }
                     }
 
-                    var serviceName = _serviceRepository.GetById((Guid)request.DTO.FilterFields[0].ServiceId).Result.Name;
-
-                    var staffSchedule = _staffScheduleRepository.GetStaffScheduleByDate(
-                        request.DTO.FilterFields[0].MedicalStaffId,
-                        request.DTO.Date.DayOfWeek).Result;
-
-                    var service = _serviceDurationRepository.GetByServiceAndStaffId(
-                        request.DTO.FilterFields[0].MedicalStaffId,
-                        request.DTO.FilterFields[0].ServiceId).Result;
-
                     if (staffSchedule != null)
                     {
                         var staffFreeTimes = new List<time>();
 
-                        if (appointments != null)
+                        if (appointments.Count != 0)
                         {
                             var times = new List<TimeOnly>();
-                            for (int i = 0; i < appointments.Count; i++)
-                            {
-                                if (i == 0 &&
-                                TimeOnly.Parse(appointments[i].StartTime) > TimeOnly.Parse(staffSchedule.MorningStart))
-                                {
-                                    var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(staffSchedule.MorningStart),
-                                    TimeOnly.Parse(appointments[i].StartTime)
-                                };
-                                    times.AddRange(freeTimes);
-                                }
-                                if (i == appointments.Count - 1 &&
-                                    TimeOnly.Parse(appointments[i].EndTime) < TimeOnly.Parse(staffSchedule.EveningEnd))
-                                {
-                                    var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(appointments[i].EndTime),
-                                    TimeOnly.Parse(staffSchedule.EveningEnd)
-                                };
-                                    times.AddRange(freeTimes);
-                                }
-                                if (i != 0 && i != appointments.Count - 1)
-                                {
-                                    var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(appointments[i - 1].EndTime),
-                                    TimeOnly.Parse(appointments[i].StartTime)
-                                };
-                                    times.AddRange(freeTimes);
-                                }
-                            }
+                            FreeTimeGenerator.GenerateStaffTotalContinuesFreeTimes(appointments, staffSchedule, times);
 
                             times.OrderBy(d => d);
-                            //foreach (var item in times)
-                            //{
-                            //    if (item.IsBetween
-                            //        (TimeOnly.Parse(staffSchedule.MorningEnd),
-                            //        TimeOnly.Parse(staffSchedule.EveningStart)))
-                            //    {
-                            //        times.Remove(item);
-                            //    }
-                            //}
 
-                            for (int i = 0; i < times.Count; i++)
+                            for (int i = 0; i < times.Count - 1; i++)
                             {
-                                freeTimeGenerator(staffFreeTimes, service.Duration, times[i], times[i + 1], staffSchedule);
+                                FreeTimeGenerator.GenerateServiceFreeTimes(staffFreeTimes, service.Duration, times[i], times[i + 1], staffSchedule);
                             }
                         }
 
@@ -248,16 +227,17 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                             var eveningStart = TimeOnly.Parse(staffSchedule.EveningStart);
                             var eveningEnd = TimeOnly.Parse(staffSchedule.EveningEnd);
 
-                            freeTimeGenerator(staffFreeTimes, service.Duration, morningStart, morningEnd, staffSchedule);
-                            freeTimeGenerator(staffFreeTimes, service.Duration, eveningStart, eveningEnd, staffSchedule);
+                            FreeTimeGenerator.GenerateServiceFreeTimes(staffFreeTimes, service.Duration, morningStart, morningEnd, staffSchedule);
+                            FreeTimeGenerator.GenerateServiceFreeTimes(staffFreeTimes, service.Duration, eveningStart, eveningEnd, staffSchedule);
                         }
 
                         foreach (var item in staffFreeTimes)
                         {
                             appointments.Add(new AppointmentDetailsDTO
                             {
-                                StaffName = staffSchedule.StaffName,
-                                StaffLastName = staffSchedule.StaffLastName,
+                                MedicalStaffId = service.MedicalStaffId,
+                                StaffName = service.StaffName,
+                                StaffLastName = service.StaffLastName,
                                 StartTime = item.StartTime.ToString(),
                                 EndTime = item.EndTime.ToString(),
                                 ServiceName = service.ServiceName
@@ -289,70 +269,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                 return responseBuilder.Faild(HttpStatusCode.BadRequest,
                     $"{_requestTitle} failed");
             }
-        }
-
-        private static void freeTimeGenerator(List<time> staffFreeTimes, int serviceDuration, TimeOnly startTime, TimeOnly endTime, MedicalStaffScheduleDayOfWeekDTO staffSchedule)
-        {
-            int x = 0;
-            x += (int)(endTime - startTime).TotalMinutes / serviceDuration;
-
-            time[] freeTimes = new time[x];
-
-            for (int j = 0; j < freeTimes.Length; j++)
-            {
-                if (j == 0)
-                {
-                    freeTimes[j] = new time
-                    {
-                        StartTime = startTime,
-                        EndTime = startTime.AddMinutes(serviceDuration)
-                    };
-                }
-                else
-                {
-                    freeTimes[j] = new time
-                    {
-                        StartTime = freeTimes[j - 1].EndTime,
-                        EndTime = freeTimes[j - 1].EndTime.AddMinutes(serviceDuration)
-                    };
-                }
-
-                if (freeTimes[j].StartTime.IsBetween(TimeOnly.Parse(staffSchedule.MorningEnd), TimeOnly.Parse(staffSchedule.EveningStart)) ||
-                    freeTimes[j].EndTime.IsBetween(TimeOnly.Parse(staffSchedule.MorningEnd), TimeOnly.Parse(staffSchedule.EveningStart)))
-                {
-                    continue;
-                }
-                else
-                {
-                    staffFreeTimes.Add(freeTimes[j]);
-                }
-            }
-        }
-
-        private class time
-        {
-            public TimeOnly StartTime { get; set; }
-            public TimeOnly EndTime { get; set; }
-        }
-
-        public class Range<T> where T : IComparable
-        {
-            readonly T min;
-            readonly T max;
-
-            public Range(T min, T max)
-            {
-                this.min = min;
-                this.max = max;
-            }
-
-            public bool IsOverlapped(Range<T> other)
-            {
-                return Min.CompareTo(other.Max) < 0 && other.Min.CompareTo(Max) < 0;
-            }
-
-            public T Min { get { return min; } }
-            public T Max { get { return max; } }
-        }
+        }   
     }
 }

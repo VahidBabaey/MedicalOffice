@@ -1,5 +1,6 @@
 ﻿using MedicalOffice.Domain.Entities;
 using MedicalOffice.Persistence.Configurations.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,11 @@ namespace MedicalOffice.Persistence.Configurations.Entities
     {
         public override void ConfigureEntity(EntityTypeBuilder<MedicalStaffSchedule> builder)
         {
+            builder
+                .HasOne(x=>x.MedicalStaff)
+                .WithMany(x=>x.MedicalStaffSchedules)
+                .HasForeignKey(x=>x.MedicalStaffId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasData(new MedicalStaffSchedule[]
                     {

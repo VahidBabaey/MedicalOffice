@@ -235,7 +235,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
         private static void eachStaffPeriodAppointmetsCounts(
             List<SpecificPeriodAppointmentResDTO> result,
-            ServiceNameDurationDTO service,
+            ServiceDurationDetailsDTO service,
             List<Appointment> appointments,
             List<MedicalStaffSchedule> staffSchedule)
         {

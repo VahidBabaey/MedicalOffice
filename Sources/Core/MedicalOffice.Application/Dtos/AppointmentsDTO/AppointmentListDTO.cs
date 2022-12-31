@@ -31,6 +31,6 @@ namespace MedicalOffice.Application.Dtos
 
         public string RoomName { get; set; }
 
-        public AppointmentType? status { get; set; }
+        public AppointmentType? AppointmentType { get; set; }
     }
 }

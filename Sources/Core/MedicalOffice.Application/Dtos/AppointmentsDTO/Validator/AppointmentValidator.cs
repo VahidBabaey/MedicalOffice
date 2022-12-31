@@ -17,7 +17,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
     public class AppointmentValidator : AbstractValidator<AppointmentDTO>
     {
         //private readonly IServiceRepository _serviceRepository;
-        //private readonly IMedicalStaffRepository _medicalStaffRepository;
+        //private readonly IMedicalStaffRepository _medicalStaffScheduleRepository;
         private static readonly int minimumLength = 3;
         public AppointmentValidator(
             //IServiceRepository serviceRepository, 
@@ -25,7 +25,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
             )
         {
             //_serviceRepository = serviceRepository;
-            //_medicalStaffRepository = medicalStaffRepository;
+            //_medicalStaffScheduleRepository = medicalStaffRepository;
 
             var validAppointmentTypeForNullTime = new AppointmentType[] { AppointmentType.waiting };
             var invalidAppointmentTypes = new AppointmentType[] { AppointmentType.FinalApproval, AppointmentType.Canceled };
@@ -33,13 +33,13 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
             Include(new IPhoneNumberValidator());
             Include(new INationalIdValidator());
             //Include(new IServiceIdValidator(_serviceRepository));
-            //Include(new IMedicalStaffValidator(_medicalStaffRepository));
+            //Include(new IMedicalStaffValidator(_medicalStaffScheduleRepository));
 
             RuleFor(x => x.AppointmentType)
                 .NotEmpty()
                     .WithMessage("{PropertyName} is required")
                 .Must(x => !invalidAppointmentTypes.Contains(x))
-                    .WithMessage("{FinalApproval and Canceled should not be used in adding appointment process}");
+                    .WithMessage("FinalApproval and Canceled are not valid types during adding appointment process");
 
             RuleFor(x => x.PatientName)
                 .NotEmpty()

@@ -48,7 +48,7 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
         if (entity == null)
         {
-            throw new ArgumentException("id does not exist!");
+            return null;
         }
 
         return entity;

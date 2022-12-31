@@ -9,7 +9,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// کادر درمان
         /// </summary>
-        public MedicalStaff? MedicalStaff { get; set; }
+        public MedicalStaff MedicalStaff { get; set; }
         
         /// <summary>
         /// آیدی کادر درمان

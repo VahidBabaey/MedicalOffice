@@ -1,6 +1,6 @@
 ﻿namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO
 {
-    public class MedicalStaffScheduleDayOfWeekDTO
+    public class StaffDayScheduleDTO
     {
         public Guid MedicalStaffId { get; set; }
 

@@ -17,7 +17,8 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
     public class AddMedicalStaffScheduleHandler : IRequestHandler<AddMedicalStaffScheduleCommand, BaseResponse>
     {
         private readonly IValidator<MedicalStaffScheduleDTO> _validator;
-        private readonly IMedicalStaffScheduleRepository _repository;
+        private readonly IMedicalStaffScheduleRepository _medicalStaffScheduleRepository;
+        private readonly IMedicalStaffRepository _medicalStaffRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
@@ -25,12 +26,14 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
 
         public AddMedicalStaffScheduleHandler(
             IValidator<MedicalStaffScheduleDTO> validator,
-            IMedicalStaffScheduleRepository repository,
+            IMedicalStaffScheduleRepository medicalStaffScheduleRepository,
+            IMedicalStaffRepository medicalStaffRepository,
             IMapper mapper,
             ILogger logger)
         {
             _validator = validator;
-            _repository = repository;
+            _medicalStaffScheduleRepository = medicalStaffScheduleRepository;
+            _medicalStaffRepository = medicalStaffRepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -60,9 +63,25 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
 
             try
             {
+                var existingStaff = _medicalStaffRepository.GetById(request.DTO.MedicalStaffId).Result;
+                if (existingStaff == null)
+                {
+                    //var error = new ArgumentException("medicalStaff isn't exist");
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} faild",
+                        AdditionalData = new ArgumentException("medicalStaff isn't exist").Message
+                    });
+
+                    return responseBuilder.Faild(HttpStatusCode.InternalServerError,
+                        $"{_requestTitle} failed",
+                        new ArgumentException("medicalStaff isn't exist").Message);
+                }
                 #region UpdateExistingWorkHours
-                var existingSchedule = _repository.GetMedicalStaffScheduleByID(request.DTO.MedicalStaffId).Result.ToList();
-                if (existingSchedule != null)
+                var existingSchedule = _medicalStaffScheduleRepository.GetMedicalStaffScheduleByID(request.DTO.MedicalStaffId).Result.ToList();
+
+                if (existingSchedule.Count != 0)
                 {
                     List<DayOfWeek> weekDays = existingSchedule.Select(x => x.WeekDay)
                         .Intersect(request.DTO.MedicalStaffSchedule.Select(x => x.WeekDay)).ToList();
@@ -81,7 +100,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
                             daySchedule.EveningStart = requestedSchedule.EveningStart;
                             daySchedule.EveningEnd = requestedSchedule.EveningEnd;
 
-                            await _repository.Update(daySchedule);
+                            await _medicalStaffScheduleRepository.Update(daySchedule);
 
                             request.DTO.MedicalStaffSchedule.Remove(requestedSchedule);
                         }
@@ -104,7 +123,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
 
                         MedicalStaffSchedule.Add(schedule);
                     }
-                    newWorkHours = await _repository.AddRangle(MedicalStaffSchedule);
+                    newWorkHours = await _medicalStaffScheduleRepository.AddRangle(MedicalStaffSchedule);
                 }
                 #endregion
 
@@ -123,6 +142,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
                 #endregion
             }
             catch (Exception error)
+
             {
                 await _logger.Log(new Log
                 {
