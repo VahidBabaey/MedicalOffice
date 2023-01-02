@@ -131,13 +131,15 @@ namespace MedicalOffice.Persistence.Repositories
 
             if (medicalStaffId == null)
             {
-                appointments = _dbcontext.Appointments.Include(x => x.MedicalStaff)
+                appointments = _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
                     .Where(x => x.Date == date && x.DeviceId == deviceId).ToList();
             }
             if (deviceId == null)
             {
-                appointments = _dbcontext.Appointments.Include(x => x.MedicalStaff)
+                appointments = _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
                     .Where(x => x.Date == date && x.MedicalStaffId == medicalStaffId).ToList();
             }
@@ -173,19 +175,22 @@ namespace MedicalOffice.Persistence.Repositories
 
             if (serviceId == null)
             {
-                appointments = _dbcontext.Appointments.Include(x => x.MedicalStaff)
+                appointments = _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
                     .Where(x => x.Date == date && x.DeviceId == deviceId).ToList();
             }
             if (deviceId == null)
             {
-                appointments = _dbcontext.Appointments.Include(x => x.MedicalStaff)
+                appointments = _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
                     .Where(x => x.Date == date && x.ServiceId == serviceId).ToList();
             }
             if (deviceId != null && serviceId != null)
             {
-                appointments = _dbcontext.Appointments.Include(x => x.MedicalStaff)
+                appointments = _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
                     .Where(
                     x => x.Date == date &&
@@ -209,14 +214,16 @@ namespace MedicalOffice.Persistence.Repositories
             return Task.FromResult(result);
         }
 
-        public Task<List<Appointment>> GetByPeriodAndStaff(DateTime startDate, DateTime endDate, Guid? medicalStaffId)
+        public Task<List<AppointmentDetailsDTO>> GetByPeriodAndStaff(DateTime startDate, DateTime endDate, Guid? medicalStaffId)
         {
             var appointments = new List<Appointment>();
 
             if (medicalStaffId == null)
             {
-                appointments = _dbcontext.Appointments.Include(x => x.MedicalStaff)
+                appointments = _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
+                    .Include(x=>x.Service)
                     .Where(x => startDate <= x.Date && x.Date <= endDate).ToList();
             }
             else
@@ -226,27 +233,53 @@ namespace MedicalOffice.Persistence.Repositories
                     .Where(x => startDate <= x.Date && x.Date <= endDate && x.MedicalStaffId == medicalStaffId).ToList();
             }
 
-            return Task.FromResult(appointments);
+            var result = new List<AppointmentDetailsDTO>();
+            foreach (var item in appointments)
+            {
+                var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
+                appointmentDetails.StaffName = item.MedicalStaff.FirstName;
+                appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
+                appointmentDetails.CreatorName = item.CreatedBy.FirstName;
+                appointmentDetails.CreatorName = item.CreatedBy.LastName;
+
+                result.Add(appointmentDetails);
+            }
+            return Task.FromResult(result);
         }
 
-        public Task<List<Appointment>> GetByPeriodAndDeviceId(DateTime startDate, DateTime endDate, Guid? deviceId)
+        public Task<List<AppointmentDetailsDTO>> GetByPeriodAndDeviceId(DateTime startDate, DateTime endDate, Guid? deviceId)
         {
             var appointments = new List<Appointment>();
 
             if (deviceId == null)
             {
-                appointments = _dbcontext.Appointments.Include(x => x.MedicalStaff)
+                appointments = _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
+                    .Include(x=>x.Service)
                     .Where(x => startDate <= x.Date && x.Date <= endDate).ToList();
             }
             else
             {
-                appointments = _dbcontext.Appointments.Include(x => x.MedicalStaff)
+                appointments = _dbcontext.Appointments
+                    .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
+                    .Include(x=>x.Service)
                     .Where(x => startDate <= x.Date && x.Date <= endDate && x.DeviceId == deviceId).ToList();
             }
 
-            return Task.FromResult(appointments);
+            var result = new List<AppointmentDetailsDTO>();
+            foreach (var item in appointments)
+            {
+                var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
+                appointmentDetails.StaffName = item.MedicalStaff.FirstName;
+                appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
+                appointmentDetails.CreatorName = item.CreatedBy.FirstName;
+                appointmentDetails.CreatorName = item.CreatedBy.LastName;
+
+                result.Add(appointmentDetails);
+            }
+            return Task.FromResult(result);
         }
 
         public Task<List<AppointmentDetailsDTO>> searchPatientAappointments(string input, DateTime? date, Guid officeId)

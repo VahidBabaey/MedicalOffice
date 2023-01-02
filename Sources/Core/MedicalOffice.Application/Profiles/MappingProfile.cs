@@ -125,7 +125,7 @@ public class MappingProfile : Profile
         CreateMap<Appointment, AppointmentDescriptionDTO>().ReverseMap();
         CreateMap<Appointment, AppointmentTypeDTO>().ReverseMap();
         CreateMap<Appointment, AppointmentDTO>().ReverseMap();
-        CreateMap<MedicalStaffSchedule, StaffDayScheduleDTO>().ReverseMap();
+        CreateMap<MedicalStaffSchedule, MedicalStaffScheduleDetailsDTO>().ReverseMap();
         CreateMap<ServiceDuration, ServiceDurationDetailsDTO>().ReverseMap();
     }
 

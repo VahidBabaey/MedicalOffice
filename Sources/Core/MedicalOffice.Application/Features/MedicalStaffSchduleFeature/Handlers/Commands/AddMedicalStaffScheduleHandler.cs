@@ -79,7 +79,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
                         new ArgumentException("medicalStaff isn't exist").Message);
                 }
                 #region UpdateExistingWorkHours
-                var existingSchedule = _medicalStaffScheduleRepository.GetMedicalStaffScheduleByID(request.DTO.MedicalStaffId).Result.ToList();
+                var existingSchedule = _medicalStaffScheduleRepository.GetMedicalStaffScheduleById(request.DTO.MedicalStaffId).Result.ToList();
 
                 if (existingSchedule.Count != 0)
                 {

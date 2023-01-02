@@ -22,9 +22,16 @@ namespace MedicalOffice.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<ServiceDurationDetailsDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId)
+        public async Task<List<ServiceDuration>> GetAllByServiceId(Guid serviceId)
         {
-            var service = _dbContext.ServiceDurations.Include(x => x.Service).Include(x=>x.MedicalStaff).SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId && x.ServiceId == serviceId).Result;
+            var serviceDuration = await _dbContext.ServiceDurations.Where(x => x.ServiceId == serviceId).ToListAsync();
+
+            return serviceDuration;
+        }
+
+        public async Task<ServiceDurationDetailsDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId)
+        {
+            var service = await _dbContext.ServiceDurations.Include(x => x.Service).Include(x => x.MedicalStaff).SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId && x.ServiceId == serviceId);
             var result = _mapper.Map<ServiceDurationDetailsDTO>(service);
 
             if (service != null)
@@ -32,10 +39,10 @@ namespace MedicalOffice.Persistence.Repositories
                 result.MedicalStaffId = service.MedicalStaffId;
                 result.ServiceName = service.Service.Name;
                 result.StaffName = service.MedicalStaff.FirstName;
-                result.StaffLastName = service.MedicalStaff.LastName;   
+                result.StaffLastName = service.MedicalStaff.LastName;
             }
 
-            return Task.FromResult(result);
+            return result;
         }
     }
 }

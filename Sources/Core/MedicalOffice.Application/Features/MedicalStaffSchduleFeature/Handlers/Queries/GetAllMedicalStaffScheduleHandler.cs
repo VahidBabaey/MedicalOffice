@@ -37,7 +37,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
 
             try
             {
-                var MedicalStaffworkhoursprograms = await _repository.GetMedicalStaffScheduleByID(request.MedicalStaffId);
+                var MedicalStaffworkhoursprograms = await _repository.GetMedicalStaffScheduleById(request.MedicalStaffId);
 
                 result = _mapper.Map<List<MedicalStaffScheduleListDTO>>(MedicalStaffworkhoursprograms);
 

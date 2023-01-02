@@ -5,6 +5,9 @@ namespace MedicalOffice.Application.Dtos
     public class AppointmentDetailsDTO
     {
         public Guid MedicalStaffId{ get; set; }
+
+        public DateTime Date{ get; set; }
+
         public string StaffName { get; set; }
 
         public string StaffLastName { get; set; }

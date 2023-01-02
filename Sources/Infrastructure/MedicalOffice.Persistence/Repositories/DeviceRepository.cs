@@ -1,6 +1,7 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,11 @@ namespace MedicalOffice.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<List<Device>> GetDevicesByRoomId(Guid roomId)
+        public async Task<List<Device>> GetDevicesByRoomId(Guid roomId)
         {
-            throw new NotImplementedException();
+            var devices =await _dbContext.Devices.Where(x=>x.RoomId==roomId).ToListAsync();
+
+            return devices;
         }
     }
 }

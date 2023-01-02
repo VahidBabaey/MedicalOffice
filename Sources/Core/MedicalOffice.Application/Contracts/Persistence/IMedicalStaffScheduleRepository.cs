@@ -7,7 +7,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
     {
         Task DeleteMedicalStaffSchedule(Guid id);
         
-        Task<IReadOnlyList<MedicalStaffSchedule>> GetMedicalStaffScheduleByID(Guid? Id);
+        Task<List<MedicalStaffSchedule>> GetMedicalStaffScheduleById(Guid? Id);
         
         Task UpdateMedicalStaffsSchedule(Guid MedicalStaffid, int day, MedicalStaffScheduleDTO MedicalStaffSchedule);
 
@@ -15,7 +15,8 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         Task DeleteRangle(List<MedicalStaffSchedule> MedicalStaffSchedules);   
 
-        Task<StaffDayScheduleDTO> GetStaffScheduleByDate(Guid? medicalStaffId,DayOfWeek dayOfweek);
-        Task<bool> CheckTimeIsInStaffSchedule(Guid? medicalStaffId, DateTime date);
+        Task<MedicalStaffSchedule> GetStaffScheduleByDate(Guid? medicalStaffId,DayOfWeek dayOfweek);
+
+        Task<bool> CheckTimeIsInStaffSchedule(Guid medicalStaffId, DateTime date);
     }
 }

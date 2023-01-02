@@ -15,6 +15,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+#nullable disable
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 {
@@ -59,7 +60,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
             var responseBuilder = new ResponseBuilder();
 
-            var validTime = _medicalStaffScheduleRepository.CheckTimeIsInStaffSchedule(request.MedicalStaffId, request.Date).Result;
+            var validTime = _medicalStaffScheduleRepository.CheckTimeIsInStaffSchedule((Guid)request.MedicalStaffId, request.Date).Result;
 
             if (!validTime)
                 throw new ArgumentException("");
@@ -70,7 +71,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                 throw new ArgumentException("");
             }
 
-            if (service.Duration< (TimeOnly.Parse(request.EndTime) - TimeOnly.Parse(request.StartTime)).TotalMinutes)
+            if (service.Duration < (TimeOnly.Parse(request.EndTime) - TimeOnly.Parse(request.StartTime)).TotalMinutes)
                 throw new ArgumentException("");
 
             var staffExistingAppointments = _appointmentRepository.GetByDateAndStaff(request.Date, medicalStaffId: request.MedicalStaffId).Result;
@@ -130,5 +131,5 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
             return true;
         }
-    } 
+    }
 }

@@ -4,6 +4,7 @@ using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Text.Json;
 
 namespace MedicalOffice.Persistence.Repositories;
@@ -50,9 +51,9 @@ public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSche
             _dbContext.SaveChanges();
         }
     }
-    public async Task<IReadOnlyList<MedicalStaffSchedule>> GetMedicalStaffScheduleByID(Guid? Id)
+    public async Task<List<MedicalStaffSchedule>> GetMedicalStaffScheduleById(Guid? medicalStaffId)
     {
-        return await _dbContext.MedicalStaffSchedules.Where(srv => srv.MedicalStaffId == Id).ToListAsync();
+        return await _dbContext.MedicalStaffSchedules.Where(x=>x.MedicalStaffId == medicalStaffId).ToListAsync();
     }
 
     public async Task<List<Guid>> AddRangle(List<MedicalStaffSchedule> MedicalStaffSchedules)
@@ -73,19 +74,24 @@ public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSche
         return Task.CompletedTask;
     }
 
-    public async Task<StaffDayScheduleDTO> GetStaffScheduleByDate(Guid? medicalStaffId, DayOfWeek dayOfweek)
+    public async Task<MedicalStaffSchedule> GetStaffScheduleByDate(Guid? medicalStaffId, DayOfWeek dayOfweek)
     {
         var medicalStaffSchedule = await _dbContext.MedicalStaffSchedules
             .Include(x => x.MedicalStaff)
-            .SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId 
+            .SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId
             && x.WeekDay == dayOfweek
             );
 
-        return _mapper.Map<StaffDayScheduleDTO>(medicalStaffSchedule);
+        if (medicalStaffSchedule != null)
+            return medicalStaffSchedule;
+
+        else return null;
     }
 
-    public Task<bool> CheckTimeIsInStaffSchedule(Guid? medicalStaffId, DateTime date)
+    public Task<bool> CheckTimeIsInStaffSchedule(Guid medicalStaffId, DateTime date)
     {
-        throw new NotImplementedException();
+        var isDayScheduleValid = _dbContext.MedicalStaffSchedules.Any(x => x.WeekDay == date.DayOfWeek && x.MedicalStaffId == medicalStaffId);
+
+        return Task.FromResult(isDayScheduleValid);
     }
 }

@@ -5,7 +5,9 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
+using MedicalOffice.Application.Features.AppointmentFeature.Handlers.Helper;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -25,6 +27,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
     public class GetSpecificPeriodAppointmentsQueryhandler : IRequestHandler<GetSpecificPeriodAppointmentsQuery, BaseResponse>
     {
         private readonly IValidator<SpecificPeriodAppointmentDTO> _validator;
+        private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IAppointmentRepository _appointmentRepository;
         private readonly IServiceRepository _serviceRepository;
@@ -36,6 +39,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
         public GetSpecificPeriodAppointmentsQueryhandler(
             IValidator<SpecificPeriodAppointmentDTO> validator,
+            IMapper mapper,
             ILogger logger,
             IAppointmentRepository appointmentRepository,
             IServiceRepository serviceRepository,
@@ -44,6 +48,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
             IDeviceRepository deviceRepository)
         {
             _validator = validator;
+            _mapper = mapper;
             _logger = logger;
             _appointmentRepository = appointmentRepository;
             _serviceRepository = serviceRepository;
@@ -58,6 +63,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
         {
             var responseBuilder = new ResponseBuilder();
 
+            #region ValidateRequest
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -71,10 +77,13 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                 return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
+            #endregion
 
+            #region DeclareListOfPeriodAppointments
             var result = new List<SpecificPeriodAppointmentResDTO>();
+            #endregion
 
-            //TODO: it should go to validator
+            #region CheckRoomContainsDevice
             if (request.DTO.RoomId != null && request.DTO.DeviceId != null)
             {
                 var roomHasDevice = _deviceRepository.GetDevicesByRoomId((Guid)request.DTO.RoomId).Result
@@ -89,10 +98,13 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         Header = $"{_requestTitle} failed",
                         AdditionalData = error
                     });
+
                     return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
                 }
             }
+            #endregion
 
+            #region ifJustServiceIdNotNull
             if (request.DTO.MedicalStaffId == null && request.DTO.DeviceId == null)
             {
                 //TODO: It should go to validator
@@ -106,11 +118,10 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         Header = $"{_requestTitle} failed",
                         AdditionalData = error
                     });
-
                     return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
                 }
 
-                var serviceDuration = _serviceDurationRepository.GetAllBySearchClause(new { ServiceId = request.DTO.ServiceId }).Result.ToList();
+                var serviceDuration = _serviceDurationRepository.GetAllByServiceId(request.DTO.ServiceId).Result;
 
                 var medicalStaffIds = serviceDuration.Select(d => d.MedicalStaffId).ToList();
 
@@ -122,18 +133,12 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                     var service = _serviceDurationRepository
                         .GetByServiceAndStaffId(serviceId: request.DTO.ServiceId, medicalStaffId: staffId).Result;
-                    if (service == null)
-                    {
-                        continue;
-                    }
 
-                    var appointments = new List<Appointment>();
-                    appointments = _appointmentRepository.GetByPeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, staffId).Result.ToList();
+                    var appointments = _appointmentRepository.GetByPeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, staffId).Result.ToList();
 
-                    var staffSchedule = new List<MedicalStaffSchedule>();
-                    staffSchedule = _staffScheduleRepository.GetAllBySearchClause(new MedicalStaffSchedule { MedicalStaffId = staffId }).Result.ToList();
+                    var staffSchedule = _staffScheduleRepository.GetMedicalStaffScheduleById(staffId).Result.ToList();
 
-                    eachStaffPeriodAppointmetsCounts(eachStaffAppointments, service, appointments, staffSchedule);
+                    FreeTimeGenerator.StaffPeriodAppointmetsCounts(eachStaffAppointments, service, appointments, staffSchedule);
 
                     allStaffAppointments.AddRange(eachStaffAppointments);
                 }
@@ -157,203 +162,57 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                     dateAppointments.Add(dateAppointment);
                 }
-
                 result.AddRange(dateAppointments);
             }
+            #endregion
 
-            if (request.DTO.MedicalStaffId != null && request.DTO.DeviceId == null)
+            #region IfMedicalStaffIdNotNull
+            if (request.DTO.MedicalStaffId != null)
             {
                 var service = _serviceDurationRepository
                     .GetByServiceAndStaffId(serviceId: request.DTO.ServiceId, medicalStaffId: request.DTO.MedicalStaffId).Result;
+
                 if (service == null)
                 {
-                    throw new ArgumentException("There is no service for this staff");
-                }
-
-                var appointments = new List<Appointment>();
-                appointments = _appointmentRepository
-                    .GetByPeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, request.DTO.MedicalStaffId).Result.ToList();
-
-                var staffSchedule = new List<MedicalStaffSchedule>();
-                staffSchedule = _staffScheduleRepository.GetMedicalStaffScheduleByID(request.DTO.MedicalStaffId).Result.ToList();
-
-                if (staffSchedule == null)
-                {
-                    throw new ArgumentException("There is no schedule for this staff");
-                }
-                eachStaffPeriodAppointmetsCounts(result, service, appointments, staffSchedule);
-            }
-
-            if (request.DTO.DeviceId != null)
-            {
-                var service = _serviceDurationRepository
-                    .GetByServiceAndStaffId(serviceId: request.DTO.ServiceId, medicalStaffId: request.DTO.MedicalStaffId).Result;
-                if (service == null)
-                {
-                    var error = "Service isn't exist";
+                    var error = new ArgumentException("There is no service for this staff");
                     await _logger.Log(new Log
                     {
                         Type = LogType.Error,
                         Header = $"{_requestTitle} failed",
-                        AdditionalData = error
+                        AdditionalData = error.Message,
                     });
-
-                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
 
-                var appointments = new List<Appointment>();
-                appointments = _appointmentRepository
-                    .GetByPeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, request.DTO.MedicalStaffId).Result.ToList();
+                var appointments = _appointmentRepository.GetByPeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, request.DTO.MedicalStaffId).Result.ToList();
 
-                var deviceAppointments = new List<Appointment>();
-                deviceAppointments = _appointmentRepository
-                 .GetByPeriodAndDeviceId(request.DTO.StartDate, request.DTO.EndDate, request.DTO.DeviceId).Result.ToList();
+                if (request.DTO.DeviceId != null)
+                {
+                    var deviceAppointments = new List<AppointmentDetailsDTO>();
+                    deviceAppointments = _appointmentRepository
+                     .GetByPeriodAndDeviceId(request.DTO.StartDate, request.DTO.EndDate, request.DTO.DeviceId).Result.ToList();
 
-                appointments.AddRange(deviceAppointments);
+                    appointments.AddRange(deviceAppointments);
+                }
 
-                var staffSchedule = new List<MedicalStaffSchedule>();
-                staffSchedule = _staffScheduleRepository.GetMedicalStaffScheduleByID(request.DTO.MedicalStaffId).Result.ToList();
-
+                var staffSchedule = _staffScheduleRepository.GetMedicalStaffScheduleById(request.DTO.MedicalStaffId).Result.ToList();
                 if (staffSchedule == null)
                 {
-                    var error = "There is no schedule for this staff";
+                    var error = new ArgumentException("This staff doesn't have schedule!");
                     await _logger.Log(new Log
                     {
                         Type = LogType.Error,
                         Header = $"{_requestTitle} failed",
-                        AdditionalData = error
+                        AdditionalData = error.Message,
                     });
 
-                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
-
-                eachStaffPeriodAppointmetsCounts(result, service, appointments, staffSchedule);
+                FreeTimeGenerator.StaffPeriodAppointmetsCounts(result, service, appointments, staffSchedule);
             }
+            #endregion
 
             throw new NotImplementedException();
-        }
-
-        private static void eachStaffPeriodAppointmetsCounts(
-            List<SpecificPeriodAppointmentResDTO> result,
-            ServiceDurationDetailsDTO service,
-            List<Appointment> appointments,
-            List<MedicalStaffSchedule> staffSchedule)
-        {
-            foreach (var daySchedule in staffSchedule)
-            {
-                var eachStaffDayOfWeekAppointments = new SpecificPeriodAppointmentResDTO();
-
-                var staffDayOfWeekAppointments = appointments.FindAll(x => x.Date.DayOfWeek == daySchedule.WeekDay).ToList();
-
-                var staffFreeTimes = new List<time>();
-                if (staffDayOfWeekAppointments != null)
-                {
-                    var times = new List<TimeOnly>();
-                    for (int i = 0; i < appointments.Count; i++)
-                    {
-                        if (i == 0 &&
-                        TimeOnly.Parse(appointments[i].StartTime) > TimeOnly.Parse(daySchedule.MorningStart))
-                        {
-                            var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(daySchedule.MorningStart),
-                                    TimeOnly.Parse(appointments[i].StartTime)
-                                };
-                            times.AddRange(freeTimes);
-                        }
-                        else if (i == appointments.Count - 1 &&
-                            TimeOnly.Parse(appointments[i].EndTime) < TimeOnly.Parse(daySchedule.EveningEnd))
-                        {
-                            var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(appointments[i].EndTime),
-                                    TimeOnly.Parse(daySchedule.EveningEnd)
-                                };
-                            times.AddRange(freeTimes);
-                        }
-                        else
-                        {
-                            var freeTimes = new List<TimeOnly> {
-                                    TimeOnly.Parse(appointments[i - 1].EndTime),
-                                    TimeOnly.Parse(appointments[i].StartTime)
-                                };
-                            times.AddRange(freeTimes);
-                        }
-                    }
-
-                    foreach (var time in times)
-                    {
-                        if (time.IsBetween
-                            (TimeOnly.Parse(daySchedule.MorningEnd),
-                            TimeOnly.Parse(daySchedule.EveningStart)))
-                        {
-                            times.Remove(time);
-                        }
-                    }
-
-                    for (int i = 0; i < times.Count; i++)
-                    {
-                        freeTimeGenerator(staffFreeTimes, service.Duration, times[i], times[i + 1]);
-                    }
-                }
-
-                else
-                {
-                    var morningStart = TimeOnly.Parse(daySchedule.MorningStart);
-                    var morningEnd = TimeOnly.Parse(daySchedule.MorningEnd);
-                    var eveningStart = TimeOnly.Parse(daySchedule.EveningStart);
-                    var eveningEnd = TimeOnly.Parse(daySchedule.EveningEnd);
-
-                    freeTimeGenerator(staffFreeTimes, service.Duration, morningStart, morningEnd);
-                    freeTimeGenerator(staffFreeTimes, service.Duration, eveningStart, eveningEnd);
-                }
-
-                foreach (var freeTime in staffFreeTimes)
-                {
-                    eachStaffDayOfWeekAppointments.FreeTimes.Add(new FreeTime(freeTime.StartTime, freeTime.EndTime));
-                }
-
-                eachStaffDayOfWeekAppointments.Date = staffDayOfWeekAppointments[0].Date;
-                eachStaffDayOfWeekAppointments.AllTimes = staffFreeTimes.Count + staffDayOfWeekAppointments.Count;
-                eachStaffDayOfWeekAppointments.FullTimes = staffDayOfWeekAppointments.Count;
-                if (eachStaffDayOfWeekAppointments.AllTimes == eachStaffDayOfWeekAppointments.FullTimes)
-                    eachStaffDayOfWeekAppointments.Full = true;
-
-                result.Add(eachStaffDayOfWeekAppointments);
-            }
-        }
-
-        private static void freeTimeGenerator(List<time> staffFreeTimes, int serviceDuration, TimeOnly startTime, TimeOnly endTime)
-        {
-            int x = 0;
-            x += (int)(endTime - startTime).TotalMinutes / serviceDuration;
-
-            time[] freeTimes = new time[x];
-
-            for (int j = 0; j <= freeTimes.Length; j++)
-            {
-                if (j == 0)
-                {
-                    freeTimes[j] = new time
-                    {
-                        StartTime = startTime,
-                        EndTime = startTime.AddMinutes(serviceDuration)
-                    };
-                }
-                else
-                {
-                    freeTimes[j] = new time
-                    {
-                        StartTime = freeTimes[j - 1].EndTime,
-                        EndTime = freeTimes[j - 1].EndTime.AddMinutes(serviceDuration)
-                    };
-                }
-
-                staffFreeTimes.Add(freeTimes[j]);
-            }
-        }
-        private class time
-        {
-            public TimeOnly StartTime { get; set; }
-            public TimeOnly EndTime { get; set; }
         }
     }
 }
