@@ -106,7 +106,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             if (invalidAppointment != null)
             {
-                var error = "Staff isn't free in requested time";
+                var error = "Staff isn't free in requested Time";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
@@ -126,7 +126,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             if (invalidAppointment != null)
             {
-                var error = "Device isn't free in requested time";
+                var error = "Device isn't free in requested Time";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

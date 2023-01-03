@@ -108,7 +108,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
             if (request.DTO.MedicalStaffId == null && request.DTO.DeviceId == null)
             {
                 //TODO: It should go to validator
-                var existingService = _serviceRepository.GetById(request.DTO.ServiceId);
+                var existingService = _serviceRepository.GetById(request.DTO.ServiceId).Result;
                 if (existingService == null)
                 {
                     var error = "Service isn't exist in this room";
@@ -129,8 +129,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                 foreach (var staffId in medicalStaffIds)
                 {
-                    var eachStaffAppointments = new List<SpecificPeriodAppointmentResDTO>();
-
                     var service = _serviceDurationRepository
                         .GetByServiceAndStaffId(serviceId: request.DTO.ServiceId, medicalStaffId: staffId).Result;
 
@@ -138,7 +136,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                     var staffSchedule = _staffScheduleRepository.GetMedicalStaffScheduleById(staffId).Result.ToList();
 
-                    FreeTimeGenerator.StaffPeriodAppointmetsCounts(eachStaffAppointments, service, appointments, staffSchedule);
+                    var eachStaffAppointments = FreeTimeGenerator.StaffPeriodAppointmetsCounts(service, appointments, staffSchedule, request.DTO.StartDate, request.DTO.EndDate);
 
                     allStaffAppointments.AddRange(eachStaffAppointments);
                 }
@@ -161,6 +159,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     }
 
                     dateAppointments.Add(dateAppointment);
+
                 }
                 result.AddRange(dateAppointments);
             }
@@ -208,11 +207,18 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                     return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
-                FreeTimeGenerator.StaffPeriodAppointmetsCounts(result, service, appointments, staffSchedule);
+                result = FreeTimeGenerator.StaffPeriodAppointmetsCounts(service, appointments, staffSchedule, request.DTO.StartDate, request.DTO.EndDate);
             }
             #endregion
 
-            throw new NotImplementedException();
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = result,
+            });
+
+            return responseBuilder.Success(HttpStatusCode.BadRequest, $"{_requestTitle} succeeded", result);
         }
     }
 }
