@@ -53,7 +53,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
         {
             var responseBuilder = new ResponseBuilder();
 
-            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = _validator.ValidateAsync(request.DTO, cancellationToken).Result;
             if (!validationResult.IsValid)
             {
                 await _logger.Log(new Log

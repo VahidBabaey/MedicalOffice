@@ -10,7 +10,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
 {
     public class IAppointmentIdValidator:AbstractValidator<IAppointmentIdDTO>
     {
-        private readonly IAppointmentRepository _serviceRepository;
+        private readonly IAppointmentRepository _appointmentRepository;
 
         public IAppointmentIdValidator()
         {
@@ -23,9 +23,9 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
 
         private bool isServiceExist(Guid serviceId)
         {
-            var existingService = _serviceRepository.GetById(serviceId);
+            var isAppointmentExist = _appointmentRepository.GetById(serviceId);
 
-            if (existingService != null)
+            if (isAppointmentExist != null)
             {
                 return true;
             }

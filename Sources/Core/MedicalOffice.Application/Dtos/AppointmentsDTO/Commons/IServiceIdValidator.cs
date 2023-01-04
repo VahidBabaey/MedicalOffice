@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
 {
-    public class IServiceIdValidator:AbstractValidator<IServiceIdDTO>
+    public class IServiceIdValidator : AbstractValidator<IServiceIdDTO>
     {
         private readonly IServiceRepository _serviceRepository;
 
@@ -18,21 +18,28 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
 
             RuleFor(x => x.ServiceId)
                 .NotEmpty()
-                .WithMessage("{PropertyName} is required")
-                .Must(x => isServiceExist(x, _serviceRepository))
+                .MustAsync(async (id, token) =>
+                      {
+                          var leaveTypeExists = await _serviceRepository.GetById(id);
+                          if (leaveTypeExists != null)
+                          {
+                              return true;
+                          }
+                          return false;
+                      })
                 .WithMessage("{PropertyName} isn't exist");
         }
 
-        private bool isServiceExist(Guid serviceId, IServiceRepository _serviceRepository)
-        {
-            var existingService = _serviceRepository.GetById(serviceId);
+        //private bool isServiceExist(Guid serviceId, IServiceRepository _serviceRepository)
+        //{
+        //    var existingService = _serviceRepository.GetById(serviceId);
 
-            if (existingService!=null)
-            {
-                return true;
-            }
+        //    if (existingService != null)
+        //    {
+        //        return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
     }
 }

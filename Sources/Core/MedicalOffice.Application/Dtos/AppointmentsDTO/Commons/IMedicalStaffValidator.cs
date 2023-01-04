@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
 {
-    public class IMedicalStaffValidator: AbstractValidator<IMedicalStaffDTO>
+    public class IMedicalStaffValidator : AbstractValidator<IMedicalStaffDTO>
     {
         private readonly IMedicalStaffRepository _medicalStaffRepository;
         public IMedicalStaffValidator(IMedicalStaffRepository medicalStaffRepository)
@@ -17,20 +17,16 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
 
             RuleFor(x => x.MedicalStaffId)
                .NotEmpty()
-               .WithMessage("{PropertyName} is required")
-               .Must(x => isStaffExist(x,_medicalStaffRepository))
+               .MustAsync(async (id, token) =>
+               {
+                   var isMedicalStaffExist = await _medicalStaffRepository.GetById(id);
+                   if (isMedicalStaffExist != null)
+                   {
+                       return true;
+                   }
+                   return false;
+               })
                .WithMessage("{PropertyName} isn't exist");
-        }
-        private bool isStaffExist(Guid staffId, IMedicalStaffRepository _medicalStaffRepository)
-        {
-            var existingStaff = _medicalStaffRepository.GetById(staffId);
-
-            if (existingStaff != null)
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }
