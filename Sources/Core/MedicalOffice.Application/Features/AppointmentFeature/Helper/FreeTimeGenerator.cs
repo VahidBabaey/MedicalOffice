@@ -14,18 +14,18 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Helper
 {
     public static class FreeTimeGenerator
     {
-        public static void GenerateServiceFreeTimes(List<time> staffFreeTimes, int serviceDuration, TimeOnly startTime, TimeOnly endTime, MedicalStaffSchedule staffSchedule)
+        public static void GenerateServiceFreeTimes(List<Time> staffFreeTimes, int serviceDuration, TimeOnly startTime, TimeOnly endTime, MedicalStaffSchedule staffSchedule)
         {
             int x = 0;
             x += (int)(endTime - startTime).TotalMinutes / serviceDuration;
 
-            time[] freeTimes = new time[x];
+            Time[] freeTimes = new Time[x];
 
             for (int j = 0; j < freeTimes.Length; j++)
             {
                 if (j == 0)
                 {
-                    freeTimes[j] = new time
+                    freeTimes[j] = new Time
                     {
                         StartTime = startTime,
                         EndTime = startTime.AddMinutes(serviceDuration)
@@ -33,7 +33,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Helper
                 }
                 else
                 {
-                    freeTimes[j] = new time
+                    freeTimes[j] = new Time
                     {
                         StartTime = freeTimes[j - 1].EndTime,
                         EndTime = freeTimes[j - 1].EndTime.AddMinutes(serviceDuration)
@@ -82,31 +82,21 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Helper
             }
         }
 
-        public static void StaffPeriodAppointmetsCounts(
-            List<SpecificPeriodAppointmentResDTO> result,
+        public static List<SpecificPeriodAppointmentResDTO> StaffPeriodAppointmetsCounts(
             ServiceDurationDetailsDTO service,
             List<AppointmentDetailsDTO> appointments,
-            List<MedicalStaffSchedule> staffSchedule)
+            List<MedicalStaffSchedule> staffSchedule,
+            DateTime startDate,
+            DateTime endDate)
         {
+            var result = new List<SpecificPeriodAppointmentResDTO>();
+
             foreach (var daySchedule in staffSchedule)
             {
                 var eachStaffDayOfWeekAppointments = new SpecificPeriodAppointmentResDTO();
+                var staffFreeTimes = new List<Time>();
 
-                var staffDayOfWeekAppointments = appointments.FindAll(x => x.Date.DayOfWeek == daySchedule.WeekDay).ToList();
-
-                var staffFreeTimes = new List<time>();
-                if (staffDayOfWeekAppointments != null)
-                {
-                    var times = new List<TimeOnly>();
-                    GenerateStaffTotalContinuesFreeTimes(appointments, daySchedule, times);
-
-                    for (int i = 0; i < times.Count - 1; i++)
-                    {
-                        GenerateServiceFreeTimes(staffFreeTimes, service.Duration, times[i], times[i + 1], daySchedule);
-                    }
-                }
-
-                else
+                if (appointments.Count == 0)
                 {
                     var morningStart = TimeOnly.Parse(daySchedule.MorningStart);
                     var morningEnd = TimeOnly.Parse(daySchedule.MorningEnd);
@@ -115,28 +105,52 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Helper
 
                     GenerateServiceFreeTimes(staffFreeTimes, service.Duration, morningStart, morningEnd, daySchedule);
                     GenerateServiceFreeTimes(staffFreeTimes, service.Duration, eveningStart, eveningEnd, daySchedule);
+
+                    for (DateTime date = startDate; date < endDate; date=date.AddDays(1))
+                    {
+                        if (daySchedule.WeekDay == date.DayOfWeek)
+                        {
+                            eachStaffDayOfWeekAppointments.Date = date;
+                            eachStaffDayOfWeekAppointments.AllTimes = staffFreeTimes.Count;
+                            eachStaffDayOfWeekAppointments.FullTimes = 0;
+                            eachStaffDayOfWeekAppointments.FreeTimes = staffFreeTimes;
+
+                            result.Add(eachStaffDayOfWeekAppointments);
+                        }
+                    }
                 }
-
-                var freeTimes = new List<FreeTime>();
-                foreach (var freeTime in staffFreeTimes)
+                else
                 {
-                    var time = new FreeTime(TimeOnly.Parse("7:00"), TimeOnly.Parse("7:30"));
-                    freeTimes.Add(time);
-                }
+                    var staffDayOfWeekAppointments = appointments.FindAll(x => x.Date.DayOfWeek == daySchedule.WeekDay).ToList();
 
-                eachStaffDayOfWeekAppointments.FreeTimes = freeTimes;
+                    var appointmentGroups = staffDayOfWeekAppointments.OrderBy(a => a.Date).GroupBy(x => x.Date);
 
-                if (staffDayOfWeekAppointments != null)
-                {
-                    eachStaffDayOfWeekAppointments.Date = staffDayOfWeekAppointments[0].Date;
-                    eachStaffDayOfWeekAppointments.AllTimes = staffFreeTimes.Count + staffDayOfWeekAppointments.Count;
-                    eachStaffDayOfWeekAppointments.FullTimes = staffDayOfWeekAppointments.Count;
-                    if (eachStaffDayOfWeekAppointments.AllTimes == eachStaffDayOfWeekAppointments.FullTimes)
-                        eachStaffDayOfWeekAppointments.Full = true;
+                    foreach (var item in appointmentGroups)
+                    {
+                        var dateAppointments = item.Select(x => x).ToList();
 
-                    result.Add(eachStaffDayOfWeekAppointments);
+                        var times = new List<TimeOnly>();
+                        GenerateStaffTotalContinuesFreeTimes(dateAppointments, daySchedule, times);
+
+                        for (int i = 0; i < times.Count - 1; i++)
+                        {
+                            GenerateServiceFreeTimes(staffFreeTimes, service.Duration, times[i], times[i + 1], daySchedule);
+                        }
+
+                        eachStaffDayOfWeekAppointments.Date = item.Key;
+                        eachStaffDayOfWeekAppointments.AllTimes = staffFreeTimes.Count + dateAppointments.Count;
+                        eachStaffDayOfWeekAppointments.FullTimes = dateAppointments.Count;
+                        eachStaffDayOfWeekAppointments.FreeTimes = staffFreeTimes;
+
+                        if (eachStaffDayOfWeekAppointments.AllTimes == eachStaffDayOfWeekAppointments.FullTimes)
+                            eachStaffDayOfWeekAppointments.Full = true;
+
+                        result.Add(eachStaffDayOfWeekAppointments);
+                    }
                 }
             }
+
+            return result;
         }
     }
 }

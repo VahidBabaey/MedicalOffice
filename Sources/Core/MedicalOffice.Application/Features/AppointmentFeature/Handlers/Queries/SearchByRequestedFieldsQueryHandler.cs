@@ -205,7 +205,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                     if (staffSchedule != null)
                     {
-                        var staffFreeTimes = new List<time>();
+                        var staffFreeTimes = new List<Time>();
 
                         if (appointments.Count != 0)
                         {

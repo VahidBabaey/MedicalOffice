@@ -1,4 +1,6 @@
-﻿namespace MedicalOffice.Application.Dtos.AppointmentsDTO
+﻿using MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries;
+
+namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
     public class SpecificPeriodAppointmentResDTO
     {
@@ -8,7 +10,7 @@
 
         public int FullTimes { get; set; }
 
-        public List<FreeTime> FreeTimes { get; set; }
+        public List<Time> FreeTimes { get; set; }
 
         public bool Full { get; set; } = false;
     }
