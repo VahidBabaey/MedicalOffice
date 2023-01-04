@@ -29,17 +29,5 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
                       })
                 .WithMessage("{PropertyName} isn't exist");
         }
-
-        //private bool isServiceExist(Guid serviceId, IServiceRepository _serviceRepository)
-        //{
-        //    var existingService = _serviceRepository.GetById(serviceId);
-
-        //    if (existingService != null)
-        //    {
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
     }
 }
