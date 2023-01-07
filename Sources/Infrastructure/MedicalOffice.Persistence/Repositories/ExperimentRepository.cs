@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
 
-public class ExperimentRepository : GenericRepository<ExperimentPre, Guid>, IExperimentRepository
+public class ExperimentRepository : GenericRepository<Experiment, Guid>, IExperimentRepository
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -12,6 +12,9 @@ public class ExperimentRepository : GenericRepository<ExperimentPre, Guid>, IExp
     {
         _dbContext = dbContext;
     }
-
-
+    public async Task<bool> CheckExistExperimentId(Guid officeId, Guid experimentId)
+    {
+        bool isExist = await _dbContext.ExperimentPres.AnyAsync(p => p.OfficeId == officeId && p.Id == experimentId);
+        return isExist;
+    }
 }

@@ -4,6 +4,7 @@ namespace MedicalOffice.Application.Dtos.InsuranceDTO;
 
 public class InsuranceDTO
 {
+
     /// <summary>
     /// آیدی مطب
     /// </summary>

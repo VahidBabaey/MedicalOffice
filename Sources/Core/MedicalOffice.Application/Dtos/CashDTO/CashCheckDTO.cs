@@ -5,6 +5,7 @@ namespace MedicalOffice.Application.Dtos.CashDTO;
 
 public class CashCheckDTO 
 {
+
     /// <summary>
     /// آیدی صندوق
     /// </summary>
@@ -29,6 +30,9 @@ public class CashCheckDTO
     /// آیدی پذیرش
     /// </summary>
     public Guid ReceptionId { get; set; }
-
+    /// <summary>
+    /// آیدی مطب
+    /// </summary>
+    public Guid OfficeId { get; set; }
 
 }

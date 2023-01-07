@@ -7,6 +7,7 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class Cash : BaseDomainEntity<Guid>
 {
+
     /// <summary>
     /// مطب
     /// </summary>

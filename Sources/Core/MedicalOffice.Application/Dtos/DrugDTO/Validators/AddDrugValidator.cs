@@ -11,7 +11,10 @@ namespace MedicalOffice.Application.Dtos.DrugDTO.Validators
     {
         public AddDrugValidator()
         {
-
+            RuleFor(x => x.Name).NotEmpty().Length(1, 100);
+            RuleFor(x => x.GenericCode).NotEmpty();
+            RuleFor(x => x.Number).NotEmpty();
+            RuleFor(x => x.IsShow).NotEmpty();
         }
     }
 }

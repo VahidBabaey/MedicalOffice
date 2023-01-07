@@ -79,5 +79,9 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
 
         return nameService;
     }
-
+    public async Task<bool> CheckMembershipId(Guid officeId, Guid membershipId)
+    {
+        bool isExist = await _dbContext.Memberships.AnyAsync(p => p.OfficeId == officeId && p.Id == membershipId);
+        return isExist;
+    }
 }

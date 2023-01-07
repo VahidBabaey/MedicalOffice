@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
@@ -29,29 +30,60 @@ public class EditCashPosCommandHandler : IRequestHandler<EditCashPosCommand, Bas
     {
         BaseResponse response = new();
 
+        UpdateCashPosValidator validator = new();
+
         Log log = new();
 
-        try
+        bool isreceptionIdExist = await _repository.CheckExistReceptionId(request.DTO.OfficeId, request.DTO.ReceptionId);
+        bool iscashIdExist = await _repository.CheckExistCashId(request.DTO.OfficeId, request.DTO.CashId);
+
+        if (!isreceptionIdExist || !iscashIdExist)
         {
-            var cashpos = _mapper.Map<CashPos>(request.DTO);
+            List<string> errors = new List<string>();
+            var error = $"اطلاعات وارد شده صحیح نمیباشد.";
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            errors = new List<string> { error };
+            response.Errors = errors;
 
-            await _repository.Update(cashpos);
+            log.Type = LogType.Error;
 
-            response.Success = true;
-            response.StatusDescription = $"{_requestTitle} succeded";
-            response.Data = (new { Id = cashpos.Id });
-
-            log.Type = LogType.Success;
+            return response;
         }
-        catch (Exception error)
+
+        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+
+        if (!validationResult.IsValid)
         {
             response.Success = false;
             response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add(error.Message);
+            response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
             log.Type = LogType.Error;
         }
+        else
+        {
+            try
+            {
+                var cashpos = _mapper.Map<CashPos>(request.DTO);
 
+                await _repository.Update(cashpos);
+
+                response.Success = true;
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = cashpos.Id });
+
+                log.Type = LogType.Success;
+            }
+            catch (Exception error)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add(error.Message);
+
+                log.Type = LogType.Error;
+            }
+        }
         log.Header = response.StatusDescription;
         log.AdditionalData = response.Errors;
 

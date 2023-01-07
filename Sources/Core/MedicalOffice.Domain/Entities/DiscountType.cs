@@ -7,6 +7,7 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class DiscountType : BaseDomainEntity<Guid>
 {
+
     /// <summary>
     /// مطب
     /// </summary>
@@ -23,4 +24,5 @@ public class DiscountType : BaseDomainEntity<Guid>
     /// تخفیف پذیرش ها
     /// </summary>
     public ICollection<ReceptionDiscount>? ReceptionDiscounts { get; set; }
+
 }

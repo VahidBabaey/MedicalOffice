@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.DrugIntractionDTO;
 using MedicalOffice.Application.Dtos.DrugIntractionDTO.Validator;
 using MedicalOffice.Application.Features.DrugIntractionFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -18,13 +20,15 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Command
 
     public class MyCommandHandlerCommandHandler : IRequestHandler<AddDrugIntractionCommand, BaseResponse>
     {
+        private readonly IValidator<DrugIntractionDTO> _validator;
         private readonly IDrugIntractionRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public MyCommandHandlerCommandHandler(IDrugIntractionRepository repository, IMapper mapper, ILogger logger)
+        public MyCommandHandlerCommandHandler(IValidator<DrugIntractionDTO> validator, IDrugIntractionRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -35,11 +39,9 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Command
         {
             BaseResponse response = new();
 
-            AddDrugIntractionValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {

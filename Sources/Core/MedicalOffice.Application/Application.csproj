@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <Folder Include="Dtos\Ban\" />
+    <Folder Include="Dtos\Tariff\Validators\" />
     <Folder Include="Features\BasicInfoFile\Handlers\Commands\" />
     <Folder Include="Features\BasicInfoFile\Requests\Commands\" />
     <Folder Include="Features\RoleFile\Handlers\Commands\" />

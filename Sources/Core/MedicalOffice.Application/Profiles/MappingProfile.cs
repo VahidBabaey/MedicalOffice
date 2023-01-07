@@ -36,9 +36,9 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Patient, PatientDTO>().ReverseMap();
-        CreateMap<Patient, UpdateAddPatientDto>().ReverseMap();
-        CreateMap<Patient, PatientListDto>().ConvertUsing(new PatientMapper());
-        CreateMap<Patient, PatientListDto>().ReverseMap();
+        CreateMap<Patient, UpdatePatientDTO>().ReverseMap();
+        CreateMap<Patient, PatientListDTO>().ConvertUsing(new PatientMapper());
+        CreateMap<Patient, PatientListDTO>().ReverseMap();
         CreateMap<MedicalStaff, PatientDTO>().ReverseMap();
         CreateMap<Section, SectionDTO>().ReverseMap();
         CreateMap<Section, SectionListDTO>().ReverseMap();
@@ -68,9 +68,9 @@ public class MappingProfile : Profile
         CreateMap<Drug, DrugDTO>().ReverseMap();
         CreateMap<Drug, UpdateDrugDTO>().ReverseMap();
         CreateMap<Drug, DrugListDTO>().ReverseMap();
-        CreateMap<ExperimentPre, ExperimentDTO>().ReverseMap();
-        CreateMap<ExperimentPre, UpdateExperimentDTO>().ReverseMap();
-        CreateMap<ExperimentPre, ExperimentListDTO>().ReverseMap();
+        CreateMap<Experiment, ExperimentDTO>().ReverseMap();
+        CreateMap<Experiment, UpdateExperimentDTO>().ReverseMap();
+        CreateMap<Experiment, ExperimentListDTO>().ReverseMap();
         CreateMap<DrugIntraction, DrugIntractionDTO>().ReverseMap();
         CreateMap<DrugIntraction, UpdateDrugIntractionDTO>().ReverseMap();
         CreateMap<DrugIntraction, DrugIntractionListDTO>().ReverseMap();
@@ -124,9 +124,9 @@ public class MappingProfile : Profile
         CreateMap<CashPos, UpdateCashPosDTO>().ReverseMap();
     }
 
-    public class PatientMapper : ITypeConverter<Patient, PatientListDto>
+    public class PatientMapper : ITypeConverter<Patient, PatientListDTO>
     {
-        public PatientListDto Convert(Patient source, PatientListDto destination, ResolutionContext context)
+        public PatientListDTO Convert(Patient source, PatientListDTO destination, ResolutionContext context)
         {
             destination = new()
             {

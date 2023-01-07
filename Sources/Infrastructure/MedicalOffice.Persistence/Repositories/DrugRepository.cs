@@ -36,4 +36,24 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
 
         return (IEnumerable<DrugListDTO>)_list;
     }
- }
+    public async Task<bool> CheckExistDrugSectionId(Guid drugSectionId)
+    {
+        bool isExist = await _dbContext.DrugSections.AnyAsync(p => p.Id == drugSectionId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistDrugUsageId(Guid drugUsageId)
+    {
+        bool isExist = await _dbContext.DrugUsages.AnyAsync(p => p.Id == drugUsageId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistDrugConsuptionId(Guid drugConsumptionId)
+    {
+        bool isExist = await _dbContext.DrugConsumptions.AnyAsync(p => p.Id == drugConsumptionId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistDrugShapeId(Guid drugShapeId)
+    {
+        bool isExist = await _dbContext.DrugShapes.AnyAsync(p => p.Id == drugShapeId);
+        return isExist;
+    }
+}

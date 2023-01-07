@@ -11,7 +11,7 @@ namespace MedicalOffice.Application.Dtos.DrugIntractionDTO.Validator
     {
         public AddDrugIntractionValidator()
         {
-
+            RuleFor(x => x.Effects).NotEmpty();
         }
     }
 }

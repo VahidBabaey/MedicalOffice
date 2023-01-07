@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.PatientReferralFormDTO;
 using MedicalOffice.Application.Dtos.PatientReferralFormDTO.Validator;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -18,13 +20,15 @@ namespace MedicalOffice.Application.Features.PatientReferralFormFile.Handlers.Co
 
     public class AddPatientReferralFormCommandHandler : IRequestHandler<AddPatientReferralFormCommand, BaseResponse>
     {
+        private readonly IValidator<PatientReferralFormDTO> _validator;
         private readonly IPatientReferralFormRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddPatientReferralFormCommandHandler(IPatientReferralFormRepository repository, IMapper mapper, ILogger logger)
+        public AddPatientReferralFormCommandHandler(IValidator<PatientReferralFormDTO> validator, IPatientReferralFormRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -35,11 +39,9 @@ namespace MedicalOffice.Application.Features.PatientReferralFormFile.Handlers.Co
         {
             BaseResponse response = new();
 
-            AddPatientReferralFormValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {

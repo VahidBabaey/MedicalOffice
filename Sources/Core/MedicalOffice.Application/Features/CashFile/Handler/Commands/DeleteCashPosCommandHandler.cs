@@ -29,6 +29,22 @@ public class DeleteCashPosCommandHandler : IRequestHandler<DeleteCashPosCommand,
         BaseResponse response = new();
         Log log = new();
 
+        bool iscashPosIdExist = await _repository.CheckCashPosId(request.CashPosId);
+
+        if (!iscashPosIdExist)
+        {
+            List<string> errors = new List<string>();
+            var error = $"لطفا یک مورد را انتخاب کنید.";
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            errors = new List<string> { error };
+            response.Errors = errors;
+
+            log.Type = LogType.Error;
+
+            return response;
+        }
+
         try
         {
             await _repository.Delete(request.CashPosId);

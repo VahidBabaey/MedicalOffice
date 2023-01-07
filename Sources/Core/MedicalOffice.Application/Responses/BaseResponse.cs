@@ -33,3 +33,4 @@ public class ResponseError
     public int ErrorCode { get; set; }
     public string Description { get; set; } = string.Empty;
 }
+

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.SectionDTO.Validators;
+using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO.Validators;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Commands;
@@ -19,13 +21,15 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 {
     public class AddServiceCommandHandler : IRequestHandler<AddServiceCommand, BaseResponse>
     {
-    private readonly IServiceRepository _repository;
-    private readonly IMapper _mapper;
-    private readonly ILogger _logger;
-    private readonly string _requestTitle;
+        private readonly IValidator<ServiceDTO> _validator;
+        private readonly IServiceRepository _repository;
+        private readonly IMapper _mapper;
+        private readonly ILogger _logger;
+        private readonly string _requestTitle;
 
-        public AddServiceCommandHandler(IServiceRepository repository, IMapper mapper, ILogger logger)
+        public AddServiceCommandHandler(IValidator<ServiceDTO> validator, IServiceRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -40,7 +44,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.Dto, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
 
             if (!validationResult.IsValid)
             {

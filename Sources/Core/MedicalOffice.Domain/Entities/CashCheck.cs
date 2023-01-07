@@ -9,6 +9,14 @@ public class CashCheck : BaseDomainEntity<Guid>
 {
 
     /// <summary>
+    /// مطب
+    /// </summary>
+    public Office? Office { get; set; }
+    /// <summary>
+    /// آیدی مطب
+    /// </summary>
+    public Guid OfficeId { get; set; }
+    /// <summary>
     /// صندوق
     /// </summary>
     public Cash? Cash { get; set; }
@@ -40,4 +48,5 @@ public class CashCheck : BaseDomainEntity<Guid>
     /// آیدی پذیرش
     /// </summary>
     public Guid ReceptionId { get; set; }
+
 }

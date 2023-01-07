@@ -50,4 +50,5 @@ public class TariffDTO : BaseDto<Guid>
     /// مبلغ اضافه به بیمه
     /// </summary>
     public float AdjunctPrice { get; set; }
+
 }

@@ -11,6 +11,9 @@ namespace MedicalOffice.Application.Dtos.PatientReferralFormDTO.Validator
     {
         public AddPatientReferralFormValidator()
         {
+            RuleFor(x => x.ReferralReason).NotEmpty().Length(1, 200);
+            RuleFor(x => x.DateSolar).NotEmpty().Length(1, 100);
+            RuleFor(x => x.DateAD).NotEmpty();
         }
     }
 }

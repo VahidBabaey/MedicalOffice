@@ -23,5 +23,20 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
 
             return regex.IsMatch(phoneNumber);
         }
+
+        bool IsValidPhoneNumberList(string[] phoneNumbers)
+        {
+
+            Regex regex = new Regex(@"^(?:0|98|\+98|\+980|0098|098|00980)?(9\d{9})$");
+
+            foreach (string phoneNumber in phoneNumbers)
+            {
+                if (!regex.IsMatch(phoneNumber))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

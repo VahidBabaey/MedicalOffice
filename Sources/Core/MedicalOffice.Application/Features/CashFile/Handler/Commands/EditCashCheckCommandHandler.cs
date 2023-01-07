@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.CashDTO;
 using MedicalOffice.Application.Dtos.CashDTO.Validators;
 using MedicalOffice.Application.Features.CashFile.Request.Commands;
 using MedicalOffice.Application.Models;
@@ -12,6 +14,7 @@ namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
 public class EditCashCheckCommandHandler : IRequestHandler<EditCashCheckCommand, BaseResponse>
 {
+    private readonly IValidator<CashCheckDTO> _validator;
     private readonly ICashCheckRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
@@ -29,29 +32,60 @@ public class EditCashCheckCommandHandler : IRequestHandler<EditCashCheckCommand,
     {
         BaseResponse response = new();
 
+        UpdateCashCheckValidator validator = new();
+
         Log log = new();
 
-        try
+        bool isreceptionIdExist = await _repository.CheckExistReceptionId(request.DTO.OfficeId, request.DTO.ReceptionId);
+        bool iscashIdExist = await _repository.CheckExistCashId(request.DTO.OfficeId, request.DTO.CashId);
+
+        if (!isreceptionIdExist || !iscashIdExist)
         {
-            var cashcheck = _mapper.Map<CashCheck>(request.DTO);
+            List<string> errors = new List<string>();
+            var error = $"اطلاعات وارد شده صحیح نمیباشد.";
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            errors = new List<string> { error };
+            response.Errors = errors;
 
-            await _repository.Update(cashcheck);
+            log.Type = LogType.Error;
 
-            response.Success = true;
-            response.StatusDescription = $"{_requestTitle} succeded";
-            response.Data = (new { Id = cashcheck.Id });
-
-            log.Type = LogType.Success;
+            return response;
         }
-        catch (Exception error)
+
+        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+
+        if (!validationResult.IsValid)
         {
             response.Success = false;
             response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add(error.Message);
+            response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
             log.Type = LogType.Error;
         }
+        else
+        {
+            try
+            {
+                var cashcheck = _mapper.Map<CashCheck>(request.DTO);
 
+                await _repository.Update(cashcheck);
+
+                response.Success = true;
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = cashcheck.Id });
+
+                log.Type = LogType.Success;
+            }
+            catch (Exception error)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add(error.Message);
+
+                log.Type = LogType.Error;
+            }
+        }
         log.Header = response.StatusDescription;
         log.AdditionalData = response.Errors;
 

@@ -72,7 +72,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
 
         return patientTag;
     }
-    public async Task<List<PatientListDto>> SearchPateint(int skip,
+    public async Task<List<PatientListDTO>> SearchPateint(int skip,
                                                           int take,
                                                           string firstName,
                                                           string lastName,
@@ -82,7 +82,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
     {
         try
         {
-            List<PatientListDto> patientList = new();
+            List<PatientListDTO> patientList = new();
 
 
             var list = await _dbContext.Patients
@@ -99,7 +99,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
 
             foreach (var item in list)
             {
-                PatientListDto patientListDto = new()
+                PatientListDTO patientListDto = new()
                 {
                     Id = item.Id,
                     BirthDate = item.BirthDate,
@@ -120,7 +120,6 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         }
         catch (Exception ex)
         {
-
             throw;
         }
 
@@ -149,5 +148,20 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
             return false;
         await _tagRepository.Delete(patientId);
         return true;
+    }
+    public async Task<bool> CheckExistIntroducerId(Guid officeId, Guid introducerId)
+    {
+        bool isExist = await _dbContext.Introducers.AnyAsync(p => p.OfficeId == officeId && p.Id == introducerId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistPatientTagId(Guid officeId, Guid patientTagId)
+    {
+        bool isExist = await _dbContext.PatientTags.AnyAsync(p => p.OfficeId == officeId && p.Id == patientTagId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistInsuranceId(Guid officeId, Guid insuranceId)
+    {
+        bool isExist = await _dbContext.Insurances.AnyAsync(p => p.OfficeId == officeId && p.Id == insuranceId);
+        return isExist;
     }
 }

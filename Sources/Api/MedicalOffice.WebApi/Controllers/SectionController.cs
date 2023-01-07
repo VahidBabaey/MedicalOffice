@@ -28,9 +28,9 @@ public class SectionController : Controller
         return Ok(response);
     }
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid OfficeId, Guid id)
     {
-        var response = await _mediator.Send(new DeleteSectionCommand() { SectionId = id });
+        var response = await _mediator.Send(new DeleteSectionCommand() {OfficeId = OfficeId, SectionId = id });
 
         return Ok(response);
     }

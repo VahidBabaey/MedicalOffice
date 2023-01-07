@@ -12,6 +12,4 @@ public class DrugConsumptionRepository : GenericRepository<DrugConsumption, Guid
     {
         _dbContext = dbContext;
     }
-
-
 }

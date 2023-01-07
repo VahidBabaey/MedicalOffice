@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Domain.Entities
 {
     public class PatientCommitmentForm : BaseDomainEntity<Guid>
-    { 
+    {
         /// <summary>
         /// فرم
         /// </summary>

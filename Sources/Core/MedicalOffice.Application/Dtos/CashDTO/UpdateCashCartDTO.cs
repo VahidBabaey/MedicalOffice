@@ -29,5 +29,9 @@ public class UpdateCashCartDTO : BaseDto<Guid>
     /// آیدی پذیرش
     /// </summary>
     public Guid ReceptionId { get; set; }
+    /// <summary>
+    /// آیدی مطب
+    /// </summary>
+    public Guid OfficeId { get; set; }
 
 }

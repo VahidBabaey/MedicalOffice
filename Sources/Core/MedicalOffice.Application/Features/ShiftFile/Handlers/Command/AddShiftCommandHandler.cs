@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Dtos.ShiftDTO.Validators;
 using MedicalOffice.Application.Features.ShiftFile.Requests.Command;
 using MedicalOffice.Application.Models;
@@ -18,13 +20,15 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 
     public class AddShiftCommandHandler : IRequestHandler<AddShiftCommand, BaseResponse>
     {
+        private readonly IValidator<ShiftDTO> _validator;
         private readonly IShiftRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddShiftCommandHandler(IShiftRepository repository, IMapper mapper, ILogger logger)
+        public AddShiftCommandHandler(IValidator<ShiftDTO> validator, IShiftRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -35,11 +39,9 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
         {
             BaseResponse response = new();
 
-            AddShiftValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {

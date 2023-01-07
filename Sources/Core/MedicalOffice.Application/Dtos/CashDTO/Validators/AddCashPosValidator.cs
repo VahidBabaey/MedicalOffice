@@ -7,5 +7,6 @@ public class AddCashPosValidator : AbstractValidator<CashPosDTO>
 {
     public AddCashPosValidator()
     {
+        RuleFor(x => x.Cost).NotEmpty();
     }
 }

@@ -47,7 +47,7 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Querie
             catch (Exception error)
             {
                 log.Header = $"{_requestTitle} failed";
-                log.AdditionalData=error.Message;
+                log.AdditionalData="در خواندن اطلاعات مشکلی پیش آمده.";
                 log.Type = LogType.Error;
             }
 

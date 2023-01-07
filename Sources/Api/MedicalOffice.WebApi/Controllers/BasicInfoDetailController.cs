@@ -49,9 +49,9 @@ public class BasicInfoDetailController : Controller
     }
 
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid officeId, Guid Id)
     {
-        var response = await _mediator.Send(new DeleteBasicInfoDetailCommand() { BasicInfoDetailId = id });
+        var response = await _mediator.Send(new DeleteBasicInfoDetailCommand() { OfficeId = officeId, BasicInfoDetailId = Id });
 
         return Ok(response);
     }

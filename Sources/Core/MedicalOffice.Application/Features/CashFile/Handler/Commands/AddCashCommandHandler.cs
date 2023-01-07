@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.CashDTO;
 using MedicalOffice.Application.Dtos.CashDTO.Validators;
 using MedicalOffice.Application.Features.CashFile.Request.Commands;
 using MedicalOffice.Application.Models;
@@ -12,13 +14,15 @@ namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
 public class AddCashCommandHandler : IRequestHandler<AddCashCommand, BaseResponse>
 {
+    private readonly IValidator<CashesDTO> _validator;
     private readonly ICashRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddCashCommandHandler(ICashRepository repository, IMapper mapper, ILogger logger)
+    public AddCashCommandHandler(IValidator<CashesDTO> validator, ICashRepository repository, IMapper mapper, ILogger logger)
     {
+        _validator = validator;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
@@ -29,11 +33,25 @@ public class AddCashCommandHandler : IRequestHandler<AddCashCommand, BaseRespons
     {
         BaseResponse response = new();
 
-        AddCashValidator validator = new();
-
         Log log = new();
 
-        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+        bool isreceptionIdExist = await _repository.CheckExistReceptionId(request.DTO.OfficeId, request.DTO.ReceptionId);
+
+        if (!isreceptionIdExist)
+        {
+            List<string> errors = new List<string>();
+            var error = $"اطلاعات وارد شده صحیح نمیباشد.";
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            errors = new List<string> { error };
+            response.Errors = errors;
+
+            log.Type = LogType.Error;
+
+            return response;
+        }
+
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {

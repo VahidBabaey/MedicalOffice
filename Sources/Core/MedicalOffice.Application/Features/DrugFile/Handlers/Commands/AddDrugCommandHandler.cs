@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.DrugDTO;
 using MedicalOffice.Application.Dtos.DrugDTO.Validators;
 using MedicalOffice.Application.Features.DrugFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -18,13 +20,15 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
 
     public class AddDrugCommandHandler : IRequestHandler<AddDrugCommand, BaseResponse>
     {
+        private readonly IValidator<DrugDTO> _validator;
         private readonly IDrugRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddDrugCommandHandler(IDrugRepository repository, IMapper mapper, ILogger logger)
+        public AddDrugCommandHandler(IValidator<DrugDTO> validator, IDrugRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -35,11 +39,9 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
         {
             BaseResponse response = new();
 
-            AddDrugValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -53,6 +55,9 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
             {
                 try
                 {
+                    if (request.DTO.Number == null)
+                        request.DTO.Number = 1;
+
                     var drug = _mapper.Map<Drug>(request.DTO);
 
                     drug = await _repository.Add(drug);

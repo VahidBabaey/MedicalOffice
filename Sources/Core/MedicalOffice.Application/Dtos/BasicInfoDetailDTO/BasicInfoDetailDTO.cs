@@ -17,5 +17,9 @@ namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO
         /// آیدی اطلاعات پایه
         /// </summary>
         public Guid BasicInfoId { get; set; }
+        /// <summary>
+        /// آیدی مطب
+        /// </summary>
+        public Guid OfficeId { get; set; }
     }
 }

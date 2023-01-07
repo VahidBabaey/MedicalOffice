@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.DrugIntractionDTO;
 using MedicalOffice.Application.Features.DrugIntractionFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -17,13 +19,15 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Command
 
     public class EditDrugIntractionCommandHandler : IRequestHandler<EditDrugIntractionCommand, BaseResponse>
     {
+        private readonly IValidator<UpdateDrugIntractionDTO> _validator;
         private readonly IDrugIntractionRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditDrugIntractionCommandHandler(IDrugIntractionRepository repository, IMapper mapper, ILogger logger)
+        public EditDrugIntractionCommandHandler(IValidator<UpdateDrugIntractionDTO> validator, IDrugIntractionRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -35,28 +39,39 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Command
             BaseResponse response = new();
 
             Log log = new();
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
-            try
-            {
-                var drugintraction = _mapper.Map<DrugIntraction>(request.DTO);
-
-                await _repository.Update(drugintraction);
-
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = drugintraction.Id });
-
-                log.Type = LogType.Success;
-            }
-            catch (Exception error)
+            if (!validationResult.IsValid)
             {
                 response.Success = false;
                 response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
+                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
             }
+            else
+            {
+                try
+                {
+                    var drugintraction = _mapper.Map<DrugIntraction>(request.DTO);
 
+                    await _repository.Update(drugintraction);
+
+                    response.Success = true;
+                    response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = drugintraction.Id });
+
+                    log.Type = LogType.Success;
+                }
+                catch (Exception error)
+                {
+                    response.Success = false;
+                    response.StatusDescription = $"{_requestTitle} failed";
+                    response.Errors.Add(error.Message);
+
+                    log.Type = LogType.Error;
+                }
+            }
             log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 

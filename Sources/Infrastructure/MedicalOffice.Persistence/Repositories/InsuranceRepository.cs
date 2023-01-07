@@ -20,5 +20,11 @@ namespace MedicalOffice.Persistence.Repositories
         {
             return await _dbContext.Insurances.Where(srv => srv.IsAdditionalInsurance == true).ToListAsync();
         }
+        public async Task<bool> CheckExistInsuranceId(Guid officeId, Guid insuranceId)
+        {
+            bool isExist = await _dbContext.Insurances.AnyAsync(p => p.OfficeId == officeId && p.Id == insuranceId);
+            return isExist;
+        }
+
     }
 }

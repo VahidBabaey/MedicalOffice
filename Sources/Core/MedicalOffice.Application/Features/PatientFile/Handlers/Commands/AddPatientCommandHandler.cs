@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Dtos.PatientDTO.Validators;
 using MedicalOffice.Application.Features.PatientFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -12,13 +14,15 @@ namespace MedicalOffice.Application.Features.PatientFile.Handlers.Commands;
 
 public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseResponse>
 {
+    private readonly IValidator<PatientDTO> _validator;
     private readonly IPatientRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddPatientCommandHandler(IPatientRepository repository, IMapper mapper, ILogger logger)
+    public AddPatientCommandHandler(IValidator<PatientDTO> validator, IPatientRepository repository, IMapper mapper, ILogger logger)
     {
+        _validator = validator;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
@@ -30,11 +34,9 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
 
         BaseResponse response = new();
 
-        AddPatientValidator validator = new();
-
         Log log = new();
 
-        var validationResult = await validator.ValidateAsync(request.Dto, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
 
         if (!validationResult.IsValid)
         {
@@ -55,13 +57,13 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = patient.Id });
-                if (request.Dto.Mobile == null)
+                if (request.Dto.PhoneNumber == null)
                 {
 
                 }
                 else
                 {
-                    foreach (var mobile in request.Dto.Mobile)
+                    foreach (var mobile in request.Dto.PhoneNumber)
                     {
                         await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
                     }

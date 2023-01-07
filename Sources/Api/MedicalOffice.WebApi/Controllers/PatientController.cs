@@ -35,7 +35,7 @@ public class PatientController : Controller
         return Ok(response);
     }
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateAddPatientDto dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdatePatientDTO dto)
     {
         var response = await _mediator.Send(new EditPatientCommand() { Dto = dto });
 
@@ -43,14 +43,14 @@ public class PatientController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<PatientListDto>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<PatientListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllPatientsQuery() { Dto = dto });
 
         return Ok(response);
     }
     [HttpGet("Search")]
-    public async Task<ActionResult<List<PatientListDto>>> GetBySearch([FromQuery] ListDto dto, [FromQuery] SearchFields searchFields)
+    public async Task<ActionResult<List<PatientListDTO>>> GetBySearch([FromQuery] ListDto dto, [FromQuery] SearchFields searchFields)
     {
         var response = await _mediator.Send(new GetPatientBySearchQuery() { Dto = dto, searchFields = searchFields });
 

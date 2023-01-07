@@ -11,7 +11,6 @@ public class Office : BaseDomainEntity<Guid>
     /// نام
     /// </summary>
     public string Name { get; set; } = string.Empty;
-
     /// <summary>
     /// آدرس
     /// </summary>
@@ -21,12 +20,10 @@ public class Office : BaseDomainEntity<Guid>
     /// شماره ثابت
     /// </summary>
     public string TelePhoneNumber { get; set; } = string.Empty;
-
     /// <summary>
     /// نوع تخفیف ها
     /// </summary>
     public ICollection<DiscountType>? DiscountTypes { get; set; }
-
     /// <summary>
     /// بیمه ها
     /// </summary>
@@ -36,12 +33,10 @@ public class Office : BaseDomainEntity<Guid>
     /// ضرایب کا
     /// </summary>
     public ICollection<KMultiplier>? KMultipliers { get; set; }
-
     /// <summary>
     /// بیماران
     /// </summary>
     public ICollection<Patient>? Patients { get; set; }
-
     /// <summary>
     /// پذیرش ها
     /// </summary>
@@ -86,5 +81,45 @@ public class Office : BaseDomainEntity<Guid>
     /// ارتباط یک به چند مطب با صندوق
     /// </summary>
     public ICollection<Cash>? Cashes { get; set; }
+    /// <summary>
+    /// جرئیات پایه
+    /// </summary>
+    public ICollection<BasicInfo>? BasicInfos { get; set; }
+    /// <summary>
+    /// دارو
+    /// </summary>
+    public ICollection<Drug>? Drugs { get; set; }
+    /// <summary>
+    /// تجویز دارو
+    /// </summary>
+    public ICollection<DrugPrescription>? DrugPrescriptions { get; set; }
+    /// <summary>
+    /// آزمایشات
+    /// </summary>
+    public ICollection<Experiment>? ExperimentPres { get; set; }
+    /// <summary>
+    /// فرم تعهدنامه
+    /// </summary>
+    public ICollection<FormCommitment>? FormCommitments { get; set; }
+    /// <summary>
+    /// کارت
+    /// </summary>
+    public ICollection<CashCart>? CashCarts { get; set; }
+    /// <summary>
+    /// پوز
+    /// </summary>
+    public ICollection<CashPos>? CashPoses { get; set; }
+    /// <summary>
+    /// چک
+    /// </summary>
+    public ICollection<CashCheck>? CashChecks { get; set; }
+    /// <summary>
+    /// معرفان
+    /// </summary>
+    public ICollection<Introducer>? Introducers { get; set; }
+    /// <summary>
+    /// تگ ها
+    /// </summary>
+    public ICollection<PatientTag>? PatientTags { get; set; }
 
 }

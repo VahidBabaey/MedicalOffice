@@ -29,6 +29,22 @@ public class DeleteCashCartCommandHandler : IRequestHandler<DeleteCashCartComman
         BaseResponse response = new();
         Log log = new();
 
+        bool iscashcartIdExist = await _repository.CheckCashCartId(request.CashCartId);
+
+        if (!iscashcartIdExist)
+        {
+            List<string> errors = new List<string>();
+            var error = $"لطفا یک مورد را انتخاب کنید.";
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            errors = new List<string> { error };
+            response.Errors = errors;
+
+            log.Type = LogType.Error;
+
+            return response;
+        }
+
         try
         {
             await _repository.Delete(request.CashCartId);

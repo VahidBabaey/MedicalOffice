@@ -6,5 +6,7 @@ public class AddSpecializationValidator : AbstractValidator<SpecializationDTO>
 {
     public AddSpecializationValidator()
     {
+        RuleFor(x => x.Name).NotEmpty();
+        RuleFor(x => x.Name).MaximumLength(100);
     }
 }

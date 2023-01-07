@@ -14,11 +14,20 @@ public class CashPosRepository : GenericRepository<CashPos, Guid>, ICashPosRepos
         _dbContext = dbContext;
         _cashPosRepository = cashPosRepository;
     }
-
-    public async void UpdateCashReception(Guid cashId, decimal cashvalue)
+    public async Task<bool> CheckExistReceptionId(Guid officeId, Guid receptonId)
     {
-        var cash = _dbContext.Cashes.Where(p => p.Id == cashId).FirstOrDefault();
-        //cash.Recieved = 
-
+        bool isExist = await _dbContext.Receptions.AnyAsync(p => p.OfficeId == officeId && p.Id == receptonId);
+        return isExist;
     }
+    public async Task<bool> CheckExistCashId(Guid officeId, Guid cashId)
+    {
+        bool isExist = await _dbContext.Cashes.AnyAsync(p => p.OfficeId == officeId && p.Id == cashId);
+        return isExist;
+    }
+    public async Task<bool> CheckCashPosId(Guid cashPosId)
+    {
+        bool isExist = await _dbContext.CashPoses.AnyAsync(p => p.Id == cashPosId);
+        return isExist;
+    }
+
 }

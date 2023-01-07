@@ -3,6 +3,7 @@ using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Dtos.ExperimentDTO.Validators;
 using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Features.Experiment.Requests.Commands;
@@ -20,13 +21,15 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
 
     public class AddExperimentCommandHandler : IRequestHandler<AddExperimentCommand, BaseResponse>
     {
+        private readonly IValidator<ExperimentDTO> _validator;
         private readonly IExperimentRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddExperimentCommandHandler(IExperimentRepository repository, IMapper mapper, ILogger logger)
+        public AddExperimentCommandHandler(IValidator<ExperimentDTO> validator, IExperimentRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -37,11 +40,9 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
         {
             BaseResponse response = new();
 
-            AddExperimentValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -55,7 +56,7 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
             {
                 try
                 {
-                    var experiment = _mapper.Map<ExperimentPre>(request.DTO);
+                    var experiment = _mapper.Map<Domain.Entities.Experiment>(request.DTO);
 
                     experiment = await _repository.Add(experiment);
 

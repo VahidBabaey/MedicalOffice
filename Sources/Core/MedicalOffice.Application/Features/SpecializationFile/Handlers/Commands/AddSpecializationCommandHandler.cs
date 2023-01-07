@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.SpecializationDTO;
 using MedicalOffice.Application.Dtos.SpecializationDTO.Validators;
 using MedicalOffice.Application.Features.SpecializationFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -18,13 +20,15 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Command
 
     public class AddSpecializationCommandHandler : IRequestHandler<AddSpecializationCommand, BaseResponse>
     {
+        private readonly IValidator<SpecializationDTO> _validator;
         private readonly ISpecializationRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddSpecializationCommandHandler(ISpecializationRepository repository, IMapper mapper, ILogger logger)
+        public AddSpecializationCommandHandler(IValidator<SpecializationDTO> validator, ISpecializationRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -35,11 +39,9 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Command
         {
             BaseResponse response = new();
 
-            AddSpecializationValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {

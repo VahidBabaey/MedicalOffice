@@ -32,7 +32,25 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
         public async Task<BaseResponse> Handle(DeleteBasicInfoDetailCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
+
             Log log = new();
+
+            bool isBasicInfoDetailIdExist = await _repository.CheckExistBasicInfoDetailId(request.BasicInfoDetailId);
+            bool isBasicInfoIdExist = await _repository.CheckExistBasicInfoId(request.OfficeId, request.BasicInfoDetailId);
+
+            if (!isBasicInfoIdExist || !isBasicInfoDetailIdExist)
+            {
+                List<string> errors = new List<string>();
+                var error = $"لطفا یک مورد را انتخاب کنید.";
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                errors = new List<string> { error };
+                response.Errors = errors;
+
+                log.Type = LogType.Error;
+
+                return response;
+            }
 
             try
             {

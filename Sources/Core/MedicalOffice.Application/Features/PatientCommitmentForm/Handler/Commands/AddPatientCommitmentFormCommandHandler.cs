@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.PatientDTO.Validators;
-using MedicalOffice.Application.Dtos.PatientIllnessFormDTO.Validator;
+using MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Command;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -19,13 +19,15 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Comm
 
     public class AddPatientCommitmentFormCommandHandler : IRequestHandler<AddPatientCommitmentFormCommand, BaseResponse>
     {
+        private readonly IValidator<AddPatientCommitmentsFormDTO> _validator;
         private readonly IPatientCommitmentFormRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddPatientCommitmentFormCommandHandler(IPatientCommitmentFormRepository repository, IMapper mapper, ILogger logger)
+        public AddPatientCommitmentFormCommandHandler(IValidator<AddPatientCommitmentsFormDTO> validator, IPatientCommitmentFormRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -36,11 +38,9 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Comm
         {
             BaseResponse response = new();
 
-            AddPatientCommitmentsForm validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {

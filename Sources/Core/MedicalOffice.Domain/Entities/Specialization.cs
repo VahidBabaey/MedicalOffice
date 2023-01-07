@@ -7,6 +7,7 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class Specialization : BaseDomainEntity<Guid>
 {
+
     /// <summary>
     /// عنوان تخصص
     /// </summary>

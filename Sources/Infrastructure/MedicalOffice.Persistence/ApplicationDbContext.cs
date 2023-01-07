@@ -30,7 +30,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<DrugShape> DrugShapes => Set<DrugShape>();
     public DbSet<DrugSection> DrugSections => Set<DrugSection>();
     public DbSet<DrugAbuse> DrugAbuses => Set<DrugAbuse>();
-    public DbSet<ExperimentPre> ExperimentPres => Set<ExperimentPre>();
+    public DbSet<Experiment> ExperimentPres => Set<Experiment>();
     public DbSet<DrugPrescription> DrugPrescriptions => Set<DrugPrescription>();
     public DbSet<FDO> FDO => Set<FDO>();
     public DbSet<GeneralExamination> GeneralExaminations => Set<GeneralExamination>();
@@ -45,6 +45,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<MemberShipService> MemberShipServices => Set<MemberShipService>();
     public DbSet<Office> Offices => Set<Office>();
     public DbSet<Patient> Patients => Set<Patient>();
+    public DbSet<Introducer> Introducers => Set<Introducer>();
     public DbSet<Picture> Pictures => Set<Picture>();
     public DbSet<PatientCommitmentForm> PatientCommitmentForms => Set<PatientCommitmentForm>();
     public DbSet<PatientFiles> PatientFiless => Set<PatientFiles>();

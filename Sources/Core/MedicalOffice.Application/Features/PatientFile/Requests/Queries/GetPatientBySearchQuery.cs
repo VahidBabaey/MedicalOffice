@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PatientFile.Requests.Queries
 {
-    public class GetPatientBySearchQuery : IRequest<List<PatientListDto>> 
+    public class GetPatientBySearchQuery : IRequest<List<PatientListDTO>> 
     {
         public ListDto Dto { get; set; } = new ListDto();
         public SearchFields searchFields { get; set; } = new SearchFields();
-        public PatientListDto SearchDTO { get; set; } = new PatientListDto();
+        public PatientListDTO SearchDTO { get; set; } = new PatientListDTO();
     }
     public class SearchFields
     {

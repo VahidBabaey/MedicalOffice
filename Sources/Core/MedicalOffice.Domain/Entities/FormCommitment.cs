@@ -10,6 +10,14 @@ namespace MedicalOffice.Domain.Entities
     public class FormCommitment : BaseDomainEntity<Guid>
     {
         /// <summary>
+        /// مطب
+        /// </summary>
+        public Office? Office { get; set; }
+        /// <summary>
+        /// آیدی مطب
+        /// </summary>
+        public Guid OfficeId { get; set; }
+        /// <summary>
         /// نام فرم تعهدنامه
         /// </summary>
         public string Name { get; set; } = string.Empty;

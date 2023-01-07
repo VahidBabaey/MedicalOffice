@@ -142,9 +142,11 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         reception.TotalReceived = CashCost;
 
         await _receptionReception.Update(reception);
-
-
-
-
     }
+    public async Task<bool> CheckExistReceptionId(Guid officeId, Guid receptionId)
+    {
+        bool isExist = await _dbContext.Receptions.AnyAsync(p => p.OfficeId == officeId && p.Id == receptionId);
+        return isExist;
+    }
+
 }

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.InsuranceDTO.Validators;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -18,6 +20,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 
     public class EditInsuranceCommandHandler : IRequestHandler<EditInsuranceCommand, BaseResponse>
     {
+        private readonly IValidator<UpdateInsuranceDTO> _validator;
         private readonly IInsuranceRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
@@ -37,11 +40,23 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 
             Log log = new();
 
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+
+                log.Type = LogType.Error;
+            }
+            else
+            {
                 try
                 {
                     var insurance = _mapper.Map<Insurance>(request.DTO);
 
-                     await _repository.Update(insurance);
+                    await _repository.Update(insurance);
 
                     response.Success = true;
                     response.StatusDescription = $"{_requestTitle} succeded";
@@ -57,8 +72,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 
                     log.Type = LogType.Error;
                 }
-            
-
+            }
             log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 
@@ -67,5 +81,4 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
             return response;
         }
     }
-
 }

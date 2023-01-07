@@ -11,6 +11,11 @@ namespace MedicalOffice.Application.Dtos.PatientIllnessFormDTO.Validator
     {
         public AddPatientIllnessFormValidator()
         {
+            RuleFor(x => x.IllnessReason).NotEmpty().Length(1, 200);
+            RuleFor(x => x.DateSolar).NotEmpty().Length(1, 50);
+            RuleFor(x => x.DateAD).NotEmpty();
+            RuleFor(x => x.Duration).NotEmpty().Length(1, 100);
+            RuleFor(x => x.RestPlace).NotEmpty().Length(1, 100);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace MedicalOffice.Domain.Entities
 {
     public class BasicInfoDetail : BaseDomainEntity<Guid>
     {
+
         /// <summary>
         /// نام جزئیات
         /// </summary>
@@ -21,5 +22,6 @@ namespace MedicalOffice.Domain.Entities
         /// آیدی جزئیات 
         /// </summary>
         public Guid? basicInfoId { get; set; }
+
     }
 }
