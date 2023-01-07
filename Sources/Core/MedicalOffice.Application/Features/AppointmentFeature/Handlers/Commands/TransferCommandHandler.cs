@@ -87,6 +87,8 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             var newAppointment = _mapper.Map<Appointment>(existingAppointment);
             newAppointment = _mapper.Map<Appointment>(request.DTO);
 
+            
+
             if (request.DTO.RoomId != null && request.DTO.DeviceId == null)
             {
                 if (existingAppointment.DeviceId != null)

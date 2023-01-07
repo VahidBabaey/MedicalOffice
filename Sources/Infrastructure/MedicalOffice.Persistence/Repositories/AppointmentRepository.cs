@@ -30,14 +30,14 @@ namespace MedicalOffice.Persistence.Repositories
             var appointments = await _dbcontext.Appointments
                 .Include(x => x.MedicalStaff)
                 .Include(x => x.CreatedBy)
-                .Include(x=>x.Service)
+                .Include(x => x.Service)
                 .Where(x => x.Date.Date == date).ToListAsync();
 
             if (serviceId != null && medicalStaffId != null)
                 appointments = await _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
-                    .Include(x=>x.Service)
+                    .Include(x => x.Service)
                     .Where(x => x.Date.Date == date
                         && x.MedicalStaffId == medicalStaffId
                         && x.ServiceId == serviceId)
@@ -47,14 +47,14 @@ namespace MedicalOffice.Persistence.Repositories
                 appointments = await _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
-                    .Include(x=>x.Service)
+                    .Include(x => x.Service)
                     .Where(x => x.Date.Date == date && x.ServiceId == serviceId).ToListAsync();
 
             if (medicalStaffId != null && serviceId == null)
                 appointments = await _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
-                    .Include(x=>x.Service)
+                    .Include(x => x.Service)
                     .Where(x => x.Date.Date == date && x.MedicalStaffId == medicalStaffId).ToListAsync();
 
             var result = new List<AppointmentDetailsDTO>();
@@ -223,7 +223,7 @@ namespace MedicalOffice.Persistence.Repositories
                 appointments = _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
-                    .Include(x=>x.Service)
+                    .Include(x => x.Service)
                     .Where(x => startDate <= x.Date && x.Date <= endDate).ToList();
             }
             else
@@ -256,7 +256,7 @@ namespace MedicalOffice.Persistence.Repositories
                 appointments = _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
-                    .Include(x=>x.Service)
+                    .Include(x => x.Service)
                     .Where(x => startDate <= x.Date && x.Date <= endDate).ToList();
             }
             else
@@ -264,7 +264,7 @@ namespace MedicalOffice.Persistence.Repositories
                 appointments = _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
-                    .Include(x=>x.Service)
+                    .Include(x => x.Service)
                     .Where(x => startDate <= x.Date && x.Date <= endDate && x.DeviceId == deviceId).ToList();
             }
 
@@ -322,6 +322,12 @@ namespace MedicalOffice.Persistence.Repositories
                 result.Add(appointmentDetails);
             }
             return Task.FromResult(result);
+        }
+
+        public Task<bool> checkAppointmentExist(Guid appointmentId, Guid officeId)
+        {
+            bool isExist = _dbcontext.Appointments.Any(p => p.OfficeId == officeId && p.Id == appointmentId);
+            return Task.FromResult(isExist);
         }
     }
 }

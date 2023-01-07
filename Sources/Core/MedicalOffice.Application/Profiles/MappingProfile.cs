@@ -122,8 +122,12 @@ public class MappingProfile : Profile
         CreateMap<Appointment, TransferAppointmentDTO>()
             .ReverseMap()
             .ForAllMembers(x=>x.Condition((src, dest, srcMember) => srcMember != null));
-        CreateMap<Appointment, UpdateAppointmentDescriptionDTO>().ReverseMap();
-        CreateMap<Appointment, UpdateAppointmentTypeDTO>().ReverseMap();
+        CreateMap<Appointment, UpdateAppointmentDescriptionDTO>()
+            .ReverseMap()
+            .ForAllMembers(x => x.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<Appointment, UpdateAppointmentTypeDTO>()
+            .ReverseMap()
+            .ForAllMembers(x => x.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<Appointment, AddAppointmentDto>().ReverseMap();
         CreateMap<MedicalStaffSchedule, MedicalStaffScheduleDetailsDTO>().ReverseMap();
         CreateMap<ServiceDuration, ServiceDurationDetailsDTO>().ReverseMap();

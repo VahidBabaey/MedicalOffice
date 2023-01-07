@@ -27,10 +27,10 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons.validators
                 .WithMessage("{PropertyName} is required")
                 .MustAsync(async (appointmentId, token) =>
                 {
-                    return await _appointmentRepository.checkServiceExist(appointmentId, officeId);
+                    return await _appointmentRepository.checkAppointmentExist(appointmentId, officeId);
 
                 })
-                .WithMessage("Service isn't exist");
+                .WithMessage("{PropertyName} isn't exist");
         }
     }
 }

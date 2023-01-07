@@ -13,6 +13,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<List<AppointmentDetailsDTO>> GetByPeriodAndStaff(DateTime startDate, DateTime endDate, Guid? medicalStaffId);
         Task<List<AppointmentDetailsDTO>> GetByPeriodAndDeviceId(DateTime startDate, DateTime endDate, Guid? deviceId);
         Task<List<AppointmentDetailsDTO>> searchPatientAappointments(string input, DateTime? date, Guid officeId);
-        Task<bool> checkServiceExist(Guid appointmentId, Guid officeId);
+        Task<bool> checkAppointmentExist(Guid appointmentId, Guid officeId);
     }
 }
