@@ -7,7 +7,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries
 {
     public class GetSpecificPeriodAppointmentsQuery : IRequest<BaseResponse>
     {
-        public SpecificPeriodAppointmentDTO DTO { get; set; }
+        public GetSpecificPeriodAppointmentDTO DTO { get; set; }
 
         public Guid OfficeId { get; set; }
     }

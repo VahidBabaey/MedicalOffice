@@ -30,7 +30,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create([FromBody] AppointmentDTO dto, [FromQuery] string officeId)
+        public async Task<ActionResult<Guid>> Create([FromBody] AddAppointmentDto dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new AddAppointmentCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
@@ -38,7 +38,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpPatch("type")]
-        public async Task<ActionResult<Guid>> EditAppointmentStatus([FromBody] AppointmentTypeDTO dto, [FromQuery] string officeId)
+        public async Task<ActionResult<Guid>> EditAppointmentStatus([FromBody] UpdateAppointmentTypeDTO dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new EditAppointmentTypeCommand { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
@@ -54,7 +54,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpPatch("patient-info")]
-        public async Task<ActionResult<Guid>> EditPatientInfo([FromBody] PatientInfoDTO dto, [FromQuery] string officeId)
+        public async Task<ActionResult<Guid>> EditPatientInfo([FromBody] UpdateAppointmentPatientInfoDto dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new EditAppointmentPatientCommand { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
@@ -62,7 +62,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpPatch("Description")]
-        public async Task<ActionResult<Guid>> EditAppointmentDescription([FromBody] AppointmentDescriptionDTO dto, [FromQuery] string officeId)
+        public async Task<ActionResult<Guid>> EditAppointmentDescription([FromBody] UpdateAppointmentDescriptionDTO dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new EditAppointmentDescriptionCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
@@ -78,7 +78,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpGet("period-appointments")]
-        public async Task<ActionResult<List<SpecificPeriodAppointmentResDTO>>> GetSpecificPeriodAppointmnet([FromQuery] SpecificPeriodAppointmentDTO dto, [FromQuery] string officeId)
+        public async Task<ActionResult<List<SpecificPeriodAppointmentResDTO>>> GetSpecificPeriodAppointmnet([FromQuery] GetSpecificPeriodAppointmentDTO dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new GetSpecificPeriodAppointmentsQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 

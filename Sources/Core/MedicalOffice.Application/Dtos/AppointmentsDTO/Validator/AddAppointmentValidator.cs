@@ -4,6 +4,7 @@ using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons.validators;
 using MedicalOffice.Application.Dtos.Common.CommonValidators;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Domain.Enums;
@@ -18,13 +19,14 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 {
-    public class AppointmentValidator : AbstractValidator<AppointmentDTO>
+    public class AddAppointmentValidator : AbstractValidator<AddAppointmentDto>
     {
         private readonly IOfficeResolver _officeResolver;
+
         private readonly IServiceRepository _serviceRepository;
         private readonly IMedicalStaffRepository _medicalStaffRepository;
         private static readonly int minimumLength = 3;
-        public AppointmentValidator(
+        public AddAppointmentValidator(
             IOfficeResolver officeResolver,
             IServiceRepository serviceRepository,
             IMedicalStaffRepository medicalStaffRepository)
@@ -38,10 +40,8 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 
             Include(new IPhoneNumberValidator());
             Include(new INationalIdValidator());
-            Include(new IServiceIdValidator(_serviceRepository));
-            Include(new IMedicalStaffValidator(_medicalStaffRepository));
-
-            var officeId = _officeResolver.GetOfficeId();
+            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+            Include(new MedicalStaffValidator(_medicalStaffRepository,_officeResolver));
 
             RuleFor(x => x.AppointmentType)
                 .NotEmpty()

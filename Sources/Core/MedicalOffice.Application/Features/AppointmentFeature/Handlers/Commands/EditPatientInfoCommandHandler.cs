@@ -19,7 +19,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 {
     public class EditAppointmentPatientCommandHandler : IRequestHandler<EditAppointmentPatientCommand, BaseResponse>
     {
-        private readonly IValidator<PatientInfoDTO> _validator;
+        private readonly IValidator<UpdateAppointmentPatientInfoDto> _validator;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IAppointmentRepository _appointmentRepository;
@@ -28,7 +28,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
         private readonly IDeviceRepository _deviceRepository;
         private readonly string _requestTitle;
 
-        public EditAppointmentPatientCommandHandler(IValidator<PatientInfoDTO> validator, ILogger logger, IMapper mapper, IAppointmentRepository appointmentRepository, IMedicalStaffRepository medicalStaffRepository, IServiceRepository serviceRepository, IDeviceRepository deviceRepository)
+        public EditAppointmentPatientCommandHandler(IValidator<UpdateAppointmentPatientInfoDto> validator, ILogger logger, IMapper mapper, IAppointmentRepository appointmentRepository, IMedicalStaffRepository medicalStaffRepository, IServiceRepository serviceRepository, IDeviceRepository deviceRepository)
         {
             _validator = validator;
             _logger = logger;

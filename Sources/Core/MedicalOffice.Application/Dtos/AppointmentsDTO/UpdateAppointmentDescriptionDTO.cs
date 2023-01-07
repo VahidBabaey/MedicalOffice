@@ -1,12 +1,10 @@
 ﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class AppointmentTypeDTO : IAppointmentIdDTO
+    public class UpdateAppointmentDescriptionDTO: IAppointmentIdDTO
     {
         public Guid AppointmentId { get; set; }
-
-        public AppointmentType AppointmentType { get; set; }
+        public string Description { get; set; }
     }
 }

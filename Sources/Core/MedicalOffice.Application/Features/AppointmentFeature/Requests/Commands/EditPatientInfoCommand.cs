@@ -7,7 +7,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Requests.Command
 {
     public class EditAppointmentPatientCommand : IRequest<BaseResponse>
     {
-        public PatientInfoDTO DTO { get; set; }
+        public UpdateAppointmentPatientInfoDto DTO { get; set; }
         public Guid OfficeId { get; set; }
     }
 }

@@ -11,17 +11,17 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 {
-    public class TransferAppointmentValidator : AbstractValidator<TransferAppointmentDTO>
+    public class UpdateAppointmentDescriptionValidator: AbstractValidator<UpdateAppointmentDescriptionDTO>
     {
-        private IAppointmentRepository _appointmentRepository;
-        private IOfficeResolver _officeResolver;
-        public TransferAppointmentValidator(
-             IAppointmentRepository appointmentRepository,IOfficeResolver officeResolver)
+        private readonly IAppointmentRepository _appointmentRepository;
+        private readonly IOfficeResolver _officeResolver;
+        public UpdateAppointmentDescriptionValidator(IAppointmentRepository appointmentRepository, IOfficeResolver officeResolver)
         {
             _appointmentRepository = appointmentRepository;
             _officeResolver = officeResolver;
 
-            Include(new AppointmentIdValidator(_appointmentRepository, _officeResolver));
+            Include(new AppointmentIdValidator(_appointmentRepository,_officeResolver));
+            RuleFor(x=>x.Description).NotEmpty();   
         }
     }
 }

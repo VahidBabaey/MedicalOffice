@@ -64,7 +64,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var existingMedicalStaff = await _medicalStaffRepository.CheckExistByIdAndOfficeId(request.DTO.MedicalStaffId, request.OfficeId);
+            var existingMedicalStaff = await _medicalStaffRepository.CheckMedicalStaffExist(request.DTO.MedicalStaffId, request.OfficeId);
             if (!existingMedicalStaff)
             {
                 var error = new ArgumentException("This MedicalStaff does not exist!");

@@ -26,7 +26,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 {
     public class GetSpecificPeriodAppointmentsQueryhandler : IRequestHandler<GetSpecificPeriodAppointmentsQuery, BaseResponse>
     {
-        private readonly IValidator<SpecificPeriodAppointmentDTO> _validator;
+        private readonly IValidator<GetSpecificPeriodAppointmentDTO> _validator;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IAppointmentRepository _appointmentRepository;
@@ -38,7 +38,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
         private readonly string _requestTitle;
 
         public GetSpecificPeriodAppointmentsQueryhandler(
-            IValidator<SpecificPeriodAppointmentDTO> validator,
+            IValidator<GetSpecificPeriodAppointmentDTO> validator,
             IMapper mapper,
             ILogger logger,
             IAppointmentRepository appointmentRepository,

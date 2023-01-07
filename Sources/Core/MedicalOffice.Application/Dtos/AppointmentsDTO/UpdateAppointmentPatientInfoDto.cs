@@ -3,7 +3,7 @@ using MedicalOffice.Application.Dtos.Common;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class PatientInfoDTO : IAppointmentIdDTO, IPhoneNumberDTO, INationalIdDTO
+    public class UpdateAppointmentPatientInfoDto : IAppointmentIdDTO, IPhoneNumberDTO, INationalIdDTO
     {
         public Guid AppointmentId { get; set; }
 

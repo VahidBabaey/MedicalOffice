@@ -6,7 +6,7 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class AppointmentDTO : IPhoneNumberDTO, INationalIdDTO, IServiceIdDTO, IMedicalStaffDTO
+    public class AddAppointmentDto : IPhoneNumberDTO, INationalIdDTO, IServiceIdDTO, IMedicalStaffDTO
     {
         public string PatientName { get; set; }
 

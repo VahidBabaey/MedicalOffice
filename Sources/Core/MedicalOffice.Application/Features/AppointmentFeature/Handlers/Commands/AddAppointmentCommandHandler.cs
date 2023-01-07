@@ -25,7 +25,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 {
     public class AddAppointmentCommandHandler : IRequestHandler<AddAppointmentCommand, BaseResponse>
     {
-        private readonly IValidator<AppointmentDTO> _validator;
+        private readonly IValidator<AddAppointmentDto> _validator;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IAppointmentRepository _appointmentRepository;
@@ -34,7 +34,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
         private readonly string _requestTitle;
 
         public AddAppointmentCommandHandler(
-            IValidator<AppointmentDTO> validator,
+            IValidator<AddAppointmentDto> validator,
             ILogger logger,
             IMapper mapper,
             IAppointmentRepository appointmentRepository,

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 {
-    public class SpecificPeriodAppointmentValidator : AbstractValidator<SpecificPeriodAppointmentDTO>
+    public class GetSpecificPeriodAppointmentValidator : AbstractValidator<GetSpecificPeriodAppointmentDTO>
     {
-        public SpecificPeriodAppointmentValidator()
+        public GetSpecificPeriodAppointmentValidator()
         {
             RuleFor(x => x.StartDate).NotEmpty();
             RuleFor(x => x.EndDate).NotEmpty();
