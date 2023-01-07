@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,11 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
     {
         public ITelePhoneNumberValidator()
         {
-            RuleFor(p => p.TelePhoneNumber)
-           .NotEmpty().WithMessage("{PropertyName} is required")
-           .Must(p => IsValidTelePhoneNumber(p)).WithMessage("{PropertyName} is not valid");
+            RuleFor(x=>x.TelePhoneNumber)
+           .NotEmpty().WithMessage(ValidationMessage.Required.For("TelePhoneNumber"))
+           .Must(p => IsValidTelePhoneNumber(p)).WithMessage(ValidationMessage.NotValid.For("TelePhoneNumber"));
         }
-        bool IsValidTelePhoneNumber(string telePhoneNumber)
+        private static bool IsValidTelePhoneNumber(string telePhoneNumber)
         {
             Regex regex = new Regex(@"^0[0-9]{2,}[0-9]{7,}$");
 

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +9,17 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Common.CommonValidators
 {
-    public class IPhoneNumberValidator: AbstractValidator<IPhoneNumberDTO>
+    public class IPhoneNumberValidator : AbstractValidator<IPhoneNumberDTO>
     {
+        private static readonly int MaximumLength = 11;
         public IPhoneNumberValidator()
         {
             RuleFor(x => x.PhoneNumber)
-                .NotEmpty().WithMessage("The PhoneNumber is required")
-                .MaximumLength(11).WithMessage("Maximum length of phone number is 11")
-                .Must(x => IsValidPhoneNumber(x)).WithMessage("Phone number is not valid");
+                .NotEmpty().WithMessage(ValidationMessage.Required.For("PhoneNumber"))
+                .MaximumLength(11).WithMessage(ValidationMessage.MaximumLength.For("PhoneNumber", MaximumLength))
+                .Must(x => IsValidPhoneNumber(x)).WithMessage(ValidationMessage.NotValid.For("PhoneNumber"));
         }
-        bool IsValidPhoneNumber(string phoneNumber)
+        private static bool IsValidPhoneNumber(string phoneNumber)
         {
             Regex regex = new Regex(@"^(?:0|98|\+98|\+980|0098|098|00980)?(9\d{9})$");
 

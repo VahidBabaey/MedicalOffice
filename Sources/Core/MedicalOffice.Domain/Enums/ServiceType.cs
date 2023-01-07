@@ -6,12 +6,11 @@
 public enum ServiceType
 {
     /// <summary>
-    /// ثانویه
+    /// ویزیت
     /// </summary>
-    Normal = 1,
+    visit = 1,
     /// <summary>
-    /// اصلی
+    ///  خدمات پزشکان
     /// </summary>
-    Main
-
+    DoctorsServices
 }

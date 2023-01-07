@@ -36,7 +36,7 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
 
         Log log = new();
 
-        var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
+        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
@@ -50,28 +50,28 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
         {
             try
             {
-                var patient = _mapper.Map<Patient>(request.Dto);
+                var patient = _mapper.Map<Patient>(request.DTO);
 
                 patient = await _repository.Add(patient);
 
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = patient.Id });
-                if (request.Dto.PhoneNumber == null)
+                if (request.DTO.Mobile == null)
                 {
 
                 }
                 else
                 {
-                    foreach (var mobile in request.Dto.PhoneNumber)
+                    foreach (var mobile in request.DTO.Mobile)
                     {
                         await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
                     }
-                    foreach (var address in request.Dto.Address)
+                    foreach (var address in request.DTO.Address)
                     {
                         await _repository.InsertAddressofPatientAsync(patient.Id, address);
                     }
-                    foreach (var tag in request.Dto.Tag)
+                    foreach (var tag in request.DTO.Tag)
                     {
                         await _repository.InsertTagofPatientAsync(patient.Id, tag);
                     }

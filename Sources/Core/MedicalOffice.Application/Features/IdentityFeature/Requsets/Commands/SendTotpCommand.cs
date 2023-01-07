@@ -11,6 +11,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands
 {
     public class SendTotpCommand : IRequest<BaseResponse>
     {
-        public PhoneNumberDTO Dto { get; set; } = new PhoneNumberDTO();
+        public PhoneNumberDTO DTO { get; set; } = new PhoneNumberDTO();
     }
 }

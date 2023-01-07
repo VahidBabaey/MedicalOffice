@@ -39,8 +39,4 @@ public class ServiceDTO : ISectionIdDTO
     /// هزینه مواد مصرفی
     /// </summary>
     public bool IsConsumingMaterials { get; set; }
-    /// <summary>
-    /// کسر موجودی از انبار
-    /// </summary>
-    public bool IsDecreasStore { get; set; }
 }

@@ -77,49 +77,6 @@ public class Office : BaseDomainEntity<Guid>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و دسترسی های کاربر مطب استفاده می شود
     /// </summary>
     public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; }
-    /// <summary>
-    /// ارتباط یک به چند مطب با صندوق
-    /// </summary>
-    public ICollection<Cash>? Cashes { get; set; }
-    /// <summary>
-    /// جرئیات پایه
-    /// </summary>
-    public ICollection<BasicInfo>? BasicInfos { get; set; }
-    /// <summary>
-    /// دارو
-    /// </summary>
-    public ICollection<Drug>? Drugs { get; set; }
-    /// <summary>
-    /// تجویز دارو
-    /// </summary>
-    public ICollection<DrugPrescription>? DrugPrescriptions { get; set; }
-    /// <summary>
-    /// آزمایشات
-    /// </summary>
-    public ICollection<Experiment>? ExperimentPres { get; set; }
-    /// <summary>
-    /// فرم تعهدنامه
-    /// </summary>
-    public ICollection<FormCommitment>? FormCommitments { get; set; }
-    /// <summary>
-    /// کارت
-    /// </summary>
-    public ICollection<CashCart>? CashCarts { get; set; }
-    /// <summary>
-    /// پوز
-    /// </summary>
-    public ICollection<CashPos>? CashPoses { get; set; }
-    /// <summary>
-    /// چک
-    /// </summary>
-    public ICollection<CashCheck>? CashChecks { get; set; }
-    /// <summary>
-    /// معرفان
-    /// </summary>
-    public ICollection<Introducer>? Introducers { get; set; }
-    /// <summary>
-    /// تگ ها
-    /// </summary>
-    public ICollection<PatientTag>? PatientTags { get; set; }
 
+    public ICollection<Appointment> Appointments{ get; set; }
 }

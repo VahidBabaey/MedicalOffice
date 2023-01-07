@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,22 +11,23 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
 {
     public class INationalIdValidator : AbstractValidator<INationalIdDTO>
     {
+        private static readonly int MaximumLength = 10;
         public INationalIdValidator()
         {
             RuleFor(x => x.NationalID)
-                .NotEmpty().WithMessage("{PropertyName} is required")
-                .MaximumLength(10).WithMessage("Maximum length of {PropertyName} is 10")
-                .Must(x => IsValidNationalId(x)).WithMessage("{PropertyName} is not valid");
+                .NotEmpty().WithMessage(ValidationMessage.Required.For("NationalID"))
+                .MaximumLength(MaximumLength).WithMessage(ValidationMessage.MaximumLength.For("NationalID", MaximumLength))
+                .Must(x => IsValidNationalId(x)).WithMessage(ValidationMessage.NotValid.For("NationalID"));
         }
 
-        bool IsValidNationalId(string NationalId)
+        private static bool IsValidNationalId(string NationalID)
         {
             Regex regex = new Regex("^(\\d)(?!\\1{9})\\d{9}$");
 
-            if (!regex.IsMatch(NationalId))
+            if (!regex.IsMatch(NationalID))
                 return false;
 
-            char[] nationalIdCharArray = NationalId.ToCharArray();
+            char[] nationalIdCharArray = NationalID.ToCharArray();
             int[] nationalIdNumArray = new int[nationalIdCharArray.Length];
 
             for (int i = 0; i < nationalIdCharArray.Length; i++)

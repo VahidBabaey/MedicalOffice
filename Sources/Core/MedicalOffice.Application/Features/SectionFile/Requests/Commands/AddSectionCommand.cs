@@ -6,5 +6,6 @@ namespace MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 
 public class AddSectionCommand : IRequest<BaseResponse>
 { 
-    public AddSectionDTO Dto { get; set; } = new AddSectionDTO();
+    public SectionDTO DTO { get; set; } = new SectionDTO();
+    public Guid OfficeId { get; set; }
 }

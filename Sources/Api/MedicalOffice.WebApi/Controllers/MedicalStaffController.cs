@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
@@ -49,7 +50,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-   // [Authorize]
+    //[Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto)
     {
@@ -58,8 +59,8 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    [Authorize]
-    [Permission("DoctorTopic,khkhsk,bhjgjh")]
+    //[Authorize]
+    [Permission(BasicInfoPermissions.GetAllDetails)]
     [HttpPatch("permissions")]
     public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] MedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)
     {
