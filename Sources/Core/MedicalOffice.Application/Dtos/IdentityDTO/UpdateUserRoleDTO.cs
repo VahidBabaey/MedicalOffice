@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.IdentityDTO
 {
-    public class UserRoleDTO : IPhoneNumberDTO
+    public class UpdateUserRoleDTO : IPhoneNumberDTO
     {
         public string PhoneNumber { get; set; }
 

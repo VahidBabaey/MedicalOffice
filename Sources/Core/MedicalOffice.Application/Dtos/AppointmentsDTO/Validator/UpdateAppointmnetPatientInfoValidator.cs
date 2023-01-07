@@ -2,8 +2,8 @@
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons.validators;
 using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;

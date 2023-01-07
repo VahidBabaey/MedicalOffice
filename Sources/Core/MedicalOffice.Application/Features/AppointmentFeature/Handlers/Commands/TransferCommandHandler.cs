@@ -84,10 +84,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var newAppointment = _mapper.Map<Appointment>(existingAppointment);
-            newAppointment = _mapper.Map<Appointment>(request.DTO);
-
-            
+            var newAppointment = _mapper.Map<Appointment>(request.DTO);
 
             if (request.DTO.RoomId != null && request.DTO.DeviceId == null)
             {

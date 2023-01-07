@@ -2,7 +2,7 @@
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons.validators;
+using MedicalOffice.Application.Dtos.Common.Validators;
 using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
