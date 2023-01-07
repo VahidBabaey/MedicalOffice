@@ -23,8 +23,8 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
             _officeResolver = officeResolver;
 
             Include(new AppointmentIdValidator(_appointmentRepository, _officeResolver));
-            Include(new IPhoneNumberValidator());
-            Include(new INationalIdValidator());
+            Include(new PhoneNumberValidator());
+            Include(new NationalIdValidator());
             _appointmentRepository = appointmentRepository;
             _officeResolver = officeResolver;
         }

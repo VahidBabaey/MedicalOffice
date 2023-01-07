@@ -7,7 +7,7 @@ public class RegisterUserValidator : AbstractValidator<RegisterUserDTO>
 {
     public RegisterUserValidator()
     {
-        Include(new IPhoneNumberValidator());
-        Include(new INationalIdValidator());
+        Include(new PhoneNumberValidator());
+        Include(new NationalIdValidator());
     }
 }
