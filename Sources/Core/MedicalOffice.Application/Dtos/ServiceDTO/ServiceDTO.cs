@@ -1,8 +1,9 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Commons;
 
 namespace MedicalOffice.Application.Dtos.ServiceDTO;
 
-public class ServiceDTO 
+public class ServiceDTO : ISectionIdDTO
 {
 
     /// <summary>
@@ -13,7 +14,7 @@ public class ServiceDTO
     /// <summary>
     /// آیدی بخش
     /// </summary>
-    public Guid? SectionId { get; set; }
+    public Guid SectionId { get; set; }
     /// <summary>
     /// نام خدمت
     /// </summa?ry>

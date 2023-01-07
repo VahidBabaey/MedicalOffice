@@ -14,13 +14,13 @@ namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 
 public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseResponse>
 {
-    private readonly IValidator<SectionDTO> _validator;
+    private readonly IValidator<AddSectionDTO> _validator;
     private readonly ISectionRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddSectionCommandHandler(IValidator<SectionDTO> validator, ISectionRepository repository, IMapper mapper, ILogger logger)
+    public AddSectionCommandHandler(IValidator<AddSectionDTO> validator, ISectionRepository repository, IMapper mapper, ILogger logger)
     {
         _validator = validator;
         _repository = repository;

@@ -133,7 +133,7 @@ public static class ServiceRegistration
         services.AddScoped<IValidator<SpecializationDTO>, AddSpecializationValidator>();
         services.AddScoped<IValidator<BasicInfoDetailDTO>, AddBasicInfoDetailValidator>();
         services.AddScoped<IValidator<UpdateBasicInfoDetailDTO>, UpdateBasicInfoDetailValidator>();
-        services.AddScoped<IValidator<SectionDTO>, AddSectionValidator>();
+        services.AddScoped<IValidator<AddSectionDTO>, AddSectionValidator>();
         services.AddScoped<IValidator<UpdateSectionDTO>, UpdateSectionValidator>();
         services.AddScoped<IValidator<ServiceDTO>, AddServiceValidator>();
         services.AddScoped<IValidator<UpdateServiceDTO>, UpdateServiceValidator>();

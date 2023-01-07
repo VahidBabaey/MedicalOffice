@@ -40,7 +40,7 @@ public class MappingProfile : Profile
         CreateMap<Patient, PatientListDTO>().ConvertUsing(new PatientMapper());
         CreateMap<Patient, PatientListDTO>().ReverseMap();
         CreateMap<MedicalStaff, PatientDTO>().ReverseMap();
-        CreateMap<Section, SectionDTO>().ReverseMap();
+        CreateMap<Section, AddSectionDTO>().ReverseMap();
         CreateMap<Section, SectionListDTO>().ReverseMap();
         CreateMap<Section, UpdateSectionDTO>().ReverseMap();
         CreateMap<Service, ServiceDTO>().ReverseMap();

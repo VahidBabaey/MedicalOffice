@@ -21,7 +21,7 @@ public class SectionController : Controller
     }
 
      [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] SectionDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] AddSectionDTO dto)
     {
         var response = await _mediator.Send(new AddSectionCommand() { Dto = dto });
 

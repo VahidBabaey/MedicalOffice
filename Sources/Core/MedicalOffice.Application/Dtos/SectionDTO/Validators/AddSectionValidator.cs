@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace MedicalOffice.Application.Dtos.SectionDTO.Validators;
 
-public class AddSectionValidator : AbstractValidator<SectionDTO>
+public class AddSectionValidator : AbstractValidator<AddSectionDTO>
 {
     private readonly Regex _namePattern;
 
