@@ -3,6 +3,7 @@ using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.CashDTO;
 using MedicalOffice.Application.Dtos.CashDTO.Validators;
 using MedicalOffice.Application.Features.CashFile.Request.Commands;
 using MedicalOffice.Application.Models;
@@ -13,13 +14,15 @@ namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
 public class EditCashPosCommandHandler : IRequestHandler<EditCashPosCommand, BaseResponse>
 {
+    private readonly IValidator<UpdateCashPosDTO> _validator;
     private readonly ICashPosRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public EditCashPosCommandHandler(ICashPosRepository repository, IMapper mapper, ILogger logger)
+    public EditCashPosCommandHandler(IValidator<UpdateCashPosDTO> validator, ICashPosRepository repository, IMapper mapper, ILogger logger)
     {
+        _validator = validator;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
@@ -29,8 +32,6 @@ public class EditCashPosCommandHandler : IRequestHandler<EditCashPosCommand, Bas
     public async Task<BaseResponse> Handle(EditCashPosCommand request, CancellationToken cancellationToken)
     {
         BaseResponse response = new();
-
-        UpdateCashPosValidator validator = new();
 
         Log log = new();
 
@@ -51,7 +52,7 @@ public class EditCashPosCommandHandler : IRequestHandler<EditCashPosCommand, Bas
             return response;
         }
 
-        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {

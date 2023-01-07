@@ -14,14 +14,15 @@ namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
 public class EditCashCheckCommandHandler : IRequestHandler<EditCashCheckCommand, BaseResponse>
 {
-    private readonly IValidator<CashCheckDTO> _validator;
+    private readonly IValidator<UpdateCashCheckDTO> _validator;
     private readonly ICashCheckRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public EditCashCheckCommandHandler(ICashCheckRepository repository, IMapper mapper, ILogger logger)
+    public EditCashCheckCommandHandler(IValidator<UpdateCashCheckDTO> validator, ICashCheckRepository repository, IMapper mapper, ILogger logger)
     {
+        _validator = validator;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
@@ -31,8 +32,6 @@ public class EditCashCheckCommandHandler : IRequestHandler<EditCashCheckCommand,
     public async Task<BaseResponse> Handle(EditCashCheckCommand request, CancellationToken cancellationToken)
     {
         BaseResponse response = new();
-
-        UpdateCashCheckValidator validator = new();
 
         Log log = new();
 
@@ -53,7 +52,7 @@ public class EditCashCheckCommandHandler : IRequestHandler<EditCashCheckCommand,
             return response;
         }
 
-        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
