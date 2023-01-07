@@ -7,12 +7,18 @@ using FluentValidation;
 using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Dtos.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MedicalOffice.WebApi.WebApi.CustomFilters;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddJsonOptions(c =>
-    c.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+    {
+        c.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+
+        c.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -42,6 +48,7 @@ builder.Services.AddSwaggerGen(c =>
             new List<string>()
         }
     });
+    //c.SchemaFilter<EnumSchemaFilter>();
 });
 
 builder.Services.AddApplicationServices();
@@ -72,3 +79,17 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public sealed class DateOnlyJsonConverter : JsonConverter<TimeOnly>
+{
+    public override TimeOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return TimeOnly.FromDateTime(reader.GetDateTime());
+    }
+
+    public override void Write(Utf8JsonWriter writer, TimeOnly value, JsonSerializerOptions options)
+    {
+        var isoDate = value.ToString("O");
+        writer.WriteStringValue(isoDate);
+    }
+}

@@ -5,15 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MedicalOffice.Persistence.Configurations.Entities
 {
-    public class AppointmentTypeConfiguration : BaseEntityTypeConfiguration<AppointmentType, Guid>
+    public class AppointmentTypeConfiguration : BaseEntityTypeConfiguration<AppointmentTypePast, Guid>
     {
-        public override void ConfigureEntity(EntityTypeBuilder<AppointmentType> builder)
+        public override void ConfigureEntity(EntityTypeBuilder<AppointmentTypePast> builder)
         {
-            builder
-                .HasMany(e => e.Appointments)
-                .WithOne(e => e.AppointmentType)
-                .HasForeignKey(e => e.AppointmentTypeId)
-                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

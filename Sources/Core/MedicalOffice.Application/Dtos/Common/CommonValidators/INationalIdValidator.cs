@@ -15,19 +15,19 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
         public INationalIdValidator()
         {
             RuleFor(x => x.NationalID)
-                .NotEmpty().WithMessage(ValidationMessage.Required.For<INationalIdDTO>(p => p.NationalID))
-                .MaximumLength(10).WithMessage(ValidationMessage.MaximumLength.For<INationalIdDTO>(p => p.NationalID, t => t.Equals(MaximumLength)))
-                .Must(x => IsValidNationalId(x)).WithMessage(ValidationMessage.NotValid.For<INationalIdDTO>(p => p.NationalID));
+                .NotEmpty().WithMessage(ValidationMessage.Required.For("NationalID"))
+                .MaximumLength(MaximumLength).WithMessage(ValidationMessage.MaximumLength.For("NationalID", MaximumLength))
+                .Must(x => IsValidNationalId(x)).WithMessage(ValidationMessage.NotValid.For("NationalID"));
         }
 
-        bool IsValidNationalId(string NationalId)
+        private static bool IsValidNationalId(string NationalID)
         {
             Regex regex = new Regex("^(\\d)(?!\\1{9})\\d{9}$");
 
-            if (!regex.IsMatch(NationalId))
+            if (!regex.IsMatch(NationalID))
                 return false;
 
-            char[] nationalIdCharArray = NationalId.ToCharArray();
+            char[] nationalIdCharArray = NationalID.ToCharArray();
             int[] nationalIdNumArray = new int[nationalIdCharArray.Length];
 
             for (int i = 0; i < nationalIdCharArray.Length; i++)

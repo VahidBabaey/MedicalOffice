@@ -1,6 +1,8 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Domain;
 using MedicalOffice.Domain.Common;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Persistence.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Allergy> Allergies => Set<Allergy>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<AppointmentService> AppointmentServices => Set<AppointmentService>();
-    public DbSet<AppointmentType> AppointmentTypes => Set<AppointmentType>();
+    //public DbSet<AppointmentTypePast> AppointmentTypes => Set<AppointmentTypePast>();
     public DbSet<BasicInfo> BasicInfos => Set<BasicInfo>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<BasicInfoDetail> BasicInfoDetail => Set<BasicInfoDetail>();
@@ -36,7 +38,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<KMultiplierDetail> KMultiplierDetails => Set<KMultiplierDetail>();
     public DbSet<MedicalAction> MedicalActions => Set<MedicalAction>();
     public DbSet<MedicalStaff> MedicalStaffs => Set<MedicalStaff>();
-    public DbSet<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms => Set<MedicalStaffWorkHourProgram>();
+    public DbSet<MedicalStaffSchedule> MedicalStaffSchedules => Set<MedicalStaffSchedule>();
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<MemberShipService> MemberShipServices => Set<MemberShipService>();
     public DbSet<Office> Offices => Set<Office>();
@@ -70,6 +72,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<MedicalStaffOfficeSpecialization> MedicalStaffOfficeSpecializations => Set<MedicalStaffOfficeSpecialization>();
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
     public DbSet<ServiceDuration> ServiceDurations=> Set<ServiceDuration>();
+    public DbSet<Room> Rooms=> Set<Room>();
+    public DbSet<Device> Devices=> Set<Device>();
 
     private readonly IUserResolverService _userResolver;
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolverService userResolver) : base(options)
@@ -90,7 +94,9 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<Role>().ToTable("Roles");
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRole");
 
-        modelBuilder.Entity<MedicalStaffWorkHourProgram>().HasKey(entity=>entity.Id);
+        modelBuilder.Entity<MedicalStaffSchedule>().HasKey(entity=>entity.Id);
+
+        //modelBuilder.Seed();
     }
 
     private void HandleAuditing()

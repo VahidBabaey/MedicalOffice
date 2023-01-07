@@ -12,7 +12,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OfficeController : ControllerBase
+    public class OfficeController : Controller
     {
         private readonly IUserResolverService _userResolverService;
         private readonly IMediator _mediator;

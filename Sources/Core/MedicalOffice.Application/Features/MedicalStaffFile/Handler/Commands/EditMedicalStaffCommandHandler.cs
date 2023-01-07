@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 {
 
-    public class MyCommandHandlerCommandHandler : IRequestHandler<EditMedicalStaffCommand, BaseResponse>
+    public class EditMedicalStaffCommandHandler : IRequestHandler<EditMedicalStaffCommand, BaseResponse>
     {
         private readonly IMedicalStaffRepository _repository;
         private readonly IUserOfficeRoleRepository _repositoryUserOfficeRole;
@@ -24,7 +24,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public MyCommandHandlerCommandHandler(IUserOfficeRoleRepository repositoryUserOfficeRole, IMedicalStaffRepository repository, IMapper mapper, ILogger logger, ICryptoServiceProvider cryptoServiceProvider)
+        public EditMedicalStaffCommandHandler(IUserOfficeRoleRepository repositoryUserOfficeRole, IMedicalStaffRepository repository, IMapper mapper, ILogger logger, ICryptoServiceProvider cryptoServiceProvider)
         {
             _repositoryUserOfficeRole = repositoryUserOfficeRole;
             _repository = repository;
