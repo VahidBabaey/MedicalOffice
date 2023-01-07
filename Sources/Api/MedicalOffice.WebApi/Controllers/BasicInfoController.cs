@@ -28,17 +28,8 @@ public class BasicInfoController : Controller
     [Authorize]
     public async Task<ActionResult<List<BasicInfoListDTO>>> GetAll([FromQuery] ListDto dto)
     {
-        string office = User.Claims.Where(c => c.Type == "office").Select(x => x.Value).FirstOrDefault() ?? string.Empty;
+        var response = await _mediator.Send(new GetAllBasicInfoQuery() { DTO = dto });
 
-        if (User.HasClaim("office", office))
-        {
-            var response = await _mediator.Send(new GetAllBasicInfoQuery() { DTO = dto });
-
-            return Ok(response);
-        }
-        else
-        {
-            throw new Exception();
-        }
+        return Ok(response);
     }
 }

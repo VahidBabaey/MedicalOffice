@@ -90,7 +90,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// برنامه کادر درمان
         /// </summary>
-        public ICollection<MedicalStaffWorkHourProgram> MedicalStaffWorkHourPrograms { get; set; } = new List<MedicalStaffWorkHourProgram>();
+        public ICollection<MedicalStaffSchedule> MedicalStaffSchedules { get; set; } = new List<MedicalStaffSchedule>();
         
         /// <summary>
         /// پذیرش ها

@@ -30,6 +30,7 @@ public static class ServiceRegistration
         services.AddCryptography(configuration);
 
         services.AddTransient<IUserResolverService, UserResolverService>();
+        services.AddTransient<IOfficeResolver, OfficeResolverService>();
 
         services.AddHttpContextAccessor();
 

@@ -8,7 +8,7 @@ using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Dtos.FormCommitmentDTO;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
-using MedicalOffice.Application.Dtos.MedicalStaffWorkHoursProgramFileDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormDTO;
@@ -27,6 +27,9 @@ using MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO;
 using MedicalOffice.Application.Dtos.Reception;
 using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Dtos.OfficeDTO;
+using MedicalOffice.Application.Dtos.ServiceDurationDTO;
+using MedicalOffice.Application.Dtos;
+using MedicalOffice.Application.Dtos.AppointmentsDTO;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -79,8 +82,8 @@ public class MappingProfile : Profile
         CreateMap<MedicalStaff, MedicalStaffListDTO>().ReverseMap();
         CreateMap<MedicalStaff, MedicalStaffNameListDTO>().ReverseMap();
         CreateMap<MedicalStaff, MedicalStaffNamesDTO>().ReverseMap();
-        CreateMap<MedicalStaffWorkHourProgram, MedicalStaffWorkHoursProgramDTO>().ReverseMap();
-        CreateMap<MedicalStaffWorkHourProgram, MedicalStaffWorkHoursProgramListDTO>().ReverseMap();
+        CreateMap<MedicalStaffSchedule, MedicalStaffScheduleDTO>().ReverseMap();
+        CreateMap<MedicalStaffSchedule, MedicalStaffScheduleListDTO>().ReverseMap();
         CreateMap<BasicInfo, BasicInfoListDTO>().ReverseMap();
         CreateMap<BasicInfoDetail, BasicInfoDetailDTO>().ReverseMap();
         CreateMap<BasicInfoDetail, illnessNamesListDTO>()
@@ -115,6 +118,21 @@ public class MappingProfile : Profile
         //CreateMap<ReceptionDetail, DetailsofAllReceptionsDTO>().ReverseMap();
         CreateMap<User, UserRoleDTO>().ReverseMap();
         CreateMap<Office, OfficeDTO>().ReverseMap();
+        CreateMap<MedicalStaffSchedule, MedicalStaffDaySchedule>().ReverseMap();
+        CreateMap<ServiceDuration, ServiceDurationDTO>().ReverseMap();
+        CreateMap<AppointmentDetailsDTO, Appointment>().ReverseMap();
+        CreateMap<Appointment, TransferAppointmentDTO>()
+            .ReverseMap()
+            .ForAllMembers(x=>x.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<Appointment, UpdateAppointmentDescriptionDTO>()
+            .ReverseMap()
+            .ForAllMembers(x => x.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<Appointment, UpdateAppointmentTypeDTO>()
+            .ReverseMap()
+            .ForAllMembers(x => x.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<Appointment, AddAppointmentDto>().ReverseMap();
+        CreateMap<MedicalStaffSchedule, MedicalStaffScheduleDetailsDTO>().ReverseMap();
+        CreateMap<ServiceDuration, ServiceDurationDetailsDTO>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDto>

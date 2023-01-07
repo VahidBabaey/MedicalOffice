@@ -6,5 +6,5 @@ namespace MedicalOffice.Application.Features.PatientFile.Requests.Commands;
 
 public class AddPatientCommand : IRequest<BaseResponse>
 {
-    public PatientDTO Dto { get; set; } = new PatientDTO();
+    public PatientDTO DTO { get; set; } = new PatientDTO();
 }
