@@ -8,7 +8,7 @@ public class OfficeValidator : AbstractValidator<OfficeDTO>
 {
     public OfficeValidator()
     {
-        Include(new ITelePhoneNumberValidator());
+        Include(new TelePhoneNumberValidator());
 
         RuleFor(o => o.Name)
             .NotEmpty()

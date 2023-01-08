@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Common.CommonValidators
 {
-    public class INationalIdValidator : AbstractValidator<INationalIdDTO>
+    public class NationalIdValidator : AbstractValidator<INationalIdDTO>
     {
         private static readonly int MaximumLength = 10;
-        public INationalIdValidator()
+        public NationalIdValidator()
         {
             RuleFor(x => x.NationalID)
                 .NotEmpty().WithMessage(ValidationMessage.Required.For("NationalID"))

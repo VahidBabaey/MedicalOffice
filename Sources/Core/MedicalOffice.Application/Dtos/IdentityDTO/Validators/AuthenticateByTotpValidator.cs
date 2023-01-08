@@ -14,7 +14,7 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
     {
         public AuthenticateByTotpValidator()
         {
-            Include(new IPhoneNumberValidator());
+            Include(new Common.CommonValidators.PhoneNumberValidator());
         }
     }
 }
