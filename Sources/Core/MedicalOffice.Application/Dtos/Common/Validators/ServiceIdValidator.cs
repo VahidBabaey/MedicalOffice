@@ -1,13 +1,14 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons.validators
+namespace MedicalOffice.Application.Dtos.Common.Validators
 {
     public class ServiceIdValidator : AbstractValidator<IServiceIdDTO>
     {

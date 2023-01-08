@@ -39,9 +39,9 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
             var validAppointmentTypeForNullTime = new AppointmentType[] { AppointmentType.waiting };
             var invalidAppointmentTypes = new AppointmentType[] { AppointmentType.FinalApproval, AppointmentType.Canceled };
 
-            Include(new IPhoneNumberValidator());
-            Include(new INationalIdValidator());
-            //Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+            Include(new PhoneNumberValidator());
+            Include(new NationalIdValidator());
+            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
             Include(new MedicalStaffValidator(_medicalStaffRepository,_officeResolver));
 
             RuleFor(x => x.AppointmentType)

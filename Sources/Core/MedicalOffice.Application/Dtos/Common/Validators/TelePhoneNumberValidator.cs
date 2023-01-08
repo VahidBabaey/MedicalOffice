@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Common.CommonValidators
 {
-    public class ITelePhoneNumberValidator : AbstractValidator<ITelePhoneNumberDTO>
+    public class TelePhoneNumberValidator : AbstractValidator<ITelePhoneNumberDTO>
     {
-        public ITelePhoneNumberValidator()
+        public TelePhoneNumberValidator()
         {
             RuleFor(x=>x.TelePhoneNumber)
            .NotEmpty().WithMessage(ValidationMessage.Required.For("TelePhoneNumber"))

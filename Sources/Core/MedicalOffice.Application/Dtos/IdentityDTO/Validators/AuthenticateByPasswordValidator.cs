@@ -13,7 +13,7 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
     {
         public AuthenticateByPasswordValidator()
         {
-            Include(new IPhoneNumberValidator());
+            Include(new Common.CommonValidators.PhoneNumberValidator());
         }
     }
 }
