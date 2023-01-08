@@ -40,11 +40,9 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
         {
             BaseResponse response = new();
 
-            AddServiceValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {

@@ -79,4 +79,21 @@ public class Office : BaseDomainEntity<Guid>
     public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; }
 
     public ICollection<Appointment> Appointments{ get; set; }
+    public ICollection<CashCart>? CashCarts { get; set; }
+    /// <summary>
+    /// پوز
+    /// </summary>
+    public ICollection<CashPos>? CashPoses { get; set; }
+    /// <summary>
+    /// چک
+    /// </summary>
+    public ICollection<CashCheck>? CashChecks { get; set; }
+    /// <summary>
+    /// معرفان
+    /// </summary>
+    public ICollection<Introducer>? Introducers { get; set; }
+    /// <summary>
+    /// تگ ها
+    /// </summary>
+    public ICollection<PatientTag>? PatientTags { get; set; }
 }

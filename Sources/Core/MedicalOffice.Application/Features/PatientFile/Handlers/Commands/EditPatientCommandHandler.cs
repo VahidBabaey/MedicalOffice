@@ -40,44 +40,56 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
 
         Log log = new();
 
-        try
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+
+        if (!validationResult.IsValid)
         {
-            var patient = _mapper.Map<Patient>(request.DTO);
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+
+            log.Type = LogType.Error;
+        }
+        else
+        {
+            try
+            {
+                var patient = _mapper.Map<Patient>(request.DTO);
 
                 await _repository.Update(patient);
                 await _repositorycontact.RemovePatientContact(patient.Id);
                 await _repositoryaddress.RemovePatientAddress(patient.Id);
                 await _repositorytag.RemovePatientTag(patient.Id);
 
-            response.Success = true;
-            response.StatusDescription = $"{_requestTitle} succeded";
-            response.Data = (new { Id = patient.Id });
-            if (request.DTO.Mobile == null)
-            {
+                response.Success = true;
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = patient.Id });
+                if (request.DTO.Mobile == null)
+                {
 
+                }
+                else
+                {
+                    foreach (var mobile in request.DTO.Mobile)
+                    {
+                        await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
+                    }
+                    foreach (var address in request.DTO.Address)
+                    {
+                        await _repository.InsertAddressofPatientAsync(patient.Id, address);
+                    }
+                    foreach (var tag in request.DTO.Tag)
+                    {
+                        await _repository.InsertTagofPatientAsync(patient.Id, tag);
+                    }
+                }
+                log.Type = LogType.Success;
             }
-            else
+            catch (Exception error)
             {
-                foreach (var mobile in request.DTO.Mobile)
-                {
-                    await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
-                }
-                foreach (var address in request.DTO.Address)
-                {
-                    await _repository.InsertAddressofPatientAsync(patient.Id, address);
-                }
-                foreach (var tag in request.DTO.Tag)
-                {
-                    await _repository.InsertTagofPatientAsync(patient.Id, tag);
-                }
-            }
-            log.Type = LogType.Success;
-        }
-        catch (Exception error)
-        {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add(error.Message);
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add(error.Message);
 
                 log.Type = LogType.Error;
             }

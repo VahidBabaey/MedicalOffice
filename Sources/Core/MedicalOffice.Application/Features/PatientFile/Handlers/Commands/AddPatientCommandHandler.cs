@@ -36,7 +36,7 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
 
         Log log = new();
 
-        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
@@ -57,13 +57,13 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = patient.Id });
-                if (request.DTO.Mobile == null)
+                if (request.DTO.PhoneNumber == null)
                 {
 
                 }
                 else
                 {
-                    foreach (var mobile in request.DTO.Mobile)
+                    foreach (var mobile in request.DTO.PhoneNumber)
                     {
                         await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
                     }

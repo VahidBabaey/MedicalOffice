@@ -50,7 +50,7 @@ public class PatientController : Controller
         return Ok(response);
     }
     [HttpGet("SearchByRequestedFeilds")]
-    public async Task<ActionResult<List<PatientListDto>>> GetBySearch([FromQuery] ListDto dto, [FromQuery] SearchFields searchFields)
+    public async Task<ActionResult<List<PatientListDTO>>> GetBySearch([FromQuery] ListDto dto, [FromQuery] SearchFields searchFields)
     {
         var response = await _mediator.Send(new GetPatientBySearchQuery() { DTO = dto, searchFields = searchFields });
 

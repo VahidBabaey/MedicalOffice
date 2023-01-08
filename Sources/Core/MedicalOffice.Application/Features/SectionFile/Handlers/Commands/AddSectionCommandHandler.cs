@@ -35,7 +35,7 @@ public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseR
 
         Log log = new();
 
-        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {

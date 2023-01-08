@@ -34,7 +34,7 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
 
         Log log = new();
 
-        var validationResult = await _validator.ValidateAsync(request.Dto, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {

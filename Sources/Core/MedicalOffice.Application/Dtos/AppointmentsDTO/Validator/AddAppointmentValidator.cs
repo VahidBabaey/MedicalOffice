@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServiceIdValidator = MedicalOffice.Application.Dtos.Common.CommonValidators.ServiceIdValidator;
 #nullable disable
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
@@ -40,7 +41,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 
             Include(new IPhoneNumberValidator());
             Include(new INationalIdValidator());
-            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+            //Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
             Include(new MedicalStaffValidator(_medicalStaffRepository,_officeResolver));
 
             RuleFor(x => x.AppointmentType)
