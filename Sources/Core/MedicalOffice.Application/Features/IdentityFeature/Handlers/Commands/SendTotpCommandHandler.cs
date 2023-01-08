@@ -16,14 +16,14 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class SendTotpCommandHandler : IRequestHandler<SendTotpCommand, BaseResponse>
     {
-        private readonly IValidator<PhoneNumberDTO> _validator;
+        private readonly IValidator<GetByPhoneNumberDTO> _validator;
         private readonly ISmsSender _smsSender;
         private readonly ITotpHandler _totpHandler;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
         public SendTotpCommandHandler(
-            IValidator<PhoneNumberDTO> validator,
+            IValidator<GetByPhoneNumberDTO> validator,
             ISmsSender smsSender,
             ITotpHandler totpHandler, 
             ILogger logger)
