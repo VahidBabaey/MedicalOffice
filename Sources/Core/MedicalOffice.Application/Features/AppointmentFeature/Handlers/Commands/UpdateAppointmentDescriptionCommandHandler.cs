@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Commands
 {
-    public class EditAppointmentDescriptionCommandHandler : IRequestHandler<EditAppointmentDescriptionCommand, BaseResponse>
+    public class UpdateAppointmentDescriptionCommandHandler : IRequestHandler<UpdateAppointmentDescriptionCommand, BaseResponse>
     {
         private readonly IValidator<UpdateAppointmentDescriptionDTO> _validator;
         private readonly ILogger _logger;
@@ -26,7 +26,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
         private readonly string _requestTitle;
 
-        public EditAppointmentDescriptionCommandHandler(
+        public UpdateAppointmentDescriptionCommandHandler(
             IValidator<UpdateAppointmentDescriptionDTO> validator, 
             ILogger logger, 
             IMapper mapper, 
@@ -41,7 +41,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(EditAppointmentDescriptionCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(UpdateAppointmentDescriptionCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
 

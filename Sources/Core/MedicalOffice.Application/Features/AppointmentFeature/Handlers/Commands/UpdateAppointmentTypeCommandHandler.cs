@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Commands
 {
-    public class EditAppointmentTypeCommandHandler : IRequestHandler<EditAppointmentTypeCommand, BaseResponse>
+    public class UpdateAppointmentTypeCommandHandler : IRequestHandler<EditAppointmentTypeCommand, BaseResponse>
     {
         private readonly IValidator<UpdateAppointmentTypeDTO> _validator;
         private readonly ILogger _logger;
@@ -27,7 +27,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
         private readonly string _requestTitle;
 
-        public EditAppointmentTypeCommandHandler(IValidator<UpdateAppointmentTypeDTO> validator, ILogger logger, IMapper mapper, IAppointmentRepository appointmentRepository)
+        public UpdateAppointmentTypeCommandHandler(IValidator<UpdateAppointmentTypeDTO> validator, ILogger logger, IMapper mapper, IAppointmentRepository appointmentRepository)
         {
             _validator = validator;
             _logger = logger;

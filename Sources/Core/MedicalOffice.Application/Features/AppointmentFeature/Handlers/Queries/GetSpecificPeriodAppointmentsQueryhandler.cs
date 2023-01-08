@@ -80,7 +80,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
             #endregion
 
             #region DeclareListOfPeriodAppointments
-            var result = new List<SpecificPeriodAppointmentResDTO>();
+            var result = new List<GetSpecificPeriodAppointmentResponseDTO>();
             #endregion
 
             #region CheckRoomContainsDevice
@@ -125,7 +125,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                 var medicalStaffIds = serviceDuration.Select(d => d.MedicalStaffId).ToList();
 
-                var allStaffAppointments = new List<SpecificPeriodAppointmentResDTO>();
+                var allStaffAppointments = new List<GetSpecificPeriodAppointmentResponseDTO>();
 
                 foreach (var staffId in medicalStaffIds)
                 {
@@ -141,14 +141,14 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     allStaffAppointments.AddRange(eachStaffAppointments);
                 }
 
-                var dateAppointments = new List<SpecificPeriodAppointmentResDTO>();
+                var dateAppointments = new List<GetSpecificPeriodAppointmentResponseDTO>();
 
                 var appointmentGroups = allStaffAppointments.OrderBy(a => a.Date)
                     .GroupBy(x => x.Date);
 
                 foreach (var group in appointmentGroups)
                 {
-                    var dateAppointment = new SpecificPeriodAppointmentResDTO();
+                    var dateAppointment = new GetSpecificPeriodAppointmentResponseDTO();
 
                     dateAppointment.Date = group.Key;
                     foreach (var appointment in group)
