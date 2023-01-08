@@ -1,4 +1,8 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +13,17 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators
 {
     internal class AddMemberShipServiceValidator : AbstractValidator<MemberShipServiceDTO>
     {
-        public AddMemberShipServiceValidator()
+        private readonly IMembershipRepository _memberRepository;
+        private readonly IServiceRepository _serviceRepository;
+        private readonly IOfficeResolver _officeResolver;
+        public AddMemberShipServiceValidator(IMembershipRepository memberRepository, IServiceRepository serviceRepository, IOfficeResolver officeResolver)
         {
+            _memberRepository = memberRepository;
+            _serviceRepository = serviceRepository;
+            _officeResolver = officeResolver;
+            RuleFor(x => x.Discount).NotEmpty();
+            Include(new ServiceListIdValidator(_serviceRepository, _officeResolver));
+            Include(new MembershipIdValidator(_memberRepository, _officeResolver));
         }
     }
 }

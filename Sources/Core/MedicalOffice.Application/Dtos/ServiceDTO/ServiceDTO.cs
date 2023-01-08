@@ -10,7 +10,6 @@ public class ServiceDTO : ISectionIdDTO
     /// آیدی مطب
     /// </summary>
     public Guid OfficeId { get; set; }
-
     /// <summary>
     /// آیدی بخش
     /// </summary>

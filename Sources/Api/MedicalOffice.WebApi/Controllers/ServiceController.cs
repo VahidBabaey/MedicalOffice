@@ -22,7 +22,7 @@ public class ServiceController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] ServiceDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] ServiceDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddServiceCommand() { DTO = dto });
 

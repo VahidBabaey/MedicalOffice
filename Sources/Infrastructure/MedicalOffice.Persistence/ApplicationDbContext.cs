@@ -14,7 +14,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Allergy> Allergies => Set<Allergy>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<AppointmentService> AppointmentServices => Set<AppointmentService>();
-    //public DbSet<AppointmentTypePast> AppointmentTypes => Set<AppointmentTypePast>();
     public DbSet<BasicInfo> BasicInfos => Set<BasicInfo>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<Cash> Cashes => Set<Cash>();

@@ -12,9 +12,9 @@ public class SectionRepository : GenericRepository<Section, Guid>, ISectionRepos
     {
         _dbContext = dbContext;
     }
-    public async Task<bool> CheckExistSectionId(Guid sectionId)
+    public async Task<bool> CheckExistSectionId(Guid sectionId, Guid officeId)
     {
-        bool isExist = await _dbContext.Sections.AnyAsync(p => p.Id == sectionId);
+        bool isExist = await _dbContext.Sections.AnyAsync(p => p.Id == sectionId && p.OfficeId == officeId);
         return isExist;
     }
 }

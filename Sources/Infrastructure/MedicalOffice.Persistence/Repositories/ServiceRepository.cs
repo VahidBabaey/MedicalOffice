@@ -36,6 +36,26 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
         bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Id == serviceId);
         return isExist;
     }
+    public async Task<bool> CheckExistServiceListId(Guid officeId, Guid[] serviceId)
+    {
+        int exixt = 0;
+        foreach (var item in serviceId)
+        {
+        bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Id == item);
+            if (isExist == false)
+            {
+                exixt = 1;
+            }
+        }
+        if (exixt == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public async Task<bool> CheckSectionId(Guid officeId, Guid sectionId)
     {
         bool isExist = await _dbContext.Sections.AnyAsync(p => p.OfficeId == officeId && p.Id == sectionId);

@@ -19,6 +19,7 @@ using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Dtos.AppointmentsDTO.Validator;
 using MedicalOffice.WebApi.WebApi.Controllers;
+using PhoneNumberValidator = MedicalOffice.Application.Dtos.Common.CommonValidators.PhoneNumberValidator;
 
 namespace MedicalOffice.Application;
 

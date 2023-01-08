@@ -4,8 +4,8 @@ using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons.validators;
 using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.Validators;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ServiceIdValidator = MedicalOffice.Application.Dtos.Common.CommonValidators.ServiceIdValidator;
+//using ServiceIdValidator = MedicalOffice.Application.Dtos.Common.CommonValidators.ServiceIdValidator;
 #nullable disable
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
@@ -41,7 +41,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 
             Include(new PhoneNumberValidator());
             Include(new NationalIdValidator());
-            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+            //Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
             Include(new MedicalStaffValidator(_medicalStaffRepository,_officeResolver));
 
             RuleFor(x => x.AppointmentType)

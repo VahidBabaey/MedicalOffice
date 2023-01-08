@@ -1,4 +1,7 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.Common.Validators;
 
 namespace MedicalOffice.Application.Dtos.MembershipDTO.Validators;
 
