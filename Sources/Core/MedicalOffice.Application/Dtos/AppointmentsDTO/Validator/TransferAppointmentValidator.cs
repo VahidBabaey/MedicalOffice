@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 {
-    public class TransferAppointmentValidator : AbstractValidator<UpdateAppointmentDTO>
+    public class TransferAppointmentValidator : AbstractValidator<TransferAppointmentDTO>
     {
         private readonly IServiceRepository _serviceRepository;
         private readonly IMedicalStaffRepository _medicalStaffRepository;

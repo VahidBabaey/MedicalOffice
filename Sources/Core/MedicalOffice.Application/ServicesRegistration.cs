@@ -59,7 +59,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<GetSpecificPeriodAppointmentDTO>, GetSpecificPeriodAppointmentValidator>();
         services.AddScoped<IValidator<UpdateAppointmentDescriptionDTO>, UpdateAppointmentDescriptionValidator>();
         services.AddScoped<IValidator<UpdateAppointmentTypeDTO>, AppointmentTypeValidator>();
-        services.AddScoped<IValidator<UpdateAppointmentDTO>, TransferAppointmentValidator>();
+        services.AddScoped<IValidator<TransferAppointmentDTO>, TransferAppointmentValidator>();
         services.AddScoped<IValidator<UpdateAppointmentPatientInfoDto>, UpdateAppointmnetPatientInfoValidator>();
         #endregion
 
