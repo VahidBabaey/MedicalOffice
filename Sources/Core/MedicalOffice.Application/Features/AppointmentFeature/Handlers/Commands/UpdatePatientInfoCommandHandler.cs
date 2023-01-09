@@ -71,7 +71,29 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             //    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             //}
 
-            existingAppointment = _mapper.Map<Appointment>(request.DTO);
+
+            /*
+
+                    public string PatientName { get; set; }
+
+        public string PatientLastName { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public string NationalID { get; set; }
+
+        public string ReferrerId { get; set; }
+
+        public string Description { get; set; }
+    }
+            */
+
+            existingAppointment.PatientName = request.DTO.PatientName;
+            existingAppointment.PatientLastName = request.DTO.PatientLastName;
+            existingAppointment.PhoneNumber = request.DTO.PhoneNumber;
+            existingAppointment.NationalID = request.DTO.NationalID;
+            existingAppointment.ReferrerId = request.DTO.ReferrerId;
+            existingAppointment.Description = request.DTO.Description;
 
             await _appointmentRepository.Update(existingAppointment);
 

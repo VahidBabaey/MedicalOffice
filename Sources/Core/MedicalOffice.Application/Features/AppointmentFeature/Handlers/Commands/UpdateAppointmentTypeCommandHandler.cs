@@ -42,6 +42,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
+            if (!validationResult.IsValid)
             {
                 await _logger.Log(new Log
                 {
@@ -62,7 +63,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             if (request.DTO.AppointmentType == AppointmentType.FinalApproval &&
                 !validToChangeToFinalApproval.Contains(existingAppointment.AppointmentType))
             {
-                var error = $"existing type to change for this new type should be {validToChangeToFinalApproval}";
+                var error = "Existing type doesn't have this capability to update to new type";
 
                 await _logger.Log(new Log
                 {
@@ -71,14 +72,13 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
-                    validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             if (request.DTO.AppointmentType == AppointmentType.Canceled &&
                 !validToChangeToCanceled.Contains(existingAppointment.AppointmentType))
             {
-                var error = $"existing type to change for this new type should be {validToChangeToCanceled}";
+                var error = "Existing type doesn't have this capability to update to new type";
 
                 await _logger.Log(new Log
                 {
@@ -90,14 +90,15 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            existingAppointment = _mapper.Map<Appointment>(request.DTO);
-
+            existingAppointment.AppointmentType = request.DTO.AppointmentType;
             await _appointmentRepository.Update(existingAppointment);
 
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeeded",
+
+
                 AdditionalData = existingAppointment.Id
             });
 

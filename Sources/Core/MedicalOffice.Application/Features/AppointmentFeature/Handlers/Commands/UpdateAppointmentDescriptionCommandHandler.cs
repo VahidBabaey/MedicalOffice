@@ -59,20 +59,19 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var existingAppointment = _appointmentRepository.GetById(request.DTO.AppointmentId).Result;
+            var appointment = _appointmentRepository.GetById(request.DTO.AppointmentId).Result;
+            appointment.Description = request.DTO.Description;
 
-            existingAppointment = _mapper.Map<Appointment>(request.DTO);
-
-            await _appointmentRepository.Update(existingAppointment);
+            await _appointmentRepository.Update(appointment);
 
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeeded",
-                AdditionalData = existingAppointment.Id
+                AdditionalData = appointment.Id
             });
 
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", existingAppointment.Id);
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", appointment.Id);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
     {
         public GetByPhoneNumberValidator()
         {
-            Include(new Common.CommonValidators.PhoneNumberValidator());
+            Include(new PhoneNumberValidator());
         }
     }
 }
