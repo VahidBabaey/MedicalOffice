@@ -11,7 +11,7 @@ namespace MedicalOffice.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 {
-    public const string DefaultConnectionString = "Default";
+    //public const string DefaultConnectionString = "Default";
     //public const string ServerConnectionString = "Server";
     //public const string LocalConnectionString = "Local";
 

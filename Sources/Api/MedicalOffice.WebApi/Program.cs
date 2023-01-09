@@ -53,7 +53,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddPersistenceServices(builder.Configuration, builder.Environment);
+builder.Services.AddPersistenceServices(builder.Configuration);
 
 builder.Services.AddCors(p =>
 {
@@ -74,7 +74,7 @@ app.UseSwaggerUI();
 app.UseCors("CorsPolicy");
 //}
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
