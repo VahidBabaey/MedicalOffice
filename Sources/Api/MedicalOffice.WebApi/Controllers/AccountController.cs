@@ -81,7 +81,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
         [Authorize(Roles ="SuperAdmin")]
         [HttpPatch("role")]
-        public async Task<ActionResult<Guid>> UpdateUserRole([FromBody] UserRoleDTO dto)
+        public async Task<ActionResult<Guid>> UpdateUserRole([FromBody] UpdateUserRoleDTO dto)
         {
             var response = await _mediator.Send(new UpdateUserRoleCommand() { DTO = dto });
 

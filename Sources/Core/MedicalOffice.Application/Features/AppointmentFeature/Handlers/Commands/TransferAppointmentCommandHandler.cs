@@ -21,9 +21,9 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Commands
 {
-    public class UpdateAppointmnetCommandHandler : IRequestHandler<UpdateAppointmentCommand, BaseResponse>
+    public class TransferAppointmnetCommandHandler : IRequestHandler<TransferAppointmentCommand, BaseResponse>
     {
-        private readonly IValidator<UpdateAppointmentDTO> _validator;
+        private readonly IValidator<TransferAppointmentDTO> _validator;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IAppointmentRepository _appointmentRepository;
@@ -33,8 +33,8 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
         private readonly string _requestTitle;
 
-        public UpdateAppointmnetCommandHandler(
-            IValidator<UpdateAppointmentDTO> validator,
+        public TransferAppointmnetCommandHandler(
+            IValidator<TransferAppointmentDTO> validator,
             ILogger logger,
             IMapper mapper,
             IAppointmentRepository appointmentRepository,
@@ -53,7 +53,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(UpdateAppointmentCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(TransferAppointmentCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
 
@@ -84,10 +84,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var newAppointment = _mapper.Map<Appointment>(existingAppointment);
-            newAppointment = _mapper.Map<Appointment>(request.DTO);
-
-            
+            var newAppointment = _mapper.Map<Appointment>(request.DTO);
 
             if (request.DTO.RoomId != null && request.DTO.DeviceId == null)
             {

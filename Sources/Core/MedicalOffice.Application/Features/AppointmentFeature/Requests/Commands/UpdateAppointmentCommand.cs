@@ -4,9 +4,9 @@ using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Requests.Commands
 {
-    public class UpdateAppointmentCommand : IRequest<BaseResponse>
+    public class TransferAppointmentCommand : IRequest<BaseResponse>
     {
-        public UpdateAppointmentDTO DTO { get; set; }
+        public TransferAppointmentDTO DTO { get; set; }
         public Guid OfficeId { get; set; }
     }
 }

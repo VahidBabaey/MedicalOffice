@@ -25,7 +25,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly IOfficeRepository _officeRepository;
         private readonly UserManager<User> _userManager;
         private readonly IUserOfficeRoleRepository _usercOfficeRoleRepository;
-        private readonly IValidator<UserRoleDTO> _validator;
+        private readonly IValidator<UpdateUserRoleDTO> _validator;
         private readonly ILogger _logger;
 
         private readonly string _requestTitle;
@@ -34,7 +34,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             RoleManager<Role> roleManager,
             UserManager<User> userManager,
             IOfficeRepository officeRepository,
-            IValidator<UserRoleDTO> validator,
+            IValidator<UpdateUserRoleDTO> validator,
             IUserOfficeRoleRepository userOfficeRoleRepository,
             ILogger logger
             )

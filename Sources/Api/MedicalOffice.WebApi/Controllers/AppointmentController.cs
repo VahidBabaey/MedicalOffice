@@ -46,9 +46,9 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpPatch("transfer")]
-        public async Task<ActionResult<Guid>> TransferAppointment([FromBody] UpdateAppointmentDTO dto, [FromQuery] string officeId)
+        public async Task<ActionResult<Guid>> TransferAppointment([FromBody] TransferAppointmentDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new UpdateAppointmentCommand { DTO = dto, OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new TransferAppointmentCommand { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
