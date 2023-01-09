@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Commands
 {
-    public class UpdateAppointmnetCommandHandler : IRequestHandler<UpdateAppointmentCommand, BaseResponse>
+    public class TransferAppointmnetCommandHandler : IRequestHandler<TransferAppointmentCommand, BaseResponse>
     {
         private readonly IValidator<TransferAppointmentDTO> _validator;
         private readonly ILogger _logger;
@@ -33,7 +33,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
         private readonly string _requestTitle;
 
-        public UpdateAppointmnetCommandHandler(
+        public TransferAppointmnetCommandHandler(
             IValidator<TransferAppointmentDTO> validator,
             ILogger logger,
             IMapper mapper,
@@ -53,7 +53,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(UpdateAppointmentCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(TransferAppointmentCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
 
