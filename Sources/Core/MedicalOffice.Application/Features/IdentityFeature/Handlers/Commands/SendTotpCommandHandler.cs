@@ -65,7 +65,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Message = $"Totp '{totp}' was sent to user" });
+                response.Data = totp;
 
                 log.Type = LogType.Success;
             }
