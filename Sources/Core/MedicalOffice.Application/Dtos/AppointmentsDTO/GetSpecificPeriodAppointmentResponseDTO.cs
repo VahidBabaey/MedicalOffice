@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 {
-    public class SpecificPeriodAppointmentResDTO
+    public class GetSpecificPeriodAppointmentResponseDTO
     {
         public DateTime Date { get; set; }
 

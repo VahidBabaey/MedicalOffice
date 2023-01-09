@@ -33,7 +33,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<RegisterUserDTO>, RegisterUserValidator>();
         services.AddScoped<IValidator<AuthenticateByPasswordDTO>, AuthenticateByPasswordValidator>();
         services.AddScoped<IValidator<AuthenticateByTotpDTO>, AuthenticateByTotpValidator>();
-        services.AddScoped<IValidator<GetByPhoneNumberDTO>, PhoneNumberValidator>();
+        services.AddScoped<IValidator<GetByPhoneNumberDTO>, GetByPhoneNumberValidator>();
         services.AddScoped<IValidator<SetPasswordDTO>, SetPasswordValidator>();
         services.AddScoped<IValidator<ResetPasswordDTO>, ResetPasswordValidator>();
         services.AddScoped<IValidator<UpdateUserRoleDTO>, UpdateUserRoleValidator>();
@@ -59,7 +59,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<GetSpecificPeriodAppointmentDTO>, GetSpecificPeriodAppointmentValidator>();
         services.AddScoped<IValidator<UpdateAppointmentDescriptionDTO>, UpdateAppointmentDescriptionValidator>();
         services.AddScoped<IValidator<UpdateAppointmentTypeDTO>, AppointmentTypeValidator>();
-        services.AddScoped<IValidator<TransferAppointmentDTO>, TransferAppointmentValidator>();
+        services.AddScoped<IValidator<UpdateAppointmentDTO>, TransferAppointmentValidator>();
         services.AddScoped<IValidator<UpdateAppointmentPatientInfoDto>, UpdateAppointmnetPatientInfoValidator>();
         #endregion
 

@@ -82,18 +82,18 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Helper
             }
         }
 
-        public static List<SpecificPeriodAppointmentResDTO> StaffPeriodAppointmetsCounts(
+        public static List<GetSpecificPeriodAppointmentResponseDTO> StaffPeriodAppointmetsCounts(
             ServiceDurationDetailsDTO service,
             List<AppointmentDetailsDTO> appointments,
             List<MedicalStaffSchedule> staffSchedule,
             DateTime startDate,
             DateTime endDate)
         {
-            var result = new List<SpecificPeriodAppointmentResDTO>();
+            var result = new List<GetSpecificPeriodAppointmentResponseDTO>();
 
             foreach (var daySchedule in staffSchedule)
             {
-                var eachStaffDayOfWeekAppointments = new SpecificPeriodAppointmentResDTO();
+                var eachStaffDayOfWeekAppointments = new GetSpecificPeriodAppointmentResponseDTO();
                 var staffFreeTimes = new List<Time>();
 
                 if (appointments.Count == 0)
