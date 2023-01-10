@@ -51,8 +51,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         public async Task<BaseResponse> Handle(AuthenticateByPasswordCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
-            BaseResponse response = new BaseResponse();
-            Log log = new();
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
