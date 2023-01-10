@@ -68,7 +68,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             if (existingUser != null)
             {
                 var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";
-
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

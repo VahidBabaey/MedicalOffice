@@ -15,8 +15,8 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 
         public string NationalID { get; set; }
 
-        public string ReferrerId { get; set; }
+        public Guid? ReferrerId { get; set; }
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 }

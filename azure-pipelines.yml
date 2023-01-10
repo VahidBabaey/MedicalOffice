@@ -1,0 +1,27 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- develop
+
+steps:
+# - task: PowerShell@2
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#       'start-process PowerShell -verb runas' 
+#       'Stop-IISSite -Name "MedicalOfficeOnline.Api" -Confirm:$false'
+  
+
+- task: CmdLine@2
+  inputs:
+    script: '"C:\Program Files\dotnet\dotnet.exe" publish --output "C:\Sites\MedicalOfficeOnline.Api.Develop\"'
+
+# - task: PowerShell@2
+#   inputs:
+#     targetType: 'inline'
+#     script: | 
+#       'start-process PowerShell -verb runas'
+#       'Start-IISSite -Name "MedicalOfficeOnline.Api"'

@@ -29,7 +29,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpPost("send-Totp")]
-        public async Task<ActionResult<string>> SendOtp(PhoneNumberDTO dto)
+        public async Task<ActionResult<string>> SendOtp(GetByPhoneNumberDTO dto)
         {
             var response = await _mediator.Send(new SendTotpCommand() { DTO = dto });
 
@@ -37,7 +37,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpGet("status")]
-        public async Task<ActionResult<UserStatusDTO>> GetUserStatus([FromQuery] PhoneNumberDTO dto)
+        public async Task<ActionResult<UserStatusDTO>> GetUserStatus([FromQuery] GetByPhoneNumberDTO dto)
         {
             var response = await _mediator.Send(new GetUserStatusQuery() { DTO = dto });
 
@@ -81,7 +81,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
         [Authorize(Roles ="SuperAdmin")]
         [HttpPatch("role")]
-        public async Task<ActionResult<Guid>> UpdateUserRole([FromBody] UserRoleDTO dto)
+        public async Task<ActionResult<Guid>> UpdateUserRole([FromBody] UpdateUserRoleDTO dto)
         {
             var response = await _mediator.Send(new UpdateUserRoleCommand() { DTO = dto });
 

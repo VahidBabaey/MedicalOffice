@@ -11,11 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using static MedicalOffice.Persistence.ApplicationDbContext;
 using FluentValidation;
 using System;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.Identity.Validators;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace MedicalOffice.Persistence;
 
@@ -23,9 +24,16 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
     {
+        //string connectionString;
+        //if (environment.IsDevelopment())
+        //    connectionString = configuration.GetConnectionString(LocalConnectionString);
+        //else if (environment.IsProduction())
+        //    connectionString = configuration.GetConnectionString(ServerConnectionString);
+        //else
+        //connectionString = configuration.GetConnectionString(DefaultConnectionString);
+
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("MedicalOfficeConnectionString"))
-        );
+            options.UseSqlServer(configuration.GetConnectionString("MedicalOfficeConnectionString")));
 
         services.AddIdentity<User, Role>()
         .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();

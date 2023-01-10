@@ -11,6 +11,7 @@ using MedicalOffice.WebApi.WebApi.CustomFilters;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseIIS();
 
 builder.Services.AddControllers()
     .AddJsonOptions(c =>
@@ -48,7 +49,6 @@ builder.Services.AddSwaggerGen(c =>
             new List<string>()
         }
     });
-    //c.SchemaFilter<EnumSchemaFilter>();
 });
 
 builder.Services.AddApplicationServices();
@@ -67,19 +67,20 @@ var app = builder.Build();
 
 app.UseAuthentication();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseCors("CorsPolicy");
-}
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseCors("CorsPolicy");
+//}
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
 
+//TODO: Create extention class in infrastructure for this line of codes
 public sealed class DateOnlyJsonConverter : JsonConverter<TimeOnly>
 {
     public override TimeOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
