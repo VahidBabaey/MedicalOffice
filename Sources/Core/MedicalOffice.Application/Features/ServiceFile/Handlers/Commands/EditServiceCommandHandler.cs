@@ -35,6 +35,18 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
             Log log = new();
 
+            var validationServiceId = await _repository.CheckExistServiceId(request.DTO.OfficeId ,request.DTO.Id);
+
+            if (!validationServiceId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)

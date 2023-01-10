@@ -34,9 +34,9 @@ public class MembershipController : Controller
     }
 
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteMembershipCommand() { MembershipId = id });
+        var response = await _mediator.Send(new DeleteMembershipCommand() { OfficeId = Guid.Parse(officeId) ,MembershipId = id });
 
         return Ok(response);
     }

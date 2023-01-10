@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -16,14 +18,15 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
 {
     public class EditServicetoMembershipCommandHandler : IRequestHandler<EditServicetoMembershipCommand, BaseResponse>
     {
+        private readonly IValidator<UpdateMemberShipServiceDTO> _validator;
         private readonly IMemberShipServiceRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditServicetoMembershipCommandHandler(IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
+        public EditServicetoMembershipCommandHandler(IValidator<UpdateMemberShipServiceDTO> validator, IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
         {
-
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -38,34 +41,51 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
 
             Log log = new();
 
-            try
-            {
-                if (request.DTO.ServiceId == null)
-                {
+            var validationMembershipServiceId = await _repository.CheckExistMemberShipServiceId(request.DTO.Id);
 
-                }
-                else
+            if (!validationMembershipServiceId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+
+                log.Type = LogType.Error;
+            }
+            else
+            {
+                try
                 {
                     foreach (var srvid in request.DTO.ServiceId)
                     {
                         await _repository.UpdateServiceOfMemberShipAsync(request.DTO.Discount, srvid, request.DTO.MembershipId);
                     }
+
+                    response.Success = true;
+                    response.StatusDescription = $"{_requestTitle} succeded";
+
+                    log.Type = LogType.Success;
                 }
+                catch (Exception error)
+                {
+                    response.Success = false;
+                    response.StatusDescription = $"{_requestTitle} failed";
+                    response.Errors.Add(error.Message);
 
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-
-                log.Type = LogType.Success;
+                    log.Type = LogType.Error;
+                }
             }
-            catch (Exception error)
-            {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
-            }
-
             log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 

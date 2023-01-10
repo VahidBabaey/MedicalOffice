@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators
 {
-    internal class AddMemberShipServiceValidator : AbstractValidator<MemberShipServiceDTO>
+    public class AddMemberShipServiceValidator : AbstractValidator<MemberShipServiceDTO>
     {
         private readonly IMembershipRepository _memberRepository;
         private readonly IServiceRepository _serviceRepository;

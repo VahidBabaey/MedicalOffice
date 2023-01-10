@@ -32,7 +32,20 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
         public async Task<BaseResponse> Handle(DeleteMembershipCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
+
             Log log = new();
+
+            var validationMembershipId = await _repository.CheckExistMembershipId(request.MembershipId, request.OfficeId);
+
+            if (!validationMembershipId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
 
             try
             {

@@ -1,4 +1,6 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Commons;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO
 {
-    public class BasicInfoDetailDTO
+    public class BasicInfoDetailDTO : IBasicInfoDetailIdDTO
     {
         /// <summary>
         /// نام جزئیات

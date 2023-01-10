@@ -35,20 +35,15 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
 
             Log log = new();
 
-            bool isBasicInfoDetailIdExist = await _repository.CheckExistBasicInfoDetailId(request.BasicInfoDetailId);
-            bool isBasicInfoIdExist = await _repository.CheckExistBasicInfoId(request.OfficeId, request.BasicInfoDetailId);
+            var validationBasicInfoDetailId = await _repository.CheckExistBasicInfoDetailId(request.BasicInfoDetailId);
 
-            if (!isBasicInfoIdExist || !isBasicInfoDetailIdExist)
+            if (!validationBasicInfoDetailId)
             {
-                List<string> errors = new List<string>();
-                var error = $"لطفا یک مورد را انتخاب کنید.";
                 response.Success = false;
                 response.StatusDescription = $"{_requestTitle} failed";
-                errors = new List<string> { error };
-                response.Errors = errors;
+                response.Errors.Add("ID isn't exist");
 
                 log.Type = LogType.Error;
-
                 return response;
             }
 

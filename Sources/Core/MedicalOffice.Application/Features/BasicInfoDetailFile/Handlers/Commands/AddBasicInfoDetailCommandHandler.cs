@@ -42,22 +42,6 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
 
             Log log = new();
 
-            bool isBasicInfoIdExist = await _repository.CheckExistBasicInfoId(request.DTO.OfficeId, request.DTO.BasicInfoId);
-
-            if (!isBasicInfoIdExist)
-            {
-                List<string> errors = new List<string>();
-                var error = $"لطفا یک مورد از جدول سمت راست انتخاب کنید.";
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                errors = new List<string> { error };
-                response.Errors = errors;
-
-                log.Type = LogType.Error;
-
-                return response;
-            }
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)

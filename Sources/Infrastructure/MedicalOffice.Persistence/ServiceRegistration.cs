@@ -43,6 +43,8 @@ using System.Text;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using System.Reflection;
+using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
+using MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators;
 
 namespace MedicalOffice.Persistence;
 
@@ -172,6 +174,8 @@ public static class ServiceRegistration
         services.AddScoped<IValidator<CashPosDTO>, AddCashPosValidator>();
         services.AddScoped<IValidator<UpdateCashPosDTO>, UpdateCashPosValidator>();
         services.AddScoped<IValidator<CashesDTO>, AddCashValidator>();
+        services.AddScoped<IValidator<MemberShipServiceDTO>, AddMemberShipServiceValidator>();
+        services.AddScoped<IValidator<UpdateMemberShipServiceDTO>, UpdateMemberShipServiceValidator>();
 
         return services;
     }

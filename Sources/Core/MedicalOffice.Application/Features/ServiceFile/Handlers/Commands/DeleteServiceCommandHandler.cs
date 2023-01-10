@@ -34,6 +34,17 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
             BaseResponse response = new();
             Log log = new();
 
+            var validationServiceId = await _repository.CheckExistServiceId(request.OfficeId, request.ServiceId);
+
+            if (!validationServiceId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
             try
             {
                 await _repository.Delete(request.ServiceId);

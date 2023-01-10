@@ -65,4 +65,9 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
         }
         return servicesOfMemeberShipListDTOs;
     }
+    public async Task<bool> CheckExistMemberShipServiceId(Guid Id)
+    {
+        bool isExist = await _dbContext.Sections.AnyAsync(p => p.Id == Id);
+        return isExist;
+    }
 }

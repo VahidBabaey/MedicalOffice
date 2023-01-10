@@ -148,5 +148,9 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         bool isExist = await _dbContext.Receptions.AnyAsync(p => p.OfficeId == officeId && p.Id == receptionId);
         return isExist;
     }
-
+    public async Task<bool> CheckExistCashId(Guid officeId, Guid cashId)
+    {
+        bool isExist = await _dbContext.Cashes.AnyAsync(p => p.Id == cashId && p.OfficeId == officeId);
+        return isExist;
+    }
 }

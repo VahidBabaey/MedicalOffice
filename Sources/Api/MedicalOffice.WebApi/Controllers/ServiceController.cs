@@ -30,9 +30,9 @@ public class ServiceController : Controller
     }
 
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove([FromQuery] string officeId, Guid id)
     {
-        var response = await _mediator.Send(new DeleteServiceCommand() { ServiceId = id });
+        var response = await _mediator.Send(new DeleteServiceCommand() { OfficeId = Guid.Parse(officeId), ServiceId = id });
 
         return Ok(response);
     }

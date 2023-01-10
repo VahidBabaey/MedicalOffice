@@ -37,22 +37,18 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
         public async Task<BaseResponse> Handle(EditBasicInfoDetailCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
+
             Log log = new();
 
-            bool isBasicInfoDetailIdExist = await _repository.CheckExistBasicInfoDetailId(request.DTO.Id);
-            bool isBasicInfoIdExist = await _repository.CheckExistBasicInfoId(request.DTO.OfficeId, request.DTO.BasicInfoId);
+            var validationBasicInfoDetailId = await _repository.CheckExistBasicInfoDetailId(request.DTO.Id);
 
-            if (!isBasicInfoDetailIdExist || !isBasicInfoIdExist)
+            if (!validationBasicInfoDetailId)
             {
-                List<string> errors = new List<string>();
-                var error = $"لطفا یک مورد را انتخاب کنید.";
                 response.Success = false;
                 response.StatusDescription = $"{_requestTitle} failed";
-                errors = new List<string> { error };
-                response.Errors = errors;
+                response.Errors.Add("ID isn't exist");
 
                 log.Type = LogType.Error;
-
                 return response;
             }
 
@@ -69,26 +65,26 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
             else
             {
 
-            try
-            {
-                var basicinfodetail = _mapper.Map<BasicInfoDetail>(request.DTO);
+                try
+                {
+                    var basicinfodetail = _mapper.Map<BasicInfoDetail>(request.DTO);
 
-                await _repository.Update(basicinfodetail);
+                    await _repository.Update(basicinfodetail);
 
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = basicinfodetail.Id });
+                    response.Success = true;
+                    response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = basicinfodetail.Id });
 
-                log.Type = LogType.Success;
-            }
-            catch (Exception error)
-            {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
+                    log.Type = LogType.Success;
+                }
+                catch (Exception error)
+                {
+                    response.Success = false;
+                    response.StatusDescription = $"{_requestTitle} failed";
+                    response.Errors.Add(error.Message);
 
-                log.Type = LogType.Error;
-            }
+                    log.Type = LogType.Error;
+                }
 
             }
             log.Header = response.StatusDescription;

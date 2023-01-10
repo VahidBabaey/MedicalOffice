@@ -3,7 +3,7 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.PatientDTO;
 
-public class UpdatePatientDTO : BaseDto<Guid>
+public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNumberListDTO
 {
     /// <summary>
     /// آیدی مطب
@@ -64,11 +64,11 @@ public class UpdatePatientDTO : BaseDto<Guid>
     /// <summary>
     /// شماره ثابت
     /// </summary>
-    public string[]? Tel { get; set; } 
+    public string[]? TelePhoneNumber { get; set; } 
     /// <summary>
     /// شماره همراه
     /// </summary>
-    public string[]? Mobile { get; set; }
+    public string[]? PhoneNumber { get; set; }
     /// <summary>
     /// برچسب
     /// </summary>

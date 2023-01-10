@@ -15,14 +15,6 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
         _dbContext = dbContext;
     }
 
-    public Task<bool> checkServiceExist(Guid serviceId, Guid officeId)
-    {
-        var isServiceExist = _dbContext.Services.Any(x=>x.Id==serviceId && x.OfficeId==officeId);
-
-        return Task.FromResult(isServiceExist);
-
-    }
-
     public async Task<IReadOnlyList<Service>> GetBySectionId(Guid sectionId)
     {
         return await _dbContext.Services.Where(srv => srv.SectionId == sectionId).ToListAsync();
@@ -31,7 +23,7 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
     {
         return (IReadOnlyList<Service>)await _dbContext.Services.Select(srv => new { srv.Id }).Where(srv => srv.Id == Id).ToListAsync();
     }
-    public async Task<bool> CheckServiceId(Guid officeId, Guid serviceId)
+    public async Task<bool> CheckExistServiceId(Guid officeId, Guid serviceId)
     {
         bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Id == serviceId);
         return isExist;

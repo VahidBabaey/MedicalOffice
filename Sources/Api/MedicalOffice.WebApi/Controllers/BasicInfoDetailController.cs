@@ -31,7 +31,7 @@ public class BasicInfoDetailController : Controller
 
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] BasicInfoDetailDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] BasicInfoDetailDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddBasicInfoDetailCommand() { DTO = dto });
 
@@ -57,7 +57,7 @@ public class BasicInfoDetailController : Controller
     }
 
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateBasicInfoDetailDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateBasicInfoDetailDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new EditBasicInfoDetailCommand() { DTO = dto });
 

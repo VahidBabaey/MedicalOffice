@@ -11,5 +11,6 @@ namespace MedicalOffice.Application.Features.ServiceFile.Requests.Commands
     public class DeleteServiceCommand : IRequest<BaseResponse>
     {
         public Guid ServiceId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }
