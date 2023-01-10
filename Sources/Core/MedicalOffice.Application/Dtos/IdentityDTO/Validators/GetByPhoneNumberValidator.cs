@@ -4,11 +4,11 @@ using MedicalOffice.Application.Dtos.Identity;
 
 namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
 {
-    public class PhoneNumberValidator: AbstractValidator<PhoneNumberDTO>
+    public class GetByPhoneNumberValidator: AbstractValidator<GetByPhoneNumberDTO>
     {
-        public PhoneNumberValidator()
+        public GetByPhoneNumberValidator()
         {
-            Include(new Common.CommonValidators.PhoneNumberValidator());
+            Include(new PhoneNumberValidator());
         }
     }
 }

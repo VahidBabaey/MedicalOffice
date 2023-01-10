@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
 {
-    public class UserRoleValidator : AbstractValidator<UserRoleDTO>
+    public class UpdateUserRoleValidator : AbstractValidator<UpdateUserRoleDTO>
     {
-        public UserRoleValidator()
+        public UpdateUserRoleValidator()
         {
             Include(new Common.CommonValidators.PhoneNumberValidator());
         }

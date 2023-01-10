@@ -33,7 +33,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
         public async Task<BaseResponse> Handle(GetUserStatusQuery request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
-            PhoneNumberValidator validator = new();
+            GetByPhoneNumberValidator validator = new();
             Log log = new();
 
             var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);

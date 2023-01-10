@@ -6,6 +6,6 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 {
     public class GetUserStatusQuery : IRequest<BaseResponse>
     {
-        public PhoneNumberDTO DTO { get; set; } = new();
+        public GetByPhoneNumberDTO DTO { get; set; } = new();
     }
 }

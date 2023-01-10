@@ -50,79 +50,81 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(AuthenticateByPasswordCommand request, CancellationToken cancellationToken)
         {
+            var responseBuilder = new ResponseBuilder();
             BaseResponse response = new BaseResponse();
             Log log = new();
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
+                });
 
-                log.Type = LogType.Error;
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                    validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
-            else
+
+            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber);
+            if (user == null)
             {
-                var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber);
-                if (user == null)
+                var error = $"User with phone number '{request.DTO.PhoneNumber}' is't exist.";
+                await _logger.Log(new Log
                 {
-                    response.Success = false;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add($"User with phone number '{request.DTO.PhoneNumber}' is't exist.");
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
 
-                    log.Type = LogType.Error;
-                }
-                else
-                {
-                    var result = await _signInManager.PasswordSignInAsync(user.UserName, request.DTO.Password, false, lockoutOnFailure: false);
-                    if (!result.Succeeded)
-                    {
-                        response.Success = false;
-                        response.StatusDescription = $"{_requestTitle} failed";
-                        response.Errors.Add($"credencial for {request.DTO.PhoneNumber} are'nt valid");
-
-                        log.Type = LogType.Error;
-                    }
-                    else
-                    {
-                        var userClaims = await _userManager.GetClaimsAsync(user);
-
-                        var roles = await _userManager.GetRolesAsync(user);
-                        var roleClaims = new List<Claim>();
-                        for (int i = 0; i < roles.Count; i++)
-                        {
-                            roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
-                        }
-
-                        var claims = new[]
-                        {
-                                new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
-                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            }
-                        .Union(userClaims)
-                        .Union(roleClaims);
-
-                        JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user,claims);
-
-                        AuthenticatedUserDTO authenticatedUser = _mapper.Map<AuthenticatedUserDTO>(user);
-                        authenticatedUser.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
-
-                        response.Success = false;
-                        response.StatusDescription = $"{_requestTitle} succeded";
-                        response.Data = (authenticatedUser);
-
-                        log.Type = LogType.Success;
-                    }
-                }
+                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, request.DTO.Password, false, lockoutOnFailure: false);
+            if (!result.Succeeded)
+            {
+                var error = $"credencial for {request.DTO.PhoneNumber} are'nt valid";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
 
-            await _logger.Log(log);
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
-            return response;
+            var userClaims = await _userManager.GetClaimsAsync(user);
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var roleClaims = new List<Claim>();
+            for (int i = 0; i < roles.Count; i++)
+            {
+                roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+            }
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())}
+            .Union(userClaims)
+            .Union(roleClaims);
+
+            JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user, claims);
+
+            AuthenticatedUserDTO authenticatedUser = _mapper.Map<AuthenticatedUserDTO>(user);
+            authenticatedUser.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
+
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = authenticatedUser
+            });
+
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", authenticatedUser);
         }
     }
 }

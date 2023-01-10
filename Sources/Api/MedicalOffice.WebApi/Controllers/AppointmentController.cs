@@ -48,7 +48,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpPatch("transfer")]
         public async Task<ActionResult<Guid>> TransferAppointment([FromBody] TransferAppointmentDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new TransferCommand { DTO = dto, OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new TransferAppointmentCommand { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -64,21 +64,21 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpPatch("Description")]
         public async Task<ActionResult<Guid>> EditAppointmentDescription([FromBody] UpdateAppointmentDescriptionDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new EditAppointmentDescriptionCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new UpdateAppointmentDescriptionCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [HttpPost("search")]
-        public async Task<ActionResult<List<AppointmentDetailsDTO>>> SearchByRequestedFeilds([FromBody] SearchAppointmentsDTO dto)
+        public async Task<ActionResult<List<AppointmentDetailsDTO>>> SearchByRequestedFeilds([FromBody] SearchAppointmentsDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new SearchByRequestedFieldsQuery { DTO = dto });
+            var response = await _mediator.Send(new SearchByStaffAndServiceQuery { DTO = dto , OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [HttpGet("period-appointments")]
-        public async Task<ActionResult<List<SpecificPeriodAppointmentResDTO>>> GetSpecificPeriodAppointmnet([FromQuery] GetSpecificPeriodAppointmentDTO dto, [FromQuery] string officeId)
+        public async Task<ActionResult<List<GetSpecificPeriodAppointmentResponseDTO>>> GetSpecificPeriodAppointmnet([FromQuery] GetSpecificPeriodAppointmentDTO dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new GetSpecificPeriodAppointmentsQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
@@ -94,33 +94,17 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpGet("types")]
-        public async Task<ActionResult<AppointmentType>> GetAllStatus()
+        public async Task<ActionResult<AppointmentType>> GetAllStatus([FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new GetAllStatusQuery { });
+            var response = await _mediator.Send(new GetAllStatusQuery { OfficeId = Guid.Parse(officeId)});
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        [HttpGet("isValidTime")]
-        public async Task<ActionResult<bool>> IsValidTime(
-            [FromQuery] string startTime,
-            [FromQuery] string endTime,
-            [FromQuery] Guid? medicalStaffId,
-            [FromQuery] Guid serviceId,
-            [FromQuery] Guid? deviceId,
-            [FromQuery] Guid? roomId,
-            [FromQuery] DateTime date)
+        [HttpGet("time-check")]
+        public async Task<ActionResult<bool>> IsValidTime([FromQuery] CheckTimeRequestDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new IsValidTimeQuery
-            {
-                StartTime = startTime,
-                EndTime = endTime,
-                MedicalStaffId = medicalStaffId,
-                ServiceId = serviceId,
-                DeviceId = deviceId,
-                RoomId = roomId,
-                Date = date
-            });
+            var response = await _mediator.Send(new TimeCheckQuery{DTO = dto ,OfficeId = Guid.Parse(officeId)});
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

@@ -9,6 +9,7 @@ using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,16 +17,16 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class SendTotpCommandHandler : IRequestHandler<SendTotpCommand, BaseResponse>
     {
-        private readonly IValidator<PhoneNumberDTO> _validator;
+        private readonly IValidator<GetByPhoneNumberDTO> _validator;
         private readonly ISmsSender _smsSender;
         private readonly ITotpHandler _totpHandler;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
         public SendTotpCommandHandler(
-            IValidator<PhoneNumberDTO> validator,
+            IValidator<GetByPhoneNumberDTO> validator,
             ISmsSender smsSender,
-            ITotpHandler totpHandler, 
+            ITotpHandler totpHandler,
             ILogger logger)
         {
             _validator = validator;
@@ -36,54 +37,47 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         }
         public async Task<BaseResponse> Handle(SendTotpCommand request, CancellationToken cancellationToken)
         {
+            var responseBuilder = new ResponseBuilder();
             BaseResponse response = new();
             Log log = new Log();
 
-            try
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            if (!validationResult.IsValid)
             {
-                var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
-                if (!validationResult.IsValid)
+                await _logger.Log(new Log
                 {
-                    response.Success = false;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
+                });
 
-                    log.Type = LogType.Error;
-                }
-
-                var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
-
-                //TODO: add sms provider to send sms to user.
-                //var totpSms = new TotpSms()
-                //{
-                //    Type = 1,
-                //    Receptor = new string[] { request.DTO.PhoneNumber },
-                //    Code = totp
-                //};
-
-                //var sendMessageToUser = await _smsSender.SendTotpSmsAsync(totpSms);
-
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Message = $"Totp '{totp}' was sent to user" });
-
-                log.Type = LogType.Success;
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                    validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
-            catch (Exception error)
+
+
+
+            var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
+
+            //TODO: add sms provider to send sms to user.
+            //var totpSms = new TotpSms()
+            //{
+            //    Type = 1,
+            //    Receptor = new string[] { request.DTO.PhoneNumber },
+            //    Code = totp
+            //};
+
+            //var sendMessageToUser = await _smsSender.SendTotpSmsAsync(totpSms);
+
+            await _logger.Log(new Log
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = totp
+            });
 
-                log.Type = LogType.Error;
-            }
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", totp);
 
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
 }

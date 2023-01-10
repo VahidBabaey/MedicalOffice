@@ -10,6 +10,7 @@ using MediatR;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseIIS();
 
 builder.Services.AddControllers()
     .AddJsonOptions(c =>
@@ -64,14 +65,14 @@ var app = builder.Build();
 
 app.UseAuthentication();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseCors("CorsPolicy");
-}
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseCors("CorsPolicy");
+//}
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 

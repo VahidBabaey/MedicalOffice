@@ -30,6 +30,7 @@ using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
 using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
+using MediatR;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -120,15 +121,12 @@ public class MappingProfile : Profile
         CreateMap<MedicalStaffSchedule, MedicalStaffDaySchedule>().ReverseMap();
         CreateMap<ServiceDuration, ServiceDurationDTO>().ReverseMap();
         CreateMap<AppointmentDetailsDTO, Appointment>().ReverseMap();
-        CreateMap<Appointment, TransferAppointmentDTO>()
-            .ReverseMap()
-            .ForAllMembers(x=>x.Condition((src, dest, srcMember) => srcMember != null));
-        CreateMap<Appointment, UpdateAppointmentDescriptionDTO>()
-            .ReverseMap()
+        CreateMap<Appointment, TransferAppointmentDTO>().ReverseMap()
             .ForAllMembers(x => x.Condition((src, dest, srcMember) => srcMember != null));
-        CreateMap<Appointment, UpdateAppointmentTypeDTO>()
-            .ReverseMap()
-            .ForAllMembers(x => x.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<Appointment, UpdateAppointmentDescriptionDTO>().ReverseMap();
+        CreateMap<Appointment, UpdateAppointmentTypeDTO>().ReverseMap();
+        //CreateMap<Appointment, UpdateAppointmentPatientInfoDto>().ReverseMap();
+        CreateMap<Appointment, UpdateAppointmentPatientInfoDto>().ReverseMap();
         CreateMap<Appointment, AddAppointmentDto>().ReverseMap();
         CreateMap<MedicalStaffSchedule, MedicalStaffScheduleDetailsDTO>().ReverseMap();
         CreateMap<ServiceDuration, ServiceDurationDetailsDTO>().ReverseMap();
@@ -149,6 +147,21 @@ public class MappingProfile : Profile
                 FirstName = source.FirstName,
                 LastName = source.LastName
             };
+            return destination;
+        }
+    }
+
+    public class UpdatePatientInfoMapper : ITypeConverter<Appointment, UpdateAppointmentPatientInfoDto>
+    {
+        public UpdateAppointmentPatientInfoDto Convert(Appointment source, UpdateAppointmentPatientInfoDto destination, ResolutionContext context)
+        {
+            source.PatientName = destination.PatientName;
+            source.PatientLastName = destination.PatientLastName;
+            source.PhoneNumber = destination.PhoneNumber;
+            source.NationalID = destination.NationalID;
+            source.ReferrerId = destination.ReferrerId;
+            source.Description = destination.Description;
+
             return destination;
         }
     }

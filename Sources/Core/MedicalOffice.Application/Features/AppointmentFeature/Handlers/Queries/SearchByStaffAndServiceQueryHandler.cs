@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 {
-    public partial class SearchByRequestedFieldsQueryHandler : IRequestHandler<SearchByRequestedFieldsQuery, BaseResponse>
+    public partial class SearchByStaffAndServiceQueryHandler : IRequestHandler<SearchByStaffAndServiceQuery, BaseResponse>
     {
         private readonly IValidator<SearchAppointmentsDTO> _validator;
         private readonly ILogger _logger;
@@ -35,7 +35,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
         private readonly string _requestTitle;
 
-        public SearchByRequestedFieldsQueryHandler(
+        public SearchByStaffAndServiceQueryHandler(
             IValidator<SearchAppointmentsDTO> validator,
             ILogger logger,
             IMapper mapper,
@@ -59,7 +59,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(SearchByRequestedFieldsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(SearchByStaffAndServiceQuery request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
 

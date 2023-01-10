@@ -11,6 +11,10 @@ namespace MedicalOffice.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 {
+    //public const string DefaultConnectionString = "Default";
+    //public const string ServerConnectionString = "Server";
+    //public const string LocalConnectionString = "Local";
+
     public DbSet<Allergy> Allergies => Set<Allergy>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<AppointmentService> AppointmentServices => Set<AppointmentService>();

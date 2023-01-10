@@ -11,6 +11,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands
 {
     public class UpdateUserRoleCommand : IRequest<BaseResponse>
     {
-        public UserRoleDTO DTO{ get; set; }  
+        public UpdateUserRoleDTO DTO{ get; set; }  
     }
 }

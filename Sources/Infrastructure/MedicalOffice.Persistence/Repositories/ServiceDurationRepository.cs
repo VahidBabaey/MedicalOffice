@@ -22,6 +22,11 @@ namespace MedicalOffice.Persistence.Repositories
             _dbContext = dbContext;
         }
 
+        public Task<bool> CheckStaffHasService(Guid? medicalStaffId, Guid serviceId)
+        {
+            return Task.FromResult(_dbContext.ServiceDurations.Any(x => x.ServiceId == serviceId && x.MedicalStaffId == medicalStaffId));
+        }
+
         public async Task<List<ServiceDuration>> GetAllByServiceId(Guid serviceId)
         {
             var serviceDuration = await _dbContext.ServiceDurations.Where(x => x.ServiceId == serviceId).ToListAsync();
