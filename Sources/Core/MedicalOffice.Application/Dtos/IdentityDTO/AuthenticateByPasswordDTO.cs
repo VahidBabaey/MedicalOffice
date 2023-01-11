@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class AuthenticateByPasswordDTO
+    public class AuthenticateByPasswordDTO : IPhoneNumberDTO
     {
         public string PhoneNumber { get; set; }
 

@@ -15,8 +15,13 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
 {
     public class AuthenticateByTotpValidator : AbstractValidator<AuthenticateByTotpDTO>
     {
-        public AuthenticateByTotpValidator()
+        private readonly UserManager<User> _userManager;
+
+        public AuthenticateByTotpValidator(UserManager<User> userManager)
         {
+            _userManager = userManager;
+
+            Include(new UserByPhoneNumberValidator(_userManager));
         }
     }
 }

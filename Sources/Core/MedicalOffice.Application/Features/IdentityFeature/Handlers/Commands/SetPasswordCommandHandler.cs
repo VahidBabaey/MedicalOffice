@@ -18,8 +18,12 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         readonly UserManager<User> _userManagr;
         readonly string _requestTitle;
 
-        public SetPasswordCommandHandler(ILogger logger, UserManager<User> userManagr)
+        public SetPasswordCommandHandler(
+            IValidator<SetPasswordDTO> validator,
+            ILogger logger,
+            UserManager<User> userManagr)
         {
+            _validator = validator; 
             _logger = logger;
             _userManagr = userManagr;
 
@@ -29,8 +33,21 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         public async Task<BaseResponse> Handle(SetPasswordCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
-            var user = await _userManagr.FindByNameAsync(request.DTO.PhoneNumber);
 
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
+                });
+
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
+            }
+
+            var user = await _userManagr.FindByNameAsync(request.DTO.PhoneNumber);
             if (user == null)
             {
                 var error = "The user didn't registered yet";
@@ -44,7 +61,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             }
 
             var changePassword = await _userManagr.AddPasswordAsync(user, request.DTO.Password);
-
             if (!changePassword.Succeeded)
             {
                 var error = changePassword.Errors.Select(error => error.Description).ToArray();

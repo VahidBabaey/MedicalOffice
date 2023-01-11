@@ -68,7 +68,16 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
             var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber && x.IsActive == true);
             if (user == null)
-                user = new User();
+            {
+                var error = $"The User with phone number {request.DTO.PhoneNumber} is't exist!";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+            }
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.DTO.Password, false, lockoutOnFailure: false);
             if (!result.Succeeded)
@@ -94,7 +103,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())}
             .Union(userClaims)
             .Union(roleClaims);

@@ -26,7 +26,7 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
             {
                 return await _userManager.Users.AnyAsync(x => x.PhoneNumber == phoneNumber);
             })
-            .WithMessage("User with phone number {PropertyName} is't exist.");
+            .WithMessage("The {PropertyName} is't exist.");
         }
     }
 }

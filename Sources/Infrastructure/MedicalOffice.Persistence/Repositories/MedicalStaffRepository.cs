@@ -5,6 +5,7 @@ using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+#nullable disable
 
 namespace MedicalOffice.Persistence.Repositories;
 
@@ -76,7 +77,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         return (IEnumerable<MedicalStaffNameListDTO>)_list;
     }
 
-    public async Task<List<MedicalStaffNamesDTO>> GetAllMedicalStaffsNamesandRoles()
+    public Task<List<MedicalStaffNamesDTO>> GetAllMedicalStaffsNamesandRoles()
     {
         List<MedicalStaffNamesDTO> medicalStaffNamesDTO = new();
 
@@ -95,7 +96,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
             };
             medicalStaffNamesDTO.Add(medicalStaffNames);
         }
-        return medicalStaffNamesDTO;
+        return Task.FromResult(medicalStaffNamesDTO);
     }
 
     public async Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber)
