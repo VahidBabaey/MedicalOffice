@@ -35,7 +35,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
             Log log = new();
 
-            var validationServiceId = await _repository.CheckExistServiceId(request.DTO.OfficeId ,request.DTO.Id);
+            var validationServiceId = await _repository.CheckExistServiceId(request.OfficeId ,request.DTO.Id);
 
             if (!validationServiceId)
             {
@@ -62,6 +62,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 try
                 {
                     var service = _mapper.Map<Service>(request.DTO);
+                    service.OfficeId = request.OfficeId;
 
                     await _repository.Update(service);
 

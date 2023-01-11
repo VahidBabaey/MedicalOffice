@@ -29,19 +29,15 @@ public class DeleteCashCartCommandHandler : IRequestHandler<DeleteCashCartComman
         BaseResponse response = new();
         Log log = new();
 
-        bool iscashcartIdExist = await _repository.CheckCashCartId(request.CashCartId);
+        bool iscashCartIdExist = await _repository.CheckCashCartId(request.CashCartId);
 
-        if (!iscashcartIdExist)
+        if (!iscashCartIdExist)
         {
-            List<string> errors = new List<string>();
-            var error = $"لطفا یک مورد را انتخاب کنید.";
             response.Success = false;
             response.StatusDescription = $"{_requestTitle} failed";
-            errors = new List<string> { error };
-            response.Errors = errors;
+            response.Errors.Add("ID isn't exist");
 
             log.Type = LogType.Error;
-
             return response;
         }
 

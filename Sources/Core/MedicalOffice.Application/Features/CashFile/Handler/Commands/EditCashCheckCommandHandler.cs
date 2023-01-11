@@ -35,20 +35,15 @@ public class EditCashCheckCommandHandler : IRequestHandler<EditCashCheckCommand,
 
         Log log = new();
 
-        bool isreceptionIdExist = await _repository.CheckExistReceptionId(request.DTO.OfficeId, request.DTO.ReceptionId);
-        bool iscashIdExist = await _repository.CheckExistCashId(request.DTO.OfficeId, request.DTO.CashId);
+        bool iscashCheckIdExist = await _repository.CheckCashCheckId(request.DTO.Id);
 
-        if (!isreceptionIdExist || !iscashIdExist)
+        if (!iscashCheckIdExist)
         {
-            List<string> errors = new List<string>();
-            var error = $"اطلاعات وارد شده صحیح نمیباشد.";
             response.Success = false;
             response.StatusDescription = $"{_requestTitle} failed";
-            errors = new List<string> { error };
-            response.Errors = errors;
+            response.Errors.Add("ID isn't exist");
 
             log.Type = LogType.Error;
-
             return response;
         }
 

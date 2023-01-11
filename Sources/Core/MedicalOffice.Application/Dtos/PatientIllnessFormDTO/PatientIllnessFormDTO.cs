@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MedicalOffice.Application.Dtos.Commons;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.PatientIllnessFormDTO
 {
-    public class PatientIllnessFormDTO
+    public class PatientIllnessFormDTO : IPatientIdDTO
     {
         /// <summary>
         /// علت
@@ -31,6 +32,6 @@ namespace MedicalOffice.Application.Dtos.PatientIllnessFormDTO
         /// <summary>
         /// آی دی بیمار
         /// </summary>
-        public Guid? PatientId { get; set; }
+        public Guid PatientId { get; set; }
     }
 }

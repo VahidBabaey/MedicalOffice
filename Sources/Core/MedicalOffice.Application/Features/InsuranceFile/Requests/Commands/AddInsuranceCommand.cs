@@ -13,4 +13,5 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 public class AddInsuranceCommand : IRequest<BaseResponse>
 {
     public InsuranceDTO DTO { get; set; } = new InsuranceDTO();
+    public Guid OfficeId { get; set; }
 }

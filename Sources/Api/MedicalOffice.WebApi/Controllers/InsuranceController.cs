@@ -25,31 +25,31 @@ public class InsuranceController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] InsuranceDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] InsuranceDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddInsuranceCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddInsuranceCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteInsuranceCommand() { InsuranceID = id });
+        var response = await _mediator.Send(new DeleteInsuranceCommand() { InsuranceID = id, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateInsuranceDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateInsuranceDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditInsuranceCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditInsuranceCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpGet]
-    public async Task<ActionResult<List<InsuranceListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<InsuranceListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllInsuranceQuery() { DTO = dto });
+        var response = await _mediator.Send(new GetAllInsuranceQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

@@ -57,6 +57,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 try
                 {
                     var service = _mapper.Map<Service>(request.DTO);
+                    service.OfficeId = request.OfficeId;
 
                     service = await _repository.Add(service);
 

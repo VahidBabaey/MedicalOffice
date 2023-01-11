@@ -40,6 +40,18 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 
             Log log = new();
 
+            var validationInsuranceId = await _repository.CheckExistInsuranceId(request.OfficeId, request.DTO.Id);
+
+            if (!validationInsuranceId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)

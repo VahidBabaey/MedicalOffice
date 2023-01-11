@@ -5,11 +5,6 @@ namespace MedicalOffice.Application.Dtos.ServiceDTO;
 
 public class ServiceDTO : ISectionIdDTO
 {
-
-    /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
     /// <summary>
     /// آیدی بخش
     /// </summary>

@@ -1,8 +1,9 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Common;
 
 namespace MedicalOffice.Application.Dtos.SectionDTO;
 
-public class AddSectionDTO 
+public class AddSectionDTO
 {
     /// <summary>
     /// نام بخش

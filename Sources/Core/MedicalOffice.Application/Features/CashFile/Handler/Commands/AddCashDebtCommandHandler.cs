@@ -40,22 +40,6 @@ public class AddCashDebtCommandHandler : IRequestHandler<AddCashDebtCommand, Bas
 
         Log log = new();
 
-        bool isreceptionIdExist = await _repository.CheckExistReceptionId(request.DTO.OfficeId, request.DTO.ReceptionId);
-
-        if (!isreceptionIdExist)
-        {
-            List<string> errors = new List<string>();
-            var error = $"اطلاعات وارد شده صحیح نمیباشد.";
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            errors = new List<string> { error };
-            response.Errors = errors;
-
-            log.Type = LogType.Error;
-
-            return response;
-        }
-
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)

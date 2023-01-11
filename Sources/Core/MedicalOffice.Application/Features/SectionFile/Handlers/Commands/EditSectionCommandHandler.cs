@@ -34,6 +34,18 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
 
         Log log = new();
 
+        var validationSectionId = await _repository.CheckExistSectionId(request.DTO.Id, request.OfficeId);
+
+        if (!validationSectionId)
+        {
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            response.Errors.Add("ID isn't exist");
+
+            log.Type = LogType.Error;
+            return response;
+        }
+
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
@@ -48,6 +60,7 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
         try
         {
             var section = _mapper.Map<Section>(request.DTO);
+            section.OfficeId = request.OfficeId;
 
             await _repository.Update(section);
 

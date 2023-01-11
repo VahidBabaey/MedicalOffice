@@ -20,5 +20,9 @@ public class PatientCommitmentFormRepository : GenericRepository<PatientCommitme
     {
         return await _dbContext.PatientCommitmentForms.Where(srv => srv.PatientId == patientId).ToListAsync();
     }
-
+    public async Task<bool> CheckExistPatientCommitmentFormId(Guid patientCommitmentFormId)
+    {
+        bool isExist = await _dbContext.PatientCommitmentForms.AnyAsync(p => p.Id == patientCommitmentFormId);
+        return isExist;
+    }
 }

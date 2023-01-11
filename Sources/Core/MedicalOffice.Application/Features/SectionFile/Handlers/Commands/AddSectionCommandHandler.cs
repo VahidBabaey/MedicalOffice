@@ -16,12 +16,14 @@ public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseR
 {
     private readonly IValidator<AddSectionDTO> _validator;
     private readonly ISectionRepository _repository;
+    private readonly IOfficeRepository _officeRepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddSectionCommandHandler(IValidator<AddSectionDTO> validator, ISectionRepository repository, IMapper mapper, ILogger logger)
+    public AddSectionCommandHandler(IValidator<AddSectionDTO> validator, IOfficeRepository officeRepository, ISectionRepository repository, IMapper mapper, ILogger logger)
     {
+        _officeRepository = officeRepository;
         _validator = validator;
         _repository = repository;
         _mapper = mapper;
@@ -34,6 +36,18 @@ public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseR
         BaseResponse response = new();
 
         Log log = new();
+
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            response.Errors.Add("OfficeID isn't exist");
+
+            log.Type = LogType.Error;
+            return response;
+        }
 
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 

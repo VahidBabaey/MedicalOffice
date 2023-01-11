@@ -150,7 +150,7 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
     }
     public async Task<bool> CheckExistCashId(Guid officeId, Guid cashId)
     {
-        bool isExist = await _dbContext.Cashes.AnyAsync(p => p.Id == cashId && p.OfficeId == officeId);
+        bool isExist = await _dbContext.Cashes.AnyAsync(p => p.OfficeId == officeId && p.Id == cashId);
         return isExist;
     }
 }

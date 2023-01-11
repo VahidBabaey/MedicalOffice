@@ -64,13 +64,13 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = patient.Id });
-                if (request.DTO.Mobile == null)
+                if (request.DTO.PhoneNumber == null)
                 {
 
                 }
                 else
                 {
-                    foreach (var mobile in request.DTO.Mobile)
+                    foreach (var mobile in request.DTO.PhoneNumber)
                     {
                         await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
                     }

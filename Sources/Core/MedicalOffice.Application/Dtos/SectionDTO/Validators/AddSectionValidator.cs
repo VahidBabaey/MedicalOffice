@@ -1,15 +1,18 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.Common.CommonValidators;
 using System.Text.RegularExpressions;
 
 namespace MedicalOffice.Application.Dtos.SectionDTO.Validators;
 
 public class AddSectionValidator : AbstractValidator<AddSectionDTO>
 {
-    private readonly Regex _namePattern;
-
-    public AddSectionValidator()
+    private readonly IOfficeRepository _officeRepository;
+    public AddSectionValidator(IOfficeRepository officeRepository)
     {
-        _namePattern = new Regex(@"^[آ-ی]{3,}$");
-        RuleFor(x => x.Name).NotEmpty().Length(1, 50).Matches(_namePattern);
+        _officeRepository = officeRepository;
+
+        RuleFor(x => x.Name).NotEmpty().Length(1, 50);
+        RuleFor(x => x.IsActive).NotEmpty();
     }
 }

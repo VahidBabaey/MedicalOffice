@@ -33,15 +33,11 @@ public class DeleteCashCheckCommandHandler : IRequestHandler<DeleteCashCheckComm
 
         if (!iscashCheckIdExist)
         {
-            List<string> errors = new List<string>();
-            var error = $"لطفا یک مورد را انتخاب کنید.";
             response.Success = false;
             response.StatusDescription = $"{_requestTitle} failed";
-            errors = new List<string> { error };
-            response.Errors = errors;
+            response.Errors.Add("ID isn't exist");
 
             log.Type = LogType.Error;
-
             return response;
         }
 

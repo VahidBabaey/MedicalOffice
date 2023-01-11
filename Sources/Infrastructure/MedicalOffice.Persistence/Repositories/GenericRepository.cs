@@ -2,7 +2,9 @@
 using MedicalOffice.Domain.Common;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace MedicalOffice.Persistence.Repositories;
@@ -63,8 +65,7 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
     {
         return await _dbContext.Set<T1>().Skip(skip).Take(take).ToListAsync();
     }
-
-
+    
     public async Task Update(T1 entity)
     {
         _dbContext.Entry(entity).State = EntityState.Modified;

@@ -6,11 +6,6 @@ namespace MedicalOffice.Application.Dtos.ServiceDTO;
 
 public class UpdateServiceDTO : BaseDto<Guid>, ISectionIdDTO
 {
-
-    /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
     /// <summary>
     /// آیدی بخش
     /// </summary>

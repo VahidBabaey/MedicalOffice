@@ -1,12 +1,13 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Commons;
 using MedicalOffice.Domain.Entities;
 
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO;
 
-public class ReceptionDetailDTO 
+public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO
 {
-
     /// <summary>
     /// آیدی پذیرش
     /// </summary>

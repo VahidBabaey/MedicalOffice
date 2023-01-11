@@ -34,6 +34,18 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Comm
             BaseResponse response = new();
             Log log = new();
 
+            var validationPatientCommitmentFormId = await _repository.CheckExistPatientCommitmentFormId(request.PatientCommitmentFormId);
+
+            if (!validationPatientCommitmentFormId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             try
             {
                 await _repository.Delete(request.PatientCommitmentFormId);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
@@ -19,6 +20,7 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
 
 public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDetailCommand, BaseResponse>
 {
+    private readonly IValidator<ReceptionDetailDTO> _validator;
     private readonly IReceptionRepository _repository;
     private readonly ICashRepository _repositoryCash;
     private readonly IReceptionDebtRepository _repositoryDebt;
@@ -26,8 +28,9 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddReceptionDetailCommandHandler(IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository repository, IMapper mapper, ILogger logger)
+    public AddReceptionDetailCommandHandler(IValidator<ReceptionDetailDTO> validator, IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository repository, IMapper mapper, ILogger logger)
     {
+        _validator = validator;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
@@ -40,11 +43,9 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
     {
         BaseResponse response = new();
 
-        AddReceptionDetailValidator validator = new();
-
         Log log = new();
 
-        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {

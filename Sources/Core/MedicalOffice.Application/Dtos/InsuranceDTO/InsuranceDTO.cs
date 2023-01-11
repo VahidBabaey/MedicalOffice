@@ -4,11 +4,6 @@ namespace MedicalOffice.Application.Dtos.InsuranceDTO;
 
 public class InsuranceDTO
 {
-
-    /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
     /// <summary>
     /// نام بیمه : تامین - مسلح - غیره
     /// </summary>

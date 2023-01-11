@@ -28,6 +28,18 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
 
         Log log = new();
 
+        var validationSectionId = await _repository.CheckExistSectionId(request.SectionId, request.OfficeId);
+
+        if (!validationSectionId)
+        {
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            response.Errors.Add("ID isn't exist");
+
+            log.Type = LogType.Error;
+            return response;
+        }
+
         try
         {
             await _repository.Delete(request.SectionId);

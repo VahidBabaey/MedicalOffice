@@ -30,7 +30,7 @@ public class SectionController : Controller
     }
 
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id, [FromQuery] string officeId)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new DeleteSectionCommand() { SectionId = id, OfficeId = Guid.Parse(officeId) });
 

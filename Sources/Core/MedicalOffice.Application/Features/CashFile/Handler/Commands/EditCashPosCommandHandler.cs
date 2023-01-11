@@ -4,7 +4,6 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.CashDTO;
-using MedicalOffice.Application.Dtos.CashDTO.Validators;
 using MedicalOffice.Application.Features.CashFile.Request.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -35,20 +34,15 @@ public class EditCashPosCommandHandler : IRequestHandler<EditCashPosCommand, Bas
 
         Log log = new();
 
-        bool isreceptionIdExist = await _repository.CheckExistReceptionId(request.DTO.OfficeId, request.DTO.ReceptionId);
-        bool iscashIdExist = await _repository.CheckExistCashId(request.DTO.OfficeId, request.DTO.CashId);
+        bool iscashPosIdExist = await _repository.CheckCashPosId(request.DTO.Id);
 
-        if (!isreceptionIdExist || !iscashIdExist)
+        if (!iscashPosIdExist)
         {
-            List<string> errors = new List<string>();
-            var error = $"اطلاعات وارد شده صحیح نمیباشد.";
             response.Success = false;
             response.StatusDescription = $"{_requestTitle} failed";
-            errors = new List<string> { error };
-            response.Errors = errors;
+            response.Errors.Add("ID isn't exist");
 
             log.Type = LogType.Error;
-
             return response;
         }
 

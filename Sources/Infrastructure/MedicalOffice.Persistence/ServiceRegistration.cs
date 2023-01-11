@@ -45,6 +45,8 @@ using Microsoft.AspNetCore.Hosting;
 using System.Reflection;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
+using MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
 
 namespace MedicalOffice.Persistence;
 
@@ -176,6 +178,7 @@ public static class ServiceRegistration
         services.AddScoped<IValidator<CashesDTO>, AddCashValidator>();
         services.AddScoped<IValidator<MemberShipServiceDTO>, AddMemberShipServiceValidator>();
         services.AddScoped<IValidator<UpdateMemberShipServiceDTO>, UpdateMemberShipServiceValidator>();
+        services.AddScoped<IValidator<ReceptionDetailDTO>, AddReceptionDetailValidator>();
 
         return services;
     }

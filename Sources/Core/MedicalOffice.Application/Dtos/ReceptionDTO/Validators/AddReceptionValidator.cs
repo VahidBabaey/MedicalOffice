@@ -7,5 +7,6 @@ public class AddReceptionValidator : AbstractValidator<ReceptionsDTO>
 {
     public AddReceptionValidator()
     {
+
     }
 }

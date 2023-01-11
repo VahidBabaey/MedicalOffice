@@ -39,7 +39,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Queries
             {
                 var insurances = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
 
-                result = _mapper.Map<List<InsuranceListDTO>>(insurances);
+                result = _mapper.Map<List<InsuranceListDTO>>(insurances.Where(p => p.OfficeId == request.OfficeId));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

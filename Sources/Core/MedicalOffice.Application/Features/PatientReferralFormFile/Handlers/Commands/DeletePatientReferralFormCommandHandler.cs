@@ -34,6 +34,18 @@ namespace MedicalOffice.Application.Features.PatientReferralFormFile.Handlers.Co
             BaseResponse response = new();
             Log log = new();
 
+            var validationPatientReferralFormId = await _repository.CheckExistPatientReferralFormId(request.PatientReferralFormId);
+
+            if (!validationPatientReferralFormId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             try
             {
                 await _repository.Delete(request.PatientReferralFormId);
