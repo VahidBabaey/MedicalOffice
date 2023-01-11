@@ -1,31 +1,32 @@
-﻿using AutoMapper;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
-using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO;
-using MedicalOffice.Application.Exceptions;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
-    public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, BaseResponse>
+    public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordCommand, BaseResponse>
     {
-        private readonly IValidator<ResetPasswordDTO> _validator;
         private readonly UserManager<User> _userManagr;
+        private readonly IValidator<SetPasswordDTO> _validator;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public ResetPasswordCommandHandler(
-            IValidator<ResetPasswordDTO> validator,
-            ILogger logger,
-            UserManager<User> userManagr)
+        public ForgetPasswordCommandHandler(
+            UserManager<User> userManagr,
+            IValidator<SetPasswordDTO> validator,
+            ILogger logger)
         {
             _validator = validator;
             _logger = logger;
@@ -33,7 +34,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(ForgetPasswordCommand request, CancellationToken cancellationToken)
         {
 
             var responseBuilder = new ResponseBuilder();
@@ -65,11 +66,13 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var changePassword = await _userManagr.ChangePasswordAsync(user, request.DTO.CurrentPassword, request.DTO.NewPassword);
+            var token = await _userManagr.GeneratePasswordResetTokenAsync(user);
 
-            if (!changePassword.Succeeded)
+            var newPassword = await _userManagr.ResetPasswordAsync(user, token, request.DTO.Password);
+
+            if (!newPassword.Succeeded)
             {
-                var error = changePassword.Errors.Select(error => error.Description).ToArray();
+                var error = newPassword.Errors.Select(error => error.Description).ToArray();
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
@@ -89,4 +92,3 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         }
     }
 }
-

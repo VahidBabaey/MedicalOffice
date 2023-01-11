@@ -118,7 +118,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                 .Take(take)
                 .ToList();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
 
             throw;
