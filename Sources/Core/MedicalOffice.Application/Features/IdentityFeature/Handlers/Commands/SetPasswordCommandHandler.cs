@@ -28,45 +28,42 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(SetPasswordCommand request, CancellationToken cancellationToken)
         {
+            var responseBuilder = new ResponseBuilder();
             var user = await _userManagr.FindByNameAsync(request.DTO.PhoneNumber);
 
             if (user == null)
             {
-                var error = $"This user didn't registered yet";
-                return await Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+                var error = "The user didn't registered yet";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
             var changePassword = await _userManagr.AddPasswordAsync(user, request.DTO.Password);
 
             if (!changePassword.Succeeded)
             {
-                return await Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed");
+                var error = changePassword.Errors.Select(error => error.Description).ToArray();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            return await Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", user.Id);
-        }
-        private async Task<BaseResponse> Success(HttpStatusCode statusCode, string message, params object[] data)
-        {
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
-                Header = message,
-                AdditionalData = data
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = user.Id
             });
-
-            return new() { StatusCode = statusCode, Success = true, StatusDescription = message, Data = data.ToList() };
-        }
-
-        private async Task<BaseResponse> Faild(HttpStatusCode statusCode, string message, params string[] errors)
-        {
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = message,
-                AdditionalData = errors
-            });
-
-            return new() { StatusCode = statusCode, Success = false, StatusDescription = message, Errors = errors.ToList() };
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", user.Id);
         }
     }
 }

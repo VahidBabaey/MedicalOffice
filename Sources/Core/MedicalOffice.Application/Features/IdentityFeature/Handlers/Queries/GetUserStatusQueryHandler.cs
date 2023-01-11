@@ -21,15 +21,15 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
 {
     public class GetUserStatusQueryHandler : IRequestHandler<GetUserStatusQuery, BaseResponse>
     {
-        private readonly IValidator<GetByPhoneNumberDTO> _validator;
         private readonly UserManager<User> _userManager;
+        private readonly IValidator<GetByPhoneNumberDTO> _validator;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
         public GetUserStatusQueryHandler(
+            UserManager<User> userManager,
             IValidator<GetByPhoneNumberDTO> validator,
-            ILogger logger,
-            UserManager<User> userManager)
+            ILogger logger)
         {
             _validator = validator;
             _logger = logger;
@@ -39,10 +39,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetUserStatusQuery request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
-            GetByPhoneNumberValidator validator = new();
-            Log log = new();
-
             var responseBuilder = new ResponseBuilder();
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
@@ -64,19 +60,14 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
 
             if (user == null)
             {
-                userStatus.Exist = false;
-                userStatus.PasswordOption = false;
+                userStatus.IsExist = false;
+                userStatus.HasPassword = false;
+                userStatus.IsActive = false;
             }
             else
             {
-                userStatus.PasswordOption = user.PasswordHash == string.Empty ? false : true;
-
-                var isLockout = await _userManager.IsLockedOutAsync(user);
-                if (isLockout)
-                {
-                    userStatus.OtpOption = false;
-                    userStatus.PasswordOption = false;
-                }
+                userStatus.HasPassword = user.PasswordHash == null ? false : true;
+                userStatus.IsActive = user.IsActive;
             }
 
             await _logger.Log(new Log

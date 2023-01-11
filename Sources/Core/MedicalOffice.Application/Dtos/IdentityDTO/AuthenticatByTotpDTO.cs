@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Identity
 {
-    public class AuthenticateByTotpDTO: IPhoneNumberDTO
+    public class AuthenticateByTotpDTO
     {
-        public string PhoneNumber { get; set; }=string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
 
         public string Totp { get; set; } = string.Empty;
     }
