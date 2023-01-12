@@ -7,11 +7,8 @@ namespace MedicalOffice.Application.Dtos.SectionDTO.Validators;
 
 public class AddSectionValidator : AbstractValidator<AddSectionDTO>
 {
-    private readonly IOfficeRepository _officeRepository;
-    public AddSectionValidator(IOfficeRepository officeRepository)
+    public AddSectionValidator()
     {
-        _officeRepository = officeRepository;
-
         RuleFor(x => x.Name).NotEmpty().Length(1, 50);
         RuleFor(x => x.IsActive).NotEmpty();
     }

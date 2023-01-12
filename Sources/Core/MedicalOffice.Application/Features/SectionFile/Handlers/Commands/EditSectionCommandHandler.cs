@@ -34,7 +34,7 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
 
         Log log = new();
 
-        var validationSectionId = await _repository.CheckExistSectionId(request.DTO.Id, request.OfficeId);
+        var validationSectionId = await _repository.CheckExistSectionId(request.OfficeId, request.DTO.Id);
 
         if (!validationSectionId)
         {

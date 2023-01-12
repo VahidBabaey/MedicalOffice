@@ -13,5 +13,6 @@ namespace MedicalOffice.Application.Features.MembershipFile.Requests.Queries
     public class GetAllMemberships : IRequest<List<MembershipListDTO>>
     {
         public ListDto DTO { get; set; } = new ListDto();
+        public Guid OfficeId { get; set; }
     }
 }

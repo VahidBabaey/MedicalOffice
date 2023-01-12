@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.ShiftFile.Requests.Command
     public class AddShiftCommand : IRequest<BaseResponse>
     {
         public ShiftDTO DTO { get; set; } = new ShiftDTO();
+        public Guid OfficeId { get; set; }
     }
 }

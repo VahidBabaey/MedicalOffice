@@ -35,7 +35,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
             Log log = new();
 
-            var validationMembershipId = await _repository.CheckExistMembershipId(request.MembershipId, request.OfficeId);
+            var validationMembershipId = await _repository.CheckExistMembershipId(request.OfficeId, request.MembershipId);
 
             if (!validationMembershipId)
             {

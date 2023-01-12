@@ -11,5 +11,6 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Queries
     public class DeleteDrugCommand : IRequest<BaseResponse>
     {
         public Guid DrugId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

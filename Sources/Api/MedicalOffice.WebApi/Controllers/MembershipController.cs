@@ -26,9 +26,9 @@ public class MembershipController : Controller
         _mediator = mediator;
     }
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] MembershipDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] MembershipDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddMembershipCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -42,17 +42,17 @@ public class MembershipController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllMemberships() { DTO = dto});
+        var response = await _mediator.Send(new GetAllMemberships() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateMembershipDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateMembershipDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditMembershipCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

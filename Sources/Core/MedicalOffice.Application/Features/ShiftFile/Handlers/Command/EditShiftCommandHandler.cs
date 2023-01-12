@@ -39,6 +39,18 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 
             Log log = new();
 
+            var validationShiftId = await _repository.CheckExistShiftId(request.OfficeId, request.DTO.Id);
+
+            if (!validationShiftId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
@@ -54,6 +66,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
                 try
                 {
                     var shift = _mapper.Map<Shift>(request.DTO);
+                    shift.OfficeId = request.OfficeId;
 
                     await _repository.Update(shift);
 

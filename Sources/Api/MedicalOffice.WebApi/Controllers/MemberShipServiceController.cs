@@ -29,9 +29,9 @@ public class MemberShipServiceController : Controller
         _mediator = mediator;
     }
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] MemberShipServiceDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] MemberShipServiceDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddServicetoMembershipCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddServicetoMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -44,17 +44,17 @@ public class MemberShipServiceController : Controller
     }
 
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateMemberShipServiceDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateMemberShipServiceDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditServicetoMembershipCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditServicetoMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShip(Guid memberShipId)
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShip(Guid memberShipId, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllServicesOfMemberShipQuery(){ MemberShipId = memberShipId});
+        var response = await _mediator.Send(new GetAllServicesOfMemberShipQuery(){ MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

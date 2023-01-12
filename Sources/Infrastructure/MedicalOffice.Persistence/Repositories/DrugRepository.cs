@@ -12,9 +12,9 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
     {
         _dbContext = dbContext;
     }
-    public async Task<IEnumerable<DrugListDTO>> GetAllDrugs()
+    public async Task<IEnumerable<DrugListDTO>> GetAllDrugs(Guid officeId)
     {
-        var _list = await _dbContext.Drugs.Select(p => new DrugListDTO
+        var _list = await _dbContext.Drugs.Where(p => p.OfficeId == officeId).Select(p => new DrugListDTO
         {
             Id = p.Id,
             Name = p.Name,
@@ -54,6 +54,11 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
     public async Task<bool> CheckExistDrugShapeId(Guid drugShapeId)
     {
         bool isExist = await _dbContext.DrugShapes.AnyAsync(p => p.Id == drugShapeId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistDrugId(Guid officeId, Guid drugId)
+    {
+        bool isExist = await _dbContext.Drugs.AnyAsync(p => p.Id == drugId && p.OfficeId == officeId);
         return isExist;
     }
 }

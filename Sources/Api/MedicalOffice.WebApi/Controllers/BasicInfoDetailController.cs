@@ -10,6 +10,7 @@ using MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Queries;
 using MedicalOffice.Application.Features.BasicInfoFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
+using MedicalOffice.Domain.Entities;
 using MedicalOffice.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ public class BasicInfoDetailController : Controller
 
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] BasicInfoDetailDTO dto, [FromQuery] string officeId)
+    public async Task<ActionResult<Guid>> Create([FromBody] BasicInfoDetailDTO dto)
     {
         var response = await _mediator.Send(new AddBasicInfoDetailCommand() { DTO = dto });
 
@@ -41,7 +42,7 @@ public class BasicInfoDetailController : Controller
     [HttpGet]
     [Authorize]
     [Permission(BasicInfoPermissions.GetAllDetails)]
-    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, Guid basicinfoId, string officeId)
+    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, Guid basicinfoId)
     {
         var response = await _mediator.Send(new GetAllBasicInfoDetailQuery() { DTO = dto, BasicInfoId = basicinfoId });
 
@@ -49,15 +50,15 @@ public class BasicInfoDetailController : Controller
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Remove(Guid officeId, Guid Id)
+    public async Task<IActionResult> Remove(Guid Id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteBasicInfoDetailCommand() { OfficeId = officeId, BasicInfoDetailId = Id });
+        var response = await _mediator.Send(new DeleteBasicInfoDetailCommand() { BasicInfoDetailId = Id });
 
         return Ok(response);
     }
 
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateBasicInfoDetailDTO dto, [FromQuery] string officeId)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateBasicInfoDetailDTO dto)
     {
         var response = await _mediator.Send(new EditBasicInfoDetailCommand() { DTO = dto });
 

@@ -39,6 +39,18 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
             Log log = new();
 
+            var validationMembershipId = await _repository.CheckExistMembershipId(request.OfficeId, request.DTO.Id);
+
+            if (!validationMembershipId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
@@ -54,6 +66,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                 try
                 {
                     var membership = _mapper.Map<Membership>(request.DTO);
+                    membership.OfficeId = request.OfficeId;
 
                     await _repository.Update(membership);
 

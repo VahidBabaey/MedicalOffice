@@ -39,6 +39,19 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
             BaseResponse response = new();
 
             Log log = new();
+
+            var validationExperimentId = await _repository.CheckExistExperimentId(request.OfficeId, request.DTO.Id);
+
+            if (!validationExperimentId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
@@ -54,6 +67,7 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
                 try
                 {
                     var experiment = _mapper.Map<Domain.Entities.Experiment>(request.DTO);
+                    experiment.OfficeId = request.OfficeId;
 
                     await _repository.Update(experiment);
 

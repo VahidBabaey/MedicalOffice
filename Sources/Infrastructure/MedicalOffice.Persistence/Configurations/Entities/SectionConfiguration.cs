@@ -36,14 +36,14 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                         Id = Guid.Parse("5da2506e-6393-4490-9242-be7b12ed407e"),
                         OfficeId = Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0"),
                         Name = "لاغری",
-                        Status = SectionStatus.Active
+                        Status = true
                     },
                     new Section
                     {
                         Id = Guid.Parse("0280a157-2c58-40f9-9345-f3cf0918eaee"),
                         OfficeId = Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0"),
                         Name = "پوست",
-                        Status = SectionStatus.Active
+                        Status = true
                     },
                 });
         }

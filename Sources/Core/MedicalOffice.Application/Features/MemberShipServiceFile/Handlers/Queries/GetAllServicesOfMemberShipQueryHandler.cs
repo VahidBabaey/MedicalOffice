@@ -36,7 +36,7 @@ public class GetAllServicesOfMemberShipQueryHandler : IRequestHandler<GetAllServ
 
         try
         {
-            var service = await _repository.GetAllServicesOfMemberShip(request.MemberShipId);
+            var service = await _repository.GetAllServicesOfMemberShip(request.OfficeId, request.MemberShipId);
 
             result = _mapper.Map<List<ServicesOfMemeberShipListDTO>>(service);
 

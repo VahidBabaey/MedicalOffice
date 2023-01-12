@@ -28,7 +28,7 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
 
         Log log = new();
 
-        var validationSectionId = await _repository.CheckExistSectionId(request.SectionId, request.OfficeId);
+        var validationSectionId = await _repository.CheckExistSectionId(request.OfficeId, request.SectionId);
 
         if (!validationSectionId)
         {

@@ -24,31 +24,31 @@ public class ExperimentController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] ExperimentDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] ExperimentDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddExperimentCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddExperimentCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteExperimentCommand() { ExperimentID = id });
+        var response = await _mediator.Send(new DeleteExperimentCommand() { ExperimentID = id, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateExperimentDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateExperimentDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditExperimentCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditExperimentCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ExperimentListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<ExperimentListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllExperimentQuery() { DTO = dto });
+        var response = await _mediator.Send(new GetAllExperimentQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

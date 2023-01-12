@@ -41,6 +41,18 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
 
             Log log = new();
 
+            var validationDrugId = await _repository.CheckExistDrugId(request.OfficeId, request.DTO.Id);
+
+            if (!validationDrugId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)

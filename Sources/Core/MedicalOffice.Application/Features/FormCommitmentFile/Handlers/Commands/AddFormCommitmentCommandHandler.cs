@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
+using MedicalOffice.Application.Dtos.FormCommitmentDTO;
 using MedicalOffice.Application.Dtos.FormCommitmentDTO.Validators;
 using MedicalOffice.Application.Dtos.InsuranceDTO.Validators;
 using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Commands;
@@ -19,13 +22,15 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
 {
     public class AddFormCommitmentCommandHandler : IRequestHandler<AddFormCommitmentCommand, BaseResponse>
     {
+        private readonly IValidator<FormCommitmentDTO> _validator;
         private readonly IFormCommitmentRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddFormCommitmentCommandHandler(IFormCommitmentRepository repository, IMapper mapper, ILogger logger)
+        public AddFormCommitmentCommandHandler(IValidator<FormCommitmentDTO> validator, IFormCommitmentRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -36,11 +41,9 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
         {
             BaseResponse response = new();
 
-            AddFormCommitmentValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {

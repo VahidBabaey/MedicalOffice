@@ -37,9 +37,9 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Querie
 
             try
             {
-                var services = await _repository.GetByBasicInfoId(request.BasicInfoId);
+                var basicInfoDetails = await _repository.GetByBasicInfoId(request.BasicInfoId);
 
-                result = _mapper.Map<List<BasicInfoDetailListDTO>>(services);
+                result = _mapper.Map<List<BasicInfoDetailListDTO>>(basicInfoDetails);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

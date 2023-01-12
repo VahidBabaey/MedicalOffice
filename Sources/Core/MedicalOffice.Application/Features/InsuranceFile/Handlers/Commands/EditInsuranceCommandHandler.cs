@@ -26,8 +26,9 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditInsuranceCommandHandler(IInsuranceRepository repository, IMapper mapper, ILogger logger)
+        public EditInsuranceCommandHandler(IValidator<UpdateInsuranceDTO> validator, IInsuranceRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -67,6 +68,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
                 try
                 {
                     var insurance = _mapper.Map<Insurance>(request.DTO);
+                    insurance.OfficeId = request.OfficeId;
 
                     await _repository.Update(insurance);
 

@@ -36,9 +36,22 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
 
             Log log = new();
 
+            var validationFormCommitmentId = await _repository.CheckExistFormCommitmentId(request.OfficeId, request.DTO.Id);
+
+            if (!validationFormCommitmentId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             try
             {
                 var formcommitment = _mapper.Map<FormCommitment>(request.DTO);
+                formcommitment.OfficeId = request.OfficeId;
 
                 await _repository.Update(formcommitment);
 

@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.DrugFile.Requests.Commands
     public class AddDrugCommand : IRequest<BaseResponse>
     {
         public DrugDTO DTO { get; set; } = new DrugDTO();
+        public Guid OfficeId { get; set; }
     }
 }

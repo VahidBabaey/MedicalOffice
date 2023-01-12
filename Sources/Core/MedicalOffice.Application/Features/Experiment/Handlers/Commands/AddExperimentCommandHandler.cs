@@ -23,12 +23,14 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
     {
         private readonly IValidator<ExperimentDTO> _validator;
         private readonly IExperimentRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddExperimentCommandHandler(IValidator<ExperimentDTO> validator, IExperimentRepository repository, IMapper mapper, ILogger logger)
+        public AddExperimentCommandHandler(IValidator<ExperimentDTO> validator, IOfficeRepository officeRepository, IExperimentRepository repository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _validator = validator;
             _repository = repository;
             _mapper = mapper;
@@ -41,6 +43,18 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
             BaseResponse response = new();
 
             Log log = new();
+
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("OfficeID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 

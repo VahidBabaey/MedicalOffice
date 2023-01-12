@@ -47,6 +47,8 @@ using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators;
 using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
+using MedicalOffice.Application.Dtos.FormCommitmentDTO;
+using MedicalOffice.Application.Dtos.FormCommitmentDTO.Validators;
 
 namespace MedicalOffice.Persistence;
 
@@ -153,6 +155,7 @@ public static class ServiceRegistration
         services.AddScoped<IValidator<UpdateServiceDTO>, UpdateServiceValidator>();
         services.AddScoped<IValidator<ServiceTariffDTO>, AddTariffValidator>();
         services.AddScoped<IValidator<InsuranceDTO>, AddInsuranceValidator>();
+        services.AddScoped<IValidator<UpdateInsuranceDTO>, UpdateInsuranceValidator>();
         services.AddScoped<IValidator<UpdateShiftDTO>, UpdateShiftValidator>();
         services.AddScoped<IValidator<ShiftDTO>, AddShiftValidator>();
         services.AddScoped<IValidator<UpdateShiftDTO>, UpdateShiftValidator>();
@@ -179,6 +182,7 @@ public static class ServiceRegistration
         services.AddScoped<IValidator<MemberShipServiceDTO>, AddMemberShipServiceValidator>();
         services.AddScoped<IValidator<UpdateMemberShipServiceDTO>, UpdateMemberShipServiceValidator>();
         services.AddScoped<IValidator<ReceptionDetailDTO>, AddReceptionDetailValidator>();
+        services.AddScoped<IValidator<FormCommitmentDTO>, AddFormCommitmentValidator>();
 
         return services;
     }

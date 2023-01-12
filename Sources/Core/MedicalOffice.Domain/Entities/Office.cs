@@ -15,7 +15,6 @@ public class Office : BaseDomainEntity<Guid>
     /// آدرس
     /// </summary>
     public string Address { get; set; } = string.Empty;
-
     /// <summary>
     /// شماره ثابت
     /// </summary>
@@ -77,8 +76,13 @@ public class Office : BaseDomainEntity<Guid>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و دسترسی های کاربر مطب استفاده می شود
     /// </summary>
     public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; }
-
+    /// <summary>
+    /// وقت دهی
+    /// </summary>
     public ICollection<Appointment> Appointments{ get; set; }
+    /// <summary>
+    /// کارت
+    /// </summary>
     public ICollection<CashCart>? CashCarts { get; set; }
     /// <summary>
     /// پوز
@@ -96,4 +100,8 @@ public class Office : BaseDomainEntity<Guid>
     /// تگ ها
     /// </summary>
     public ICollection<PatientTag>? PatientTags { get; set; }
+    /// <summary>
+    /// سرویس ها - عضویت ها
+    /// </summary>
+    public ICollection<MemberShipService>? MemberShipServices { get; set; }
 }

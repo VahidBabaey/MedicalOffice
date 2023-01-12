@@ -10,6 +10,14 @@ namespace MedicalOffice.Domain.Entities
     public class MemberShipService : BaseDomainEntity<Guid>
     {
         /// <summary>
+        /// آیدی مطب
+        /// </summary>
+        public Guid OfficeId { get; set; }
+        /// <summary>
+        /// مطب
+        /// </summary>
+        public Office? Office { get; set; }
+        /// <summary>
         /// عضویت
         /// </summary>
         public Membership? MemberShip { get; set; }

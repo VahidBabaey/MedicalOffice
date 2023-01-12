@@ -40,7 +40,7 @@ namespace MedicalOffice.Application.Features.BasicInfoFile.Handlers.Queries
                 var basicInfos = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
                 
 
-                result = _mapper.Map<List<BasicInfoListDTO>>(basicInfos);
+                result = _mapper.Map<List<BasicInfoListDTO>>(basicInfos.Where(p => p.OfficeId == request.OfficeId));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

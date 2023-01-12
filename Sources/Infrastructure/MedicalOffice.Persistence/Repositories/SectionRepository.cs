@@ -15,7 +15,7 @@ public class SectionRepository : GenericRepository<Section, Guid>, ISectionRepos
     {
         _dbContext = dbContext;
     }
-    public async Task<bool> CheckExistSectionId(Guid sectionId, Guid officeId)
+    public async Task<bool> CheckExistSectionId(Guid officeId, Guid sectionId)
     {
         bool isExist = await _dbContext.Sections.AnyAsync(p => p.Id == sectionId && p.OfficeId == officeId);
         return isExist;

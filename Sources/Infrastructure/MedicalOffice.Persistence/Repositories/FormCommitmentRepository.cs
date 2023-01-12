@@ -12,6 +12,9 @@ public class FormCommitmentRepository : GenericRepository<FormCommitment, Guid>,
     {
         _dbContext = dbContext;
     }
-
-
+    public async Task<bool> CheckExistFormCommitmentId(Guid officeId, Guid formCommitmentId)
+    {
+        bool isExist = await _dbContext.FormCommitments.AnyAsync(p => p.Id == formCommitmentId && p.OfficeId == officeId);
+        return isExist;
+    }
 }

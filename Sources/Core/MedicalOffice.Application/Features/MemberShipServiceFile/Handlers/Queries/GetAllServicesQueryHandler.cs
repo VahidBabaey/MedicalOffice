@@ -39,7 +39,7 @@ public class GetAllServicesQueryHandler : IRequestHandler<GetAllServicesQuery, L
         {
             var service = await _repository.GetAll();
 
-            result = _mapper.Map<List<ServiceListDTO>>(service);
+            result = _mapper.Map<List<ServiceListDTO>>(service.Where(p => p.OfficeId == request.OfficeId));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;
