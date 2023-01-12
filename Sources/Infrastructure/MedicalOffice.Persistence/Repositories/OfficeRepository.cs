@@ -14,14 +14,9 @@ public class OfficeRepository : GenericRepository<Office, Guid>, IOfficeReposito
 
     public async Task<List<Office?>> GetByUserId(Guid userId)
     {
-        List<Office?> offices = _dbcontext.UserOfficeRoles.Include(uor => uor.Office).Where(u => u.UserId == userId)
-            .Select(uor => uor.Office).ToList();
+        var offices = await _dbcontext.UserOfficeRoles.Include(uor => uor.Office).Where(u => u.UserId == userId)
+            .Select(uor => uor.Office).ToListAsync();
 
-        if (offices != null)
-        {
-            return offices;
-        }
-
-        return null;
+        return offices;
     }
 }

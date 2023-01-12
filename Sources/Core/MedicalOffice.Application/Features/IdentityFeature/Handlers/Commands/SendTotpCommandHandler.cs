@@ -38,8 +38,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         public async Task<BaseResponse> Handle(SendTotpCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
-            BaseResponse response = new();
-            Log log = new Log();
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
@@ -54,8 +52,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
-
-
 
             var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
 
@@ -77,7 +73,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             });
 
             return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", totp);
-
         }
     }
 }

@@ -47,6 +47,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         {
             var responseBuilder = new ResponseBuilder();
 
+            #region ValidateRequestDTO
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -55,16 +56,31 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
-                }); 
+                });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", 
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
+            #endregion
 
-            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p =>
-                p.PhoneNumber == request.DTO.PhoneNumber ||
-                p.NationalID == request.DTO.NationalID);
+            #region MakeSurePatientRoleExistsOrThrowException();
+            var patientRole = _roleManager.FindByNameAsync("PATIENT").Result;
+            if (patientRole == null)
+            {
+                const string error = "There is no suitable Role for assigning to user";
 
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+            }
+            #endregion
+
+            #region MakeSureUserIsntExist
+            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.DTO.PhoneNumber || p.NationalID == request.DTO.NationalID);
             if (existingUser != null)
             {
                 var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";
@@ -74,79 +90,59 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
-
                 return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
-            try
+            #endregion
+
+            #region CreateUser
+            var user = _mapper.Map<User>(request.DTO);
+            user.Id = Guid.NewGuid();
+            user.UserName = request.DTO.PhoneNumber;
+
+            var userCreation = await _userManager.CreateAsync(user, request.DTO.Password);
+            #endregion
+
+            #region MakeSureUserIsCreatedOrThrowException();
+            if (!userCreation.Succeeded)
             {
-                var user = _mapper.Map<User>(request.DTO);
-                user.Id = Guid.NewGuid();
-                user.UserName = request.DTO.PhoneNumber;
+                var error = userCreation.Errors.Select(x => $"{x.Code} - {x.Description}").ToArray();
 
-                var userCreation = await _userManager.CreateAsync(user);
-
-                //MakeSureUserIsCreatedOrThrowException();
-                if (!userCreation.Succeeded)
-                {
-                    var error = userCreation.Errors.Select(x => $"{x.Code} - {x.Description}").ToArray();
-
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} failed",
-                        AdditionalData = error
-                    });
-
-                    return responseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error);
-                }
-
-                var userOfficeRoles = new List<UserOfficeRole>();
-                var roleName = new List<string>();
-
-                var patientRole = _roleManager.FindByNameAsync("PATIENT").Result;
-
-                //MakeSurePatientRoleExistsOrThrowException();
-                if (patientRole == null)
-                {
-                    const string error = $"there is no suitable patientRole for assigning to user";
-
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} failed",
-                        AdditionalData = error
-                    });
-
-                    return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
-                }
-
-                await _userOfficeRoleRepository.InsertToUserOfficeRole(
-                    UserId: user.Id,
-                    roleId: patientRole.Id
-               );
-
-                await _userManager.AddToRoleAsync(user, patientRole.NormalizedName);
-
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Success,
-                    Header = $"{_requestTitle} succeded",
-                    AdditionalData = new { user.Id }
-                });
-
-                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { user.Id });
-            }
-            catch (Exception error)
-            {
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = error.Message
+                    AdditionalData = error
                 });
-
-                return responseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error.Message);
+                return responseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error);
             }
+            #endregion
+
+            #region MakeSureUserRoleIsAddedOrThrowException()
+            var userRoleAddition = await _userManager.AddToRoleAsync(user, patientRole.NormalizedName);
+            if (!userRoleAddition.Succeeded)
+            {
+                await _userManager.DeleteAsync(user);
+
+                var error = userRoleAddition.Errors.Select(x => $"{x.Code} - {x.Description}").ToArray();
+
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return responseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error);
+            }
+            #endregion
+
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = new { user.Id }
+            });
+
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { user.Id });
         }
     }
 }

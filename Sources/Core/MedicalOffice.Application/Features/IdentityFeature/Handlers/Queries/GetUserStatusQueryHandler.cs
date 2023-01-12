@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,11 +22,16 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
     public class GetUserStatusQueryHandler : IRequestHandler<GetUserStatusQuery, BaseResponse>
     {
         private readonly UserManager<User> _userManager;
+        private readonly IValidator<GetByPhoneNumberDTO> _validator;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetUserStatusQueryHandler(ILogger logger, UserManager<User> userManager)
+        public GetUserStatusQueryHandler(
+            UserManager<User> userManager,
+            IValidator<GetByPhoneNumberDTO> validator,
+            ILogger logger)
         {
+            _validator = validator;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
             _userManager = userManager;
@@ -32,65 +39,45 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetUserStatusQuery request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
-            GetByPhoneNumberValidator validator = new();
-            Log log = new();
+            var responseBuilder = new ResponseBuilder();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
+                });
 
-                log.Type = LogType.Error;
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                    validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
+            }
+
+            UserStatusDTO userStatus = new();
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.PhoneNumber == request.DTO.PhoneNumber);
+
+            if (user == null)
+            {
+                userStatus.IsExist = false;
+                userStatus.HasPassword = false;
+                userStatus.IsActive = false;
             }
             else
             {
-                try
-                {
-                    UserStatusDTO userStatus = new();
-                    var user = await _userManager.Users.SingleOrDefaultAsync(u => u.PhoneNumber == request.DTO.PhoneNumber);
-
-                    if (user == null)
-                    {
-                        userStatus.Exist = false;
-                        userStatus.PasswordOption = false;
-                    }
-                    else
-                    {
-                        userStatus.PasswordOption = user.PasswordHash == string.Empty ? false : true;
-
-                        var isLockout = await _userManager.IsLockedOutAsync(user);
-                        if (isLockout)
-                        {
-                            userStatus.OtpOption = false;
-                            userStatus.PasswordOption = false;
-                        }
-
-                        response.Success = true;
-                        response.StatusDescription = $"{_requestTitle} succeded";
-                        response.Data = (userStatus);
-
-                        log.Type = LogType.Success;
-                    }
-                }
-                catch (Exception error)
-                {
-                    response.Success = false;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
-                }
+                userStatus.HasPassword = user.PasswordHash == null ? false : true;
+                userStatus.IsActive = user.IsActive;
             }
 
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = userStatus
+            });
 
-            await _logger.Log(log);
-
-            return response;
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeede", userStatus);
         }
     }
 }

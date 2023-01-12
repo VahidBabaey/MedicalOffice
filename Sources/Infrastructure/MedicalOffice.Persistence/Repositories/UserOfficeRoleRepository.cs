@@ -16,18 +16,14 @@ public class UserOfficeRoleRepository : GenericRepository<UserOfficeRole, Guid>,
     }
     public async Task<UserOfficeRole> InsertToUserOfficeRole(Guid userid, Guid roleid, Guid officeid)
     {
-        UserOfficeRole UserOfficeRole = new()
+        var result = await _repositoryUserOfficeRole.Add(new()
         {
             UserId = userid,
             OfficeId = officeid,
             RoleId = roleid
-        };
+        });
 
-        if (UserOfficeRole == null)
-            throw new NullReferenceException(nameof(UserOfficeRole));
-
-        await _repositoryUserOfficeRole.Add(UserOfficeRole);
-        return UserOfficeRole;
+        return result;
     }
 
     public async Task AddUserOfficeRoles(List<UserOfficeRole> userOfficeRoles)
@@ -39,24 +35,6 @@ public class UserOfficeRoleRepository : GenericRepository<UserOfficeRole, Guid>,
     public async Task<List<UserOfficeRole>> GetByUserId(Guid userId)
     {
         var userOfficeRole = await _dbContext.UserOfficeRoles.Where(urf => urf.UserId == userId).ToListAsync();
-
-        return userOfficeRole;
-    }
-
-    public async Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid userId, Guid? officeId = null)
-    {
-        var userOfficeRole = new UserOfficeRole
-        {
-            RoleId = roleId,
-            UserId = userId,
-        };
-
-        if (officeId != null)
-        {
-            userOfficeRole.OfficeId = (Guid)officeId;
-        }
-
-        await _dbContext.UserOfficeRoles.AddAsync(userOfficeRole);
 
         return userOfficeRole;
     }

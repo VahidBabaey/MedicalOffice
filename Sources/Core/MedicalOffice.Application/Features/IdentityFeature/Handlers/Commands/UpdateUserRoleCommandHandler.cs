@@ -62,9 +62,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest,
-                    $"{_requestTitle} failed",
-                    validationResult.Errors.Select(x => x.ErrorMessage).ToArray());
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", validationResult.Errors.Select(x => x.ErrorMessage).ToArray());
             }
 
             var user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
@@ -79,8 +77,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = error
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.NotFound,
-                    $"{_requestTitle} failed", error);
+                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
             var office = _officeRepository.GetById(request.DTO.OfficeId);
@@ -95,8 +92,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = error
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.NotFound,
-                    $"{_requestTitle} failed", error);
+                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
             var role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
@@ -110,19 +106,15 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = error
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.NotFound,
-                    $"{_requestTitle} failed", error);
+                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
             var IsuserOfficeRoleExist = _usercOfficeRoleRepository
                 .GetAll().Result
-                .Any(uor =>
-                    uor.UserId == user.Id &&
-                    uor.OfficeId == request.DTO.OfficeId &&
-                    uor.RoleId == request.DTO.RoleId);
+                .Any(uor => uor.UserId == user.Id && uor.OfficeId == request.DTO.OfficeId && uor.RoleId == request.DTO.RoleId);
             if (IsuserOfficeRoleExist)
             {
-                var error = "This UserOfficeRole is Exist";
+                var error = "This UserOfficeRole is IsExist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
@@ -130,8 +122,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = error
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.Conflict,
-                    $"{_requestTitle} failed", error);
+                return responseBuilder.Faild(HttpStatusCode.Conflict, $"{_requestTitle} failed", error);
             }
 
             var updateUserRoles = await _userManager.AddToRoleAsync(user, role.NormalizedName);
@@ -144,42 +135,25 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = updateUserRoles.Errors.Select(error => error.ToString()).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.InternalServerError,
-                    $"{_requestTitle} failed",
+                return responseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed",
                     updateUserRoles.Errors.Select(error => error.ToString()).ToArray());
             }
 
-            try
+            var updateUserOfficeRole = await _usercOfficeRoleRepository.Add(new UserOfficeRole
             {
-                var updateUserOfficeRole = await _usercOfficeRoleRepository.Add(new UserOfficeRole
-                {
-                    UserId = user.Id,
-                    RoleId = request.DTO.RoleId,
-                    OfficeId = request.DTO.OfficeId
-                });
+                UserId = user.Id,
+                RoleId = request.DTO.RoleId,
+                OfficeId = request.DTO.OfficeId
+            });
 
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Success,
-                    Header = $"{_requestTitle} succeeded",
-                    AdditionalData = updateUserOfficeRole
-                });
-
-                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} failed", updateUserOfficeRole);
-            }
-            catch (Exception error)
+            await _logger.Log(new Log
             {
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
-                });
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = updateUserOfficeRole
+            });
 
-                return responseBuilder.Faild(HttpStatusCode.InternalServerError,
-                    $"{_requestTitle} failed",
-                    error.Message);
-            }
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} failed", updateUserOfficeRole);
         }
     }
 }

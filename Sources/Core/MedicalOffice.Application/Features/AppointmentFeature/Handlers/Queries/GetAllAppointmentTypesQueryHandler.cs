@@ -15,7 +15,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 {
     public class GetAllAppointmentTypesQueryHandler : IRequestHandler<GetAllStatusQuery, BaseResponse>
     {
-        public async Task<BaseResponse> Handle(GetAllStatusQuery request, CancellationToken cancellationToken)
+        public Task<BaseResponse> Handle(GetAllStatusQuery request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
             var appointmentTypes = Enum.GetValues<AppointmentType>().ToList().Select(a => new 
@@ -24,7 +24,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                 Value = Convert.ToInt32(a)
             });
 
-            return responseBuilder.Success(HttpStatusCode.OK, "succeded", appointmentTypes);
+            return Task.FromResult(responseBuilder.Success(HttpStatusCode.OK, "succeded", appointmentTypes));
         }
     }
 }
