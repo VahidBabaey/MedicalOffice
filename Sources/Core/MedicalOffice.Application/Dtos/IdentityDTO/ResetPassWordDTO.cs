@@ -3,7 +3,7 @@ using MedicalOffice.Application.Dtos.Common.CommonValidators;
 
 namespace MedicalOffice.Application.Dtos.IdentityDTO
 {
-    public class ResetPasswordDTO : IPhoneNumberDTO
+    public class ResetPasswordDTO:IPhoneNumberDTO
     {
         public string PhoneNumber { get; set; }
 

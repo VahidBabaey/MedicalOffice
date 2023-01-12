@@ -51,8 +51,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         public async Task<BaseResponse> Handle(AuthenticateByPasswordCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
-            BaseResponse response = new BaseResponse();
-            Log log = new();
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
@@ -68,31 +66,29 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber);
+            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber && x.IsActive == true);
             if (user == null)
             {
-                var error = $"User with phone number '{request.DTO.PhoneNumber}' is't exist.";
+                var error = $"The User with phone number {request.DTO.PhoneNumber} is't exist!";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
-
                 return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.DTO.Password, false, lockoutOnFailure: false);
             if (!result.Succeeded)
             {
-                var error = $"credencial for {request.DTO.PhoneNumber} are'nt valid";
+                var error = $"credencial for {request.DTO.PhoneNumber} is'nt valid";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
-
                 return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
@@ -107,7 +103,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())}
             .Union(userClaims)
             .Union(roleClaims);

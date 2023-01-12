@@ -45,106 +45,81 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         }
         public async Task<BaseResponse> Handle(AuthenticateByTotpCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new BaseResponse();
-            Log log = new();
+            var responseBuilder = new ResponseBuilder();
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
+                });
 
-                log.Type = LogType.Error;
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                    validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
+            }
+
+            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber && x.IsActive == true);
+            if (user == null)
+            {
+                var error = $"The User with phone number {request.DTO.PhoneNumber} is't exist!";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+            }
+
+            var isVerify = _totpHandler.Verify(request.DTO.PhoneNumber, request.DTO.Totp);
+            if (!isVerify)
+            {
+                var error = $"Totp for {request.DTO.PhoneNumber} is'nt valid";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             else
             {
-                try
+                var userClaims = await _userManager.GetClaimsAsync(user);
+
+                var roles = await _userManager.GetRolesAsync(user);
+                var roleClaims = new List<Claim>();
+                for (int i = 0; i < roles.Count; i++)
                 {
-                    var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber);
-                    if (user == null)
-                    {
-                        response.Success = false;
-                        response.StatusDescription = $"{_requestTitle} failed";
-                        response.Errors.Add($"User with phone number '{request.DTO.PhoneNumber}' is't exist.");
-
-                        log.Type = LogType.Error;
-                    }
-                    else if (await _userManager.IsLockedOutAsync(user))
-                    {
-                        // User exists but can not login until _userManager.GetLockoutEndDateAsync()
-                    }
-                    else
-                    {
-                        var isVerify = _totpHandler.Verify(request.DTO.PhoneNumber, request.DTO.Totp);
-
-                        if (!isVerify)
-                        {
-                            response.StatusCode = HttpStatusCode.NotAcceptable;
-                            response.Success = false;
-                            response.StatusDescription = $"{_requestTitle} failed";
-                            response.Errors.Add($"Totp for {request.DTO.PhoneNumber} are'nt valid");
-
-                            log.Type = LogType.Error;
-                        }
-                        else
-                        {
-                            var userClaims = await _userManager.GetClaimsAsync(user);
-
-                            var roles = await _userManager.GetRolesAsync(user);
-                            var roleClaims = new List<Claim>();
-                            for (int i = 0; i < roles.Count; i++)
-                            {
-                                roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
-                            }
-
-                            var claims = new[]
-                            {
-                                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            }
-                            .Union(userClaims)
-                            .Union(roleClaims);
-
-                            JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user,claims);
-
-                            AuthenticatedUserDTO authenticatedUser = _mapper.Map<AuthenticatedUserDTO>(user);
-                            authenticatedUser.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
-
-                            //AuthenticatedUserDTO authenticatedUser = new()
-                            //{
-                            //    Id = user.Id.ToString(),
-                            //    UserName = user.UserName,
-                            //    FirstName = user.FirstName,
-                            //    LastName = user.LastName,
-                            //    Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken)
-                            //};
-
-                            response.Success = true;
-                            response.StatusDescription = $"{_requestTitle} succeded";
-                            response.Data = (authenticatedUser);
-
-                            log.Type = LogType.Success;
-                        }
-                    }
+                    roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
                 }
-                catch (Exception error)
+
+                var claims = new[]
                 {
-                    response.Success = false;
-                    response.StatusCode = HttpStatusCode.Unauthorized;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }
+                .Union(userClaims)
+                .Union(roleClaims);
+
+                JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user, claims);
+
+                AuthenticatedUserDTO authenticatedUser = _mapper.Map<AuthenticatedUserDTO>(user);
+                authenticatedUser.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
+
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeeded",
+                    AdditionalData = authenticatedUser
+                });
+
+                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", authenticatedUser);
             }
-
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
 }

@@ -44,10 +44,9 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Queries
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
             }
-            catch (Exception error)
+            catch (Exception)
             {
                 log.Header = $"{_requestTitle} failed";
-                ;
                 log.Type = LogType.Error;
             }
 

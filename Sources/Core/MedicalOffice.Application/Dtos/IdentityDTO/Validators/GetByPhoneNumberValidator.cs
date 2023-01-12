@@ -1,14 +1,21 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.Validators;
 using MedicalOffice.Application.Dtos.Identity;
+using MedicalOffice.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
 {
     public class GetByPhoneNumberValidator: AbstractValidator<GetByPhoneNumberDTO>
     {
-        public GetByPhoneNumberValidator()
+        private readonly UserManager<User> _userManager;
+
+        public GetByPhoneNumberValidator(UserManager<User> userManager)
         {
-            Include(new PhoneNumberValidator());
+            _userManager = userManager;
+
+            Include(new UserByPhoneNumberValidator(_userManager));
         }
     }
 }

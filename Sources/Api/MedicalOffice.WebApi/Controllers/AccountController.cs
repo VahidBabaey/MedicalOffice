@@ -70,7 +70,16 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        //[Authorize]
+        [Authorize]
+        [HttpPatch("forget-password")]
+        public async Task<ActionResult<Guid>> ForgetPassword(SetPasswordDTO dto)
+        {
+            var response = await _mediator.Send(new ForgetPasswordCommand() { DTO = dto });
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
+        [Authorize]
         [HttpPatch("set-password")]
         public async Task<ActionResult<Guid>> SetPassword([FromBody]SetPasswordDTO dto)
         {
