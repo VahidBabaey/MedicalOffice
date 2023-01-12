@@ -9,13 +9,9 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
 {
     public class GetByPhoneNumberValidator: AbstractValidator<GetByPhoneNumberDTO>
     {
-        private readonly UserManager<User> _userManager;
-
-        public GetByPhoneNumberValidator(UserManager<User> userManager)
+        public GetByPhoneNumberValidator()
         {
-            _userManager = userManager;
 
-            Include(new UserByPhoneNumberValidator(_userManager));
         }
     }
 }
