@@ -13,9 +13,7 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
 
         public UserStatusRequestValidator(UserManager<User> userManager)
         {
-            _userManager = userManager;
 
-            Include(new UserByPhoneNumberValidator(_userManager));
         }
     }
 }

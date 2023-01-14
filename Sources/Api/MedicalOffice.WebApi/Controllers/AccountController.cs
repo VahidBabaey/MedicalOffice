@@ -37,7 +37,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        [HttpPost("validate-Totp")]
+        [HttpPost("verify-Totp")]
         public async Task<ActionResult<bool>> VerifyTotp(VerifyTotpDTO dto)
         {
             var response = await _mediator.Send(new VerifyTotpCommand() { DTO = dto });
