@@ -38,6 +38,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<ResetPasswordDTO>, ResetPasswordValidator>();
         services.AddScoped<IValidator<UpdateUserRoleDTO>, UpdateUserRoleValidator>();
         services.AddScoped<IValidator<SendTotpDTO>, SendTotpValidator>();
+        services.AddScoped<IValidator<VerifyTotpDTO>, VerifyTotpValidator>();
         #endregion Identity
 
         #region Office

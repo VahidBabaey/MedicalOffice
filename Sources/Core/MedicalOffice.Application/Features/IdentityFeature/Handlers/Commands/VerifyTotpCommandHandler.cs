@@ -1,5 +1,8 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Dtos.Identity;
+using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -14,12 +17,14 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class VerifyTotpCommandHandler : IRequestHandler<VerifyTotpCommand, BaseResponse>
     {
+        private readonly IValidator<VerifyTotpDTO> _validator;
         private readonly ITotpHandler _totpHandler;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public VerifyTotpCommandHandler(ITotpHandler totpHandler, ILogger logger)
+        public VerifyTotpCommandHandler(IValidator<VerifyTotpDTO> validator, ITotpHandler totpHandler, ILogger logger)
         {
+            _validator = validator;
             _totpHandler = totpHandler;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -28,6 +33,20 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         public async Task<BaseResponse> Handle(VerifyTotpCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
+
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
+                });
+
+                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                    validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
+            }
 
             var isVerify = _totpHandler.Verify(request.DTO.PhoneNumber, request.DTO.Totp);
             if (!isVerify)

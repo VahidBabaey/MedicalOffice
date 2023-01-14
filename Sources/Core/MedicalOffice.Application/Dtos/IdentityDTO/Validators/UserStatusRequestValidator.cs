@@ -9,11 +9,6 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
 {
     public class UserStatusRequestValidator: AbstractValidator<UserStatusRequestDTO>
     {
-        private readonly UserManager<User> _userManager;
 
-        public UserStatusRequestValidator(UserManager<User> userManager)
-        {
-
-        }
     }
 }
