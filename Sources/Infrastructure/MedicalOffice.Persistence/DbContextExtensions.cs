@@ -25,4 +25,29 @@ public static class DbContextExtensions
                 property.SetValue(oldEntity, oldValue);
         }
     }
+
+    public static T Patch<T>(this T entity, T newEntity, bool replaceIfNull) where T : class
+    {
+        var properties = typeof(T).GetProperties();
+        if (replaceIfNull)
+        {
+            foreach (var property in properties)
+            {
+                var newValue = property.GetValue(newEntity);
+                property.SetValue(entity, newValue);
+            }
+        }
+        else
+        {
+            foreach (var property in properties)
+            {
+                var newValue = property.GetValue(newEntity);
+                if (newValue != null)
+                    property.SetValue(entity, newValue);
+            }
+        }
+        return entity;
+    }
 }
+
+

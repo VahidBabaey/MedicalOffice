@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
 {
-    public class GetByPhoneNumberValidator: AbstractValidator<GetByPhoneNumberDTO>
+    public class UserStatusRequestValidator: AbstractValidator<UserStatusRequestDTO>
     {
         private readonly UserManager<User> _userManager;
 
-        public GetByPhoneNumberValidator(UserManager<User> userManager)
+        public UserStatusRequestValidator(UserManager<User> userManager)
         {
             _userManager = userManager;
 

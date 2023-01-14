@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Identity;
+using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands
 {
     public class SendTotpCommand : IRequest<BaseResponse>
     {
-        public GetByPhoneNumberDTO DTO { get; set; } = new GetByPhoneNumberDTO();
+        public SendTotpDTO DTO { get; set; } = new SendTotpDTO();
     }
 }

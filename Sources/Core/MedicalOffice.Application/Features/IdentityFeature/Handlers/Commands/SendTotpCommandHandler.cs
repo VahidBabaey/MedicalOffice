@@ -2,6 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity;
+using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
@@ -17,14 +18,14 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class SendTotpCommandHandler : IRequestHandler<SendTotpCommand, BaseResponse>
     {
-        private readonly IValidator<GetByPhoneNumberDTO> _validator;
+        private readonly IValidator<SendTotpDTO> _validator;
         private readonly ISmsSender _smsSender;
         private readonly ITotpHandler _totpHandler;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
         public SendTotpCommandHandler(
-            IValidator<GetByPhoneNumberDTO> validator,
+            IValidator<SendTotpDTO> validator,
             ISmsSender smsSender,
             ITotpHandler totpHandler,
             ILogger logger)

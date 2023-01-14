@@ -33,10 +33,11 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<RegisterUserDTO>, RegisterUserValidator>();
         services.AddScoped<IValidator<AuthenticateByPasswordDTO>, AuthenticateByPasswordValidator>();
         services.AddScoped<IValidator<AuthenticateByTotpDTO>, AuthenticateByTotpValidator>();
-        services.AddScoped<IValidator<GetByPhoneNumberDTO>, GetByPhoneNumberValidator>();
+        services.AddScoped<IValidator<UserStatusRequestDTO>, UserStatusRequestValidator>();
         services.AddScoped<IValidator<SetPasswordDTO>, SetPasswordValidator>();
         services.AddScoped<IValidator<ResetPasswordDTO>, ResetPasswordValidator>();
         services.AddScoped<IValidator<UpdateUserRoleDTO>, UpdateUserRoleValidator>();
+        services.AddScoped<IValidator<SendTotpDTO>, SendTotpValidator>();
         #endregion Identity
 
         #region Office
