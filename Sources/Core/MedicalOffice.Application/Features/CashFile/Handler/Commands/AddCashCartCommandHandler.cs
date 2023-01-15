@@ -50,6 +50,7 @@ public class AddCashCartCommandHandler : IRequestHandler<AddCashCartCommand, Bas
             try
             {
                 var cashcart = _mapper.Map<CashCart>(request.DTO);
+                cashcart.OfficeId = request.OfficeId;
 
                 cashcart = await _repository.Add(cashcart);
 

@@ -61,6 +61,7 @@ public class EditCashPosCommandHandler : IRequestHandler<EditCashPosCommand, Bas
             try
             {
                 var cashpos = _mapper.Map<CashPos>(request.DTO);
+                cashpos.OfficeId = request.OfficeId;
 
                 await _repository.Update(cashpos);
 

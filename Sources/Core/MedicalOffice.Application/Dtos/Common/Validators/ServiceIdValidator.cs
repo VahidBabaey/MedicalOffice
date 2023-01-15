@@ -26,7 +26,7 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
                 .NotEmpty()
                 .MustAsync(async (serviceId, token) =>
                     {
-                        return await _serviceRepository.CheckExistServiceId(serviceId, officeId);
+                        return await _serviceRepository.CheckExistServiceId(officeId, serviceId);
 
                     })
                 .WithMessage("{PropertyName} isn't exist");

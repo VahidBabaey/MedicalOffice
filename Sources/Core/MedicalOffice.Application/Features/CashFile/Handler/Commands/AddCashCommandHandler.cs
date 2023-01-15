@@ -50,6 +50,7 @@ public class AddCashCommandHandler : IRequestHandler<AddCashCommand, BaseRespons
             try
             {
                 var cash = _mapper.Map<Cash>(request.DTO);
+                cash.OfficeId = request.OfficeId;
 
                 cash = await _repository.Add(cash);
 

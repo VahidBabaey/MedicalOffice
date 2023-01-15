@@ -55,6 +55,7 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
             try
             {
                 var patient = _mapper.Map<Patient>(request.DTO);
+                patient.OfficeId = request.OfficeId;
 
                 await _repository.Update(patient);
                 await _repositorycontact.RemovePatientContact(patient.Id);

@@ -25,8 +25,9 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditShiftCommandHandler(IShiftRepository repository, IMapper mapper, ILogger logger)
+        public EditShiftCommandHandler(IValidator<UpdateShiftDTO> validator, IShiftRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;

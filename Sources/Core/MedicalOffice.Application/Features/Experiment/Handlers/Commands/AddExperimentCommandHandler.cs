@@ -71,6 +71,7 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
                 try
                 {
                     var experiment = _mapper.Map<Domain.Entities.Experiment>(request.DTO);
+                    experiment.OfficeId = request.OfficeId;
 
                     experiment = await _repository.Add(experiment);
 

@@ -20,13 +20,13 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
     public class AddServiceTariffCommandHandler : IRequestHandler<AddServiceTariffCommand, BaseResponse>
     {
-        private readonly IValidator<ServiceTariffDTO> _validator;
+        private readonly IValidator<TariffDTO> _validator;
         private readonly IServiceTariffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddServiceTariffCommandHandler(IValidator<ServiceTariffDTO> validator, IServiceTariffRepository repository, IMapper mapper, ILogger logger)
+        public AddServiceTariffCommandHandler(IValidator<TariffDTO> validator, IServiceTariffRepository repository, IMapper mapper, ILogger logger)
         {
             _validator = validator;
             _repository = repository;
@@ -56,6 +56,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 try
                 {
                     var tariff = _mapper.Map<Tariff>(request.DTO);
+                    tariff.OfficeId = request.OfficeId;
 
                     await _repository.Add(tariff);
 

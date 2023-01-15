@@ -11,10 +11,6 @@ public class UpdateServiceDTO : BaseDto<Guid>, ISectionIdDTO
     /// </summary>
     public Guid SectionId { get; set; }
     /// <summary>
-    /// آیدی عضویت
-    /// </summary>
-    public Guid? MembershipId { get; set; }
-    /// <summary>
     /// نام خدمت
     /// </summa?ry>
     public string Name { get; set; } = string.Empty;

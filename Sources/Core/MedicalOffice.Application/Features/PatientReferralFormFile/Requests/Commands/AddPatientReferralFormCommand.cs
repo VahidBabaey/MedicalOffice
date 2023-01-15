@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Co
     public class AddPatientReferralFormCommand : IRequest<BaseResponse>
     {
         public PatientReferralFormDTO DTO { get; set; } = new PatientReferralFormDTO();
+        public Guid OfficeId { get; set; }
     }
 }

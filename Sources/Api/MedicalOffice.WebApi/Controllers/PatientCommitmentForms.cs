@@ -11,7 +11,6 @@ using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -36,9 +35,9 @@ public class PatientCommitmentForms : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] AddPatientCommitmentsFormDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] AddPatientCommitmentsFormDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddPatientCommitmentFormCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddPatientCommitmentFormCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

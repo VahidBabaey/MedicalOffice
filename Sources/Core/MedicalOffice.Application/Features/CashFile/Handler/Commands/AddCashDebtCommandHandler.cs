@@ -54,19 +54,20 @@ public class AddCashDebtCommandHandler : IRequestHandler<AddCashDebtCommand, Bas
         {
             try
             {
-                var cash = _mapper.Map<Cash>(request.DTO);
+                var cashDebt = _mapper.Map<Cash>(request.DTO);
+                cashDebt.OfficeId = request.OfficeId;
 
-                cash = await _repository.Add(cash);
+                cashDebt = await _repository.Add(cashDebt);
 
-                var receptionDebt = await _repositoryReception.CreateNewReceptionDebt(request.DTO.Recieved, request.DTO.OfficeId, request.DTO.ReceptionId);
+                var receptionDebt = await _repositoryReception.CreateNewReceptionDebt(request.DTO.Recieved, request.OfficeId, request.DTO.ReceptionId);
 
-                var receptionDetailDebt = await _repositoryReception.CreateNewReceptionDetailDebt(request.DTO.Recieved, request.DTO.OfficeId, request.DTO.ReceptionId);
+                var receptionDetailDebt = await _repositoryReception.CreateNewReceptionDetailDebt(request.DTO.Recieved, request.OfficeId, request.DTO.ReceptionId);
 
-                await _repositoryReceptionDebt.AddReceptionDebt(request.DTO.ReceptionId, receptionDetailDebt.Id, request.DTO.OfficeId, request.DTO.Recieved);
+                await _repositoryReceptionDebt.AddReceptionDebt(request.DTO.ReceptionId, receptionDetailDebt.Id, request.OfficeId, request.DTO.Recieved);
 
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = cash.Id });
+                response.Data = (new { Id = cashDebt.Id });
 
                 log.Type = LogType.Success;
             }

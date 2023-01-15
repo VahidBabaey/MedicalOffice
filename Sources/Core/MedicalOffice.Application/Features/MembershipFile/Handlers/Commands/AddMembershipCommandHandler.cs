@@ -72,24 +72,13 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                 try
                 {
                     var membership = _mapper.Map<Membership>(request.DTO);
+                    membership.OfficeId = request.OfficeId;
 
                     membership = await _repository.Add(membership);
 
                     response.Success = true;
                     response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data=(new { Id = membership.Id });
-                    //if (request.DTO.ServiceIDs == null)
-                    //{
-
-                    //}
-                    //else
-                    //{
-                    //    foreach (var srvid in request.DTO.ServiceIDs)
-                    //    {                   
-                    //    await _officeRepository.InsertMembershipIdofServiceAsync(membership.Discount, srvid, membership.Id);
-                    //    }
-                    //}
-                    
+                    response.Data=(new { Id = membership.Id });              
 
                     log.Type = LogType.Success;
                 }

@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Comm
     public class AddPatientIllnessFormCommand : IRequest<BaseResponse>
     {
         public PatientIllnessFormDTO DTO { get; set; } = new PatientIllnessFormDTO();
+        public Guid OfficeId { get; set; }
     }
 }

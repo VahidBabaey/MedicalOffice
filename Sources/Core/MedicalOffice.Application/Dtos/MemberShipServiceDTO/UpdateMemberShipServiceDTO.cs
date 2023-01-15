@@ -19,7 +19,7 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO
         /// <summary>
         /// آیدی سرویس
         /// </summary>
-        public Guid[]? ServiceId { get; set; }
+        public Guid[] ServiceId { get; set; }
         /// <summary>
         /// تخفیف
         /// </summary>

@@ -13,5 +13,6 @@ public class AddPatientValidator : AbstractValidator<PatientDTO>
         RuleFor(x => x.LastName).NotEmpty().Length(1, 100);
         Include(new IPhoneNumberListValidator());
         Include(new ITelePhoneNumberListValidator());
+        Include(new NationalIdValidator());
     }
 }

@@ -5,6 +5,7 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Features.Experiment.Requests.Queries;
 using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,15 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Queries
 
     public class GetAllExperimentQueryHandler : IRequestHandler<GetAllExperimentQuery, List<ExperimentListDTO>>
     {
+        private readonly IOfficeRepository _officeRepository;
         private readonly IExperimentRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllExperimentQueryHandler(IExperimentRepository repository, IMapper mapper, ILogger logger)
+        public GetAllExperimentQueryHandler(IOfficeRepository officeRepository, IExperimentRepository repository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -32,6 +35,8 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Queries
         public async Task<List<ExperimentListDTO>> Handle(GetAllExperimentQuery request, CancellationToken cancellationToken)
         {
             List<ExperimentListDTO> result = new();
+
+            BaseResponse response = new();
 
             Log log = new();
 

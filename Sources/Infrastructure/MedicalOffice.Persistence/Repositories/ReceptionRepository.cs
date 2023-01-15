@@ -354,4 +354,9 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     {
         throw new NotImplementedException();
     }
+    public async Task<bool> CheckExistReceptionId(Guid officeId, Guid receptionId)
+    {
+        bool isExist = await _dbContext.Receptions.AnyAsync(p => p.Id == receptionId && p.OfficeId == officeId);
+        return isExist;
+    }
 }

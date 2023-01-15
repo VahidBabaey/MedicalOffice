@@ -50,6 +50,7 @@ public class AddCashPosCommandHandler : IRequestHandler<AddCashPosCommand, BaseR
             try
             {
                 var cashpos = _mapper.Map<CashPos>(request.DTO);
+                cashpos.OfficeId = request.OfficeId;
 
                 cashpos = await _repository.Add(cashpos);
 

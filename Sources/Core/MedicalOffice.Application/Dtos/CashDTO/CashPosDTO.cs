@@ -23,9 +23,5 @@ public class CashPosDTO : ICashIdDTO
     /// آیدی پذیرش
     /// </summary>
     public Guid ReceptionId { get; set; }
-    /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
 
 }

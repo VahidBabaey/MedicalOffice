@@ -8,7 +8,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> CheckExistInsuranceId(Guid officeId, Guid insuranceId);
         Task<bool> CheckExistIntroducerId(Guid officeId, Guid introducerId);
         Task<bool> CheckExistPatientId(Guid officeId, Guid patientId);
-        Task<bool> CheckExistPatientTagId(Guid officeId, Guid patientTagId);
         Task<PatientAddress> InsertAddressofPatientAsync(Guid patientid, string address);
         Task<PatientContact> InsertContactValueofPatientAsync(Guid patientid, string contactnumber);
         Task<PatientTag> InsertTagofPatientAsync(Guid patientid, string tag);

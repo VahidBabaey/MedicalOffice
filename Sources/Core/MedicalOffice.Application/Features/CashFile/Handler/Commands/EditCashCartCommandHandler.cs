@@ -64,6 +64,7 @@ public class EditCashCartCommandHandler : IRequestHandler<EditCashCartCommand, B
             try
             {
                 var cashcart = _mapper.Map<CashCart>(request.DTO);
+                cashcart.OfficeId = request.OfficeId;
 
                 await _repository.Update(cashcart);
 

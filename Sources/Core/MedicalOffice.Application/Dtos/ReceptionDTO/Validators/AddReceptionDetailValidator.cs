@@ -7,11 +7,13 @@ namespace MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
 
 public class AddReceptionDetailValidator : AbstractValidator<ReceptionDetailDTO>
 {
+    private readonly IReceptionRepository _receptionRepository;
     private readonly IInsuranceRepository _insuranceRepository;
     private readonly IOfficeResolver _officeResolver;
     private readonly IServiceRepository _serviceRepository;
-    public AddReceptionDetailValidator(IServiceRepository serviceRepository, IOfficeResolver officeResolver, IInsuranceRepository insuranceRepository)
+    public AddReceptionDetailValidator(IReceptionRepository receptionRepository, IServiceRepository serviceRepository, IOfficeResolver officeResolver, IInsuranceRepository insuranceRepository)
     {
+        _receptionRepository = receptionRepository;
         _serviceRepository = serviceRepository;
         _officeResolver = officeResolver;
         _insuranceRepository = insuranceRepository;
@@ -19,5 +21,6 @@ public class AddReceptionDetailValidator : AbstractValidator<ReceptionDetailDTO>
         RuleFor(x => x.ServiceCount).NotEmpty();
         Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
         Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+        Include(new ReceptionIdValidator(_receptionRepository, _officeResolver));
     }
 }

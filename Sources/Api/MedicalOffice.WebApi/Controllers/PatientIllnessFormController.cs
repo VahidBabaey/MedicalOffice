@@ -34,9 +34,9 @@ public class PatientIllnessFormController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] PatientIllnessFormDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] PatientIllnessFormDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddPatientIllnessFormCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddPatientIllnessFormCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -50,7 +50,7 @@ public class PatientIllnessFormController : Controller
     }
 
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id)
     {
         var response = await _mediator.Send(new DeletePatientIllnessFormCommand() { PatientIllnessFormId = id });
 

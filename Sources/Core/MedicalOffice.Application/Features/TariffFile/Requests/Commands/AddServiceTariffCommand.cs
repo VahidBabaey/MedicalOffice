@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.ServiceDTO;
+using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace MedicalOffice.Application.Features.TariffFile.Requests.Commands
 {
     public class AddServiceTariffCommand : IRequest<BaseResponse>
     {
-        public ServiceTariffDTO DTO { get; set; } = new ServiceTariffDTO();
+        public TariffDTO DTO { get; set; } = new TariffDTO();
+        public Guid OfficeId { get; set; }
     }
 }

@@ -10,11 +10,6 @@ namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO
 {
     public class UpdateBasicInfoDetailDTO : BaseDto<Guid>, IBasicInfoDetailIdDTO
     {
-
-        /// <summary>
-        /// آیدی مطب
-        /// </summary>
-        public Guid OfficeId { get; set; }
         /// <summary>
         /// نام جزئیات
         /// </summary>

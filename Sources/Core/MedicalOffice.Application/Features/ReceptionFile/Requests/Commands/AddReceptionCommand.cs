@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Requests.Commands
     public class AddReceptionCommand : IRequest<BaseResponse>
     {
         public ReceptionsDTO DTO { get; set; } = new ReceptionsDTO();
+        public Guid OfficeId { get; set; }
     }
 }

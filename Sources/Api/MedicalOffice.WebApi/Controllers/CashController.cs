@@ -19,7 +19,7 @@ public class CashController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] CashesDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] CashesDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddCashCommand() { DTO = dto });
 
@@ -27,7 +27,7 @@ public class CashController : Controller
     }
 
     [HttpPost("Pos")]
-    public async Task<ActionResult<Guid>> CreatePos([FromBody] CashPosDTO dto)
+    public async Task<ActionResult<Guid>> CreatePos([FromBody] CashPosDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddCashPosCommand() { DTO = dto });
 
@@ -35,7 +35,7 @@ public class CashController : Controller
     }
 
     [HttpPost("Check")]
-    public async Task<ActionResult<Guid>> CreateCheck([FromBody] CashCheckDTO dto)
+    public async Task<ActionResult<Guid>> CreateCheck([FromBody] CashCheckDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddCashCheckCommand() { DTO = dto });
 
@@ -43,7 +43,7 @@ public class CashController : Controller
     }
 
     [HttpPost("Cart")]
-    public async Task<ActionResult<Guid>> CreateCart([FromBody] CashCartDTO dto)
+    public async Task<ActionResult<Guid>> CreateCart([FromBody] CashCartDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddCashCartCommand() { DTO = dto });
 
@@ -59,7 +59,7 @@ public class CashController : Controller
     }
 
     [HttpPatch("Pos")]
-    public async Task<ActionResult<Guid>> UpdatePos([FromBody] UpdateCashPosDTO dto)
+    public async Task<ActionResult<Guid>> UpdatePos([FromBody] UpdateCashPosDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new EditCashPosCommand() { DTO = dto });
 
@@ -67,7 +67,7 @@ public class CashController : Controller
     }
 
     [HttpPatch("Check")]
-    public async Task<ActionResult<Guid>> UpdateCheck([FromBody] UpdateCashCheckDTO dto)
+    public async Task<ActionResult<Guid>> UpdateCheck([FromBody] UpdateCashCheckDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new EditCashCheckCommand() { DTO = dto });
 
@@ -75,7 +75,7 @@ public class CashController : Controller
     }
 
     [HttpPatch("Cart")]
-    public async Task<ActionResult<Guid>> UpdateCart([FromBody] UpdateCashCartDTO dto)
+    public async Task<ActionResult<Guid>> UpdateCart([FromBody] UpdateCashCartDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new EditCashCartCommand() { DTO = dto });
 
@@ -83,7 +83,7 @@ public class CashController : Controller
     }
 
     [HttpDelete("Pos")]
-    public async Task<IActionResult> RemoveAsyncPos(Guid id)
+    public async Task<IActionResult> RemovePos(Guid id, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new DeleteCashPosCommand() { CashPosId = id });
 
@@ -91,7 +91,7 @@ public class CashController : Controller
     }
 
     [HttpDelete("Cart")]
-    public async Task<IActionResult> RemoveAsyncCart(Guid id)
+    public async Task<IActionResult> RemoveCart(Guid id, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new DeleteCashCartCommand() { CashCartId = id });
 
@@ -99,7 +99,7 @@ public class CashController : Controller
     }
 
     [HttpDelete("Check")]
-    public async Task<IActionResult> RemoveAsyncCheck(Guid id)
+    public async Task<IActionResult> RemoveCheck(Guid id, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new DeleteCashCheckCommand() { CashCheckId = id });
 
@@ -115,7 +115,7 @@ public class CashController : Controller
     }
 
     [HttpPost("CashDebt")]
-    public async Task<ActionResult<Guid>> CreateCashDebt([FromBody] CashesDTO dto)
+    public async Task<ActionResult<Guid>> CreateCashDebt([FromBody] CashesDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddCashDebtCommand() { DTO = dto });
 

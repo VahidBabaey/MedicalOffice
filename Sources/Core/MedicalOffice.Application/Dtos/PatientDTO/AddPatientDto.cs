@@ -4,12 +4,8 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.PatientDTO;
 
-public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO
+public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationalIdDTO
 {
-    /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
     /// <summary>
     /// شماره پرونده
     /// </summary>
@@ -77,11 +73,11 @@ public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO
     /// <summary>
     /// آیدی معرف
     /// </summary>
-    public Guid IntroducerId { get; set; }
+    public Guid? IntroducerId { get; set; }
     /// <summary>
     /// آیدی بیمه
     /// </summary>
-    public Guid InsuranceId { get; set; }
+    public Guid? InsuranceId { get; set; }
     /// <summary>
     /// نوع معرف
     /// </summary>

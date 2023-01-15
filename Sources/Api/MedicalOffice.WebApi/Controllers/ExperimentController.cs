@@ -30,6 +30,7 @@ public class ExperimentController : Controller
 
         return Ok(response);
     }
+
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
@@ -37,6 +38,7 @@ public class ExperimentController : Controller
 
         return Ok(response);
     }
+
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateExperimentDTO dto, [FromQuery] string officeId)
     {

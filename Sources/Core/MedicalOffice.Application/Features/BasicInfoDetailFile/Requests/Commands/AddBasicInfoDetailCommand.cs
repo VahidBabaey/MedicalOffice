@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Comman
     public class AddBasicInfoDetailCommand : IRequest<BaseResponse>
     {
         public BasicInfoDetailDTO DTO { get; set; } = new BasicInfoDetailDTO();
+        public Guid OfficeId { get; set; }
     }
 }

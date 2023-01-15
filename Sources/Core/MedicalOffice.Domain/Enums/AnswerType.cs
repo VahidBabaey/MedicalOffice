@@ -16,7 +16,7 @@ namespace MedicalOffice.Domain.Enums
         /// </summary>
         InPerson = 1,
         /// <summary>
-        /// سرکار خانم دکتر
+        /// غیر حضوری
         /// </summary>
         Absenteely = 2,
     }

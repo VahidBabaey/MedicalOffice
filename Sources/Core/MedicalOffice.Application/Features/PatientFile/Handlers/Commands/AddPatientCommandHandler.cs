@@ -14,14 +14,16 @@ namespace MedicalOffice.Application.Features.PatientFile.Handlers.Commands;
 
 public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseResponse>
 {
+    private readonly IOfficeRepository _officeRepository;
     private readonly IValidator<PatientDTO> _validator;
     private readonly IPatientRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddPatientCommandHandler(IValidator<PatientDTO> validator, IPatientRepository repository, IMapper mapper, ILogger logger)
+    public AddPatientCommandHandler(IOfficeRepository officeRepository, IValidator<PatientDTO> validator, IPatientRepository repository, IMapper mapper, ILogger logger)
     {
+        _officeRepository = officeRepository;
         _validator = validator;
         _repository = repository;
         _mapper = mapper;
@@ -35,6 +37,18 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
         BaseResponse response = new();
 
         Log log = new();
+
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            response.Errors.Add("OfficeID isn't exist");
+
+            log.Type = LogType.Error;
+            return response;
+        }
 
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
@@ -51,6 +65,7 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
             try
             {
                 var patient = _mapper.Map<Patient>(request.DTO);
+                patient.OfficeId = request.OfficeId;
 
                 patient = await _repository.Add(patient);
 

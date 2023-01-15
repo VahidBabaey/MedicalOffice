@@ -15,6 +15,6 @@ public class AddCashValidator : AbstractValidator<CashesDTO>
         _cashRepository = cashRepository;
 
         RuleFor(x => x.Recieved).NotEmpty();
-        Include(new ReceptionIdValidator(_cashRepository, _officeResolver));
+        Include(new CashReceptionIdValidator(_cashRepository, _officeResolver));
     }
 }

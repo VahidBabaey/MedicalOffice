@@ -154,11 +154,6 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         bool isExist = await _dbContext.Introducers.AnyAsync(p => p.OfficeId == officeId && p.Id == introducerId);
         return isExist;
     }
-    public async Task<bool> CheckExistPatientTagId(Guid officeId, Guid patientTagId)
-    {
-        bool isExist = await _dbContext.PatientTags.AnyAsync(p => p.OfficeId == officeId && p.Id == patientTagId);
-        return isExist;
-    }
     public async Task<bool> CheckExistInsuranceId(Guid officeId, Guid insuranceId)
     {
         bool isExist = await _dbContext.Insurances.AnyAsync(p => p.OfficeId == officeId && p.Id == insuranceId);

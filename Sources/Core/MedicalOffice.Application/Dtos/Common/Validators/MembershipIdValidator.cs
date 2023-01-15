@@ -27,7 +27,7 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
                 .NotEmpty()
                 .MustAsync(async (membershipId, token) =>
                 {
-                    var leaveTypeExists = await _membershipRepository.CheckExistMembershipId(membershipId, officeId);
+                    var leaveTypeExists = await _membershipRepository.CheckExistMembershipId(officeId, membershipId);
                     if (leaveTypeExists == true)
                     {
                         return true;

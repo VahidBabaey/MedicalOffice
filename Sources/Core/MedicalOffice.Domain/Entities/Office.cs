@@ -97,11 +97,11 @@ public class Office : BaseDomainEntity<Guid>
     /// </summary>
     public ICollection<Introducer>? Introducers { get; set; }
     /// <summary>
-    /// تگ ها
-    /// </summary>
-    public ICollection<PatientTag>? PatientTags { get; set; }
-    /// <summary>
     /// سرویس ها - عضویت ها
     /// </summary>
     public ICollection<MemberShipService>? MemberShipServices { get; set; }
+    /// <summary>
+    /// جزئیات
+    /// </summary>
+    public ICollection<BasicInfo>? BasicInfos { get; set; }
 }

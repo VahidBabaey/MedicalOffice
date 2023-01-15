@@ -6,11 +6,6 @@ namespace MedicalOffice.Application.Dtos.ServiceDTO;
 
 public class ServiceTariffDTO
 {
-
-    /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
     /// <summary>
     /// آیدی بیمه
     /// </summary>

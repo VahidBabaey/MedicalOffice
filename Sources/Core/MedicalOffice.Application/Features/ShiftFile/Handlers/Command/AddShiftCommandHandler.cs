@@ -70,6 +70,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
                 try
                 {
                     var shift = _mapper.Map<Shift>(request.DTO);
+                    shift.OfficeId = request.OfficeId;
 
                     shift = await _repository.Add(shift);
 

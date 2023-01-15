@@ -8,7 +8,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
 {
     public interface IServiceListIdDTO
     {
-        public Guid[]? ServiceId { get; set; }
+        public Guid[] ServiceId { get; set; }
     }
 }
 

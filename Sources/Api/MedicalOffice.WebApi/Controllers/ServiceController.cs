@@ -24,22 +24,22 @@ public class ServiceController : Controller
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] ServiceDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddServiceCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddServiceCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Remove([FromQuery] string officeId, Guid id)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new DeleteServiceCommand() { OfficeId = Guid.Parse(officeId), ServiceId = id });
 
         return Ok(response);
     }
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateServiceDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateServiceDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditServiceCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditServiceCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

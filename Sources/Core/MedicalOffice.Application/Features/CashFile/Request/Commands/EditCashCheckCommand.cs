@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.CashFile.Request.Commands
     public class EditCashCheckCommand : IRequest<BaseResponse>
     {
         public UpdateCashCheckDTO DTO { get; set; } = new UpdateCashCheckDTO();
+        public Guid OfficeId { get; set; }
     }
 }

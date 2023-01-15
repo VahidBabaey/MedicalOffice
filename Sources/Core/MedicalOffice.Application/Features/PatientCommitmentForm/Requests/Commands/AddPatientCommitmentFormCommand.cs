@@ -13,5 +13,6 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Comm
     public class AddPatientCommitmentFormCommand : IRequest<BaseResponse>
     {
         public AddPatientCommitmentsFormDTO DTO { get; set; } = new AddPatientCommitmentsFormDTO();
+        public Guid OfficeId { get; set; }
     }
 }

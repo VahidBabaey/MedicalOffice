@@ -73,6 +73,7 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
                         request.DTO.Number = 1;
 
                     var drug = _mapper.Map<Drug>(request.DTO);
+                    drug.OfficeId = request.OfficeId;
 
                     drug = await _repository.Add(drug);
 

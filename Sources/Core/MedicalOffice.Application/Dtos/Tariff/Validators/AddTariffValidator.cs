@@ -21,9 +21,9 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
             _officeResolver = officeResolver;
             _serviceRepository = serviceRepository;
             _insuranceRepository = insuranceRepository;
+
             RuleFor(x => x.TariffValue).NotEmpty();
             RuleFor(x => x.InternalTariffValue).NotEmpty();
-            RuleFor(x => x.Difference).NotEmpty();
             Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
             Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
         }

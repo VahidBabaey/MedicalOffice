@@ -1,10 +1,12 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Commons;
 using MedicalOffice.Domain.Enums;
 
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO;
 
-public class ReceptionsDTO 
+public class ReceptionsDTO : IPatientIdDTO, IShiftIdDTO, IMedicalStaffDTO
 {
     /// <summary>
     /// تایپ پذیرش : پرداخت مبلغ امانی - پرداخت بدهی - برگشتی - پکیج - بدون فرانشیز - عادی
@@ -19,10 +21,6 @@ public class ReceptionsDTO
     /// </summary>
     public string ReceptionSubmitHour { get; set; } = string.Empty;
     /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
-    /// <summary>
     /// آیدی بیمار
     /// </summary>
     public Guid PatientId { get; set; }
@@ -33,7 +31,7 @@ public class ReceptionsDTO
     /// <summary>
     /// آیدی یوزر لاگین شده
     /// </summary>
-    public Guid LoggedInMedicalStaffId { get; set; }
+    public Guid MedicalStaffId { get; set; }
     /// <summary>
     /// شماره فاکتور
     /// </summary>

@@ -62,6 +62,7 @@ public class EditCashCheckCommandHandler : IRequestHandler<EditCashCheckCommand,
             try
             {
                 var cashcheck = _mapper.Map<CashCheck>(request.DTO);
+                cashcheck.OfficeId = request.OfficeId;
 
                 await _repository.Update(cashcheck);
 

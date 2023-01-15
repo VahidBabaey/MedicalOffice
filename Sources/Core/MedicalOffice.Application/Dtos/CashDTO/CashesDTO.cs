@@ -7,10 +7,6 @@ namespace MedicalOffice.Application.Dtos.CashDTO;
 public class CashesDTO : IReceptionIdDTO
 {
     /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
-    /// <summary>
     /// آیدی پذیرش
     /// </summary>
     public Guid ReceptionId { get; set; }

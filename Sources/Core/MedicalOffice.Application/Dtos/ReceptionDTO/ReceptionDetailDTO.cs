@@ -6,16 +6,12 @@ using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO;
 
-public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO
+public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO, IReceptionIdDTO
 {
     /// <summary>
     /// آیدی پذیرش
     /// </summary>
     public Guid ReceptionId { get; set; }
-    /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
     /// <summary>
     /// آیدی خدمت
     /// </summary>
