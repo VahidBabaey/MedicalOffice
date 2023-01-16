@@ -10,6 +10,7 @@ using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Commands
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using NLog.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,13 +24,15 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
         private readonly IValidator<MemberShipServiceDTO> _validator;
         private readonly IMemberShipServiceRepository _repository;
         private readonly IOfficeRepository _officeRepository;
+        private readonly IServiceRepository _serviceRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddServicetoMembershipCommandHandler(IValidator<MemberShipServiceDTO> validator, IOfficeRepository officeRepository,  IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
+        public AddServicetoMembershipCommandHandler(IValidator<MemberShipServiceDTO> validator, IServiceRepository serviceRepository, IOfficeRepository officeRepository,  IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
         {
-            _officeRepository = officeRepository;
+            _serviceRepository = serviceRepository;
+           _officeRepository = officeRepository;
             _validator = validator;
             _repository = repository;
             _mapper = mapper;
@@ -74,6 +77,16 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
 
                     foreach (var srvid in request.DTO.ServiceId)
                     {
+                        if (await _serviceRepository.CheckExistServiceId(request.OfficeId, srvid) == false)
+                        {
+                            response.Success = false;
+                            response.StatusDescription = $"{_requestTitle} failed";
+                            response.Errors.Add("ServiceID isn't exist");
+
+                            log.Type = LogType.Error;
+                            return response;
+                        }
+
                         await _repository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount, srvid, request.DTO.MembershipId);
                     }
 

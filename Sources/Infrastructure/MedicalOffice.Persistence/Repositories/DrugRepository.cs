@@ -1,5 +1,6 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,5 +61,11 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
     {
         bool isExist = await _dbContext.Drugs.AnyAsync(p => p.Id == drugId && p.OfficeId == officeId);
         return isExist;
+    }
+    public async Task<List<Drug>> GetDrugBySearch(string name)
+    {
+        var drugs = await _dbContext.Drugs.Where(p => p.Name.Contains(name)).ToListAsync();
+
+        return drugs;
     }
 }

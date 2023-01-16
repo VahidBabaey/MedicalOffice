@@ -8,6 +8,7 @@ using MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using NLog.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +21,14 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
     {
         private readonly IValidator<UpdateMemberShipServiceDTO> _validator;
         private readonly IMemberShipServiceRepository _repository;
+        private readonly IServiceRepository _serviceRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditServicetoMembershipCommandHandler(IValidator<UpdateMemberShipServiceDTO> validator, IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
+        public EditServicetoMembershipCommandHandler(IValidator<UpdateMemberShipServiceDTO> validator, IServiceRepository serviceRepository,  IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
         {
+            _serviceRepository = serviceRepository;
             _validator = validator;
             _repository = repository;
             _mapper = mapper;
@@ -69,7 +72,16 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
                 {
                     foreach (var srvid in request.DTO.ServiceId)
                     {
-                        await _repository.UpdateServiceOfMemberShipAsync(request.DTO.Discount, srvid, request.DTO.MembershipId);
+                        if (await _serviceRepository.CheckExistServiceId(request.OfficeId, srvid) == false)
+                        {
+                            response.Success = false;
+                            response.StatusDescription = $"{_requestTitle} failed";
+                            response.Errors.Add("ServiceID isn't exist");
+
+                            log.Type = LogType.Error;
+                            return response;
+                        }
+                        await _repository.UpdateServiceOfMemberShipAsync(request.DTO.Discount,request.OfficeId, request.DTO.Id, srvid, request.DTO.MembershipId);
                     }
 
                     response.Success = true;

@@ -31,10 +31,12 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
         return memberShipService;
     }
 
-    public async Task<MemberShipService> UpdateServiceOfMemberShipAsync(string discount, Guid serviceId, Guid memberShipId)
+    public async Task<MemberShipService> UpdateServiceOfMemberShipAsync(string discount, Guid OfficeId, Guid id, Guid serviceId, Guid memberShipId)
     {
         MemberShipService memberShipService = new MemberShipService()
         {
+            OfficeId = OfficeId,
+            Id = id,
             ServiceId = serviceId,
             MembershipId = memberShipId,
             Discount = discount

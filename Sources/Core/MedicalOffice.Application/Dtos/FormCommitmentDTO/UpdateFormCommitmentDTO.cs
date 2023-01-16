@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.FormCommitmentDTO
 {
-    public class UpdateFormCommitmentDTO : BaseDto<Guid>
+    public class UpdateFormCommitmentDTO : BaseDto<Guid>, IPatientIdDTO
     {
         /// <summary>
         /// نام فرم تعهدنامه

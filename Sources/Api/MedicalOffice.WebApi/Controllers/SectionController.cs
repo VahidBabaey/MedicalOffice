@@ -5,6 +5,7 @@ using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
+using MedicalOffice.Application.Features.ShiftFile.Requests.Query;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,4 +54,12 @@ public class SectionController : Controller
 
         return Ok(response);
     }
+    [HttpGet("Search")]
+    public async Task<ActionResult<List<SectionListDTO>>> GetSectionBySearch([FromQuery] string name, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetSectionBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+
 }

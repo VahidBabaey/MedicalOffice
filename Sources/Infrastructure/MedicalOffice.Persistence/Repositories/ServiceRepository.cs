@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -57,5 +58,11 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
     {
         bool isExist = await _dbContext.Specializations.AnyAsync(p => p.Id == specializationId);
         return isExist;
+    }
+    public async Task<List<Service>> GetServiceBySearch(string name)
+    {
+        var services = await _dbContext.Services.Where(p => p.Name.Contains(name)).ToListAsync();
+
+        return services;
     }
 }

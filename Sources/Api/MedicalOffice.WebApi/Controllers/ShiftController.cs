@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.DrugDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Dtos.ShiftDTO;
+using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Features.ShiftFile.Requests.Command;
@@ -47,6 +49,13 @@ public class ShiftController : Controller
     public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new GetAllShiftsQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+    [HttpGet("Search")]
+    public async Task<ActionResult<List<ShiftListDTO>>> GetShiftBySearch([FromQuery] string name, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetShiftBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

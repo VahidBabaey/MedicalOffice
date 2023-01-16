@@ -105,7 +105,7 @@ public class MappingProfile : Profile
         CreateMap<Permission, PermissionDTO>().ReverseMap();
         CreateMap<Permission, UpdatePermissionDTO>().ReverseMap();
         CreateMap<Permission, PermissionListDTO>().ReverseMap();
-        CreateMap<FormCommitment, FormCommitmentDTO>().ReverseMap();
+        CreateMap<FormCommitment, AddFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, UpdateFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, FormCommitmentListDTO>().ReverseMap();
         CreateMap<Picture, PictureUploadDTO>().ReverseMap();

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.FormCommitmentDTO.Validators
 {
-    public class AddFormCommitmentValidator : AbstractValidator<FormCommitmentDTO>
+    public class AddFormCommitmentValidator : AbstractValidator<AddFormCommitmentDTO>
     {
         private readonly IPatientRepository _patientRepository;
         private readonly IOfficeResolver _officeResolver;

@@ -54,4 +54,11 @@ public class ExperimentController : Controller
 
         return Ok(response);
     }
+    [HttpGet("Search")]
+    public async Task<ActionResult<List<ExperimentListDTO>>> GetExperimentBySearch([FromQuery] string name, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetExperimentBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
 }

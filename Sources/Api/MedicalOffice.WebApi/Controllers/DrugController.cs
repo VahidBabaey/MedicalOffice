@@ -1,11 +1,13 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.DrugFile.Handlers.Queries;
 using MedicalOffice.Application.Features.DrugFile.Requests.Commands;
 using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
+using MedicalOffice.Application.Features.Experiment.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.WebApi.Attributes;
@@ -98,6 +100,13 @@ public class DrugController : Controller
         var response = await _mediator.Send(new DeleteDrugCommand() { DrugId = id, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
-
     }
+    [HttpGet("Search")]
+    public async Task<ActionResult<List<DrugListDTO>>> GetDrugBySearch([FromQuery] string name, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetDrugBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+
 }

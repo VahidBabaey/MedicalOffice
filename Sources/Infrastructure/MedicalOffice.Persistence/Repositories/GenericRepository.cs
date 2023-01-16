@@ -77,15 +77,17 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
     {
         var result = new List<T1>();
 
-        var set = _dbContext.Set<T1>();
-
         var properties = typeof(T1).GetProperties();
 
         foreach (var property in properties)
         {
-            var fetchResult = await set
-                .Where(t => property.GetValue(t) == searchCaluse)
-                .ToListAsync();
+            var fetchResult =  _dbContext.Set<T1>()
+                .Where(delegate (T1 t)
+                {
+                    var propertyValue = property.GetValue(t);
+                    return propertyValue == searchCaluse;
+                })
+                .ToList();
 
             if (fetchResult.Any())
                 result.AddRange(fetchResult);

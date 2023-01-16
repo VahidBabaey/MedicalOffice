@@ -14,15 +14,13 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators
     public class AddMemberShipServiceValidator : AbstractValidator<MemberShipServiceDTO>
     {
         private readonly IMembershipRepository _memberRepository;
-        private readonly IServiceRepository _serviceRepository;
         private readonly IOfficeResolver _officeResolver;
-        public AddMemberShipServiceValidator(IMembershipRepository memberRepository, IServiceRepository serviceRepository, IOfficeResolver officeResolver)
+        public AddMemberShipServiceValidator(IMembershipRepository memberRepository, IOfficeResolver officeResolver)
         {
             _memberRepository = memberRepository;
-            _serviceRepository = serviceRepository;
             _officeResolver = officeResolver;
+
             RuleFor(x => x.Discount).NotEmpty();
-            //Include(new ServiceListIdValidator(_serviceRepository, _officeResolver));
             Include(new MembershipIdValidator(_memberRepository, _officeResolver));
         }
     }

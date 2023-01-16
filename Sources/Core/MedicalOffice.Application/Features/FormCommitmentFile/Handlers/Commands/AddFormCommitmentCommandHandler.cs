@@ -22,14 +22,16 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
 {
     public class AddFormCommitmentCommandHandler : IRequestHandler<AddFormCommitmentCommand, BaseResponse>
     {
-        private readonly IValidator<FormCommitmentDTO> _validator;
+        private readonly IValidator<AddFormCommitmentDTO> _validator;
         private readonly IFormCommitmentRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddFormCommitmentCommandHandler(IValidator<FormCommitmentDTO> validator, IFormCommitmentRepository repository, IMapper mapper, ILogger logger)
+        public AddFormCommitmentCommandHandler(IOfficeRepository officeRepository, IValidator<AddFormCommitmentDTO> validator, IFormCommitmentRepository repository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _validator = validator;
             _repository = repository;
             _mapper = mapper;
@@ -42,6 +44,18 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
             BaseResponse response = new();
 
             Log log = new();
+
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("OfficeID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
@@ -58,6 +72,7 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
                 try
                 {
                     var formcommitment = _mapper.Map<FormCommitment>(request.DTO);
+                    formcommitment.OfficeId = request.OfficeId;
 
                     formcommitment = await _repository.Add(formcommitment);
 
