@@ -12,8 +12,6 @@ namespace MedicalOffice.Application.Dtos.Identity
     {
         public string PhoneNumber { get; set; } = string.Empty;
 
-        public string countryCode { get; set; }
-
         public string Password{ get; set; }
 
         public string FirstName { get; set; } = string.Empty;

@@ -12,7 +12,6 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
     {
         public VerifyTotpValidator()
         {
-            Include(new PhoneNumberValidator());
         }
     }
 }
