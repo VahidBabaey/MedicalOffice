@@ -22,13 +22,13 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
     public class GetUserStatusQueryHandler : IRequestHandler<GetUserStatusQuery, BaseResponse>
     {
         private readonly UserManager<User> _userManager;
-        private readonly IValidator<GetByPhoneNumberDTO> _validator;
+        private readonly IValidator<UserStatusRequestDTO> _validator;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
         public GetUserStatusQueryHandler(
             UserManager<User> userManager,
-            IValidator<GetByPhoneNumberDTO> validator,
+            IValidator<UserStatusRequestDTO> validator,
             ILogger logger)
         {
             _validator = validator;

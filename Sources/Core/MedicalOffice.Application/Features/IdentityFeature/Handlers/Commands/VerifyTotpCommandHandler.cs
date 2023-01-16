@@ -3,7 +3,6 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO;
-using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -16,27 +15,22 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
-    public class SendTotpCommandHandler : IRequestHandler<SendTotpCommand, BaseResponse>
+    public class VerifyTotpCommandHandler : IRequestHandler<VerifyTotpCommand, BaseResponse>
     {
-        private readonly IValidator<SendTotpDTO> _validator;
-        private readonly ISmsSender _smsSender;
+        private readonly IValidator<VerifyTotpDTO> _validator;
         private readonly ITotpHandler _totpHandler;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public SendTotpCommandHandler(
-            IValidator<SendTotpDTO> validator,
-            ISmsSender smsSender,
-            ITotpHandler totpHandler,
-            ILogger logger)
+        public VerifyTotpCommandHandler(IValidator<VerifyTotpDTO> validator, ITotpHandler totpHandler, ILogger logger)
         {
             _validator = validator;
-            _smsSender = smsSender;
             _totpHandler = totpHandler;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
-        public async Task<BaseResponse> Handle(SendTotpCommand request, CancellationToken cancellationToken)
+
+        public async Task<BaseResponse> Handle(VerifyTotpCommand request, CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder();
 
@@ -54,26 +48,27 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
+            var isVerify = _totpHandler.Verify(request.DTO.PhoneNumber, request.DTO.Totp);
+            if (!isVerify)
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = false
+                });
 
-            //TODO: add sms provider to send sms to user.
-            //var totpSms = new TotpSms()
-            //{
-            //    Type = 1,
-            //    Receptor = new string[] { request.DTO.PhoneNumber },
-            //    Code = totp
-            //};
-
-            //var sendMessageToUser = await _smsSender.SendTotpSmsAsync(totpSms);
+                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} failed", false);
+            }
 
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeeded",
-                AdditionalData = totp
+                AdditionalData = true
             });
 
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", totp);
+            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", true);
         }
     }
 }
