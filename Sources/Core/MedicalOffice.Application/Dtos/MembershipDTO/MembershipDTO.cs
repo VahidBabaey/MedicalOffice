@@ -1,13 +1,10 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Common;
 
 namespace MedicalOffice.Application.Dtos.MembershipDTO;
 
 public class MembershipDTO
 {
-    /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
     /// <summary>
     /// نام عضویت
     /// </summary>

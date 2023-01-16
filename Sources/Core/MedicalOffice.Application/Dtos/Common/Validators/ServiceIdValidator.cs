@@ -2,6 +2,7 @@
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
                 .NotEmpty()
                 .MustAsync(async (serviceId, token) =>
                     {
-                        return await _serviceRepository.checkServiceExist(serviceId, officeId);
+                        return await _serviceRepository.CheckExistServiceId(officeId, serviceId);
 
                     })
                 .WithMessage("{PropertyName} isn't exist");

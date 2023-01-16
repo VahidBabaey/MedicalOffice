@@ -5,6 +5,7 @@ namespace MedicalOffice.Domain.Entities;
 
 public class Diagnose : BaseDomainEntity<Guid>
 {
+
     /// <summary>
     /// بیمار
     /// </summary>
@@ -41,4 +42,5 @@ public class Diagnose : BaseDomainEntity<Guid>
     /// توضیحات
     /// </summary>
     public string Description { get; set; } = string.Empty;
+
 }

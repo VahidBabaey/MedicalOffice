@@ -9,6 +9,7 @@ namespace MedicalOffice.Domain.Entities
 {
     public class DrugIntraction : BaseDomainEntity<Guid>
     {
+
         /// <summary>
         /// نام گروه1
         /// </summary>
@@ -36,5 +37,6 @@ namespace MedicalOffice.Domain.Entities
         public Guid? PDrugId { get; set; }
         public Drug? SDrug { get; set; }
         public Guid? SDrugId { get; set; }
+
     }
 }

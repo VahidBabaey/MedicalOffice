@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.FormCommitmentDTO;
 using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Commands;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -17,13 +19,15 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
 {
     public class EditFormCommitmentCommandHandler : IRequestHandler<EditFormCommitmentCommand, BaseResponse>
     {
+        private readonly IValidator<UpdateFormCommitmentDTO> _validator;
         private readonly IFormCommitmentRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditFormCommitmentCommandHandler(IFormCommitmentRepository repository, IMapper mapper, ILogger logger)
+        public EditFormCommitmentCommandHandler(IValidator<UpdateFormCommitmentDTO> validator, IFormCommitmentRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -36,28 +40,52 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
 
             Log log = new();
 
-            try
-            {
-                var formcommitment = _mapper.Map<FormCommitment>(request.DTO);
+            var validationFormCommitmentId = await _repository.CheckExistFormCommitmentId(request.OfficeId, request.DTO.Id);
 
-                await _repository.Update(formcommitment);
-
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = formcommitment.Id });
-
-                log.Type = LogType.Success;
-            }
-            catch (Exception error)
+            if (!validationFormCommitmentId)
             {
                 response.Success = false;
                 response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
             }
+            else
+            {
+                try
+                {
+                    var formcommitment = _mapper.Map<FormCommitment>(request.DTO);
+                    formcommitment.OfficeId = request.OfficeId;
 
+                    await _repository.Update(formcommitment);
 
+                    response.Success = true;
+                    response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = formcommitment.Id });
+
+                    log.Type = LogType.Success;
+                }
+                catch (Exception error)
+                {
+                    response.Success = false;
+                    response.StatusDescription = $"{_requestTitle} failed";
+                    response.Errors.Add(error.Message);
+
+                    log.Type = LogType.Error;
+                }
+            }
             log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 

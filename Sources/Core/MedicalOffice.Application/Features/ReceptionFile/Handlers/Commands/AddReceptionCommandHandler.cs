@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.SectionDTO.Validators;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
+using MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
@@ -17,13 +18,17 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
 
 public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, BaseResponse>
 {
+    private readonly IValidator<ReceptionsDTO> _validator;
+    private readonly IOfficeRepository _officeRepository;
     private readonly IReceptionRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddReceptionCommandHandler(IReceptionRepository repository, IMapper mapper, ILogger logger)
+    public AddReceptionCommandHandler(IValidator<ReceptionsDTO> validator, IOfficeRepository officeRepository, IReceptionRepository repository, IMapper mapper, ILogger logger)
     {
+        _validator = validator;
+        _officeRepository = officeRepository;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
@@ -34,11 +39,21 @@ public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, B
     {
         BaseResponse response = new();
 
-        AddReceptionValidator validator = new();
-
         Log log = new();
 
-        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            response.Errors.Add("OfficeID isn't exist");
+
+            log.Type = LogType.Error;
+            return response;
+        }
+
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
@@ -53,8 +68,9 @@ public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, B
             try
             {
                 var reception = _mapper.Map<Reception>(request.DTO);
+                reception.OfficeId = request.OfficeId;
 
-                await _repository.CreateNewReception(request.DTO.LoggedInMedicalStaffId, request.DTO.ShiftId, request.DTO.OfficeId, request.DTO.PatientId, request.DTO.ReceptionType);
+                await _repository.CreateNewReception(request.DTO.MedicalStaffId, request.DTO.ShiftId, request.OfficeId, request.DTO.PatientId, request.DTO.ReceptionType);
 
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";

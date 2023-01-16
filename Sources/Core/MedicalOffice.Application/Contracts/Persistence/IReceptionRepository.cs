@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.Reception;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using System.Data.SqlTypes;
@@ -22,7 +22,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
         int serviceCount,
         Guid insuranceId
         );
-    Task<Guid> AddReceptionService
+    Task<ReceptionDetail> AddReceptionService
         (
         Guid receptionId,
         Guid serviceId,
@@ -56,4 +56,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
     Task<IEnumerable<MembershipNamesDTO>> GetAllMembershipNames();
     Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId);
     Task<List<ReceptionDetailListDTO>> GetReceptionDetailList(Guid patientId);
+    Task<Reception> CreateNewReceptionDebt(long Debt, Guid officeId, Guid receptionId);
+    Task<ReceptionDetail> CreateNewReceptionDetailDebt(long Debt, Guid officeId, Guid receptionId);
+    Task<bool> CheckExistReceptionId(Guid officeId, Guid receptionId);
 }

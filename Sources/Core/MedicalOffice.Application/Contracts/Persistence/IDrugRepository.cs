@@ -5,6 +5,12 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IDrugRepository : IGenericRepository<Drug, Guid>
     {
-        Task<IEnumerable<DrugListDTO>> GetAllDrugs();
+        Task<bool> CheckExistDrugConsuptionId(Guid drugConsumptionId);
+        Task<bool> CheckExistDrugId(Guid officeId, Guid drugId);
+        Task<bool> CheckExistDrugSectionId(Guid drugSectionId);
+        Task<bool> CheckExistDrugShapeId(Guid drugShapeId);
+        Task<bool> CheckExistDrugUsageId(Guid drugUsageId);
+        Task<IEnumerable<DrugListDTO>> GetAllDrugs(Guid officeId);
+        Task<List<Drug>> GetDrugBySearch(string name);
     }
 }

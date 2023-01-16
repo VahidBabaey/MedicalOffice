@@ -20,5 +20,9 @@ public class PatientIllnessFormRepository : GenericRepository<PatientIllnessForm
     {
         return await _dbContext.PatientIllnessForms.Where(srv => srv.PatientId == patientId).ToListAsync();
     }
-
+    public async Task<bool> CheckExistPatientIllnessFormId(Guid patientIllnessFormId)
+    {
+        bool isExist = await _dbContext.PatientIllnessForms.AnyAsync(p => p.Id == patientIllnessFormId);
+        return isExist;
+    }
 }

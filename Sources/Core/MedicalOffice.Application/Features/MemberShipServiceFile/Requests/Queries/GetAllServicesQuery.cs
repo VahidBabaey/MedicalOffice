@@ -10,6 +10,6 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Quer
 {
     public class GetAllServicesQuery : IRequest<List<ServiceListDTO>>
     {
-
+        public Guid OfficeId { get; set; }
     }
 }

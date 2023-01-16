@@ -32,7 +32,20 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
         public async Task<BaseResponse> Handle(DeleteExperimentCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
+
             Log log = new();
+
+            var validationExperimentId = await _repository.CheckExistExperimentId(request.OfficeId, request.ExperimentID);
+
+            if (!validationExperimentId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
 
             try
             {

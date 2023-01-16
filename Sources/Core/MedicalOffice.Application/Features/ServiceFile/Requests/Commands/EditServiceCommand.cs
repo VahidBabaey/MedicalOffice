@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.ServiceFile.Requests.Commands
     public class EditServiceCommand : IRequest<BaseResponse>
     {
         public UpdateServiceDTO DTO { get; set; } = new UpdateServiceDTO();
+        public Guid OfficeId { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.Reception;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Requests.Commands
 {
     public class AddReceptionCommand : IRequest<BaseResponse>
     {
-        public ReceptionDTO DTO { get; set; } = new ReceptionDTO();
+        public ReceptionsDTO DTO { get; set; } = new ReceptionsDTO();
+        public Guid OfficeId { get; set; }
     }
 }

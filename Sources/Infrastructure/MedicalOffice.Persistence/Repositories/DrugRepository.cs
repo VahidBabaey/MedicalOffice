@@ -1,5 +1,6 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,9 +13,9 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
     {
         _dbContext = dbContext;
     }
-    public async Task<IEnumerable<DrugListDTO>> GetAllDrugs()
+    public async Task<IEnumerable<DrugListDTO>> GetAllDrugs(Guid officeId)
     {
-        var _list = await _dbContext.Drugs.Select(p => new DrugListDTO
+        var _list = await _dbContext.Drugs.Where(p => p.OfficeId == officeId).Select(p => new DrugListDTO
         {
             Id = p.Id,
             Name = p.Name,
@@ -36,4 +37,35 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
 
         return (IEnumerable<DrugListDTO>)_list;
     }
- }
+    public async Task<bool> CheckExistDrugSectionId(Guid drugSectionId)
+    {
+        bool isExist = await _dbContext.DrugSections.AnyAsync(p => p.Id == drugSectionId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistDrugUsageId(Guid drugUsageId)
+    {
+        bool isExist = await _dbContext.DrugUsages.AnyAsync(p => p.Id == drugUsageId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistDrugConsuptionId(Guid drugConsumptionId)
+    {
+        bool isExist = await _dbContext.DrugConsumptions.AnyAsync(p => p.Id == drugConsumptionId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistDrugShapeId(Guid drugShapeId)
+    {
+        bool isExist = await _dbContext.DrugShapes.AnyAsync(p => p.Id == drugShapeId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistDrugId(Guid officeId, Guid drugId)
+    {
+        bool isExist = await _dbContext.Drugs.AnyAsync(p => p.Id == drugId && p.OfficeId == officeId);
+        return isExist;
+    }
+    public async Task<List<Drug>> GetDrugBySearch(string name)
+    {
+        var drugs = await _dbContext.Drugs.Where(p => p.Name.Contains(name)).ToListAsync();
+
+        return drugs;
+    }
+}

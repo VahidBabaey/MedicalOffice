@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
@@ -18,13 +19,15 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
 
     public class EditExperimentCommandHandler : IRequestHandler<EditExperimentCommand, BaseResponse>
     {
+        private readonly IValidator<UpdateExperimentDTO> _validator;
         private readonly IExperimentRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditExperimentCommandHandler(IExperimentRepository repository, IMapper mapper, ILogger logger)
+        public EditExperimentCommandHandler(IValidator<UpdateExperimentDTO> validator, IExperimentRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -37,27 +40,52 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
 
             Log log = new();
 
-            try
-            {
-                var experiment = _mapper.Map<ExperimentPre>(request.DTO);
+            var validationExperimentId = await _repository.CheckExistExperimentId(request.OfficeId, request.DTO.Id);
 
-                await _repository.Update(experiment);
-
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = experiment.Id });
-
-                log.Type = LogType.Success;
-            }
-            catch (Exception error)
+            if (!validationExperimentId)
             {
                 response.Success = false;
                 response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
             }
+            else
+            {
+                try
+                {
+                    var experiment = _mapper.Map<Domain.Entities.Experiment>(request.DTO);
+                    experiment.OfficeId = request.OfficeId;
 
+                    await _repository.Update(experiment);
+
+                    response.Success = true;
+                    response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = experiment.Id });
+
+                    log.Type = LogType.Success;
+                }
+                catch (Exception error)
+                {
+                    response.Success = false;
+                    response.StatusDescription = $"{_requestTitle} failed";
+                    response.Errors.Add(error.Message);
+
+                    log.Type = LogType.Error;
+                }
+            }
             log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;
 

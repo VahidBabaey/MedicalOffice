@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Comm
     public class EditServicetoMembershipCommand : IRequest<BaseResponse>
     {
         public UpdateMemberShipServiceDTO DTO { get; set; } = new UpdateMemberShipServiceDTO();
+        public Guid OfficeId { get; set; }
     }
 }

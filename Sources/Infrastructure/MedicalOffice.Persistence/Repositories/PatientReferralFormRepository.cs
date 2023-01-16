@@ -20,5 +20,9 @@ public class PatientReferralFormRepository : GenericRepository<PatientReferralFo
     {
         return await _dbContext.PatientReferralForms.Where(srv => srv.PatientId == patientId).ToListAsync();
     }
-
+    public async Task<bool> CheckExistPatientReferralFormId(Guid patientReferralFormId)
+    {
+        bool isExist = await _dbContext.PatientReferralForms.AnyAsync(p => p.Id == patientReferralFormId);
+        return isExist;
+    }
 }

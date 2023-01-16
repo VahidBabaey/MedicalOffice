@@ -1,8 +1,10 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Commons;
 
 namespace MedicalOffice.Application.Dtos.Tariff;
 
-public class TariffDTO : BaseDto<Guid>
+public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
 {
 
     /// <summary>
@@ -21,7 +23,6 @@ public class TariffDTO : BaseDto<Guid>
     /// از ضرایب کا استفاده شود یا خیر
     /// </summary>
     public bool UseKMultiplier { get; set; }
-
     /// <summary>
     /// آیدی ضرایب کا
     /// </summary>
@@ -50,4 +51,5 @@ public class TariffDTO : BaseDto<Guid>
     /// مبلغ اضافه به بیمه
     /// </summary>
     public float AdjunctPrice { get; set; }
+
 }

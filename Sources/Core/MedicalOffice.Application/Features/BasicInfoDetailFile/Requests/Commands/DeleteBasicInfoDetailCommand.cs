@@ -11,5 +11,6 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Comman
     public class DeleteBasicInfoDetailCommand : IRequest<BaseResponse>
     {
         public Guid BasicInfoDetailId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

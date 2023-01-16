@@ -11,5 +11,6 @@ namespace MedicalOffice.Application.Features.ShiftFile.Requests.Command
     public class DeleteShiftCommand : IRequest<BaseResponse>
     {
         public Guid ShiftID { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

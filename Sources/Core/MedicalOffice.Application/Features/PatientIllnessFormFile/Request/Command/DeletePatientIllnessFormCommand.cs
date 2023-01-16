@@ -11,5 +11,7 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Comm
     public class DeletePatientIllnessFormCommand : IRequest<BaseResponse>
     {
         public Guid PatientIllnessFormId { get; set; }
+        public Guid PatientId { get; set; }
+
     }
 }

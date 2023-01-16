@@ -19,6 +19,7 @@ using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Dtos.AppointmentsDTO.Validator;
 using MedicalOffice.WebApi.WebApi.Controllers;
+using PhoneNumberValidator = MedicalOffice.Application.Dtos.Common.CommonValidators.PhoneNumberValidator;
 
 namespace MedicalOffice.Application;
 
@@ -27,7 +28,7 @@ public static class ServicesRegistration
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        //services.AddMediatR(Assembly.GetExecutingAssembly());
 
         #region Identity
         services.AddScoped<IValidator<RegisterUserDTO>, RegisterUserValidator>();
@@ -66,5 +67,10 @@ public static class ServicesRegistration
         #endregion
 
         return services;
+    }
+    public static IServiceCollection AddApplication(this IServiceCollection services)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        return services.AddMediatR(assembly);
     }
 }

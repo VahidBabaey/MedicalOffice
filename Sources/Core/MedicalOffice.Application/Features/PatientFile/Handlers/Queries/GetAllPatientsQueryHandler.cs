@@ -8,7 +8,7 @@ using MedicalOffice.Application.Models;
 
 namespace MedicalOffice.Application.Features.PatientFile.Handlers.Queries;
 
-public class GetAllPatientsQueryHandler : IRequestHandler<GetAllPatientsQuery, List<PatientListDto>>
+public class GetAllPatientsQueryHandler : IRequestHandler<GetAllPatientsQuery, List<PatientListDTO>>
 {
     private readonly IPatientRepository _repository;
     private readonly IMapper _mapper;
@@ -23,9 +23,9 @@ public class GetAllPatientsQueryHandler : IRequestHandler<GetAllPatientsQuery, L
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
-    public async Task<List<PatientListDto>> Handle(GetAllPatientsQuery request, CancellationToken cancellationToken)
+    public async Task<List<PatientListDTO>> Handle(GetAllPatientsQuery request, CancellationToken cancellationToken)
     {
-        List<PatientListDto> result = new();
+        List<PatientListDTO> result = new();
 
         Log log = new();
 
@@ -33,7 +33,7 @@ public class GetAllPatientsQueryHandler : IRequestHandler<GetAllPatientsQuery, L
         {
             var patients = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
 
-            result = _mapper.Map<List<PatientListDto>>(patients);
+            result = _mapper.Map<List<PatientListDTO>>(patients);
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

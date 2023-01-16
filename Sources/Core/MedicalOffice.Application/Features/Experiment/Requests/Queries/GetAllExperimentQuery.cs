@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.Experiment.Requests.Queries
     public class GetAllExperimentQuery : IRequest<List<ExperimentListDTO>>
     {
         public ListDto DTO { get; set; } = new ListDto();
+        public Guid OfficeId { get; set; }
     }
 }

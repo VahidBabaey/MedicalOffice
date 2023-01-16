@@ -7,7 +7,6 @@ using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Commands;
 using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -24,31 +23,31 @@ public class FormCommitmentController : Controller
     }
 
      [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] FormCommitmentDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] AddFormCommitmentDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddFormCommitmentCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddFormCommitmentCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteFormCommitmentCommand() { FormCommitmentID = id });
+        var response = await _mediator.Send(new DeleteFormCommitmentCommand() { FormCommitmentID = id, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateFormCommitmentDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateFormCommitmentDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditFormCommitmentCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditFormCommitmentCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<FormCommitmentListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<FormCommitmentListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GatAllFormCommitmentQuery() { DTO = dto });
+        var response = await _mediator.Send(new GatAllFormCommitmentQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

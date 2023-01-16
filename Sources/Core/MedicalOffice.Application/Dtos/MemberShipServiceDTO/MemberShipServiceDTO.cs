@@ -1,4 +1,6 @@
-﻿using MedicalOffice.Domain.Entities;
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Commons;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO
 {
-    public class MemberShipServiceDTO
+    public class MemberShipServiceDTO : IMembershipIdDTO, IServiceListIdDTO
     {
         /// <summary>
         /// آیدی عضویت
@@ -16,7 +18,7 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO
         /// <summary>
         /// آیدی سرویس
         /// </summary>
-        public Guid[]? ServiceId { get; set; }
+        public Guid[] ServiceId { get; set; }
         /// <summary>
         /// تخفیف
         /// </summary>

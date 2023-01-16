@@ -1,11 +1,13 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.DrugFile.Handlers.Queries;
 using MedicalOffice.Application.Features.DrugFile.Requests.Commands;
 using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
+using MedicalOffice.Application.Features.Experiment.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.WebApi.Attributes;
@@ -26,10 +28,10 @@ public class DrugController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<DrugListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<DrugListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
 
-        var response = await _mediator.Send(new GetDrugQuery() { DTO = dto });
+        var response = await _mediator.Send(new GetDrugQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
         
@@ -45,7 +47,7 @@ public class DrugController : Controller
 
     }
     [HttpGet("drug-consumption")]
-    public async Task<ActionResult<List<DrugShapeListDTO>>> GetDrugsConsumption([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<DrugConsumptionListDTO>>> GetDrugsConsumption([FromQuery] ListDto dto)
     {
 
         var response = await _mediator.Send(new GetDrugConsumptionQuery() { DTO = dto });
@@ -54,7 +56,7 @@ public class DrugController : Controller
 
     }
     [HttpGet("drug-usage")]
-    public async Task<ActionResult<List<DrugShapeListDTO>>> GetDrugsUsage([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<DrugUsageListDTO>>> GetDrugsUsage([FromQuery] ListDto dto)
     {
 
         var response = await _mediator.Send(new GetDrugUsageQuery() { DTO = dto });
@@ -63,7 +65,7 @@ public class DrugController : Controller
 
     }
     [HttpGet("drug-section")]
-    public async Task<ActionResult<List<DrugShapeListDTO>>> GetDrugsSection([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<DrugSectionListDTO>>> GetDrugsSection([FromQuery] ListDto dto)
     {
 
         var response = await _mediator.Send(new GetDrugSectionQuery() { DTO = dto });
@@ -72,32 +74,39 @@ public class DrugController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] DrugDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] DrugDTO dto, [FromQuery] string officeId)
     {
 
-        var response = await _mediator.Send(new AddDrugCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddDrugCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
 
     }
 
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateDrugDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateDrugDTO dto, [FromQuery] string officeId)
     {
 
-        var response = await _mediator.Send(new EditDrugCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditDrugCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
 
     }
 
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
 
-        var response = await _mediator.Send(new DeleteDrugCommand() { DrugId = id });
+        var response = await _mediator.Send(new DeleteDrugCommand() { DrugId = id, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
-
     }
+    [HttpGet("Search")]
+    public async Task<ActionResult<List<DrugListDTO>>> GetDrugBySearch([FromQuery] string name, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetDrugBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+
 }

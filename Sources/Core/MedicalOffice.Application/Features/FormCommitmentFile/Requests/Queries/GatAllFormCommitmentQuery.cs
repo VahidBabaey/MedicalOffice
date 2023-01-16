@@ -13,5 +13,6 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Requests.Queries
     public class GatAllFormCommitmentQuery : IRequest<List<FormCommitmentListDTO>>
     {
         public ListDto DTO { get; set; } = new ListDto();
+        public Guid OfficeId { get; set; }
     }
 }

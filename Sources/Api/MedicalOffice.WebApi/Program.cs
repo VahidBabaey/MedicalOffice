@@ -6,20 +6,18 @@ using System.Text.Json.Serialization;
 using FluentValidation;
 using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Dtos.Identity;
-using Microsoft.AspNetCore.Mvc;
-using MedicalOffice.WebApi.WebApi.CustomFilters;
-using System.Text.Json;
+using MediatR;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseIIS();
 
 builder.Services.AddControllers()
     .AddJsonOptions(c =>
-    {
-        c.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    c.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-        c.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
-    });
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddApplication();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -80,17 +78,16 @@ app.MapControllers();
 
 app.Run();
 
-//TODO: Create extention class in infrastructure for this line of codes
-public sealed class DateOnlyJsonConverter : JsonConverter<TimeOnly>
-{
-    public override TimeOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        return TimeOnly.FromDateTime(reader.GetDateTime());
-    }
+//public sealed class DateOnlyJsonConverter : JsonConverter<TimeOnly>
+//{
+//    public override TimeOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+//    {
+//        return TimeOnly.FromDateTime(reader.GetDateTime());
+//    }
 
-    public override void Write(Utf8JsonWriter writer, TimeOnly value, JsonSerializerOptions options)
-    {
-        var isoDate = value.ToString("O");
-        writer.WriteStringValue(isoDate);
-    }
-}
+//    public override void Write(Utf8JsonWriter writer, TimeOnly value, JsonSerializerOptions options)
+//    {
+//        var isoDate = value.ToString("O");
+//        writer.WriteStringValue(isoDate);
+//    }
+//}

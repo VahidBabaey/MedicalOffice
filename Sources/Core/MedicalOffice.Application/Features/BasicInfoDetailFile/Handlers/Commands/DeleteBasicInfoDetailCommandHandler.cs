@@ -32,7 +32,20 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
         public async Task<BaseResponse> Handle(DeleteBasicInfoDetailCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
+
             Log log = new();
+
+            var validationBasicInfoDetailId = await _repository.CheckExistBasicInfoDetailId(request.BasicInfoDetailId);
+
+            if (!validationBasicInfoDetailId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
 
             try
             {

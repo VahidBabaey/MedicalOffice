@@ -29,7 +29,20 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
         public async Task<BaseResponse> Handle(DeleteFormCommitmentCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
+
             Log log = new();
+
+            var validationFormCommitmentId = await _repository.CheckExistFormCommitmentId(request.OfficeId, request.FormCommitmentID);
+
+            if (!validationFormCommitmentId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
 
             try
             {

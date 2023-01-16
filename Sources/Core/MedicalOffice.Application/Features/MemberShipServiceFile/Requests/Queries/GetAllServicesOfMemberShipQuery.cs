@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Quer
     public class GetAllServicesOfMemberShipQuery : IRequest<List<ServicesOfMemeberShipListDTO>>
     {
         public Guid MemberShipId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

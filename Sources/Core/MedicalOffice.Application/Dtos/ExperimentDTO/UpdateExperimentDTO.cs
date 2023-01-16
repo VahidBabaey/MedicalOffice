@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace MedicalOffice.Application.Dtos.ExperimentDTO
         /// <summary>
         /// نوع جواب
         /// </summary>
-        public string AnswerType { get; set; } = string.Empty;
+        public AnswerType AnswerType { get; set; }
         /// <summary>
         /// ماکسیمم رنج نرمال
         /// </summary>

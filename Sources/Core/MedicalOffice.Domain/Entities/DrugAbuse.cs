@@ -5,6 +5,7 @@ namespace MedicalOffice.Domain.Entities;
 
 public class DrugAbuse : BaseDomainEntity<Guid>
 {
+
     /// <summary>
     /// بیمار
     /// </summary>
@@ -41,4 +42,5 @@ public class DrugAbuse : BaseDomainEntity<Guid>
     /// تاریخ پایان مصرف
     /// </summary>
     public string EndDate { get; set; } = string.Empty;
+
 }

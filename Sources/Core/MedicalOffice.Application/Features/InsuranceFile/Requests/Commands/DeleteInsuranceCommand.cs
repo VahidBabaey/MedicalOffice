@@ -13,4 +13,5 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 public class DeleteInsuranceCommand : IRequest<BaseResponse>
 {
     public Guid InsuranceID { get; set; }
+    public Guid OfficeId { get; set; }
 }

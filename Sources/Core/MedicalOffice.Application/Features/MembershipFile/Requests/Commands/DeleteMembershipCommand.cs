@@ -11,6 +11,6 @@ namespace MedicalOffice.Application.Features.MembershipFile.Requests.Commands
     public class DeleteMembershipCommand : IRequest<BaseResponse>
     {
         public Guid MembershipId { get; set; }
-        public Guid[]? ServiceIDs { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

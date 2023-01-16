@@ -24,13 +24,14 @@ using MedicalOffice.Domain.Entities;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO;
-using MedicalOffice.Application.Dtos.Reception;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
 using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MediatR;
+using MedicalOffice.Application.Dtos.Tariff;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -39,11 +40,11 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Patient, PatientDTO>().ReverseMap();
-        CreateMap<Patient, UpdateAddPatientDto>().ReverseMap();
-        CreateMap<Patient, PatientListDto>().ConvertUsing(new PatientMapper());
-        CreateMap<Patient, PatientListDto>().ReverseMap();
+        CreateMap<Patient, UpdatePatientDTO>().ReverseMap();
+        CreateMap<Patient, PatientListDTO>().ConvertUsing(new PatientMapper());
+        CreateMap<Patient, PatientListDTO>().ReverseMap();
         CreateMap<MedicalStaff, PatientDTO>().ReverseMap();
-        CreateMap<Section, SectionDTO>().ReverseMap();
+        CreateMap<Section, AddSectionDTO>().ReverseMap();
         CreateMap<Section, SectionListDTO>().ReverseMap();
         CreateMap<Section, UpdateSectionDTO>().ReverseMap();
         CreateMap<Service, ServiceDTO>().ReverseMap();
@@ -71,9 +72,9 @@ public class MappingProfile : Profile
         CreateMap<Drug, DrugDTO>().ReverseMap();
         CreateMap<Drug, UpdateDrugDTO>().ReverseMap();
         CreateMap<Drug, DrugListDTO>().ReverseMap();
-        CreateMap<ExperimentPre, ExperimentDTO>().ReverseMap();
-        CreateMap<ExperimentPre, UpdateExperimentDTO>().ReverseMap();
-        CreateMap<ExperimentPre, ExperimentListDTO>().ReverseMap();
+        CreateMap<Experiment, ExperimentDTO>().ReverseMap();
+        CreateMap<Experiment, UpdateExperimentDTO>().ReverseMap();
+        CreateMap<Experiment, ExperimentListDTO>().ReverseMap();
         CreateMap<DrugIntraction, DrugIntractionDTO>().ReverseMap();
         CreateMap<DrugIntraction, UpdateDrugIntractionDTO>().ReverseMap();
         CreateMap<DrugIntraction, DrugIntractionListDTO>().ReverseMap();
@@ -104,7 +105,7 @@ public class MappingProfile : Profile
         CreateMap<Permission, PermissionDTO>().ReverseMap();
         CreateMap<Permission, UpdatePermissionDTO>().ReverseMap();
         CreateMap<Permission, PermissionListDTO>().ReverseMap();
-        CreateMap<FormCommitment, FormCommitmentDTO>().ReverseMap();
+        CreateMap<FormCommitment, AddFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, UpdateFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, FormCommitmentListDTO>().ReverseMap();
         CreateMap<Picture, PictureUploadDTO>().ReverseMap();
@@ -115,8 +116,7 @@ public class MappingProfile : Profile
         CreateMap<User, MedicalStaffDTO>().ReverseMap();
         CreateMap<Membership, MembershipNamesDTO>().ReverseMap();
         CreateMap<ReceptionDiscount, ReceptionDiscountDTO>().ReverseMap();
-        CreateMap<Reception, ReceptionDTO>().ReverseMap();
-        //CreateMap<ReceptionDetail, DetailsofAllReceptionsDTO>().ReverseMap();
+        CreateMap<Reception, ReceptionsDTO>().ReverseMap();
         CreateMap<User, UserRoleDTO>().ReverseMap();
         CreateMap<Office, OfficeDTO>().ReverseMap();
         CreateMap<MedicalStaffSchedule, MedicalStaffDaySchedule>().ReverseMap();
@@ -130,11 +130,12 @@ public class MappingProfile : Profile
         CreateMap<Appointment, AddAppointmentDto>().ReverseMap();
         CreateMap<MedicalStaffSchedule, MedicalStaffScheduleDetailsDTO>().ReverseMap();
         CreateMap<ServiceDuration, ServiceDurationDetailsDTO>().ReverseMap();
+        CreateMap<Tariff, TariffDTO>().ReverseMap();
     }
 
-    public class PatientMapper : ITypeConverter<Patient, PatientListDto>
+    public class PatientMapper : ITypeConverter<Patient, PatientListDTO>
     {
-        public PatientListDto Convert(Patient source, PatientListDto destination, ResolutionContext context)
+        public PatientListDTO Convert(Patient source, PatientListDTO destination, ResolutionContext context)
         {
             destination = new()
             {

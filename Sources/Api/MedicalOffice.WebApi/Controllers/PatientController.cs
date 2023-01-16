@@ -21,36 +21,36 @@ public class PatientController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] PatientDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] PatientDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddPatientCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddPatientCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpDelete]
-    public async Task<ActionResult<Guid>> Delete(Guid patientId)
+    public async Task<ActionResult<Guid>> Delete(Guid patientId, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeletePatientCommand() { PatientId = patientId });
+        var response = await _mediator.Send(new DeletePatientCommand() { PatientId = patientId, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateAddPatientDto dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdatePatientDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditPatientCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditPatientCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<PatientListDto>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<PatientListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllPatientsQuery() { DTO = dto });
+        var response = await _mediator.Send(new GetAllPatientsQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpGet("SearchByRequestedFeilds")]
-    public async Task<ActionResult<List<PatientListDto>>> GetBySearch([FromQuery] ListDto dto, [FromQuery] SearchFields searchFields)
+    public async Task<ActionResult<List<PatientListDTO>>> GetBySearch([FromQuery] ListDto dto, [FromQuery] SearchFields searchFields)
     {
         var response = await _mediator.Send(new GetPatientBySearchQuery() { DTO = dto, searchFields = searchFields });
 

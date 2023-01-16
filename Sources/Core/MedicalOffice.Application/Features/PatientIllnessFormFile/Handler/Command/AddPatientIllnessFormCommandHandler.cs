@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.PatientIllnessFormDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormDTO.Validator;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Command;
 using MedicalOffice.Application.Models;
@@ -18,13 +20,15 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Comm
 
     public class AddPatientIllnessFormCommandHandler : IRequestHandler<AddPatientIllnessFormCommand, BaseResponse>
     {
+        private readonly IValidator<PatientIllnessFormDTO> _validator;
         private readonly IPatientIllnessFormRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddPatientIllnessFormCommandHandler(IPatientIllnessFormRepository repository, IMapper mapper, ILogger logger)
+        public AddPatientIllnessFormCommandHandler(IValidator<PatientIllnessFormDTO> validator, IPatientIllnessFormRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -35,11 +39,9 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Comm
         {
             BaseResponse response = new();
 
-            AddPatientIllnessFormValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {

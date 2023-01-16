@@ -11,3 +11,4 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
         public Guid ServiceId { get; set; }
     }
 }
+

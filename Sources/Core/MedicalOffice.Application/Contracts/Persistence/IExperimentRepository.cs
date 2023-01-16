@@ -2,8 +2,9 @@
 
 namespace MedicalOffice.Application.Contracts.Persistence
 {
-    public interface IExperimentRepository : IGenericRepository<ExperimentPre, Guid>
+    public interface IExperimentRepository : IGenericRepository<Experiment, Guid>
     {
-
+        Task<bool> CheckExistExperimentId(Guid officeId, Guid experimentId);
+        Task<List<Experiment>> GetExperimentBySearch(string name);
     }
 }

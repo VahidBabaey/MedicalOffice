@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Commands;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using NLog.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +21,19 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
 {
     public class AddServicetoMembershipCommandHandler : IRequestHandler<AddServicetoMembershipCommand, BaseResponse>
     {
+        private readonly IValidator<MemberShipServiceDTO> _validator;
         private readonly IMemberShipServiceRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
+        private readonly IServiceRepository _serviceRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddServicetoMembershipCommandHandler(IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
+        public AddServicetoMembershipCommandHandler(IValidator<MemberShipServiceDTO> validator, IServiceRepository serviceRepository, IOfficeRepository officeRepository,  IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
         {
-
+            _serviceRepository = serviceRepository;
+           _officeRepository = officeRepository;
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -38,11 +46,21 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
 
             BaseResponse response = new();
 
-            AddMemberShipServiceValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("OfficeID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -56,21 +74,25 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
             {
                 try
                 {
-                    if (request.DTO.ServiceId == null)
-                    {
 
-                    }
-                    else
+                    foreach (var srvid in request.DTO.ServiceId)
                     {
-                        foreach (var srvid in request.DTO.ServiceId)
+                        if (await _serviceRepository.CheckExistServiceId(request.OfficeId, srvid) == false)
                         {
-                            await _repository.InsertServiceToMemberShipAsync(request.DTO.Discount, srvid, request.DTO.MembershipId);
+                            response.Success = false;
+                            response.StatusDescription = $"{_requestTitle} failed";
+                            response.Errors.Add("ServiceID isn't exist");
+
+                            log.Type = LogType.Error;
+                            return response;
                         }
+
+                        await _repository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount, srvid, request.DTO.MembershipId);
                     }
 
                     response.Success = true;
                     response.StatusDescription = $"{_requestTitle} succeded";
-                    
+
                     log.Type = LogType.Success;
                 }
                 catch (Exception error)

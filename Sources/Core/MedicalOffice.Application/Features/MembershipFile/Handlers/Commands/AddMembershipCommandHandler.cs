@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO.Validators;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -18,15 +20,17 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
     public class AddMembershipCommandHandler : IRequestHandler<AddMembershipCommand, BaseResponse>
     {
+        private readonly IValidator<MembershipDTO> _validator;
         private readonly IMembershipRepository _repository;
-        private readonly IServiceRepository _repositoryservice;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddMembershipCommandHandler(IServiceRepository repositoryservice, IMembershipRepository repository, IMapper mapper, ILogger logger)
+        public AddMembershipCommandHandler(IValidator<MembershipDTO> validator, IOfficeRepository officeRepository,  IMembershipRepository repository, IMapper mapper, ILogger logger)
         {
-            _repositoryservice = repositoryservice;
+            _officeRepository = officeRepository;
+            _validator = validator;
             _repository = repository;   
             _mapper = mapper;
             _logger = logger;
@@ -39,11 +43,21 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
             
             BaseResponse response = new();
 
-            AddMembershipValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("OfficeID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -58,24 +72,13 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                 try
                 {
                     var membership = _mapper.Map<Membership>(request.DTO);
+                    membership.OfficeId = request.OfficeId;
 
                     membership = await _repository.Add(membership);
 
                     response.Success = true;
                     response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data=(new { Id = membership.Id });
-                    //if (request.DTO.ServiceIDs == null)
-                    //{
-
-                    //}
-                    //else
-                    //{
-                    //    foreach (var srvid in request.DTO.ServiceIDs)
-                    //    {                   
-                    //    await _officeRepository.InsertMembershipIdofServiceAsync(membership.Discount, srvid, membership.Id);
-                    //    }
-                    //}
-                    
+                    response.Data=(new { Id = membership.Id });              
 
                     log.Type = LogType.Success;
                 }

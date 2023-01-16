@@ -9,6 +9,7 @@ namespace MedicalOffice.Domain.Entities
 {
     public class DrugConsumption : BaseDomainEntity<Guid>
     {
+
         /// <summary>
         /// شکل دارو
         /// </summary>
@@ -17,5 +18,6 @@ namespace MedicalOffice.Domain.Entities
         /// داروها
         /// </summary>
         public ICollection<Drug>? DrugPres { get; set; }
+
     }
 }

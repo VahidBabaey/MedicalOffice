@@ -26,33 +26,33 @@ public class MembershipController : Controller
         _mediator = mediator;
     }
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] MembershipDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] MembershipDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddMembershipCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteMembershipCommand() { MembershipId = id });
+        var response = await _mediator.Send(new DeleteMembershipCommand() { OfficeId = Guid.Parse(officeId) ,MembershipId = id });
 
         return Ok(response);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllMemberships() { DTO = dto});
+        var response = await _mediator.Send(new GetAllMemberships() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateMembershipDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateMembershipDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditMembershipCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

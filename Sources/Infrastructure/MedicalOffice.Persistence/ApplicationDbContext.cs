@@ -20,6 +20,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<AppointmentService> AppointmentServices => Set<AppointmentService>();
     public DbSet<BasicInfo> BasicInfos => Set<BasicInfo>();
     public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<Cash> Cashes => Set<Cash>();
+    public DbSet<CashPos> CashPoses => Set<CashPos>();
+    public DbSet<CashCart> CashCarts => Set<CashCart>();
+    public DbSet<CashCheck> CashChecks => Set<CashCheck>();
     public DbSet<BasicInfoDetail> BasicInfoDetail => Set<BasicInfoDetail>();
     public DbSet<Diagnose> Diagnoses => Set<Diagnose>();
     public DbSet<DiscountType> DiscountTypes => Set<DiscountType>();
@@ -31,7 +35,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<DrugShape> DrugShapes => Set<DrugShape>();
     public DbSet<DrugSection> DrugSections => Set<DrugSection>();
     public DbSet<DrugAbuse> DrugAbuses => Set<DrugAbuse>();
-    public DbSet<ExperimentPre> ExperimentPres => Set<ExperimentPre>();
+    public DbSet<Experiment> ExperimentPres => Set<Experiment>();
     public DbSet<DrugPrescription> DrugPrescriptions => Set<DrugPrescription>();
     public DbSet<FDO> FDO => Set<FDO>();
     public DbSet<GeneralExamination> GeneralExaminations => Set<GeneralExamination>();
@@ -46,6 +50,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<MemberShipService> MemberShipServices => Set<MemberShipService>();
     public DbSet<Office> Offices => Set<Office>();
     public DbSet<Patient> Patients => Set<Patient>();
+    public DbSet<Introducer> Introducers => Set<Introducer>();
     public DbSet<Picture> Pictures => Set<Picture>();
     public DbSet<PatientCommitmentForm> PatientCommitmentForms => Set<PatientCommitmentForm>();
     public DbSet<PatientFiles> PatientFiless => Set<PatientFiles>();
@@ -58,6 +63,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<PMH> PMH => Set<PMH>();
     public DbSet<Reception> Receptions => Set<Reception>();
     public DbSet<ReceptionDetail> ReceptionDetails => Set<ReceptionDetail>();
+    public DbSet<ReceptionDebt> ReceptionDebts => Set<ReceptionDebt>();
     public DbSet<ReceptionDiscount> ReceptionDiscounts => Set<ReceptionDiscount>();
     public DbSet<ReceptionMedicalStaff> ReceptionMedicalStaffs => Set<ReceptionMedicalStaff>();
     public DbSet<ReceptionDetailService> ReceptionDetailServices => Set<ReceptionDetailService>();

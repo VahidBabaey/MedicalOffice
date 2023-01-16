@@ -12,6 +12,4 @@ public class DrugShapeRepository : GenericRepository<DrugShape, Guid>, IDrugShap
     {
         _dbContext = dbContext;
     }
-
-
 }

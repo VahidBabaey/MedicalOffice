@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.DrugDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Dtos.ShiftDTO;
+using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Features.ShiftFile.Requests.Command;
@@ -23,30 +25,37 @@ public class ShiftController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] ShiftDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] ShiftDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddShiftCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddShiftCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteShiftCommand() { ShiftID = id });
+        var response = await _mediator.Send(new DeleteShiftCommand() { ShiftID = id, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateShiftDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateShiftDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditShiftCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditShiftCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
     [HttpGet]
-    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllShiftsQuery() { DTO = dto });
+        var response = await _mediator.Send(new GetAllShiftsQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+    [HttpGet("Search")]
+    public async Task<ActionResult<List<ShiftListDTO>>> GetShiftBySearch([FromQuery] string name, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetShiftBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

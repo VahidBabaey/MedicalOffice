@@ -1,23 +1,15 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Commons;
 
 namespace MedicalOffice.Application.Dtos.ServiceDTO;
 
-public class UpdateServiceDTO : BaseDto<Guid>
+public class UpdateServiceDTO : BaseDto<Guid>, ISectionIdDTO
 {
-
-    /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
-
     /// <summary>
     /// آیدی بخش
     /// </summary>
-    public Guid? SectionId { get; set; }
-    /// <summary>
-    /// آیدی عضویت
-    /// </summary>
-    public Guid? MembershipId { get; set; }
+    public Guid SectionId { get; set; }
     /// <summary>
     /// نام خدمت
     /// </summa?ry>
@@ -26,7 +18,6 @@ public class UpdateServiceDTO : BaseDto<Guid>
     /// کد ژنریک
     /// </summary>
     public string GenericCode { get; set; } = string.Empty;
-
     /// <summary>
     /// آیدی تخصص مربوط به خدمت
     /// </summary>

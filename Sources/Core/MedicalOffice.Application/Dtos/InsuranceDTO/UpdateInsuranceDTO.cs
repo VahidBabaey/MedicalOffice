@@ -5,10 +5,6 @@ namespace MedicalOffice.Application.Dtos.InsuranceDTO;
 public class UpdateInsuranceDTO : BaseDto<Guid>
 {
     /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
-    /// <summary>
     /// نام بیمه : تامین - مسلح - غیره
     /// </summary>
     public string Name { get; set; } = string.Empty;

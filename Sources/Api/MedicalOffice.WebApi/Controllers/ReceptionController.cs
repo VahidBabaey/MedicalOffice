@@ -3,7 +3,7 @@ using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.Reception;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Dtos.RoleDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
@@ -69,17 +69,17 @@ public class ReceptionController : Controller
     }
 
     [HttpPost("Reception")]
-    public async Task<ActionResult<Guid>> CreateReception([FromBody] ReceptionDTO dto)
+    public async Task<ActionResult<Guid>> CreateReception([FromBody] ReceptionsDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddReceptionCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddReceptionCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpPost("ReceptionDetail")]
-    public async Task<ActionResult<Guid>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto)
+    public async Task<ActionResult<Guid>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddReceptionDetailCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddReceptionDetailCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -90,7 +90,7 @@ public class ReceptionController : Controller
 
         return Ok(response);
     }
-    [HttpGet("dtailsLsit")]
+    [HttpGet("dtailsList")]
     public async Task<ActionResult<List<ReceptionDetailListDTO>>> GetDetailsList([FromQuery] Guid patientId)
     {
         var response = await _mediator.Send(new GetReceptionDetailsListQuery() { PatientId = patientId });

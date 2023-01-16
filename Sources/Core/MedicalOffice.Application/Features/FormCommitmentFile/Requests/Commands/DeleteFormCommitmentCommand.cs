@@ -11,5 +11,6 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Requests.Command
     public class DeleteFormCommitmentCommand : IRequest<BaseResponse>
     {
         public Guid FormCommitmentID { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

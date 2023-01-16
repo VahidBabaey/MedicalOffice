@@ -32,4 +32,14 @@ public class DrugIntractionRepository : GenericRepository<DrugIntraction, Guid>,
 
         return (IEnumerable<DrugIntractionListDTO>)_list;
     }
+    public async Task<bool> CheckExistDrugIntractionId(Guid drugIntractionId)
+    {
+        bool isExist = await _dbContext.DrugIntractions.AnyAsync(p => p.Id == drugIntractionId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistDrugId(Guid drugIntractionId)
+    {
+        bool isExist = await _dbContext.Drugs.AnyAsync(p => p.Id == drugIntractionId);
+        return isExist;
+    }
 }

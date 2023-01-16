@@ -39,7 +39,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
             {
                 var shifts = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
 
-                result = _mapper.Map<List<ShiftListDTO>>(shifts);
+                result = _mapper.Map<List<ShiftListDTO>>(shifts.Where(p => p.OfficeId == request.OfficeId));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

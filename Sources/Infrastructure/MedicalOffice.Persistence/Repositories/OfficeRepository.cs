@@ -19,4 +19,9 @@ public class OfficeRepository : GenericRepository<Office, Guid>, IOfficeReposito
 
         return offices;
     }
+    public async Task<bool> CheckExistOfficeId(Guid officeId)
+    {
+        bool isExist = await _dbcontext.Offices.AnyAsync(p => p.Id == officeId);
+        return isExist;
+    }
 }

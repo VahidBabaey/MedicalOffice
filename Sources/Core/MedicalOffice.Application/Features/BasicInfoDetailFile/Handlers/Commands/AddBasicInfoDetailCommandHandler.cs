@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO.Validator;
 using MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -10,6 +12,7 @@ using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,13 +21,15 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
 
     public class AddBasicInfoDetailCommandHandler : IRequestHandler<AddBasicInfoDetailCommand, BaseResponse>
     {
+        private readonly IValidator<BasicInfoDetailDTO> _validator;
         private readonly IBasicInfoDetailRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddBasicInfoDetailCommandHandler(IBasicInfoDetailRepository repository, IMapper mapper, ILogger logger)
+        public AddBasicInfoDetailCommandHandler(IValidator<BasicInfoDetailDTO> validator, IBasicInfoDetailRepository repository, IMapper mapper, ILogger logger)
         {
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -35,11 +40,9 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
         {
             BaseResponse response = new();
 
-            AddBasicInfoDetailValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -64,6 +67,7 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
                 }
                 catch (Exception error)
                 {
+
                     response.Success = false;
                     response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);

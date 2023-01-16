@@ -7,6 +7,14 @@ public class Drug : BaseDomainEntity<Guid>
 {
 
     /// <summary>
+    /// مطب
+    /// </summary>
+    public Office? Office { get; set; }
+    /// <summary>
+    /// آیدی مطب
+    /// </summary>
+    public Guid OfficeId { get; set; }
+    /// <summary>
     /// نام دارو
     /// </summary>
     public string Name { get; set; } = string.Empty;
@@ -71,6 +79,5 @@ public class Drug : BaseDomainEntity<Guid>
     /// </summary>
     public ICollection<DrugIntraction>? PDrugs { get; set; }
     public ICollection<DrugIntraction>? SDrugs { get; set; }
-
 
 }

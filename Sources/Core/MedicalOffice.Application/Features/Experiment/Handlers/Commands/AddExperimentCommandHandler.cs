@@ -3,6 +3,7 @@ using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Dtos.ExperimentDTO.Validators;
 using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Features.Experiment.Requests.Commands;
@@ -20,13 +21,17 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
 
     public class AddExperimentCommandHandler : IRequestHandler<AddExperimentCommand, BaseResponse>
     {
+        private readonly IValidator<ExperimentDTO> _validator;
         private readonly IExperimentRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddExperimentCommandHandler(IExperimentRepository repository, IMapper mapper, ILogger logger)
+        public AddExperimentCommandHandler(IValidator<ExperimentDTO> validator, IOfficeRepository officeRepository, IExperimentRepository repository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -37,11 +42,21 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
         {
             BaseResponse response = new();
 
-            AddExperimentValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("OfficeID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -55,7 +70,8 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Commands
             {
                 try
                 {
-                    var experiment = _mapper.Map<ExperimentPre>(request.DTO);
+                    var experiment = _mapper.Map<Domain.Entities.Experiment>(request.DTO);
+                    experiment.OfficeId = request.OfficeId;
 
                     experiment = await _repository.Add(experiment);
 

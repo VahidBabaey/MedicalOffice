@@ -13,5 +13,6 @@ namespace MedicalOffice.Application.Features.ServiceFile.Requests.Commands
     public class AddServiceCommand : IRequest<BaseResponse>
     {
         public ServiceDTO DTO { get; set; } = new ServiceDTO();
+        public Guid OfficeId { get; set; }
     }
 }

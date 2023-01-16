@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.InsuranceDTO.Validators;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -17,13 +19,17 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 {
     public class AddInsuranceCommandHandler : IRequestHandler<AddInsuranceCommand, BaseResponse>
     {
+        private readonly IValidator<InsuranceDTO> _validator;
         private readonly IInsuranceRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddInsuranceCommandHandler(IInsuranceRepository repository, IMapper mapper, ILogger logger)
+        public AddInsuranceCommandHandler(IValidator<InsuranceDTO> validator, IOfficeRepository officeRepository,  IInsuranceRepository repository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
+            _validator = validator;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -34,11 +40,21 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
         {
             BaseResponse response = new();
 
-            AddInsuranceValidator validator = new();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("OfficeID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -53,6 +69,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
                 try
                 {
                     var insurance = _mapper.Map<Insurance>(request.DTO);
+                    insurance.OfficeId = request.OfficeId;
 
                     insurance = await _repository.Add(insurance);
 

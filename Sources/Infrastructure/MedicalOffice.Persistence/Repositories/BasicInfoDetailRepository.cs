@@ -24,4 +24,14 @@ public class BasicInfoDetailRepository : GenericRepository<BasicInfoDetail, Guid
     {
         return await _dbContext.BasicInfoDetail.Where(srv => srv.basicInfoId == Guid.Parse("7d4395ec-e818-46bd-9500-b47446fdc8c8")).ToListAsync();
     }
+    public async Task<bool> CheckExistBasicInfoId(Guid officeId, Guid basicInfoId)
+    {
+        bool isExist = await _dbContext.BasicInfos.AnyAsync(p => p.OfficeId == officeId && p.Id == basicInfoId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistBasicInfoDetailId(Guid basicInfoDetailId)
+    {
+        bool isExist = await _dbContext.BasicInfoDetail.AnyAsync(p => p.Id == basicInfoDetailId);
+        return isExist;
+    }
 }

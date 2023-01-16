@@ -13,5 +13,6 @@ namespace MedicalOffice.Application.Features.MembershipFile.Requests.Commands
     public class AddMembershipCommand : IRequest<BaseResponse>
     {
         public MembershipDTO DTO { get; set; } = new MembershipDTO();
+        public Guid OfficeId { get; set; }
     }
 }

@@ -36,9 +36,9 @@ public class PatientReferralFormController : Controller
         return Ok(response);
     }
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] PatientReferralFormDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] PatientReferralFormDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddPatientReferralFormCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddPatientReferralFormCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

@@ -32,7 +32,20 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
         public async Task<BaseResponse> Handle(DeleteDrugCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
+
             Log log = new();
+
+            var validationDrugId = await _repository.CheckExistDrugId(request.OfficeId, request.DrugId);
+
+            if (!validationDrugId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
 
             try
             {

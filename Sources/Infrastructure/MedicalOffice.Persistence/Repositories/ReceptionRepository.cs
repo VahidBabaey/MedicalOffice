@@ -1,11 +1,14 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.Reception;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using MedicalOffice.Persistence.Repositories.RepoHelpers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using OtpNet;
+using System.Net;
+using System;
 
 namespace MedicalOffice.Persistence.Repositories;
 
@@ -14,17 +17,19 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     private readonly IGenericRepository<ReceptionDetail, Guid> _receptionDetailRepository;
     private readonly IGenericRepository<ReceptionMedicalStaff, Guid> _receptionDetailMedicalStaffRepository;
     private readonly IGenericRepository<ReceptionDetailService, Guid> _receptionDetailServiceRepository;
+    private readonly IGenericRepository<Reception, Guid> _receptionReception;
     private readonly ApplicationDbContext _dbContext;
     string medicalStaffNames = "";
-    public ReceptionRepository(IGenericRepository<ReceptionDetailService, Guid> receptionDetailServiceRepository, IGenericRepository<ReceptionMedicalStaff, Guid> receptionDetailMedicalStaffRepository, IGenericRepository<ReceptionDetail, Guid> receptionDetailRepository, ApplicationDbContext dbContext) : base(dbContext)
+    public ReceptionRepository(IGenericRepository<Reception, Guid> receptionReception, IGenericRepository<ReceptionDetailService, Guid> receptionDetailServiceRepository, IGenericRepository<ReceptionMedicalStaff, Guid> receptionDetailMedicalStaffRepository, IGenericRepository<ReceptionDetail, Guid> receptionDetailRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
         _receptionDetailRepository = receptionDetailRepository;
         _receptionDetailMedicalStaffRepository = receptionDetailMedicalStaffRepository;
         _receptionDetailServiceRepository = receptionDetailServiceRepository;
+        _receptionReception = receptionReception;
     }
 
-    public async Task<Guid> AddReceptionService(Guid receptionId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, Guid discountTypeId, Guid[] MedicalStaffs)
+    public async Task<ReceptionDetail> AddReceptionService(Guid receptionId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, Guid discountTypeId, Guid[] MedicalStaffs)
     {
         var reception = await _dbContext.Receptions.SingleAsync(r => r.Id == receptionId);
         var service = await _dbContext.Services.SingleAsync(s => s.Id == serviceId);
@@ -35,8 +40,8 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         if (!MedicalStaffsCheck)
             throw new NullReferenceException();
 
-        var cost = await GetReceptionServiceCost(serviceId, serviceCount, insuranceId);
-        var finalRecieved = received - discountValue.Discount;
+        var cost = await GetReceptionServiceCost(serviceId, serviceCount, insuranceId) - discountValue.Discount;
+        var finalRecieved = received;
         var debt = cost > finalRecieved ? cost - finalRecieved : 0;
         var deposit = finalRecieved > cost ? finalRecieved - cost : 0;
 
@@ -44,11 +49,12 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         {
             AdditionalInsuranceId = additionalInsuranceId,
             Cost = cost,
-            Received = received,
+            Received = finalRecieved,
             Deposit = deposit,
             Debt = debt,
             InsuranceId = insuranceId,
             IsDeleted = false,
+            IsDebt = false,
             OfficeId = service.OfficeId,
             ReceptionId = reception.Id,
             ServiceCount = serviceCount,
@@ -62,7 +68,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             var receptionMedicalStaff = new ReceptionMedicalStaff()
             {
                 IsDeleted = false,
-                //UserOfficeRoleId = MedicalStaffId,
                 ReceptionDetailId = addedDetail.Id,
             };
             await _receptionDetailMedicalStaffRepository.Add(receptionMedicalStaff);
@@ -75,7 +80,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         };
         await _receptionDetailServiceRepository.Add(receptionDetailService);
 
-        return addedDetail.Id;
+        return addedDetail;
     }
 
     public async Task<Guid> CreateNewReception(Guid MedicalStaffId, Guid shiftId, Guid officeId, Guid patientId, ReceptionType receptionType)
@@ -90,6 +95,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             IsCancelled = false,
             IsDeleted = false,
             IsReturned = false,
+            IsDebt = false,
             LoggedInMedicalStaffId = MedicalStaffId,
             OfficeId = officeId,
             PatientId = patientId,
@@ -108,6 +114,66 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         await _dbContext.SaveChangesAsync();
 
         return addedReception.Entity.Id;
+    }
+
+    public async Task<Reception> CreateNewReceptionDebt(long Debt,Guid officeId, Guid receptionId)
+    {
+        var factorNo = await GetFactorNo();
+        var factorNoToday = await GetFactorNoToday();
+        var patientId = _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefault().PatientId;
+
+        Reception reception = new()
+        {
+            FactorNo = factorNo,
+            FactorNoToday = factorNoToday,
+            IsCancelled = false,
+            IsDeleted = false,
+            IsReturned = false,
+            IsDebt = true,
+            LoggedInMedicalStaffId = default,
+            OfficeId = officeId,
+            PatientId = patientId,
+            ReceptionDate = DateTime.Now.ToPersianDate(),
+            ReceptionSubmitHour = DateTime.Now.ToShortTimeString(),
+            ReceptionType = (ReceptionType?)3,
+            ShiftId = default,
+            TotalDebt = default,
+            TotalDeposit = default,
+            TotalReceived = Debt,
+            TotalReceptionCost = default
+        };
+
+        var addedReception = await _dbContext.Receptions.AddAsync(reception);
+
+        await _dbContext.SaveChangesAsync();
+
+        return reception;
+    }
+
+    public async Task<ReceptionDetail> CreateNewReceptionDetailDebt(long Debt, Guid officeId, Guid receptionId)
+    {
+
+        ReceptionDetail receptionDetail = new()
+        {
+            AdditionalInsuranceId = default,
+            Cost = default,
+            Received = Debt,
+            Deposit = default,
+            Debt = default,
+            InsuranceId = default,
+            IsDeleted = false,
+            OfficeId = officeId,
+            IsDebt = true,
+            ReceptionId = receptionId,
+            ServiceCount = default,
+            ReceptionDiscountId = default
+        };
+
+        var addedReception = await _dbContext.ReceptionDetails.AddAsync(receptionDetail);
+
+        await _dbContext.SaveChangesAsync();
+
+        return receptionDetail;
     }
 
     public async Task DeleteReceptionService(Guid receptionDetailId)
@@ -163,70 +229,40 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         return (long)Convert.ToDouble(service.TariffValue * serviceCount); 
     }
 
-    //public async Task<ReceptionServiceDto> GetReceptionServiceInfo(Guid receptionDetailId)
-    //{
-        //var detail = await _dbContext.ReceptionDetails.SingleOrDefaultAsync(rd => rd.Id == receptionDetailId);
-
-        //if (detail != null)
-        //{
-        //    await _dbContext
-        //        .Entry(detail)
-        //        .Collection(d => d.ReceptionDiscounts).EntityEntry
-        //        .Collection(d => d.ReceptionMedicalStaffs).EntityEntry
-        //        .Reference(d => d.Service)
-        //        .LoadAsync();
-
-        //    long discount = default;
-        //    Guid discountTypeId = default;
-        //    Guid[]? MedicalStaffs = default;
-        //    if (detail.ReceptionDiscounts.Any())
-        //    {
-        //        discount = detail.ReceptionDiscounts.Sum(d => d.Amount);
-        //        discountTypeId = detail.ReceptionDiscounts.First().DiscountTypeId;
-        //    }
-        //    if (detail.ReceptionMedicalStaffs.Any())
-        //    {
-        //        MedicalStaffs = detail.ReceptionMedicalStaffs
-        //            .Select(u => u.Id)
-        //            .ToArray();
-        //    }
-
-        //    ReceptionServiceDto dto = new()
-        //    {
-        //        AdditionalInsuranceId = detail.AdditionalInsuranceId,
-        //        DiscountAmount = discount,
-        //        DiscountTypeId = discountTypeId,
-        //        InsuranceId = detail.InsuranceId,
-        //        ServiceId = detail.ServiceId,
-        //        MedicalStaffs = MedicalStaffs,
-        //        ServiceName = detail.Service.Name,
-        //        Received = detail.Received,
-        //        ServiceCount = detail.ServiceCount
-        //    };
-
-        //    return dto;
-        //}
-        //else
-        //    throw new NullReferenceException();
-    //}
     public async Task <DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId)
     {
+        var facNo = await _dbContext.Receptions.Where(p => p.PatientId == patientId).FirstOrDefaultAsync();
         var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId).ToListAsync();
         DetailsofAllReceptionsDTO detailsofAllReceptions = new DetailsofAllReceptionsDTO();
         foreach (var item in _list)
         {
-            detailsofAllReceptions.ReceptionId = item.Id;
+            detailsofAllReceptions.ReceptionId = item.ReceptionId;
             detailsofAllReceptions.Cost += item.Cost;
             detailsofAllReceptions.Debt += item.Debt;
             detailsofAllReceptions.Deposit += item.Deposit;
+            detailsofAllReceptions.Recieved += item.Received;
         }
+        detailsofAllReceptions.FactorNo = facNo.FactorNo;
+        if (detailsofAllReceptions.Recieved == detailsofAllReceptions.Cost)
+        {
+            detailsofAllReceptions.Debt = 0;
+        }
+        var reception = await _dbContext.Receptions.Where(p => p.Id == detailsofAllReceptions.ReceptionId).FirstOrDefaultAsync();
+
+        reception.TotalReceptionCost = detailsofAllReceptions.Cost;
+        reception.TotalDebt = detailsofAllReceptions.Debt;
+        reception.TotalDeposit = detailsofAllReceptions.Deposit;
+        reception.TotalReceived += detailsofAllReceptions.Recieved;
+
+        await _receptionReception.Update(reception);
+
         return detailsofAllReceptions;
     }
 
     public async Task<List<ReceptionDetailListDTO>> GetReceptionDetailList(Guid patientId)
     {
         List<ReceptionDetailListDTO> receptionDetailListDTO = new();
-        var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId).ToListAsync();
+        var _list = await _dbContext.ReceptionDetails.Where(x => x.ServiceCount > 0).Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId).ToListAsync();
         foreach (var item in _list)
         {
             var serviceId =  _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == item.Id).FirstOrDefault().ServiceId;
@@ -317,5 +353,10 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     public async Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, long discount, Guid discountTypeId, Guid[] MedicalStaffs)
     {
         throw new NotImplementedException();
+    }
+    public async Task<bool> CheckExistReceptionId(Guid officeId, Guid receptionId)
+    {
+        bool isExist = await _dbContext.Receptions.AnyAsync(p => p.Id == receptionId && p.OfficeId == officeId);
+        return isExist;
     }
 }

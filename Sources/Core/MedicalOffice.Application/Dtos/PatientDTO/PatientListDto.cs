@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.PatientDTO;
 
-public class PatientListDto : BaseDto<Guid>
+public class PatientListDTO : BaseDto<Guid>
 {
     /// <summary>
     /// شماره پرونده

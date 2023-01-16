@@ -13,5 +13,6 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Requests.Command
     public class EditFormCommitmentCommand : IRequest<BaseResponse>
     {
         public UpdateFormCommitmentDTO DTO { get; set; } = new UpdateFormCommitmentDTO();
+        public Guid OfficeId { get; set; }
     }
 }

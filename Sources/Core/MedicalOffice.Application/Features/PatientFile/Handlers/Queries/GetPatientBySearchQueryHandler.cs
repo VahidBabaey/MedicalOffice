@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PatientFile.Handlers.Queries;
 
-public class GetPatientBySearchQueryHandler : IRequestHandler<GetPatientBySearchQuery, List<PatientListDto>>
+public class GetPatientBySearchQueryHandler : IRequestHandler<GetPatientBySearchQuery, List<PatientListDTO>>
 {
     private readonly IPatientRepository _repository;
     private readonly IMapper _mapper;
@@ -30,16 +30,16 @@ public class GetPatientBySearchQueryHandler : IRequestHandler<GetPatientBySearch
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
-    public async Task<List<PatientListDto>> Handle(GetPatientBySearchQuery request, CancellationToken cancellationToken)
+    public async Task<List<PatientListDTO>> Handle(GetPatientBySearchQuery request, CancellationToken cancellationToken)
     {
         Log log = new();
 
-        List<PatientListDto> result = new();
+        List<PatientListDTO> result = new();
         try
         {
             var pateint = await _repository.SearchPateint(request.DTO.Skip, request.DTO.Take,request.searchFields.FirstName, request.searchFields.LastName, request.searchFields.NationalID, request.searchFields.Mobile, request.searchFields.FileNumber);
 
-            result = _mapper.Map<List<PatientListDto>>(pateint);
+            result = _mapper.Map<List<PatientListDTO>>(pateint);
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

@@ -89,6 +89,18 @@ public class Patient : BaseDomainEntity<Guid>
     /// </summary>
     public Guid InsuranceId { get; set; }
     /// <summary>
+    /// معرف
+    /// </summary>
+    public Introducer? Introducer { get; set; }
+    /// <summary>
+    /// آیدی معرف
+    /// </summary>
+    public Guid IntroducerId { get; set; }
+    /// <summary>
+    /// اتباع خارجی
+    /// </summary>
+    public bool IsForeign { get; set; }
+    /// <summary>
     /// آدرس ها
     /// </summary>
     public ICollection<PatientAddress> PatientAddresses { get; set; } = new List<PatientAddress>();
@@ -112,10 +124,6 @@ public class Patient : BaseDomainEntity<Guid>
     /// وقت دهی ها
     /// </summary>
     public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-    /// <summary>
-    /// آیدی معرف
-    /// </summary>
-    public Guid IntroducerId { get; set; }
     /// <summary>
     /// نوع معرف
     /// </summary>

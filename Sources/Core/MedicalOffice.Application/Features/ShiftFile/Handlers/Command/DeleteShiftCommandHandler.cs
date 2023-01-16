@@ -34,6 +34,18 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
             BaseResponse response = new();
             Log log = new();
 
+            var validationShiftId = await _repository.CheckExistShiftId(request.OfficeId, request.ShiftID);
+
+            if (!validationShiftId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             try
             {
                 await _repository.Delete(request.ShiftID);

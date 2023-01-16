@@ -5,6 +5,7 @@ using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using Microsoft.Data.SqlClient;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 
@@ -24,14 +25,24 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
     public async Task<BaseResponse> Handle(DeleteSectionCommand request, CancellationToken cancellationToken)
     {
         BaseResponse response = new();
+
         Log log = new();
+
+        var validationSectionId = await _repository.CheckExistSectionId(request.OfficeId, request.SectionId);
+
+        if (!validationSectionId)
+        {
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            response.Errors.Add("ID isn't exist");
+
+            log.Type = LogType.Error;
+            return response;
+        }
 
         try
         {
-            //var sec = _repository.GetByID(request.SectionId);
-            //sec.IsDeleted = true;
-
-            //_repository.SoftDelete<Section>(request.SectionId);
+            await _repository.Delete(request.SectionId);
 
             response.Success = true;
             response.StatusDescription = $"{_requestTitle} succeded";

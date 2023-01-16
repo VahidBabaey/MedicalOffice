@@ -10,10 +10,6 @@ namespace MedicalOffice.Application.Dtos.ShiftDTO
      public class ShiftDTO
     {
         /// <summary>
-        /// آیدی مطب
-        /// </summary>
-        public Guid OfficeId { get; set; }
-        /// <summary>
         /// عنوان شیفت : صبح - ظهر - عصر - غیره
         /// </summary>
         public string Name { get; set; } = string.Empty;

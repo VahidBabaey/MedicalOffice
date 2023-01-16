@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.Experiment.Requests.Commands
     public class AddExperimentCommand : IRequest<BaseResponse>
     {
       public ExperimentDTO DTO { get; set; } = new ExperimentDTO();
+      public Guid OfficeId { get; set; }
     }
 }

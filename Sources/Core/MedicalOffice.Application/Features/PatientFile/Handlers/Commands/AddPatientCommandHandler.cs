@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Dtos.PatientDTO.Validators;
 using MedicalOffice.Application.Features.PatientFile.Requests.Commands;
 using MedicalOffice.Application.Models;
@@ -12,13 +14,17 @@ namespace MedicalOffice.Application.Features.PatientFile.Handlers.Commands;
 
 public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseResponse>
 {
+    private readonly IOfficeRepository _officeRepository;
+    private readonly IValidator<PatientDTO> _validator;
     private readonly IPatientRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddPatientCommandHandler(IPatientRepository repository, IMapper mapper, ILogger logger)
+    public AddPatientCommandHandler(IOfficeRepository officeRepository, IValidator<PatientDTO> validator, IPatientRepository repository, IMapper mapper, ILogger logger)
     {
+        _officeRepository = officeRepository;
+        _validator = validator;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
@@ -30,11 +36,21 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
 
         BaseResponse response = new();
 
-        AddPatientValidator validator = new();
-
         Log log = new();
 
-        var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            response.Success = false;
+            response.StatusDescription = $"{_requestTitle} failed";
+            response.Errors.Add("OfficeID isn't exist");
+
+            log.Type = LogType.Error;
+            return response;
+        }
+
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
@@ -49,19 +65,20 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
             try
             {
                 var patient = _mapper.Map<Patient>(request.DTO);
+                patient.OfficeId = request.OfficeId;
 
                 patient = await _repository.Add(patient);
 
                 response.Success = true;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = patient.Id });
-                if (request.DTO.Mobile == null)
+                if (request.DTO.PhoneNumber == null)
                 {
 
                 }
                 else
                 {
-                    foreach (var mobile in request.DTO.Mobile)
+                    foreach (var mobile in request.DTO.PhoneNumber)
                     {
                         await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
                     }

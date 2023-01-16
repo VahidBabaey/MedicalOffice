@@ -2,6 +2,7 @@
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
+using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Features.TariffFile.Requests.Commands;
 using MedicalOffice.Application.Features.TariffFile.Requests.Queries;
@@ -21,9 +22,9 @@ public class TariffController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] ServiceTariffDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] TariffDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddServiceTariffCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddServiceTariffCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
