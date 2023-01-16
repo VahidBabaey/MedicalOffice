@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO;
@@ -29,15 +30,23 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpPost("send-Totp")]
-        public async Task<ActionResult<string>> SendOtp(GetByPhoneNumberDTO dto)
+        public async Task<ActionResult<string>> SendTotp(SendTotpDTO dto)
         {
             var response = await _mediator.Send(new SendTotpCommand() { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [HttpPost("verify-Totp")]
+        public async Task<ActionResult<bool>> VerifyTotp(VerifyTotpDTO dto)
+        {
+            var response = await _mediator.Send(new VerifyTotpCommand() { DTO = dto });
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
         [HttpGet("status")]
-        public async Task<ActionResult<UserStatusDTO>> GetUserStatus([FromQuery] GetByPhoneNumberDTO dto)
+        public async Task<ActionResult<UserStatusDTO>> GetUserStatus([FromQuery] UserStatusRequestDTO dto)
         {
             var response = await _mediator.Send(new GetUserStatusQuery() { DTO = dto });
 

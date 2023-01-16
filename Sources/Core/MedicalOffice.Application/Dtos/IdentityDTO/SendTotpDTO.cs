@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.Identity
+namespace MedicalOffice.Application.Dtos.IdentityDTO
 {
-    public class GetByPhoneNumberDTO:IPhoneNumberDTO
+    public class SendTotpDTO : IPhoneNumberDTO
     {
-        public string PhoneNumber { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; }
     }
 }
