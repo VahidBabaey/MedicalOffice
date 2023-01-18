@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(VerifyTotpCommand request, CancellationToken cancellationToken)
         {
-            
+
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
@@ -51,14 +52,15 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             var isVerify = _totpHandler.Verify(request.DTO.PhoneNumber, request.DTO.Totp);
             if (!isVerify)
             {
+                var error = "Totp isn't valid";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = false
+                    AdditionalData = error
                 });
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} failed", false);
+                return ResponseBuilder.Faild(HttpStatusCode.NotAcceptable, $"{_requestTitle} failed", error);
             }
 
             await _logger.Log(new Log
