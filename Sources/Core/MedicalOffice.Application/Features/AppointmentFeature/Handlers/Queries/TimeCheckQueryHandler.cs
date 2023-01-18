@@ -50,7 +50,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
         public async Task<BaseResponse> Handle(TimeCheckQuery request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
             var result = new CheckTimeResponseDTO();
 
             #region ValidateTime
@@ -67,7 +67,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     AdditionalData = result
                 });
 
-                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
             }
             #endregion
 
@@ -82,7 +82,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     AdditionalData = result
                 });
 
-                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
             }
 
             var serviceDuration = _serviceDurationRepository.GetByServiceAndStaffId(request.DTO.MedicalStaffId, request.DTO.ServiceId).Result;
@@ -97,7 +97,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     AdditionalData = result
                 });
 
-                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
             }
 
             var staffExistingAppointments = _appointmentRepository.GetByDateAndStaff(request.DTO.Date, medicalStaffId: request.DTO.MedicalStaffId).Result;
@@ -113,7 +113,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     AdditionalData = result
                 });
 
-                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
             }
 
             if (request.DeviceId != null)
@@ -131,7 +131,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         AdditionalData = result
                     });
 
-                    return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
+                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
                 }
             }
 
@@ -144,7 +144,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                 AdditionalData = result
             });
 
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
         }
     }
 }

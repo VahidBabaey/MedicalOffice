@@ -22,24 +22,21 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
     {
         private readonly IValidator<UpdateAppointmentTypeDTO> _validator;
         private readonly ILogger _logger;
-        private readonly IMapper _mapper;
         private readonly IAppointmentRepository _appointmentRepository;
-
         private readonly string _requestTitle;
 
-        public UpdateAppointmentTypeCommandHandler(IValidator<UpdateAppointmentTypeDTO> validator, ILogger logger, IMapper mapper, IAppointmentRepository appointmentRepository)
+        public UpdateAppointmentTypeCommandHandler(
+            IValidator<UpdateAppointmentTypeDTO> validator,
+            ILogger logger,
+            IAppointmentRepository appointmentRepository)
         {
             _validator = validator;
             _logger = logger;
-            _mapper = mapper;
             _appointmentRepository = appointmentRepository;
-
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
         public async Task<BaseResponse> Handle(EditAppointmentTypeCommand request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
@@ -51,7 +48,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
@@ -72,7 +69,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             if (request.DTO.AppointmentType == AppointmentType.Canceled &&
@@ -87,7 +84,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                     AdditionalData = error
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             existingAppointment.AppointmentType = request.DTO.AppointmentType;
@@ -102,7 +99,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 AdditionalData = existingAppointment.Id
             });
 
-            return responseBuilder.Success(HttpStatusCode.BadRequest, $"{_requestTitle} succeeded", existingAppointment.Id);
+            return ResponseBuilder.Success(HttpStatusCode.BadRequest, $"{_requestTitle} succeeded", existingAppointment.Id);
         }
     }
 }

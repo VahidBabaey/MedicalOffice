@@ -5,16 +5,18 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.DrugDTO;
 using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
 using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.DrugFile.Handlers.Queries
 {
 
-    public class GetDrugSectionQueryHandler : IRequestHandler<GetDrugSectionQuery, List<DrugSectionListDTO>>
+    public class GetDrugSectionQueryHandler : IRequestHandler<GetDrugSectionQuery, BaseResponse>
     {
         private readonly IDrugSectionRepository _repository;
         private readonly IMapper _mapper;
@@ -29,32 +31,31 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<DrugSectionListDTO>> Handle(GetDrugSectionQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetDrugSectionQuery request, CancellationToken cancellationToken)
         {
-            List<DrugSectionListDTO> result = new();
-
             Log log = new();
 
             try
             {
                 var drugsection = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
-
-                result = _mapper.Map<List<DrugSectionListDTO>>(drugsection);
+                var result = _mapper.Map<List<DrugSectionListDTO>>(drugsection);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
+                await _logger.Log(log);
+
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+
             }
             catch (Exception error)
             {
                 log.Header = $"{_requestTitle} failed";
                 log.AdditionalData = error.Message;
                 log.Type = LogType.Error;
+                await _logger.Log(log);
+
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
-
-            await _logger.Log(log);
-
-            return result;
         }
     }
-
 }

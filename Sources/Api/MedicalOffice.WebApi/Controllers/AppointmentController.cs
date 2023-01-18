@@ -1,18 +1,10 @@
 ﻿using MediatR;
-using MedicalOffice.Application;
 using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
-using MedicalOffice.Application.Dtos.Identity;
-using MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO;
-using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Commands;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
-using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
-using MedicalOffice.Domain;
-using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers
@@ -37,6 +29,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [Authorize]
         [HttpPatch("type")]
         public async Task<ActionResult<Guid>> EditAppointmentStatus([FromBody] UpdateAppointmentTypeDTO dto, [FromQuery] string officeId)
         {
@@ -45,6 +38,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [Authorize]
         [HttpPatch("transfer")]
         public async Task<ActionResult<Guid>> TransferAppointment([FromBody] TransferAppointmentDTO dto, [FromQuery] string officeId)
         {
@@ -53,6 +47,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [Authorize]
         [HttpPatch("patient-info")]
         public async Task<ActionResult<Guid>> EditPatientInfo([FromBody] UpdateAppointmentPatientInfoDto dto, [FromQuery] string officeId)
         {
@@ -61,6 +56,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [Authorize]
         [HttpPatch("Description")]
         public async Task<ActionResult<Guid>> EditAppointmentDescription([FromBody] UpdateAppointmentDescriptionDTO dto, [FromQuery] string officeId)
         {
@@ -69,14 +65,16 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [Authorize]
         [HttpPost("search")]
         public async Task<ActionResult<List<AppointmentDetailsDTO>>> SearchByRequestedFeilds([FromBody] SearchAppointmentsDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new SearchByStaffAndServiceQuery { DTO = dto , OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new SearchByStaffAndServiceQuery { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [Authorize]
         [HttpGet("period-appointments")]
         public async Task<ActionResult<List<GetSpecificPeriodAppointmentResponseDTO>>> GetSpecificPeriodAppointmnet([FromQuery] GetSpecificPeriodAppointmentDTO dto, [FromQuery] string officeId)
         {
@@ -85,10 +83,11 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [Authorize]
         [HttpGet("patient-appointments")]
         public async Task<ActionResult<List<AppointmentDetailsDTO>>> searchByPatient([FromQuery] string input, DateTime? date, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new SearchByPatientQuery { Input=input, Date = date, OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new SearchByPatientQuery { Input = input, Date = date, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -96,15 +95,16 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpGet("types")]
         public async Task<ActionResult<AppointmentType>> GetAllStatus([FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new GetAllStatusQuery { OfficeId = Guid.Parse(officeId)});
+            var response = await _mediator.Send(new GetAllStatusQuery { OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [Authorize]
         [HttpGet("time-check")]
         public async Task<ActionResult<bool>> IsValidTime([FromQuery] CheckTimeRequestDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new TimeCheckQuery{DTO = dto ,OfficeId = Guid.Parse(officeId)});
+            var response = await _mediator.Send(new TimeCheckQuery { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

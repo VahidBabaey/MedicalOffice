@@ -33,7 +33,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 
         public async Task<BaseResponse> Handle(GetAllServiceDurationQuery request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
 
             try
             {
@@ -48,7 +48,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     AdditionalData = result
                 });
 
-                return responseBuilder.Success(HttpStatusCode.OK,
+                return ResponseBuilder.Success(HttpStatusCode.OK,
                     $"{_requestTitle} succeeded",
                     result);
             }
@@ -62,7 +62,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     AdditionalData = error.Message
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.NotFound,
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound,
                     $"{_requestTitle} failed",
                     error.Message);
             }

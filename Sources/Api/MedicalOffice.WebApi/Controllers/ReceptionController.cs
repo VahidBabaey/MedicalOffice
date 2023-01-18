@@ -1,18 +1,13 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.ReceptionDTO;
-using MedicalOffice.Application.Dtos.RoleDTO;
-using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Commands;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Queries;
-using MedicalOffice.Application.Features.RoleFile.Handlers.Queries;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Features.TariffFile.Requests.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -28,7 +23,7 @@ public class ReceptionController : Controller
         _mediator = mediator;
     }
 
-
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MembershipNamesDTO>>> GetAllMembershipNames()
     {
@@ -36,6 +31,8 @@ public class ReceptionController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpPost("Discount")]
     public async Task<ActionResult<Guid>> CreateReceptionDiscount([FromBody] ReceptionDiscountDTO dto)
     {
@@ -44,6 +41,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("Insurances")]
     public async Task<ActionResult<List<InsuranceNamesDTO>>> GetAllInsurances()
     {
@@ -52,6 +50,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("Additional")]
     public async Task<ActionResult<List<InsuranceNamesDTO>>> GetAllAdditionalInsurances()
     {
@@ -60,6 +59,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("MedicalStaffs")]
     public async Task<ActionResult<List<MedicalStaffNamesDTO>>> GetAllMedicalStaffs()
     {
@@ -68,6 +68,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPost("Reception")]
     public async Task<ActionResult<Guid>> CreateReception([FromBody] ReceptionsDTO dto, [FromQuery] string officeId)
     {
@@ -76,6 +77,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPost("ReceptionDetail")]
     public async Task<ActionResult<Guid>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId)
     {
@@ -83,6 +85,8 @@ public class ReceptionController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpGet("dtails")]
     public async Task<ActionResult<List<DetailsofAllReceptionsDTO>>> GetAllDetails([FromQuery] Guid patientId)
     {
@@ -90,6 +94,8 @@ public class ReceptionController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpGet("dtailsList")]
     public async Task<ActionResult<List<ReceptionDetailListDTO>>> GetDetailsList([FromQuery] Guid patientId)
     {

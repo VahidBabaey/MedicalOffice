@@ -27,9 +27,9 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
         private readonly string _requestTitle;
 
         public UpdateAppointmentDescriptionCommandHandler(
-            IValidator<UpdateAppointmentDescriptionDTO> validator, 
-            ILogger logger, 
-            IMapper mapper, 
+            IValidator<UpdateAppointmentDescriptionDTO> validator,
+            ILogger logger,
+            IMapper mapper,
             IAppointmentRepository appointmentRepository
             )
         {
@@ -43,8 +43,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
 
         public async Task<BaseResponse> Handle(UpdateAppointmentDescriptionCommand request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -55,7 +53,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
@@ -71,7 +69,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 AdditionalData = appointment.Id
             });
 
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", appointment.Id);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", appointment.Id);
         }
     }
 }

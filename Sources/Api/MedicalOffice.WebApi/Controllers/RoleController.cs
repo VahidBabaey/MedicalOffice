@@ -6,7 +6,7 @@ using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.RoleFile.Handlers.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -22,7 +22,7 @@ public class RoleController : Controller
         _mediator = mediator;
     }
 
-
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<RoleListDTO>>> GetAll([FromQuery] ListDto dto)
     {

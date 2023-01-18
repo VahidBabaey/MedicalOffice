@@ -61,7 +61,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetSpecificPeriodAppointmentsQuery request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
 
             #region ValidateRequest
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
@@ -74,7 +74,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
             #endregion
@@ -99,7 +99,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         AdditionalData = error
                     });
 
-                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
                 }
             }
             #endregion
@@ -118,7 +118,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         Header = $"{_requestTitle} failed",
                         AdditionalData = error
                     });
-                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
                 }
 
                 var serviceDuration = _serviceDurationRepository.GetAllByServiceId(request.DTO.ServiceId).Result;
@@ -180,7 +180,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         Header = $"{_requestTitle} failed",
                         AdditionalData = error.Message,
                     });
-                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
 
                 var appointments = _appointmentRepository.GetByPeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, request.DTO.MedicalStaffId).Result.ToList();
@@ -205,7 +205,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                         AdditionalData = error.Message,
                     });
 
-                    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
                 result = FreeTimeGenerator.StaffPeriodAppointmetsCounts(service, appointments, staffSchedule, request.DTO.StartDate, request.DTO.EndDate);
             }
@@ -218,7 +218,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                 AdditionalData = result,
             });
 
-            return responseBuilder.Success(HttpStatusCode.BadRequest, $"{_requestTitle} succeeded", result);
+            return ResponseBuilder.Success(HttpStatusCode.BadRequest, $"{_requestTitle} succeeded", result);
         }
     }
 }

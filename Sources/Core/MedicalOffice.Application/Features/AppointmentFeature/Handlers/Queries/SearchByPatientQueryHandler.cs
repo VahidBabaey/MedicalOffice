@@ -33,7 +33,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
         }
         public async Task<BaseResponse> Handle(SearchByPatientQuery request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
             var patientAppointments = await _appointmentRepository.searchPatientAappointments(request.Input, request.Date, request.OfficeId);
 
             await _logger.Log(new Log
@@ -43,7 +43,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                 AdditionalData = patientAppointments
             });
 
-            return responseBuilder.Success(HttpStatusCode.OK,
+            return ResponseBuilder.Success(HttpStatusCode.OK,
                 $"{_requestTitle} succeeded",
                 patientAppointments);
         }

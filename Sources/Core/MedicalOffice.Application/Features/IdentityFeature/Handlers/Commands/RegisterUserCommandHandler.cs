@@ -45,7 +45,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
 
             #region ValidateRequestDTO
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
@@ -58,7 +58,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
             #endregion
@@ -75,7 +75,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
-                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
             #endregion
 
@@ -90,7 +90,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             #endregion
 
@@ -113,7 +113,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
-                return responseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error);
             }
             #endregion
 
@@ -131,7 +131,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
-                return responseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed", error);
             }
             #endregion
 
@@ -142,7 +142,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 AdditionalData = new { user.Id }
             });
 
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { user.Id });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { user.Id });
         }
     }
 }

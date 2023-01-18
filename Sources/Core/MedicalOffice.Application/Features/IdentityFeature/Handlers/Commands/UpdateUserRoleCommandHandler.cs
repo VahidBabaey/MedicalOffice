@@ -49,7 +49,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         }
         public async Task<BaseResponse> Handle(UpdateUserRoleCommand request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
@@ -62,7 +62,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", validationResult.Errors.Select(x => x.ErrorMessage).ToArray());
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", validationResult.Errors.Select(x => x.ErrorMessage).ToArray());
             }
 
             var user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
@@ -77,7 +77,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = error
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
             var office = _officeRepository.GetById(request.DTO.OfficeId);
@@ -92,7 +92,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = error
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
             var role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
@@ -106,7 +106,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = error
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
             var IsuserOfficeRoleExist = _usercOfficeRoleRepository
@@ -122,7 +122,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = error
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.Conflict, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.Conflict, $"{_requestTitle} failed", error);
             }
 
             var updateUserRoles = await _userManager.AddToRoleAsync(user, role.NormalizedName);
@@ -135,7 +135,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = updateUserRoles.Errors.Select(error => error.ToString()).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed",
                     updateUserRoles.Errors.Select(error => error.ToString()).ToArray());
             }
 
@@ -153,7 +153,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 AdditionalData = updateUserOfficeRole
             });
 
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} failed", updateUserOfficeRole);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} failed", updateUserOfficeRole);
         }
     }
 }

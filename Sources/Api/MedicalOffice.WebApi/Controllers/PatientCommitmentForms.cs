@@ -1,16 +1,11 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO;
-using MedicalOffice.Application.Dtos.PatientIllnessFormDTO;
-using MedicalOffice.Application.Dtos.PatientIllnessFormListDTO;
-using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Command;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Queries;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -26,6 +21,7 @@ public class PatientCommitmentForms : Controller
         _mediator = mediator;
     }
 
+    [Authorize]
     [HttpGet("Commitments")]
     public async Task<ActionResult<List<CommitmentNamesListDTO>>> GetAllCommitments()
     {
@@ -34,6 +30,7 @@ public class PatientCommitmentForms : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] AddPatientCommitmentsFormDTO dto, [FromQuery] string officeId)
     {
@@ -42,6 +39,7 @@ public class PatientCommitmentForms : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<PatientCommitmentsFormListDTO>>> GetAll([FromQuery] ListDto dto, Guid patientid)
     {
@@ -50,6 +48,7 @@ public class PatientCommitmentForms : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
@@ -57,5 +56,4 @@ public class PatientCommitmentForms : Controller
 
         return Ok(response);
     }
-
 }

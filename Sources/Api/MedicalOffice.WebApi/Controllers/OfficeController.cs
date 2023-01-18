@@ -3,10 +3,8 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Commands;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Queries;
-using MedicalOffice.Application.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers
 {

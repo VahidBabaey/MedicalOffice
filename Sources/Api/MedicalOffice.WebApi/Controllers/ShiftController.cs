@@ -9,10 +9,12 @@ using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Features.ShiftFile.Requests.Command;
 using MedicalOffice.Application.Features.ShiftFile.Requests.Query;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ShiftController : Controller
@@ -31,6 +33,7 @@ public class ShiftController : Controller
 
         return Ok(response);
     }
+
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
@@ -38,6 +41,7 @@ public class ShiftController : Controller
 
         return Ok(response);
     }
+
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateShiftDTO dto, [FromQuery] string officeId)
     {
@@ -45,6 +49,7 @@ public class ShiftController : Controller
 
         return Ok(response);
     }
+
     [HttpGet]
     public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
@@ -52,6 +57,7 @@ public class ShiftController : Controller
 
         return Ok(response);
     }
+
     [HttpGet("Search")]
     public async Task<ActionResult<List<ShiftListDTO>>> GetShiftBySearch([FromQuery] string name, [FromQuery] string officeId)
     {
@@ -59,5 +65,4 @@ public class ShiftController : Controller
 
         return Ok(response);
     }
-
 }

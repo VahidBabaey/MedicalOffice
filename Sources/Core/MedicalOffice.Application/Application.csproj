@@ -8,10 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\Ban\**" />
     <Compile Remove="Features\MedicalStaffFile\Handlers\**" />
     <Compile Remove="Features\MedicalStaffFile\Requests\**" />
+    <EmbeddedResource Remove="Dtos\Ban\**" />
     <EmbeddedResource Remove="Features\MedicalStaffFile\Handlers\**" />
     <EmbeddedResource Remove="Features\MedicalStaffFile\Requests\**" />
+    <None Remove="Dtos\Ban\**" />
     <None Remove="Features\MedicalStaffFile\Handlers\**" />
     <None Remove="Features\MedicalStaffFile\Requests\**" />
   </ItemGroup>
@@ -43,7 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Ban\" />
     <Folder Include="Features\BasicInfoFile\Handlers\Commands\" />
     <Folder Include="Features\BasicInfoFile\Requests\Commands\" />
     <Folder Include="Features\RoleFile\Handlers\Commands\" />

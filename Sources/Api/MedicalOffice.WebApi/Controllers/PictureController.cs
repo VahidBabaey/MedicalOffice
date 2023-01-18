@@ -1,15 +1,9 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.PictureDTO;
-using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.PictureFile.Requests.Commands;
 using MedicalOffice.Application.Features.PictureFile.Requests.Queries;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
@@ -24,6 +18,7 @@ public class PictureController : Controller
         _mediator = mediator;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromForm] PictureUploadDTO dto)
     {
@@ -32,6 +27,7 @@ public class PictureController : Controller
 
     }
 
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
@@ -40,6 +36,7 @@ public class PictureController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<PatientPicturesDTO>>> GetAll([FromQuery] Guid patientid)
     {

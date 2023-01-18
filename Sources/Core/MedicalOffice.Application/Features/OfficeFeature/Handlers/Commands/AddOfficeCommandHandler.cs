@@ -44,7 +44,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(AddOfficeCommand request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
@@ -56,7 +56,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest,
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest,
                     $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
@@ -73,7 +73,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     AdditionalData = error
                 });
 
-                return responseBuilder.Success(HttpStatusCode.Conflict,
+                return ResponseBuilder.Success(HttpStatusCode.Conflict,
                     $"{_requestTitle} succeeded",
                     error);
             }
@@ -101,7 +101,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     AdditionalData = newOffice
                 });
 
-                return responseBuilder.Success(HttpStatusCode.OK,
+                return ResponseBuilder.Success(HttpStatusCode.OK,
                     $"{_requestTitle} succeeded",
                     newOffice.Result.Id);
             }
@@ -114,7 +114,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     AdditionalData = error.Message
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.InternalServerError,
+                return ResponseBuilder.Faild(HttpStatusCode.InternalServerError,
                     $"{_requestTitle} failed",
                     error.Message);
             }

@@ -1,14 +1,9 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.BasicInfoListDTO;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.BasicInfoFile.Requests.Queries;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
@@ -23,13 +18,12 @@ public class BasicInfoController : Controller
         _mediator = mediator;
     }
 
-
+    [Authorize]
     [HttpGet]
-    //[Authorize]
     public async Task<ActionResult<List<BasicInfoListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new GetAllBasicInfoQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

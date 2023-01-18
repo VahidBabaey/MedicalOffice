@@ -48,7 +48,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 
         public async Task<BaseResponse> Handle(AddServiceDurationCommand request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -59,7 +59,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest,
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest,
                     $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
@@ -75,7 +75,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     AdditionalData = error.Message
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.NotFound,
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound,
                     $"{_requestTitle} failed",
                     error.Message);
             }
@@ -94,7 +94,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     AdditionalData = error.Message
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.NotFound,
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound,
                     $"{_requestTitle} failed",
                     error.Message);
             }
@@ -112,7 +112,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     AdditionalData = newServiceDuration
                 }); ;
 
-                return responseBuilder.Success(HttpStatusCode.OK,
+                return ResponseBuilder.Success(HttpStatusCode.OK,
                     $"{_requestTitle} succeeded",
                     newServiceDuration.Id);
             }
@@ -125,7 +125,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     AdditionalData = error.Message
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.InternalServerError,
+                return ResponseBuilder.Faild(HttpStatusCode.InternalServerError,
                     $"{_requestTitle} failed",
                     error.Message);
             }

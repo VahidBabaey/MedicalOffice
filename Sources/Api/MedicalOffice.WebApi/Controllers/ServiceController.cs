@@ -6,10 +6,12 @@ using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Commands;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ServiceController : Controller
@@ -36,6 +38,7 @@ public class ServiceController : Controller
 
         return Ok(response);
     }
+
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateServiceDTO dto, [FromQuery] string officeId)
     {
@@ -51,6 +54,7 @@ public class ServiceController : Controller
 
         return Ok(response);
     }
+
     [HttpGet("Search")]
     public async Task<ActionResult<List<ServiceListDTO>>> GetSectionBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] string sectionId)
     {
@@ -58,5 +62,4 @@ public class ServiceController : Controller
 
         return Ok(response);
     }
-
 }

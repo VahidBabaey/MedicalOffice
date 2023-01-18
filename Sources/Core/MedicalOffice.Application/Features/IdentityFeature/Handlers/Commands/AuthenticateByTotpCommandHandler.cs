@@ -45,7 +45,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         }
         public async Task<BaseResponse> Handle(AuthenticateByTotpCommand request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
@@ -57,7 +57,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
@@ -71,7 +71,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
-                return responseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
             var isVerify = _totpHandler.Verify(request.DTO.PhoneNumber, request.DTO.Totp);
@@ -85,7 +85,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = error
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             else
             {
@@ -118,7 +118,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = authenticatedUser
                 });
 
-                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", authenticatedUser);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", authenticatedUser);
             }
         }
     }

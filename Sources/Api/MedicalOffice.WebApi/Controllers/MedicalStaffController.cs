@@ -2,8 +2,6 @@
 using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
-using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.WebApi.Attributes;
@@ -23,7 +21,7 @@ public class MedicalStaffController : Controller
         _mediator = mediator;
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto)
     {
@@ -32,7 +30,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> UpdateMedicalStaff([FromBody] UpdateMedicalStaffDTO dto)
     {
@@ -41,7 +39,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
@@ -50,7 +48,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto)
     {
@@ -59,7 +57,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [Permission(BasicInfoPermissions.GetAllDetails)]
     [HttpPatch("permissions")]
     public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] MedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)

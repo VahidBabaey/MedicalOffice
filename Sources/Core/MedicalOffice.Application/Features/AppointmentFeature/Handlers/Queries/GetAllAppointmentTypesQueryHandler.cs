@@ -17,14 +17,14 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
     {
         public Task<BaseResponse> Handle(GetAllStatusQuery request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
             var appointmentTypes = Enum.GetValues<AppointmentType>().ToList().Select(a => new 
             {
                 Key = a.ToString(),
                 Value = Convert.ToInt32(a)
             });
 
-            return Task.FromResult(responseBuilder.Success(HttpStatusCode.OK, "succeded", appointmentTypes));
+            return Task.FromResult(ResponseBuilder.Success(HttpStatusCode.OK, "succeded", appointmentTypes));
         }
     }
 }

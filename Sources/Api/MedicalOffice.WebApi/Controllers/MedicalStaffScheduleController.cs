@@ -2,7 +2,7 @@
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Requests.Commands;
 using MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Requests.Queries;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -18,6 +18,7 @@ public class MedicalStaffScheduleController : Controller
         _mediator = mediator;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffScheduleDTO dto)
     {
@@ -26,6 +27,7 @@ public class MedicalStaffScheduleController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> UpdateMedicalStaffSchedule([FromBody] MedicalStaffScheduleDTO dto)
     {
@@ -34,6 +36,7 @@ public class MedicalStaffScheduleController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid medicalStaffId)
     {
@@ -42,6 +45,7 @@ public class MedicalStaffScheduleController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffScheduleListDTO>>> GetAll(Guid medicalStaffId)
     {

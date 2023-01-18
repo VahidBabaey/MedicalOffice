@@ -5,16 +5,18 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Queries
 {
 
-    public class GetAllInsuranceQueryHandler : IRequestHandler<GetAllInsuranceQuery, List<InsuranceListDTO>>
+    public class GetAllInsuranceQueryHandler : IRequestHandler<GetAllInsuranceQuery, BaseResponse>
     {
         private readonly IInsuranceRepository _repository;
         private readonly IMapper _mapper;
@@ -29,31 +31,33 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<InsuranceListDTO>> Handle(GetAllInsuranceQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetAllInsuranceQuery request, CancellationToken cancellationToken)
         {
-            List<InsuranceListDTO> result = new();
-
             Log log = new();
 
             try
             {
                 var insurances = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
 
-                result = _mapper.Map<List<InsuranceListDTO>>(insurances.Where(p => p.OfficeId == request.OfficeId));
+                var result = _mapper.Map<List<InsuranceListDTO>>(insurances.Where(p => p.OfficeId == request.OfficeId));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
+                log.AdditionalData = result;
+                await _logger.Log(log);
+
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
             }
-            catch (Exception)
+
+            catch (Exception error)
             {
                 log.Header = $"{_requestTitle} failed";
+                log.AdditionalData = error.Message;
                 log.Type = LogType.Error;
+                await _logger.Log(log);
+
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
-
-            await _logger.Log(log);
-
-            return result;
         }
     }
-
 }

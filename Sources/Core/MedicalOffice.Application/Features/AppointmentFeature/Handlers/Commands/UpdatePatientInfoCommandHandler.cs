@@ -42,8 +42,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
         }
         public async Task<BaseResponse> Handle(EditAppointmentPatientCommand request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -54,39 +52,11 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
             var existingAppointment = _appointmentRepository.GetById(request.DTO.AppointmentId).Result;
-            //if (existingAppointment == null)
-            //{
-            //    var error = "The appointment isn't exist";
-            //    await _logger.Log(new Log
-            //    {
-            //        Type = LogType.Error,
-            //        Header = $"{_requestTitle} failed",
-            //        AdditionalData = error
-            //    });
-            //    return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            //}
-
-
-            /*
-
-                    public string PatientName { get; set; }
-
-        public string PatientLastName { get; set; }
-
-        public string PhoneNumber { get; set; }
-
-        public string NationalID { get; set; }
-
-        public string ReferrerId { get; set; }
-
-        public string Description { get; set; }
-    }
-            */
 
             existingAppointment.PatientName = request.DTO.PatientName;
             existingAppointment.PatientLastName = request.DTO.PatientLastName;
@@ -103,7 +73,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
                 Header = $"{_requestTitle} succeeded",
                 AdditionalData = existingAppointment.Id
             });
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", existingAppointment.Id);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", existingAppointment.Id);
         }
     }
 }

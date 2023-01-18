@@ -6,10 +6,12 @@ using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Features.TariffFile.Requests.Commands;
 using MedicalOffice.Application.Features.TariffFile.Requests.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class TariffController : Controller
@@ -28,5 +30,4 @@ public class TariffController : Controller
 
         return Ok(response);
     }
-
 }

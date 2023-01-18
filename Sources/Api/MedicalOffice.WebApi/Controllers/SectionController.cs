@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
-//[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class SectionController : Controller
@@ -23,6 +22,7 @@ public class SectionController : Controller
         _mediator = mediator;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] AddSectionDTO dto, [FromQuery] string officeId)
     {
@@ -31,6 +31,7 @@ public class SectionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
@@ -39,6 +40,7 @@ public class SectionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateSectionDTO dto, [FromQuery] string officeId)
     {
@@ -47,6 +49,7 @@ public class SectionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
@@ -54,6 +57,8 @@ public class SectionController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpGet("Search")]
     public async Task<ActionResult<List<SectionListDTO>>> GetSectionBySearch([FromQuery] string name, [FromQuery] string officeId)
     {
@@ -61,5 +66,4 @@ public class SectionController : Controller
 
         return Ok(response);
     }
-
 }

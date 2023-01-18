@@ -41,7 +41,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
 
         public async Task<BaseResponse> Handle(AddMedicalStaffScheduleCommand request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
 
             #region CheckValidation
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
@@ -55,7 +55,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest,
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest,
                     $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
@@ -74,7 +74,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
                         AdditionalData = new ArgumentException("medicalStaff isn't exist").Message
                     });
 
-                    return responseBuilder.Faild(HttpStatusCode.InternalServerError,
+                    return ResponseBuilder.Faild(HttpStatusCode.InternalServerError,
                         $"{_requestTitle} failed",
                         new ArgumentException("medicalStaff isn't exist").Message);
                 }
@@ -135,7 +135,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
                     AdditionalData = newWorkHours
                 }); ;
 
-                return responseBuilder.Success(HttpStatusCode.OK,
+                return ResponseBuilder.Success(HttpStatusCode.OK,
                     $"{_requestTitle} succeeded",
                     newWorkHours);
 
@@ -151,7 +151,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
                     AdditionalData = error.Message
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.InternalServerError,
+                return ResponseBuilder.Faild(HttpStatusCode.InternalServerError,
                     $"{_requestTitle} failed",
                     error.Message);
             }

@@ -32,7 +32,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(VerifyTotpCommand request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
@@ -44,7 +44,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
@@ -58,7 +58,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     AdditionalData = false
                 });
 
-                return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} failed", false);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} failed", false);
             }
 
             await _logger.Log(new Log
@@ -68,7 +68,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 AdditionalData = true
             });
 
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", true);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", true);
         }
     }
 }

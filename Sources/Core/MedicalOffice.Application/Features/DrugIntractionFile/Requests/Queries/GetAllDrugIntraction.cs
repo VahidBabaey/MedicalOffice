@@ -1,15 +1,10 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.DrugIntractionDTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.DrugIntractionFile.Requests.Queries
 {
-    public class GetAllDrugIntraction : IRequest<List<DrugIntractionListDTO>>
+    public class GetAllDrugIntraction : IRequest<BaseResponse>
     {
         public ListDto DTO { get; set; } = new ListDto();
     }

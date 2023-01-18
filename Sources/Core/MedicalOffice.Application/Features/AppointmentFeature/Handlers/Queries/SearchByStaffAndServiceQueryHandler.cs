@@ -61,7 +61,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
         public async Task<BaseResponse> Handle(SearchByStaffAndServiceQuery request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
+            
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
@@ -73,7 +73,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
@@ -124,7 +124,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     AdditionalData = appointments
                 });
 
-                return responseBuilder.Success(HttpStatusCode.OK,
+                return ResponseBuilder.Success(HttpStatusCode.OK,
                     $"{_requestTitle} succeeded",
                     appointments);
             }
@@ -253,7 +253,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     AdditionalData = appointments
                 });
 
-                return responseBuilder.Success(HttpStatusCode.OK,
+                return ResponseBuilder.Success(HttpStatusCode.OK,
                     $"{_requestTitle} succeeded",
                     appointments);
             }
@@ -266,7 +266,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     Header = $"{_requestTitle} failed"
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest,
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest,
                     $"{_requestTitle} failed");
             }
         }   

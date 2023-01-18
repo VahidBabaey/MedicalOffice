@@ -1,16 +1,9 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.PermissionDTO;
-using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
-using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Commands;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Queries;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
 using Microsoft.AspNetCore.Mvc;
-using MedicalOffice.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -26,6 +19,7 @@ public class PermissionController : Controller
         _mediator = mediator;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(string id, [FromBody] PermissionDTO dto)
     {
@@ -34,6 +28,7 @@ public class PermissionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdatePermissionDTO dto)
     {
@@ -42,7 +37,8 @@ public class PermissionController : Controller
         return Ok(response);
     }
 
-    [HttpGet("MedicalStaffs")]
+    [Authorize]
+    [HttpGet("medicalStaffs")]
     public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetAll()
     {
         var response = await _mediator.Send(new GetAllMedicalStaffsName());
@@ -50,6 +46,7 @@ public class PermissionController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetPermissionDetails(Guid id)
     {
@@ -57,6 +54,4 @@ public class PermissionController : Controller
 
         return Ok(response);
     }
-
-
 }

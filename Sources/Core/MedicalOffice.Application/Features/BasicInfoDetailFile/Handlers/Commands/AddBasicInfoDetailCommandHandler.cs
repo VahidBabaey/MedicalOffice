@@ -51,30 +51,31 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
                 response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                 log.Type = LogType.Error;
+
+                return response;
             }
-            else
+
+            try
             {
-                try
-                {
-                    var basicinfodetail = _mapper.Map<BasicInfoDetail>(request.DTO);
+                var basicinfodetail = _mapper.Map<BasicInfoDetail>(request.DTO);
 
-                    basicinfodetail = await _repository.Add(basicinfodetail);
+                basicinfodetail = await _repository.Add(basicinfodetail);
 
-                    response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data = (new { Id = basicinfodetail.Id });
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = basicinfodetail.Id });
 
-                    log.Type = LogType.Success;
-                }
-                catch (Exception error)
-                {
-
-                    response.Success = false;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
-                }
+                log.Type = LogType.Success;
             }
+            catch (Exception error)
+            {
+
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add(error.Message);
+
+                log.Type = LogType.Error;
+            }
+
 
             log.Header = response.StatusDescription;
             log.AdditionalData = response.Errors;

@@ -1,19 +1,11 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.PatientIllnessFormDTO;
-using MedicalOffice.Application.Dtos.PatientIllnessFormListDTO;
 using MedicalOffice.Application.Dtos.PatientReferralFormDTO;
-using MedicalOffice.Application.Dtos.SectionDTO;
-using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Command;
-using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Request.Query;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Commands;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Queries;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -28,6 +20,8 @@ public class PatientReferralFormController : Controller
     {
         _mediator = mediator;
     }
+
+    [Authorize]
     [HttpGet("illnessReasons")]
     public async Task<ActionResult<List<illnessNamesListDTO>>> GetPatientIllnessReasons()
     {
@@ -35,6 +29,8 @@ public class PatientReferralFormController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] PatientReferralFormDTO dto, [FromQuery] string officeId)
     {
@@ -42,6 +38,8 @@ public class PatientReferralFormController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<PatientReferralFormListDTO>>> GetAll([FromQuery] ListDto dto, Guid patientid)
     {
@@ -49,6 +47,8 @@ public class PatientReferralFormController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
@@ -56,5 +56,4 @@ public class PatientReferralFormController : Controller
 
         return Ok(response);
     }
-
 }

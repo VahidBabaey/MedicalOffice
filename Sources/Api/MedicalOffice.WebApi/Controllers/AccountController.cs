@@ -1,10 +1,7 @@
 ﻿using MediatR;
-using MedicalOffice.Application;
-using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
-using MedicalOffice.Application.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -70,7 +67,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPatch("reset-password")]
         public async Task<ActionResult<Guid>> ResetPassword(ResetPasswordDTO dto)
         {
@@ -90,14 +87,14 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
         [Authorize]
         [HttpPatch("set-password")]
-        public async Task<ActionResult<Guid>> SetPassword([FromBody]SetPasswordDTO dto)
+        public async Task<ActionResult<Guid>> SetPassword([FromBody] SetPasswordDTO dto)
         {
             var response = await _mediator.Send(new SetPasswordCommand() { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        [Authorize(Roles ="SuperAdmin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPatch("role")]
         public async Task<ActionResult<Guid>> UpdateUserRole([FromBody] UpdateUserRoleDTO dto)
         {

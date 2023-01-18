@@ -39,8 +39,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetUserStatusQuery request, CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder();
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -51,7 +49,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return responseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
@@ -77,7 +75,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
                 AdditionalData = userStatus
             });
 
-            return responseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeede", userStatus);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeede", userStatus);
         }
     }
 }

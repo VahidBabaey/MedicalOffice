@@ -1,17 +1,9 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.DrugDTO;
 using MedicalOffice.Application.Dtos.DrugIntractionDTO;
-using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.SectionDTO;
-using MedicalOffice.Application.Features.DrugFile.Handlers.Queries;
-using MedicalOffice.Application.Features.DrugFile.Requests.Commands;
-using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
 using MedicalOffice.Application.Features.DrugIntractionFile.Requests.Commands;
 using MedicalOffice.Application.Features.DrugIntractionFile.Requests.Queries;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -27,32 +19,39 @@ public class DrugIntractionController : Controller
         _mediator = mediator;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] DrugIntractionDTO dto)
     {
-        var response = await _mediator.Send(new AddDrugIntractionCommand() { DTO = dto});
+        var response = await _mediator.Send(new AddDrugIntractionCommand() { DTO = dto });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeleteDrugIntractionCommand() { DrugIntractionID = id });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateDrugIntractionDTO dto)
     {
         var response = await _mediator.Send(new EditDrugIntractionCommand() { DTO = dto });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<DrugIntractionListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllDrugIntraction() { DTO = dto });
-        return Ok(response);
-    }
 
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
 }

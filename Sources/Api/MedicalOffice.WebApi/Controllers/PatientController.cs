@@ -3,8 +3,7 @@ using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Features.PatientFile.Requests.Commands;
 using MedicalOffice.Application.Features.PatientFile.Requests.Queries;
-using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
-using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
@@ -20,6 +19,7 @@ public class PatientController : Controller
         _mediator = mediator;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] PatientDTO dto, [FromQuery] string officeId)
     {
@@ -27,6 +27,8 @@ public class PatientController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpDelete]
     public async Task<ActionResult<Guid>> Delete(Guid patientId, [FromQuery] string officeId)
     {
@@ -34,6 +36,8 @@ public class PatientController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdatePatientDTO dto, [FromQuery] string officeId)
     {
@@ -42,6 +46,7 @@ public class PatientController : Controller
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<PatientListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
@@ -49,6 +54,8 @@ public class PatientController : Controller
 
         return Ok(response);
     }
+
+    [Authorize]
     [HttpGet("SearchByRequestedFeilds")]
     public async Task<ActionResult<List<PatientListDTO>>> GetBySearch([FromQuery] ListDto dto, [FromQuery] SearchFields searchFields)
     {
