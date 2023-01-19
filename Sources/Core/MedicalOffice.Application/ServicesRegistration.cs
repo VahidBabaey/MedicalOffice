@@ -28,9 +28,9 @@ public static class ServicesRegistration
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        //services.AddMediatR(Assembly.GetExecutingAssembly());
 
         #region Identity
+        services.AddScoped<IValidator<RegisterUserWithoutPassDTO>, RegisterUserWithoutPassValidator>();
         services.AddScoped<IValidator<RegisterUserDTO>, RegisterUserValidator>();
         services.AddScoped<IValidator<AuthenticateByPasswordDTO>, AuthenticateByPasswordValidator>();
         services.AddScoped<IValidator<AuthenticateByTotpDTO>, AuthenticateByTotpValidator>();

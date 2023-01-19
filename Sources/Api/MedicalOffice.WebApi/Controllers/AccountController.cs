@@ -26,6 +26,14 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [HttpPost("register-without-password")]
+        public async Task<ActionResult<Guid>> RegisterWithoutPassword(RegisterUserWithoutPassDTO dto)
+        {
+            var response = await _mediator.Send(new RegisterUserWithoutPassCommand() { DTO = dto });
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
         [HttpPost("send-Totp")]
         public async Task<ActionResult<string>> SendTotp(SendTotpDTO dto)
         {

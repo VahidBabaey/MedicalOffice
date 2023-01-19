@@ -21,7 +21,4 @@ namespace MedicalOffice.Application.Dtos.Identity
         public string NationalID { get; set; } = string.Empty;
 
     }
-
-
-
 }

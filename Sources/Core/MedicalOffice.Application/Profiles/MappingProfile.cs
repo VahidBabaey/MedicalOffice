@@ -112,6 +112,7 @@ public class MappingProfile : Profile
         CreateMap<Picture, AddPictureDTO>().ReverseMap();
         CreateMap<Picture, PatientPicturesDTO>().ReverseMap();
         CreateMap<User, RegisterUserDTO>().ReverseMap();
+        CreateMap<User, RegisterUserWithoutPassDTO>().ReverseMap();
         CreateMap<User, AuthenticatedUserDTO>().ReverseMap();
         CreateMap<User, MedicalStaffDTO>().ReverseMap();
         CreateMap<Membership, MembershipNamesDTO>().ReverseMap();
