@@ -55,6 +55,18 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
                 return response;
             }
 
+            //var validationShiftConflict = await _repository.CheckShiftConflict(request.OfficeId, request.DTO.StartTime, request.DTO.EndTime);
+
+            //if (validationShiftConflict)
+            //{
+            //    response.Success = false;
+            //    response.StatusDescription = $"{_requestTitle} failed";
+            //    response.Errors.Add("There are conflicts between Shifts");
+
+            //    log.Type = LogType.Error;
+            //    return response;
+            //}
+
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)

@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.SectionDTO;
+using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 
-public class GetSectionBySearchQuery : IRequest<List<SectionListDTO>>
+public class GetSectionBySearchQuery : IRequest<BaseResponse>
 {
     public string Name { get; set; }
     public Guid OfficeId { get; set; }

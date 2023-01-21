@@ -10,6 +10,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
     public interface IShiftRepository : IGenericRepository<Shift, Guid>
     {
         Task<bool> CheckExistShiftId(Guid officeId, Guid shiftId);
+        Task<bool> CheckShiftConflict(Guid officeId, TimeOnly startTime, TimeOnly endTime);
         Task<List<Shift>> GetShiftBySearch(string name);
     }
 }

@@ -27,8 +27,6 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
             picture.OfficeId = pictureUploadDTO.OfficeId;
             picture.PatientId = pictureUploadDTO.PatientId;
 
-            
-
             var fileName = "" + picture.PictureName;
             byte[] pictureBinary = null;
             using (var fileStream = pictureUploadDTO.File.OpenReadStream())
@@ -46,7 +44,6 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
             picture.VirtualPath = filePath;
 
             await _pictureRepository.Add(picture);
-            //_pictureRepository.Update(picture);
 
             AddPictureDTO pictureDTO = new AddPictureDTO()
             {

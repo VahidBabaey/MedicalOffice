@@ -2,8 +2,8 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.ShiftDTO;
-using MedicalOffice.Application.Features.ShiftFile.Requests.Query;
+using MedicalOffice.Application.Dtos.InsuranceDTO;
+using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using System;
@@ -13,16 +13,17 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
+namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Queries
 {
-    public class GetShiftBySearchQueryHandler : IRequestHandler<GetShiftBySearchQuery, BaseResponse>
+
+    public class GetInsuranceBySearchQueryHandler : IRequestHandler<GetInsuranceBySearchQuery, BaseResponse>
     {
-        private readonly IShiftRepository _repository;
+        private readonly IInsuranceRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetShiftBySearchQueryHandler(IShiftRepository repository, IMapper mapper, ILogger logger)
+        public GetInsuranceBySearchQueryHandler(IInsuranceRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -30,15 +31,15 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(GetShiftBySearchQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetInsuranceBySearchQuery request, CancellationToken cancellationToken)
         {
             Log log = new();
 
             try
             {
-                var shifts = await _repository.GetShiftBySearch(request.Name);
+                var insurances = await _repository.GetInsuranceBySearch(request.Name);
 
-                var result = _mapper.Map<List<ShiftListDTO>>(shifts.Where(p => p.OfficeId == request.OfficeId));
+                var result = _mapper.Map<List<InsuranceListDTO>>(insurances.Where(p => p.OfficeId == request.OfficeId));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
@@ -59,5 +60,4 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
             }
         }
     }
-
 }

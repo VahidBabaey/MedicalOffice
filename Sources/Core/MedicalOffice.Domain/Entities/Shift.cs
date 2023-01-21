@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Domain.Common;
+﻿using MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries;
+using MedicalOffice.Domain.Common;
 
 namespace MedicalOffice.Domain.Entities;
 
@@ -25,12 +26,12 @@ public class Shift : BaseDomainEntity<Guid>
     /// <summary>
     /// تایم شروع
     /// </summary>
-    public string StartTime { get; set; } = string.Empty;
+    public string StartTime { get; set; }
     
     /// <summary>
     /// تایم پایان
     /// </summary>
-    public string EndTime { get; set; } = string.Empty;
+    public string EndTime { get; set; }
     
     /// <summary>
     /// آیا شیفت روز های تعطبل نیز هست یا خیر

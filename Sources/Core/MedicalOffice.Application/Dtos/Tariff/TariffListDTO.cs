@@ -10,6 +10,10 @@ public class TariffListDTO : BaseDto<Guid>
     /// </summary>
     public Guid OfficeId { get; set; }
     /// <summary>
+    /// آیدی سرویس
+    /// </summary>
+    public Guid ServiceId { get; set; }
+    /// <summary>
     /// آیدی تعرفه
     /// </summary>
     public Guid TariffId { get; set; }

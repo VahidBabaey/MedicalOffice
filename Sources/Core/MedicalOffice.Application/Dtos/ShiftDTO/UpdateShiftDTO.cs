@@ -22,8 +22,8 @@ namespace MedicalOffice.Application.Dtos.ShiftDTO
         /// </summary>
         public string EndTime { get; set; } = string.Empty;
         /// <summary>
-        /// آیا شیفت روز های تعطبل نیز هست یا خیر
+        /// روز بعد
         /// </summary>
-        public bool HolidayShift { get; set; }
+        public bool IsNextDay { get; set; }
     }
 }

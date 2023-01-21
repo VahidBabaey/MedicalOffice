@@ -3,13 +3,16 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
+using MedicalOffice.Application.Dtos.PatientCommitmentsFormDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormListDTO;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
 using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Responses;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Query;
 
-public class GetAllCommitmentsNamesQueryHandler : IRequestHandler<GetAllCommitmentsNamesFormQuery, List<CommitmentNamesListDTO>>
+public class GetAllCommitmentsNamesQueryHandler : IRequestHandler<GetAllCommitmentsNamesFormQuery, BaseResponse>
 {
     private readonly IBasicInfoDetailRepository _repository;
     private readonly IMapper _mapper;
@@ -24,31 +27,33 @@ public class GetAllCommitmentsNamesQueryHandler : IRequestHandler<GetAllCommitme
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
-    public async Task<List<CommitmentNamesListDTO>> Handle(GetAllCommitmentsNamesFormQuery request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(GetAllCommitmentsNamesFormQuery request, CancellationToken cancellationToken)
     {
-        List<CommitmentNamesListDTO> result = new();
-
         Log log = new();
 
         try
         {
             var commitments = await _repository.GetByBasicInfoCommitmentId();
 
-            result = _mapper.Map<List<CommitmentNamesListDTO>>(commitments);
+            var result = _mapper.Map<List<CommitmentNamesListDTO>>(commitments);
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;
+            log.AdditionalData = result;
+            await _logger.Log(log);
+
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
         }
+
         catch (Exception error)
         {
             log.Header = $"{_requestTitle} failed";
-            log.AdditionalData=(error.Message);
+            log.AdditionalData = error.Message;
             log.Type = LogType.Error;
+            await _logger.Log(log);
+
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
-
-        await _logger.Log(log);
-
-        return result;
     }
 }
 

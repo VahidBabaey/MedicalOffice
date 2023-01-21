@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.TariffFile.Requests.Queries
 {
-    public class GetAllAdditionalInsuranceNamesQuery : IRequest<BaseResponse>
+    public class GetAllTariffByServiceIDQuery : IRequest<BaseResponse>
     {
         public InsuranceNamesDTO DTO { get; set; } = new InsuranceNamesDTO();
     }

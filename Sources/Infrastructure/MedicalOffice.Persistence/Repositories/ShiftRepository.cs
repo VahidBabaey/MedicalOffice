@@ -30,5 +30,23 @@ namespace MedicalOffice.Persistence.Repositories
 
             return shifts;
         }
+        public async Task<bool> CheckShiftConflict(Guid officeId, TimeOnly startTime, TimeOnly endTime)
+        {
+            bool isConflict = false;
+            var shifts = await _dbContext.Shifts.Where(p => p.OfficeId == officeId).ToListAsync();
+            //foreach (var item in shifts)
+            //{
+
+            //    if (/*startTime <= item.EndTime && item.StartTime <= endTime*/)
+            //    {
+            //        isConflict = true;
+            //    }
+            //    else
+            //    {
+            //        isConflict = false;
+            //    }
+            //}
+            return isConflict;
+        }
     }
 }
