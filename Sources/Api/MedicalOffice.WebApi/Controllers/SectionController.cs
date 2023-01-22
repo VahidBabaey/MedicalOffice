@@ -22,7 +22,7 @@ public class SectionController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] AddSectionDTO dto, [FromQuery] string officeId)
     {
@@ -31,7 +31,7 @@ public class SectionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
@@ -40,7 +40,7 @@ public class SectionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateSectionDTO dto, [FromQuery] string officeId)
     {
@@ -49,7 +49,7 @@ public class SectionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
     public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
@@ -58,7 +58,7 @@ public class SectionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("Search")]
     public async Task<ActionResult<List<SectionListDTO>>> GetSectionBySearch([FromQuery] string name, [FromQuery] string officeId)
     {

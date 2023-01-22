@@ -4,19 +4,10 @@ namespace MedicalOffice.Application.Dtos.Tariff;
 
 public class TariffListDTO : BaseDto<Guid>
 {
-
-    /// <summary>
-    /// آیدی مرکز درمانی - مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
     /// <summary>
     /// آیدی سرویس
     /// </summary>
     public Guid ServiceId { get; set; }
-    /// <summary>
-    /// آیدی تعرفه
-    /// </summary>
-    public Guid TariffId { get; set; }
     /// <summary>
     /// آیدی بیمه
     /// </summary>
@@ -25,10 +16,6 @@ public class TariffListDTO : BaseDto<Guid>
     /// نام بیمه
     /// </summary>
     public string InsuranceName { get; set; } = string.Empty;
-    /// <summary>
-    /// آیدی ضرایب کا
-    /// </summary>
-    public Guid KMultiplierId { get; set; }
     /// <summary>
     /// مبلغ تعرفه
     /// </summary>

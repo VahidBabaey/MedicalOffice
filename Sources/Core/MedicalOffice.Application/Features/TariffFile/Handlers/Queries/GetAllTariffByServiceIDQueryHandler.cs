@@ -16,14 +16,14 @@ using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 {
 
-    public class GetAllTariffByServiceIDQueryHandler : IRequestHandler<GetAllAdditionalInsuranceNamesQuery, BaseResponse>
+    public class GetAllTariffByServiceIDQueryHandler : IRequestHandler<GetAllTariffByServiceIDQuery, BaseResponse>
     {
-        private readonly IInsuranceRepository _repository;
+        private readonly IServiceTariffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllTariffByServiceIDQueryHandler(IInsuranceRepository repository, IMapper mapper, ILogger logger)
+        public GetAllTariffByServiceIDQueryHandler(IServiceTariffRepository repository, IMapper mapper, ILogger logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -31,22 +31,20 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(GetAllAdditionalInsuranceNamesQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetAllTariffByServiceIDQuery request, CancellationToken cancellationToken)
         {
             Log log = new();
 
             try
             {
-                var insuranceNames = await _repository.GetAllAdditionalInsuranceNames();
-
-                var result = _mapper.Map<List<InsuranceNamesDTO>>(insuranceNames);
+                var tariffsofService = await _repository.GetTariffsofService(request.OfficeId, request.ServiceId);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
-                log.AdditionalData = result;
+                log.AdditionalData = tariffsofService;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", tariffsofService);
             }
 
             catch (Exception error)

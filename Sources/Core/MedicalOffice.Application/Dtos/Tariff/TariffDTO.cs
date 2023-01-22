@@ -6,11 +6,6 @@ namespace MedicalOffice.Application.Dtos.Tariff;
 
 public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
 {
-
-    /// <summary>
-    /// آیدی مرکز درمانی - مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
     /// <summary>
     /// آیدی خدمت
     /// </summary>
@@ -19,14 +14,6 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// آیدی بیمه
     /// </summary>
     public Guid InsuranceId { get; set; }
-    /// <summary>
-    /// از ضرایب کا استفاده شود یا خیر
-    /// </summary>
-    public bool UseKMultiplier { get; set; }
-    /// <summary>
-    /// آیدی ضرایب کا
-    /// </summary>
-    public Guid KMultiplierId { get; set; }
     /// <summary>
     /// مبلغ تعرفه
     /// </summary>
