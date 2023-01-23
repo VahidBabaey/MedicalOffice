@@ -45,6 +45,13 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                         Name = "پوست",
                         Status = true
                     },
+                    new Section
+                    {
+                        Id = Guid.Parse("CE906C3A-9C62-493B-8782-E357E75C192D"),
+                        OfficeId = Guid.Parse("300649ef-fbc7-42d0-b13d-539e0597eebe"),
+                        Name = "روان",
+                        Status = true
+                    },
                 });
         }
     }

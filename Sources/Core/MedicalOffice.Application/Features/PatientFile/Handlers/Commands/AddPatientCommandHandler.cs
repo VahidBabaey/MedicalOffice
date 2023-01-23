@@ -66,6 +66,7 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
             {
                 var patient = _mapper.Map<Patient>(request.DTO);
                 patient.OfficeId = request.OfficeId;
+                patient.FileNumber = _repository.GenerateFileNumber().ToString();
 
                 patient = await _repository.Add(patient);
 

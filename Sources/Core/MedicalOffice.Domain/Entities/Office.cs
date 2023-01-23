@@ -97,6 +97,10 @@ public class Office : BaseDomainEntity<Guid>
     /// </summary>
     public ICollection<Introducer>? Introducers { get; set; }
     /// <summary>
+    /// عضویت ها
+    /// </summary>
+    public ICollection<Membership>? Memberships { get; set; }
+    /// <summary>
     /// سرویس ها - عضویت ها
     /// </summary>
     public ICollection<MemberShipService>? MemberShipServices { get; set; }

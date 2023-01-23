@@ -65,6 +65,16 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
+                .HasMany(office => office.Memberships)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasMany(office => office.MemberShipServices)
+                .WithOne(UserOfficeRole => UserOfficeRole.Office)
+                .HasForeignKey(UserOfficeRole => UserOfficeRole.OfficeId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
                 .HasData(new[]
                 {
                     new Office()

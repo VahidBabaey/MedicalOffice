@@ -164,4 +164,19 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         bool isExist = await _dbContext.Patients.AnyAsync(p => p.Id == patientId && p.OfficeId == officeId);
         return isExist;
     }
+    public int GenerateFileNumber()
+    {
+        var lastFileNumber =  _dbContext.Patients.Max(p => p.FileNumber);
+
+        int nextNo = default;
+
+        if (lastFileNumber == null)
+        {
+            nextNo = 1;
+        }
+        else
+            nextNo = Convert.ToInt32(lastFileNumber) + 1;
+
+        return nextNo;
+    }
 }

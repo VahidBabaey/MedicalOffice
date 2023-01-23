@@ -9,13 +9,9 @@ namespace MedicalOffice.Domain.Entities;
 public class Patient : BaseDomainEntity<Guid>
 {
     /// <summary>
-    /// شماره پرونده
+    /// شماره پرونده 
     /// </summary>
-    public int PatientCode { get; set; }
-    /// <summary>
-    /// شماره پرونده دستی
-    /// </summary>
-    public string FileNumber { get; set; } = string.Empty;
+    public string FileNumber { get; set; }
     /// <summary>
     /// شماره تلفن
     /// </summary>

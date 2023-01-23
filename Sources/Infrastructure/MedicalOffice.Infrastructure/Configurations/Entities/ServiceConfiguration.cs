@@ -19,11 +19,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 .WithMany(e => e.Services)
                 .HasForeignKey(e => e.SectionId)
                 .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .HasOne(e => e.Specialization)
-                .WithMany(e => e.Services)
-                .HasForeignKey(e => e.SpecializationId)
-                .OnDelete(DeleteBehavior.NoAction);
 
             builder
                 .HasMany(e => e.MedicalStaffServiceSharePercents)
