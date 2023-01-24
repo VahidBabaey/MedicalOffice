@@ -3,6 +3,7 @@ using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -13,13 +14,19 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Queries
 {
     public class GetByUserIdQueryHandler : IRequestHandler<GetByUserIdQuery, BaseResponse>
     {
+        private readonly IUserResolverService _userResolverService;
+        private readonly IOfficeRepository _officeRepository;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
-        private readonly IOfficeRepository _officeRepository;
         private readonly string _requestTitle;
 
-        public GetByUserIdQueryHandler(IMapper mapper, ILogger logger, IOfficeRepository repository)
+        public GetByUserIdQueryHandler(
+            IUserResolverService userResolverService,
+            IMapper mapper,
+            ILogger logger,
+            IOfficeRepository repository)
         {
+            _userResolverService = userResolverService;
             _mapper = mapper;
             _logger = logger;
             _officeRepository = repository;
@@ -28,38 +35,25 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetByUserIdQuery request, CancellationToken cancellationToken)
         {
-            var offices = await _officeRepository.GetByUserId(request.UserId);
-            if (offices == null)
+            var userId = _userResolverService.GetUserId().Result;
+            var result = new List<OfficeListDTO>();
+
+            var offices = await _officeRepository.GetByUserId(Guid.Parse(userId));
+            if (offices.Any())
             {
-                var error = $"No office found";
-                return await Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
-            }  
-            
-            var result = _mapper.Map<HashSet<Office?>>(offices);
+                foreach (var office in offices)
+                {
+                    result.Add(_mapper.Map<OfficeListDTO>(office));
+                }
+            }
 
-            return await Success(HttpStatusCode.OK, $"{_requestTitle} succeded",result);
-        }
-
-        private async Task<BaseResponse> Success(HttpStatusCode statusCode, string message, params object[] data)
-        {
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
-                Header = message,
-                AdditionalData = data
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = result
             });
-            return new() { StatusCode = statusCode, Success = true, StatusDescription = message, Data = data.ToList() };
-        }
-
-        private async Task<BaseResponse> Faild(HttpStatusCode statusCode, string message, params string[] errors)
-        {
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = message,
-                AdditionalData = errors
-            });
-            return new() { StatusCode = statusCode, Success = false, StatusDescription = message, Errors = errors.ToList() };
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Commands;
@@ -12,12 +13,10 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
     [ApiController]
     public class OfficeController : Controller
     {
-        private readonly IUserResolverService _userResolverService;
         private readonly IMediator _mediator;
 
-        public OfficeController(IMediator mediator, IUserResolverService userResolverService)
+        public OfficeController(IMediator mediator)
         {
-            _userResolverService = userResolverService;
             _mediator = mediator;
         }
 
@@ -25,9 +24,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<OfficeListDTO>>> GetByUserId()
         {
-            var userId = _userResolverService.GetUserId().Result;
-
-            var response = await _mediator.Send(new GetByUserIdQuery { UserId = Guid.Parse(userId) });
+            var response = await _mediator.Send(new GetByUserIdQuery {});
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -35,10 +32,16 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<ActionResult<Guid>> AddOffice([FromBody] OfficeDTO dto)
+        { 
+            var response = await _mediator.Send(new AddOfficeCommand { DTO = dto});
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
+        [HttpPost("add-office")]
+        public async Task<ActionResult<Guid>> AddOfficeWithoutSpecificPermission([FromBody] List<UserOfficeDTO> dto)
         {
-            var userId = Guid.Parse(_userResolverService.GetUserId().Result);
-            var roles = _userResolverService.GetUserRoles().Result;
-            var response = await _mediator.Send(new AddOfficeCommand { DTO = dto, Roles = roles , UserId  = userId });
+            var response = await _mediator.Send(new AddOfficeWithoutSpecificPermissionCommand { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

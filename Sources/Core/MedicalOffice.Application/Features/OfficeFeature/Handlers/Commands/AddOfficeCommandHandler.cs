@@ -21,13 +21,16 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
     public class AddOfficeCommandHandler : IRequestHandler<AddOfficeCommand, BaseResponse>
     {
         private readonly IValidator<OfficeDTO> _validator;
+        private readonly IUserResolverService _userResolverService;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly IOfficeRepository _officeRepository;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly string _requestTitle;
+
         public AddOfficeCommandHandler(
             IValidator<OfficeDTO> validator,
+            IUserResolverService userResolverService,
             IUserOfficeRoleRepository userOfficeRoleRepository,
             IOfficeRepository officeRepository,
             ILogger logger,
@@ -35,17 +38,15 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
             )
         {
             _validator = validator;
+            _userResolverService = userResolverService;
             _userOfficeRoleRepository = userOfficeRoleRepository;
             _officeRepository = officeRepository;
             _logger = logger;
             _mapper = mapper;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
-
         public async Task<BaseResponse> Handle(AddOfficeCommand request, CancellationToken cancellationToken)
         {
-            
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -56,11 +57,12 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     AdditionalData = validationResult.Errors.Select(error => error.ErrorMessage).ToArray()
                 });
 
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest,
-                    $"{_requestTitle} failed",
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
+            var userId = Guid.Parse(_userResolverService.GetUserId().Result);
+            var roles = _userResolverService.GetUserRoles().Result;
             var existingOffice = _officeRepository.GetAll().Result.Any(x => x.TelePhoneNumber == request.DTO.TelePhoneNumber);
 
             if (existingOffice)
@@ -84,11 +86,11 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 
                 var newOffice = _officeRepository.Add(office);
 
-                if (request.Roles.Any(x=>x.Equals(AdminRole.Name)))
+                if (roles.Any(x => x.Equals(AdminRole.Name)))
                 {
                     var userOfficeRoles = _userOfficeRoleRepository.Add(new UserOfficeRole
                     {
-                        UserId = request.UserId,
+                        UserId = userId,
                         RoleId = AdminRole.Id,
                         OfficeId = newOffice.Result.Id,
                     });
@@ -101,9 +103,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     AdditionalData = newOffice
                 });
 
-                return ResponseBuilder.Success(HttpStatusCode.OK,
-                    $"{_requestTitle} succeeded",
-                    newOffice.Result.Id);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", newOffice.Result.Id);
             }
             catch (Exception error)
             {

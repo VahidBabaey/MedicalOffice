@@ -4,8 +4,8 @@ using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.OfficeFeature.Requests.Commands
 {
-    public class AddOfficeCommand : IRequest<BaseResponse>
+    public class AddOfficeWithoutSpecificPermissionCommand : IRequest<BaseResponse>
     {
-        public OfficeDTO DTO { get; set; }
+        public List<UserOfficeDTO> DTO { get; set; }
     }
 }
