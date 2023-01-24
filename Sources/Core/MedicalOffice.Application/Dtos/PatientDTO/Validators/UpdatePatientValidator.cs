@@ -9,8 +9,8 @@ public class UpdatePatientValidator : AbstractValidator<UpdatePatientDTO>
     {
         RuleFor(x => x.FirstName).NotEmpty().Length(1, 100);
         RuleFor(x => x.LastName).NotEmpty().Length(1, 100);
-        Include(new IPhoneNumberListValidator());
-        Include(new ITelePhoneNumberListValidator());
-        Include(new NationalIdValidator());
+        //Include(new IPhoneNumberListValidator());
+        //Include(new ITelePhoneNumberListValidator());
+        //Include(new NationalIdValidator());
     }
 }

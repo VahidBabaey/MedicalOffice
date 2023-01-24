@@ -59,4 +59,6 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
     Task<Reception> CreateNewReceptionDebt(long Debt, Guid officeId, Guid receptionId);
     Task<ReceptionDetail> CreateNewReceptionDetailDebt(long Debt, Guid officeId, Guid receptionId);
     Task<bool> CheckExistReceptionId(Guid officeId, Guid receptionId);
+    Task<List<ReceptionListDTO>> GetReceptionList(Guid patientId);
+    int GetServiceCountsOfPatient(Guid receptionId);
 }

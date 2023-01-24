@@ -23,7 +23,7 @@ public class ReceptionController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MembershipNamesDTO>>> GetAllMembershipNames()
     {
@@ -32,7 +32,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost("Discount")]
     public async Task<ActionResult<Guid>> CreateReceptionDiscount([FromBody] ReceptionDiscountDTO dto)
     {
@@ -41,7 +41,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("Insurances")]
     public async Task<ActionResult<List<InsuranceNamesDTO>>> GetAllInsurances()
     {
@@ -50,7 +50,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("Additional")]
     public async Task<ActionResult<List<InsuranceNamesDTO>>> GetAllAdditionalInsurances()
     {
@@ -59,7 +59,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("MedicalStaffs")]
     public async Task<ActionResult<List<MedicalStaffNamesDTO>>> GetAllMedicalStaffs()
     {
@@ -67,8 +67,8 @@ public class ReceptionController : Controller
 
         return Ok(response);
     }
-
-    [Authorize]
+    
+    //[Authorize]
     [HttpPost("Reception")]
     public async Task<ActionResult<Guid>> CreateReception([FromBody] ReceptionsDTO dto, [FromQuery] string officeId)
     {
@@ -77,7 +77,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost("ReceptionDetail")]
     public async Task<ActionResult<Guid>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId)
     {
@@ -86,7 +86,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("dtails")]
     public async Task<ActionResult<List<DetailsofAllReceptionsDTO>>> GetAllDetails([FromQuery] Guid patientId)
     {
@@ -95,7 +95,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("dtailsList")]
     public async Task<ActionResult<List<ReceptionDetailListDTO>>> GetDetailsList([FromQuery] Guid patientId)
     {

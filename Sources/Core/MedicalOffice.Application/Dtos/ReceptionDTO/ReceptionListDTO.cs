@@ -8,23 +8,55 @@ namespace MedicalOffice.Application.Dtos.ReceptionDTO;
 public class ReceptionListDTO : BaseDto<Guid>
 {
     /// <summary>
-    /// تاریخ پذیرش
+    /// تاریخ مراجعه
     /// </summary>
-    public ReceptionsDTO? ReceptionDTO { get; set; }
+    public string ReceptionDate { get; set; }
     /// <summary>
-    ///  خدمت
+    /// سرویس ها
     /// </summary>
-    public ICollection<ServiceListDTO>? Services { get; set; }
+    public string ServicesNames { get; set; }
     /// <summary>
-    /// اطلاعات تعداد - مبلغ دریافتی - پیش پرداخت - بدهی
+    /// تعداد
     /// </summary>
-    public ReceptionDetailDTO? ReceptionDetailDTO { get; set; }
+    public int ServiceCount { get; set; }
     /// <summary>
-    /// اطلاعات تخفیف - 
+    /// هزینه دریافتی
     /// </summary>
-    public ReceptionDiscountDTO? ReceptionDiscountDTO { get; set; }
+    public long Cost { get; set; }
     /// <summary>
-    /// کاربران / پزشکان
+    /// مبلغ امانی / بیعانه
     /// </summary>
-    public ICollection<ReceptionMedicalStaffDTO>? ReceptionMedicalStaffs { get; set; }
+    public float Deposit { get; set; }
+    /// <summary>
+    /// بدهی
+    /// </summary>
+    public long Debt { get; set; }
+    /// <summary>
+    /// جمع کل
+    /// </summary>
+    public float TotalReception { get; set; }
+    /// <summary>
+    /// لیست  پزشکان
+    /// </summary>
+    public string DoctorsNames { get; set; }
+    /// <summary>
+    /// لیست کارشناسان
+    /// </summary>
+    public string ExpertsNames { get; set; }
+    ///// <summary>
+    /////  خدمت
+    ///// </summary>
+    //public ICollection<ServiceListDTO>? Services { get; set; }
+    ///// <summary>
+    ///// اطلاعات تعداد - مبلغ دریافتی - پیش پرداخت - بدهی
+    ///// </summary>
+    //public ReceptionDetailDTO? ReceptionDetailDTO { get; set; }
+    ///// <summary>
+    ///// اطلاعات تخفیف - 
+    ///// </summary>
+    //public ReceptionDiscountDTO? ReceptionDiscountDTO { get; set; }
+    ///// <summary>
+    ///// کاربران / پزشکان
+    ///// </summary>
+    //public ICollection<ReceptionMedicalStaffDTO>? ReceptionMedicalStaffs { get; set; }
 }

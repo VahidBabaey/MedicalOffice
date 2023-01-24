@@ -21,7 +21,7 @@ public class MedicalStaffController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto)
     {
@@ -30,7 +30,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> UpdateMedicalStaff([FromBody] UpdateMedicalStaffDTO dto)
     {
@@ -39,7 +39,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
@@ -48,7 +48,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto)
     {
@@ -57,7 +57,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [Permission(BasicInfoPermissions.GetAllDetails)]
     [HttpPatch("permissions")]
     public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] MedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)
