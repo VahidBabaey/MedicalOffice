@@ -10,6 +10,6 @@ namespace MedicalOffice.Domain.Entities
 
         //public ICollection<Permission> Permissions { get; set; }
 
-        public ICollection<Role>? Role { get; set; }
+        public ICollection<Role> Role { get; set; }
     }
 }
