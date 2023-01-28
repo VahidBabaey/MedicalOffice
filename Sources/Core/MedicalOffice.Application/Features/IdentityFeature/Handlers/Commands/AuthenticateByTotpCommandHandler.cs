@@ -45,7 +45,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         }
         public async Task<BaseResponse> Handle(AuthenticateByTotpCommand request, CancellationToken cancellationToken)
         {
-            
+
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
@@ -87,39 +87,37 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
-            else
+
+            var userClaims = await _userManager.GetClaimsAsync(user);
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var roleClaims = new List<Claim>();
+            for (int i = 0; i < roles.Count; i++)
             {
-                var userClaims = await _userManager.GetClaimsAsync(user);
+                roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+            }
 
-                var roles = await _userManager.GetRolesAsync(user);
-                var roleClaims = new List<Claim>();
-                for (int i = 0; i < roles.Count; i++)
-                {
-                    roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
-                }
-
-                var claims = new[]
-                {
+            var claims = new[]
+            {
                     new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }
-                .Union(userClaims)
-                .Union(roleClaims);
+            .Union(userClaims)
+            .Union(roleClaims);
 
-                JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user, claims);
+            JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user, claims);
 
-                AuthenticatedUserDTO authenticatedUser = _mapper.Map<AuthenticatedUserDTO>(user);
-                authenticatedUser.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
+            AuthenticatedUserDTO authenticatedUser = _mapper.Map<AuthenticatedUserDTO>(user);
+            authenticatedUser.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
 
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Success,
-                    Header = $"{_requestTitle} succeeded",
-                    AdditionalData = authenticatedUser
-                });
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = authenticatedUser
+            });
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", authenticatedUser);
-            }
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", authenticatedUser);
         }
     }
 }

@@ -1,18 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
-using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO;
-using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
@@ -38,8 +31,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         }
         public async Task<BaseResponse> Handle(SendTotpCommand request, CancellationToken cancellationToken)
         {
-            
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -56,15 +47,10 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
             var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
 
-            //TODO: add sms provider to send sms to user.
-            //var totpSms = new TotpSms()
-            //{
-            //    Type = 1,
-            //    Receptor = new string[] { request.DTO.PhoneNumber },
-            //    Code = totp
-            //};
+            //send sms to user.
+            var totpSms = new TotpSms(1, new string[] { request.DTO.PhoneNumber }, totp);
 
-            //var sendMessageToUser = await _smsSender.SendTotpSmsAsync(totpSms);
+            var sendMessageToUser = await _smsSender.SendTotpSmsAsync(totpSms);
 
             await _logger.Log(new Log
             {
