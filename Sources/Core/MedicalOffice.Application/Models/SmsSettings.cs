@@ -8,16 +8,7 @@ namespace MedicalOffice.Application.Models
 {
     public class SmsSettings
     {
-        public SmsSettings()
-        {
-
-        }
-        public SmsSettings(string apiKey, string sendTotpTemplate)
-        {
-            ApiKey = apiKey;
-            SendTotpTemplate = sendTotpTemplate;
-        }
-        public string? ApiKey{ get; set; } 
-        public string? SendTotpTemplate { get; set; }
+        public string ApiKey{ get; set; } 
+        public string SendTotpTemplate { get; set; }
     }
 }

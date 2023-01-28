@@ -15,7 +15,6 @@ namespace MedicalOffice.Infrastructure.Sms
 
         public async Task<bool> SendTotpSmsAsync(TotpSms totpSms)
         {
-            
             var smsProvider = new Api(_smsSettings.ApiKey);
             var sendMessageToUser = await smsProvider.VerifyAsync(
                 totpSms.Type,
