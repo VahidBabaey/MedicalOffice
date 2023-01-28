@@ -61,4 +61,6 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
     Task<bool> CheckExistReceptionId(Guid officeId, Guid receptionId);
     Task<List<ReceptionListDTO>> GetReceptionList(Guid patientId);
     int GetServiceCountsOfPatient(Guid receptionId);
+    Task<List<ReceptionDetailListForReceptionDTO>> GetReceptionDetailListForReception(Guid patientId, Guid receptionId);
+    Task UpdateReceptionService(Guid receptionDetailId, Guid serviceId, Guid[] MedicalStaffs);
 }

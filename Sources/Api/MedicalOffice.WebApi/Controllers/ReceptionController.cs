@@ -103,4 +103,20 @@ public class ReceptionController : Controller
 
         return Ok(response);
     }
+    //[Authorize]
+    [HttpPost("updatereceptiondetail")]
+    public async Task<ActionResult<Guid>> UpdateReceptionDetail([FromBody] UpdateReceptionDetailDTO dto, [FromQuery] string receptiodDetailId, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new UpdateReceptionDetailCommand() { DTO = dto, ReceptiodDetailId = Guid.Parse(receptiodDetailId), OfficeId = Guid.Parse(officeId)});
+
+        return Ok(response);
+    }
+    //[Authorize]
+    [HttpDelete("deletereceptiondetail")]
+    public async Task<ActionResult<Guid>> DeleteReceptionDetail([FromQuery] string receptiodDetailId, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new DeleteReceptionDetailCommand() {ReceptiodDetailId = Guid.Parse(receptiodDetailId), OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
 }

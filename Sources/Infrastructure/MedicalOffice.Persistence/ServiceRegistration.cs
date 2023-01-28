@@ -184,6 +184,7 @@ public static class ServiceRegistration
         services.AddScoped<IValidator<MemberShipServiceDTO>, AddMemberShipServiceValidator>();
         services.AddScoped<IValidator<UpdateMemberShipServiceDTO>, UpdateMemberShipServiceValidator>();
         services.AddScoped<IValidator<ReceptionDetailDTO>, AddReceptionDetailValidator>();
+        services.AddScoped<IValidator<UpdateReceptionDetailDTO>, UpdateReceptionDetailValidator>();
         services.AddScoped<IValidator<AddFormCommitmentDTO>, AddFormCommitmentValidator>();
         services.AddScoped<IValidator<ReceptionsDTO>, AddReceptionValidator>();
         services.AddScoped<IValidator<AddFormCommitmentDTO>, AddFormCommitmentValidator>();

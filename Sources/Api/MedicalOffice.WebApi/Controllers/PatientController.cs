@@ -67,9 +67,17 @@ public class PatientController : Controller
     }
     //[Authorize]
     [HttpGet("searchreceptionslist")]
-    public async Task<ActionResult<List<ReceptionListDTO>>> GetreceptionsList([FromQuery] string patientId)
+    public async Task<ActionResult<List<ReceptionListDTO>>> GetReceptionsList([FromQuery] string patientId)
     {
         var response = await _mediator.Send(new GetAllPatientReceptionsQuery() {PatientId = Guid.Parse(patientId) });
+
+        return Ok(response);
+    }
+    //[Authorize]
+    [HttpGet("searchreceptiondetailsforreceptionlist")]
+    public async Task<ActionResult<List<ReceptionDetailListForReceptionDTO>>> GetReceptionDetailsListForReception([FromQuery] string patientId, [FromQuery] string receptionId)
+    {
+        var response = await _mediator.Send(new GetAllPatientReceptionDetailsforReceptionQuery() { PatientId = Guid.Parse(patientId), ReceptionId = Guid.Parse(receptionId) });
 
         return Ok(response);
     }
