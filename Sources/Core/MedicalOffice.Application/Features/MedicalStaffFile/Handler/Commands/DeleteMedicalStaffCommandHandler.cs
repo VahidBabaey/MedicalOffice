@@ -32,7 +32,20 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
         public async Task<BaseResponse> Handle(DeleteMedicalStaffCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();
+
             Log log = new();
+
+            var validationMedicalStaffId = await _repository.CheckMedicalStaffExist(request.MedicalStaffId, request.OfficeId);
+
+            if (!validationMedicalStaffId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
 
             try
             {

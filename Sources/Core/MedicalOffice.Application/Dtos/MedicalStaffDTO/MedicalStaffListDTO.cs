@@ -18,22 +18,22 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// نام
         /// </summary>
         public string FirstName { get; set; } = string.Empty;
-
         /// <summary>
         /// نام خانوادگی
         /// </summary>
         public string LastName { get; set; } = string.Empty;
-
         /// <summary>
         /// شماره تلفن
         /// </summary>
         public string PhoneNumber { get; set; } = string.Empty;
-
+        /// <summary>
+        /// شماره نظام پزشکی
+        /// </summary>
+        public string MedicalNumber { get; set; } = string.Empty;
         /// <summary>
         /// آیدی تخصص
         /// </summary>
         public Guid? SpecializationId { get; set; }
-
         /// <summary>
         /// نام تخصص
         /// </summary>

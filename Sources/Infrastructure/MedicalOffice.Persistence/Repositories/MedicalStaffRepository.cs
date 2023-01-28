@@ -49,15 +49,15 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
     }
 
-    public async Task<IEnumerable<MedicalStaffListDTO>> GetAllMedicalStaffs()
+    public async Task<IEnumerable<MedicalStaffListDTO>> GetAllMedicalStaffs(Guid officeID)
     {
-        var _list = await _dbContext.MedicalStaffs.Select(p => new MedicalStaffListDTO
+        var _list = await _dbContext.MedicalStaffs.Where(p => p.OfficeId == officeID).Select(p => new MedicalStaffListDTO
         {
             Id = p.Id,
             FirstName = p.FirstName,
             LastName = p.LastName,
-            PhoneNumber = p.PhoneNumber,
-            //ProfilePicture = p.ProfilePicture,
+            PhoneNumber = p.PhoneNumber, 
+            MedicalNumber = p.MedicalNumber,
             SpecializationId = p.SpecializationId,
             SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Name }).Where(x => x.Id == p.SpecializationId).FirstOrDefault().Name
         }).ToListAsync();
