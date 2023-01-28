@@ -44,6 +44,7 @@ public static class ServicesRegistration
 
         #region Office
         services.AddScoped<IValidator<OfficeDTO>, OfficeValidator>();
+        services.AddScoped<IValidator<UserOfficeDTO>, UserOfficeValidator>();
         #endregion Office
 
         #region ServiceDuration

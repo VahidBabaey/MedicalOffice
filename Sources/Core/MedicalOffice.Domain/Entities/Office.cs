@@ -22,48 +22,48 @@ public class Office : BaseDomainEntity<Guid>
     /// <summary>
     /// نوع تخفیف ها
     /// </summary>
-    public ICollection<DiscountType>? DiscountTypes { get; set; }
+    public ICollection<DiscountType> DiscountTypes { get; set; }
     /// <summary>
     /// بیمه ها
     /// </summary>
-    public ICollection<Insurance>? Insurances { get; set; }
+    public ICollection<Insurance> Insurances { get; set; }
 
     /// <summary>
     /// ضرایب کا
     /// </summary>
-    public ICollection<KMultiplier>? KMultipliers { get; set; }
+    public ICollection<KMultiplier> KMultipliers { get; set; }
     /// <summary>
     /// بیماران
     /// </summary>
-    public ICollection<Patient>? Patients { get; set; }
+    public ICollection<Patient> Patients { get; set; }
     /// <summary>
     /// پذیرش ها
     /// </summary>
-    public ICollection<Reception>? Receptions { get; set; }
+    public ICollection<Reception> Receptions { get; set; }
     /// <summary>
     /// بخش ها
     /// </summary>
-    public ICollection<Section>? Sections { get; set; }
+    public ICollection<Section> Sections { get; set; }
     /// <summary>
     /// خدمات
     /// </summary>
-    public ICollection<Service>? Services { get; set; }
+    public ICollection<Service> Services { get; set; }
     /// <summary>
     /// شیفت ها
     /// </summary>
-    public ICollection<Shift>? Shifts { get; set; }
+    public ICollection<Shift> Shifts { get; set; }
     /// <summary>
     /// تعرفه ها
     /// </summary>
-    public ICollection<Tariff>? Tariffs { get; set; }
+    public ICollection<Tariff> Tariffs { get; set; }
     /// <summary>
     /// جزئیات پذیرش
     /// </summary>
-    public ICollection<ReceptionDetail>? ReceptionDetails { get; set; }
+    public ICollection<ReceptionDetail> ReceptionDetails { get; set; }
     /// <summary>
     /// دسترسی ها
     /// </summary>
-    public ICollection<Picture>? Pictures { get; set; }
+    public ICollection<Picture> Pictures { get; set; }
     /// <summary>
     /// ارتباط یک به چند مطب با کاربرانش
     /// </summary>
@@ -71,11 +71,11 @@ public class Office : BaseDomainEntity<Guid>
     /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و کاربر-مطب-نقش استفاده می شود
     /// </summary>
-    public ICollection<UserOfficeRole>? UserOfficeRoles { get; set; }
+    public ICollection<UserOfficeRole> UserOfficeRoles { get; set; }
     /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین مطب و دسترسی های کاربر مطب استفاده می شود
     /// </summary>
-    public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; }
+    public ICollection<UserOfficePermission> UserOfficePermissions { get; set; }
     /// <summary>
     /// وقت دهی
     /// </summary>

@@ -2,6 +2,7 @@
 using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
 using MedicalOffice.Application.Models;
@@ -24,10 +25,12 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
         private readonly UserManager<User> _userManager;
         private readonly IValidator<UserStatusRequestDTO> _validator;
         private readonly ILogger _logger;
+        private readonly IUserRepository _userRepository;
         private readonly string _requestTitle;
 
         public GetUserStatusQueryHandler(
             UserManager<User> userManager,
+            IUserRepository userRepository,
             IValidator<UserStatusRequestDTO> validator,
             ILogger logger)
         {
@@ -35,6 +38,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
             _userManager = userManager;
+            _userRepository = userRepository;
         }
 
         public async Task<BaseResponse> Handle(GetUserStatusQuery request, CancellationToken cancellationToken)
@@ -64,6 +68,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
             }
             else
             {
+                userStatus.IsExist = true;
                 userStatus.HasPassword = user.PasswordHash == null ? false : true;
                 userStatus.IsActive = user.IsActive;
             }

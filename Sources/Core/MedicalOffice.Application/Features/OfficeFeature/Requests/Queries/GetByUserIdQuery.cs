@@ -13,6 +13,5 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Requests.Queries
 {
     public class GetByUserIdQuery : IRequest<BaseResponse>
     {
-        public Guid UserId { get; set; }
     }
 }
