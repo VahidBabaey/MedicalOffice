@@ -54,7 +54,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
 
     Task<decimal> GetReceptionTotal(Guid id);
     Task<IEnumerable<MembershipNamesDTO>> GetAllMembershipNames();
-    Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId);
+    Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId);
     Task<List<ReceptionDetailListDTO>> GetReceptionDetailList(Guid patientId);
     Task<Reception> CreateNewReceptionDebt(long Debt, Guid officeId, Guid receptionId);
     Task<ReceptionDetail> CreateNewReceptionDetailDebt(long Debt, Guid officeId, Guid receptionId);

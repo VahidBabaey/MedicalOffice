@@ -42,7 +42,7 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
 
             try
             {
-                var detailsofallreceptions = await _repository.GetDetailsofAllReceptions(request.PatientId);
+                var detailsofallreceptions = await _repository.GetDetailsofAllReceptions(request.PatientId, request.ReceptionId);
 
                 result = _mapper.Map<DetailsofAllReceptionsDTO>(detailsofallreceptions);
 

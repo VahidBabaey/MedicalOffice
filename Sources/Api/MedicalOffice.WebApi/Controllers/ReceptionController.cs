@@ -88,9 +88,9 @@ public class ReceptionController : Controller
 
     //[Authorize]
     [HttpGet("dtails")]
-    public async Task<ActionResult<List<DetailsofAllReceptionsDTO>>> GetAllDetails([FromQuery] Guid patientId)
+    public async Task<ActionResult<List<DetailsofAllReceptionsDTO>>> GetAllDetails([FromQuery] Guid patientId, [FromQuery] Guid receptionId)
     {
-        var response = await _mediator.Send(new GetDetailsOfAllReceptionsQuery() { PatientId = patientId});
+        var response = await _mediator.Send(new GetDetailsOfAllReceptionsQuery() { PatientId = patientId, ReceptionId = receptionId});
 
         return Ok(response);
     }

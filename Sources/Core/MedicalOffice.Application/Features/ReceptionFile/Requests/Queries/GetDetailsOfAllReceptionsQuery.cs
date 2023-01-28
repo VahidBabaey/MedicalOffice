@@ -13,5 +13,6 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Requests.Queries
     public class GetDetailsOfAllReceptionsQuery : IRequest<BaseResponse>
     {
         public Guid PatientId { get; set; }
+        public Guid ReceptionId { get; set; }
     }
 }

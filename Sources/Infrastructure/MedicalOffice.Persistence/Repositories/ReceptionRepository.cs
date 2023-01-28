@@ -287,10 +287,10 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         return (long)Convert.ToDouble(service.TariffValue * serviceCount);
     }
 
-    public async Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId)
+    public async Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId)
     {
         var facNo = await _dbContext.Receptions.Where(p => p.PatientId == patientId).FirstOrDefaultAsync();
-        var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId).ToListAsync();
+        var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId && p.Reception.Id == receptionId).ToListAsync();
         DetailsofAllReceptionsDTO detailsofAllReceptions = new DetailsofAllReceptionsDTO();
         foreach (var item in _list)
         {
