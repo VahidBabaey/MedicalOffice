@@ -13,12 +13,12 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// نام دسترسی
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// نام فارسی دسترسی
         /// </summary>
-        public string? PersianName { get; set; }
+        public string PersianName { get; set; }
 
         /// <summary>
         /// شناسه دسته بندی دسترسی
@@ -28,14 +28,11 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         ///  ارتباط یک به چند با دسته بندی دسترسی 
         /// </summary>
-        public PermissionCategory? PermissionCategory { get; set; }
-
-
-
+        public PermissionCategory PermissionCategory { get; set; }
 
         /// <summary>
         /// ارتباط چند به چند کاربران مطب و دسترسی هایشان
         /// </summary>
-        public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; } = new List<UserOfficePermission>();
+        public ICollection<UserOfficePermission> UserOfficePermissions { get; set; } = new List<UserOfficePermission>();
     }
 }

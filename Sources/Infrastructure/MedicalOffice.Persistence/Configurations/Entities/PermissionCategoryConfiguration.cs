@@ -11,8 +11,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
 {
     public class PermissionCategoryConfiguration : BaseEntityTypeConfiguration<PermissionCategory, Guid>
     {
-        private static PermissionCategory PermissionCategoryCreator(string guidId, string name, string persianName)
-            => new() { Id = Guid.Parse(guidId), Name = name, PersianName = persianName };
+        private static PermissionCategory PermissionCategoryCreator(string guidId, string name, string persianName, bool isShown=true)
+            => new() { Id = Guid.Parse(guidId), Name = name, PersianName = persianName,IsShown = isShown };
 
         public override void ConfigureEntity(EntityTypeBuilder<PermissionCategory> builder)
         {
@@ -27,7 +27,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     PermissionCategoryCreator("23bc31a3-6542-43d7-a4e8-6a953415e0d0","AppointmentPermission","دسترسی وقت دهی"),
                     PermissionCategoryCreator("529e3ed5-51ea-4411-8fbb-ab62e99f7691","BasicInfoPermission","دسترسی اطلاعات پایه"),
                     PermissionCategoryCreator("9301e02e-c11d-4c8f-bc72-c40c6322eebb","DashboardPermission","دسترسی به داشبورد"),
-                    PermissionCategoryCreator("3f75033b-be8a-47e7-b86a-fa67c48785dc","PreparedPatternsPermission","دسترسی به الگوهای آماده")
+                    PermissionCategoryCreator("3f75033b-be8a-47e7-b86a-fa67c48785dc","PreparedPatternsPermission","دسترسی به الگوهای آماده"),
+                    PermissionCategoryCreator("202eafde-1b56-428b-9b0b-60a8d5efe812","SupportPermission","دسترسی پشتیبانی",false),
                 });
         }
     }

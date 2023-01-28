@@ -8,8 +8,11 @@ namespace MedicalOffice.Domain.Entities
 
         public string PersianName{ get; set; } = string.Empty;
 
-        //public ICollection<Permission> Permissions { get; set; }
+        public bool IsShown{ get; set; }
+
+        public ICollection<Permission> Permissions { get; set; }
 
         public ICollection<Role> Role { get; set; }
+
     }
 }

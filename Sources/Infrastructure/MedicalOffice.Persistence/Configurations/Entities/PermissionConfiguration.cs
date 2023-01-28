@@ -26,6 +26,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     PermissionCreator("ac4c98c9-0295-4bea-b34b-19660f948852","7469a760-7fe8-43cf-9165-a8e415f91774","ReceptionReturnregistration","ثبت برگشتی"),
                     PermissionCreator("e4f9046b-7b60-4187-8f7d-50aeb32d7071","7469a760-7fe8-43cf-9165-a8e415f91774","ReceptionShiftChange","تغییر شیفت"),
 
+                    PermissionCreator("ea53dd69-35c5-43f7-a0aa-be02f24bfa71","b15e5500-998f-40dc-80f2-983c5b1c1aba","AllFilesPermission","دسترسی به کل پرونده ها"),
                     PermissionCreator("f1568f21-659f-42d4-9a65-306acf0501c1","b15e5500-998f-40dc-80f2-983c5b1c1aba","FileEdit","ویرایش پرونده"),
                     PermissionCreator("520df499-cb60-45b7-9f48-a142694c9ff6","b15e5500-998f-40dc-80f2-983c5b1c1aba","FileDelete","حذف پرونده"),
                     PermissionCreator("583b93b7-60b0-418b-9f70-e3d22032a08a","b15e5500-998f-40dc-80f2-983c5b1c1aba","FileRegistration","ثبت پرونده"),
@@ -43,9 +44,11 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     PermissionCreator("b9e66192-1c2a-4dbf-97f6-79a6d861a872","365298ad-1986-45c5-a74b-3173b6f90655","DoctorPermissionLightPen","دسترسی به قلم نوری"),
                     PermissionCreator("94195d88-bd36-49b4-8bba-9f575e498b8d","365298ad-1986-45c5-a74b-3173b6f90655","DoctorPermissionPictures"," دسترسی به تصاویر ویزیت"),
                     PermissionCreator("e34710cc-d5eb-4a99-acaf-771a6dcd00f3","365298ad-1986-45c5-a74b-3173b6f90655","DoctorPermissionCommitments","دسترسی به تعهدنامه ها"),
-                    PermissionCreator("59114568-3b0c-44a9-950c-565fd6f67e23","365298ad-1986-45c5-a74b-3173b6f90655","DoctorRegisteredVisitChange","دسترسی تغییر در ویزیت های ثبت شده"),
+                    PermissionCreator("59114568-3b0c-44a9-950c-565fd6f67e23","365298ad-1986-45c5-a74b-3173b6f90655","DoctorOthersRegisteredVisitChange","دسترسی تغییر در ویزیت های ثبت شده دیگران"),
                     PermissionCreator("99f8a553-8445-4d35-bb0e-6e3331353578","365298ad-1986-45c5-a74b-3173b6f90655","DoctorPermissionForms","دسترسی فرم ها"),
                     PermissionCreator("b43130fb-edbe-41a6-b4e0-07278191505c","365298ad-1986-45c5-a74b-3173b6f90655","DoctorPermissionPrescription","دسترسی به نسخه نویسی"),
+                    PermissionCreator("9729da56-1152-4a10-8817-3f2b87a6f4a5","365298ad-1986-45c5-a74b-3173b6f90655","DoctorPermissionFileBrief","دسترسی به خلاصه پرونده"),
+                    PermissionCreator("5921e3d9-33cb-40c3-95ec-aa30f27d8488","365298ad-1986-45c5-a74b-3173b6f90655","DoctorPermissionPMH","دسترسی به PMH"),
 
                     PermissionCreator("3e7c5991-89d9-4a98-967e-71e68393ea3b","05a066f7-0a5e-4e70-a382-65e18453ae46","ReportDailyCash","صندوق روزانه"),
                     PermissionCreator("789a92c9-28b4-4200-b9f0-e1ebe8b9a7bf","05a066f7-0a5e-4e70-a382-65e18453ae46","ReportFinancial","گزارش مالی"),
@@ -67,7 +70,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     PermissionCreator("e7ec3e67-8ba8-46d4-8a6c-9f003c264978","05a066f7-0a5e-4e70-a382-65e18453ae46","ReportSpecialForms","گزارش از فرم های اختصاصی"),
                     PermissionCreator("a952610e-01a1-4df8-a50b-87c750a8ce39","05a066f7-0a5e-4e70-a382-65e18453ae46","ReportStore","گزارش انبار"),
 
-                    PermissionCreator("549cc91b-62e2-4bcc-b428-2c7ca785167a","d5eccfd3-a6c9-422b-835a-a77f0295481f","StoreComidity","تعریف کالا"),
+                    PermissionCreator("09b7d194-d6b3-43fb-9591-3b5fb9a2f145","d5eccfd3-a6c9-422b-835a-a77f0295481f","StoreDefinition","تعریف انبار"),
+                    PermissionCreator("549cc91b-62e2-4bcc-b428-2c7ca785167a","d5eccfd3-a6c9-422b-835a-a77f0295481f","StoreComidityDefinition","تعریف کالا"),
                     PermissionCreator("10ec79b9-dd1a-427f-b0bb-86963c29045a","d5eccfd3-a6c9-422b-835a-a77f0295481f","StoreConsumerRegitration","ثبت مصرفی"),
                     PermissionCreator("4d32b6dc-f206-451a-9425-dbab00609b66","d5eccfd3-a6c9-422b-835a-a77f0295481f","StoreComidityTrasportation","انتقال کالا"),
                     PermissionCreator("61c3d629-76bb-4755-8eba-891b833917fc","d5eccfd3-a6c9-422b-835a-a77f0295481f","StoreRemittanceRegitration","ثبت حواله"),

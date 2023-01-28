@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Domain.Entities
 {
-    public class RolePermissionCategory
+    public class RolePermission
     {
-        public Guid PermissionCategoryId { get; set; }
+        public Guid PermissionId { get; set; }
         public Guid RoleId { get; set; }
-        public PermissionCategory PermissionCategory { get; set; }
+        public Permission Permission{ get; set; }
         public Role Role { get; set; }
     }
 }
