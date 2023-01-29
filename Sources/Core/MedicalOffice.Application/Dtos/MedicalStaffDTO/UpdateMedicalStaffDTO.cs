@@ -11,11 +11,6 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
     public class UpdateMedicalStaffDTO : BaseDto<Guid>
     {
         /// <summary>
-        /// آیدی مطب
-        /// </summary>
-        public Guid? OfficeId { get; set; }
-
-        /// <summary>
         /// عکس کادر درمان
         /// </summary>
         //public byte[]? ProfilePicture { get; set; }
@@ -24,37 +19,38 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// نام
         /// </summary>
         public string FirstName { get; set; } = string.Empty;
-
         /// <summary>
         /// نام خانوادگی
         /// </summary>
         public string LastName { get; set; } = string.Empty;
-
         /// <summary>
         /// شماره نظام پزشکی
         /// </summary>
         public string MedicalNumber { get; set; } = string.Empty;
-
         /// <summary>
         /// کد ملی
         /// </summary>
         public string NationalID { get; set; } = string.Empty;
-
         /// <summary>
         /// عنوان
         /// </summary>
         public Title? Title { get; set; }
-
         /// <summary>
         /// آیدی تخصص
         /// </summary>
         public Guid? SpecializationId { get; set; }
-
+        /// <summary>
+        /// نام کاربری بیمه سلامت
+        /// </summary>
+        public string IHIOUserName { get; set; } = string.Empty;
+        /// <summary>
+        /// رمز عبور بیمه سلامت
+        /// </summary>
+        public string IHIOPassword { get; set; } = string.Empty;
         /// <summary>
         /// شماره تلفن
         /// </summary>
         public string PhoneNumber { get; set; } = string.Empty;
-
         /// <summary>
         /// شناسه کاربر
         /// </summary>

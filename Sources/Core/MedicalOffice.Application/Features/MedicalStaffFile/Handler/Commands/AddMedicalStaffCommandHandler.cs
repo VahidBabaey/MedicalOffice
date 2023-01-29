@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.LogicProviders;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO.Validators;
+using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
@@ -21,25 +24,30 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
     public class AddMedicalStaffCommandHandler : IRequestHandler<AddMedicalStaffCommand, BaseResponse>
     {
+        private readonly IValidator<MedicalStaffDTO> _validator;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IMedicalStaffRoleRepository _medicalStaffRoleRepository;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly IMedicalStaffRepository _medicalStaffrepository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly string _requestTitle;
 
         public AddMedicalStaffCommandHandler(
+            IValidator<MedicalStaffDTO> validator,
             IMapper mapper,
             ILogger logger,
             RoleManager<Role> roleManager,
             UserManager<User> userManager,
             IMedicalStaffRepository medicalStaffrepository,
             IUserOfficeRoleRepository userOfficeRoleRepository,
-            IMedicalStaffRoleRepository medicalStaffRoleRepository
+            IMedicalStaffRoleRepository medicalStaffRoleRepository,
+            IOfficeRepository officeRepository
             )
         {
+            _validator = validator;
             _mapper = mapper;
             _logger = logger;
             _roleManager = roleManager;
@@ -47,6 +55,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             _userOfficeRoleRepository = userOfficeRoleRepository;
             _medicalStaffrepository = medicalStaffrepository;
             _medicalStaffRoleRepository = medicalStaffRoleRepository;
+            _officeRepository = officeRepository;
 
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
@@ -55,11 +64,21 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
         {
             BaseResponse response = new();
 
-            var validator = new AddMedicalStaffValidator();
-
             Log log = new();
 
-            var validationResult = await validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("OfficeID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -68,7 +87,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             }
 
             bool isMedicalStaffExist = await _medicalStaffrepository.CheckExistByOfficeIdAndPhoneNumber(
-                request.DTO.OfficeId, request.DTO.PhoneNumber);
+                request.OfficeId, request.DTO.PhoneNumber);
 
             if (isMedicalStaffExist)
             {
@@ -111,6 +130,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
             var medicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
             medicalStaff.UserId = user.Id;
+            medicalStaff.OfficeId = request.OfficeId;
             medicalStaff = await _medicalStaffrepository.Add(medicalStaff);
 
             var roleName = new List<string>();
@@ -127,7 +147,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                         {
                             RoleId = roleId,
                             UserId = user.Id,
-                            OfficeId = request.DTO.OfficeId
+                            OfficeId = request.OfficeId
                         });
 
                         medicalstaffRole.Add(new MedicalStaffRole

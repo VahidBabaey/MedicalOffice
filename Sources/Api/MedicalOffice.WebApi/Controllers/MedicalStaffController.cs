@@ -21,43 +21,43 @@ public class MedicalStaffController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddMedicalStaffCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddMedicalStaffCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPatch]
-    public async Task<ActionResult<Guid>> UpdateMedicalStaff([FromBody] UpdateMedicalStaffDTO dto)
+    public async Task<ActionResult<Guid>> UpdateMedicalStaff([FromBody] UpdateMedicalStaffDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditMedicalStaffCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditMedicalStaffCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteMedicalStaffCommand() { MedicalStaffId = id });
+        var response = await _mediator.Send(new DeleteMedicalStaffCommand() { MedicalStaffId = id, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllMedicalStaffs() { DTO = dto });
+        var response = await _mediator.Send(new GetAllMedicalStaffs() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [Permission(BasicInfoPermissions.GetAllDetails)]
     [HttpPatch("permissions")]
     public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] MedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)

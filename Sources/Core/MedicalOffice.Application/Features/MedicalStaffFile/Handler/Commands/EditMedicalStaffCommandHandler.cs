@@ -40,6 +40,18 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
             Log log = new();
 
+            var validationMedicalStaffId = await _repository.CheckMedicalStaffExist(request.DTO.Id, request.OfficeId);
+
+            if (!validationMedicalStaffId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             try
             {
                 var MedicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
