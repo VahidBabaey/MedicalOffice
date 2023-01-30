@@ -84,7 +84,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<ServiceDuration> ServiceDurations=> Set<ServiceDuration>();
     public DbSet<Room> Rooms=> Set<Room>();
     public DbSet<Device> Devices=> Set<Device>();
-    public DbSet<MenuPermission> MenuPermissions=> Set<MenuPermission>();
+    public DbSet<MenuPermission> MenuPermissions => Set<MenuPermission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
     private readonly IUserResolverService _userResolver;
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolverService userResolver) : base(options)

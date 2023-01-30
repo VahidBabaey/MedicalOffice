@@ -18,6 +18,16 @@ namespace MedicalOffice.Persistence.Configurations.Entities
             builder
                 .HasKey(mp => new { mp.PermissionId, mp.MenuId });
             builder
+                .HasOne(mp => mp.Permission)
+                .WithMany(p => p.MenuPermissions)
+                .HasForeignKey(mp => mp.PermissionId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasOne(mp => mp.Menu)
+                .WithMany(p => p.MenuPermissions)
+                .HasForeignKey(mp => mp.MenuId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
                 .HasData(new MenuPermission[]
             {
             #region FilePermission
@@ -35,13 +45,13 @@ namespace MedicalOffice.Persistence.Configurations.Entities
 	        #endregion
 
             #region ReceptionPermission
-                MenuPermissionCreator("bd389ea9-3cd5-48d6-bf01-669f6a87711c","ea53dd69-35c5-43f7-a0aa-be02f24bfa71"),
-                MenuPermissionCreator("bd389ea9-3cd5-48d6-bf01-669f6a87711c","f1568f21-659f-42d4-9a65-306acf0501c1"),
-                MenuPermissionCreator("bd389ea9-3cd5-48d6-bf01-669f6a87711c","520df499-cb60-45b7-9f48-a142694c9ff6"),
-                MenuPermissionCreator("bd389ea9-3cd5-48d6-bf01-669f6a87711c","583b93b7-60b0-418b-9f70-e3d22032a08a"),
-                MenuPermissionCreator("bd389ea9-3cd5-48d6-bf01-669f6a87711c","cd77a3e3-f0c1-427f-9dcb-e098f53167d4"),
-                MenuPermissionCreator("bd389ea9-3cd5-48d6-bf01-669f6a87711c","086109f0-8508-472e-a644-12f40f32177f"),
-                MenuPermissionCreator("bd389ea9-3cd5-48d6-bf01-669f6a87711c","1b419f29-ce34-4c4e-ad7c-2804d8a6e15a"),
+                MenuPermissionCreator("8018f694-2387-4e67-8263-1a994d010617","7469a760-7fe8-43cf-9165-a8e415f91774"),
+                MenuPermissionCreator("8018f694-2387-4e67-8263-1a994d010617","8266f349-234c-400a-9670-4676b75d019c"),
+                MenuPermissionCreator("8018f694-2387-4e67-8263-1a994d010617","953ebbbe-a4f2-49b7-9273-8fceed61479e"),
+                MenuPermissionCreator("8018f694-2387-4e67-8263-1a994d010617","a3f8ca65-004e-4c5f-a3da-0c13b5b3d033"),
+                MenuPermissionCreator("8018f694-2387-4e67-8263-1a994d010617","a46bf033-b50d-4e11-8c5d-0e404ed97b9f"),
+                MenuPermissionCreator("8018f694-2387-4e67-8263-1a994d010617","ac4c98c9-0295-4bea-b34b-19660f948852"),
+                MenuPermissionCreator("8018f694-2387-4e67-8263-1a994d010617","e4f9046b-7b60-4187-8f7d-50aeb32d7071"),
                 #endregion
 
             #region TodayPatient

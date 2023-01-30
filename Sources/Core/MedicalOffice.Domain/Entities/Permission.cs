@@ -31,5 +31,15 @@ namespace MedicalOffice.Domain.Entities
         /// ارتباط چند به چند کاربران مطب و دسترسی هایشان
         /// </summary>
         public ICollection<UserOfficePermission> UserOfficePermissions { get; set; } = new List<UserOfficePermission>();
+
+        /// <summary>
+        /// ارتباط چند به چند منو و دسترسی
+        /// </summary>
+        public ICollection<MenuPermission> MenuPermissions { get; set; }
+
+        /// <summary>
+        /// ارتباط چند به چند نقش و دسترسی
+        /// </summary>
+        public ICollection<RolePermission> RolePermissions { get; set; }
     }
 }

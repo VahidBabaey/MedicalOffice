@@ -1,5 +1,6 @@
 ﻿using MedicalOffice.Domain.Entities;
 using MedicalOffice.Persistence.Configurations.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Persistence.Configurations.Entities
 {
-    public class PermissionConfiguration : BaseEntityTypeConfiguration<Permission, Guid>
+    public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
     {
         private static Permission PermissionCreator(string guidId, string? parentId, string name, string persianName, bool isShown = true)
             => new() { Id = Guid.Parse(guidId), ParentId = parentId != null ? Guid.Parse(parentId) : null, Name = name, PersianName = persianName, IsShown = isShown };
 
-        public override void ConfigureEntity(EntityTypeBuilder<Permission> builder)
+        public void Configure(EntityTypeBuilder<Permission> builder)
         {
             builder
                 .HasData(new Permission[]
