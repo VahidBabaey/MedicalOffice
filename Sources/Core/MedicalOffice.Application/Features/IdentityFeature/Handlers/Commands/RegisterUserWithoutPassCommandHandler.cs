@@ -20,22 +20,23 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly IValidator<RegisterUserWithoutPassDTO> _validator;
-        private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
 
         private readonly string _requestTitle;
+
         public RegisterUserWithoutPassCommandHandler(
             UserManager<User> userManager,
             RoleManager<Role> roleManager,
             IValidator<RegisterUserWithoutPassDTO> validator,
-            IUserOfficeRoleRepository userOfficeRoleRepository,
             ILogger logger,
-            IMapper mapper
+            IMapper mapper,
+            IUserRepository userRepository
             )
         {
+            _userRepository = userRepository;
             _validator = validator;
-            _userOfficeRoleRepository = userOfficeRoleRepository;
             _userManager = userManager;
             _roleManager = roleManager;
             _logger = logger;
@@ -80,7 +81,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             #endregion
 
             #region MakeSureUserIsntExist
-            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.DTO.PhoneNumber || p.NationalID == request.DTO.NationalID);
+            var existingUser = await _userRepository.CheckByPhoneOrNationalId(request.DTO.PhoneNumber, request.DTO.NationalID);
+            //var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.DTO.PhoneNumber || p.NationalID == request.DTO.NationalID);
             if (existingUser != null)
             {
                 var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";

@@ -7,5 +7,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<User> InsertToUser(Guid officeid);
 
         Task<User?> CheckByPhoneOrNationalId(string phoneNumber, string nationalId);
+
+        Task<User?> FindExistAndActiveUser(string phoneNumber, bool isActive);
     }
 }

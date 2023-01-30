@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
@@ -26,8 +27,10 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly string _requestTitle;
+        private readonly IUserRepository _userRepository;
 
         public AuthenticateByTotpCommandHandler(
+            IUserRepository userRepository,
             IValidator<AuthenticateByTotpDTO> validator,
             UserManager<User> userManager,
             ITokenGenerator tokenGenerator,
@@ -35,6 +38,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             ILogger logger,
             IMapper mapper)
         {
+            _userRepository = userRepository;
             _validator = validator;
             _userManager = userManager;
             _tokenGenerator = tokenGenerator;
@@ -61,7 +65,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber && x.IsActive == true);
+            var user = await _userRepository.FindExistAndActiveUser(request.DTO.PhoneNumber, true);
+            //var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber && x.IsActive == true);
             if (user == null)
             {
                 var error = $"The User with phone number {request.DTO.PhoneNumber} is't exist!";
