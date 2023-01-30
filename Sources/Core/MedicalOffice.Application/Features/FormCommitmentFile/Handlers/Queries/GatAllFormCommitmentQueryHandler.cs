@@ -38,7 +38,7 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Queries
 
             try
             {
-                var formCommitments = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
+                var formCommitments = await _repository.GetAll();
                 var result = _mapper.Map<List<FormCommitmentListDTO>>(formCommitments.Where(p => p.OfficeId == request.OfficeId));
 
                 log.Header = $"{_requestTitle} succeded";

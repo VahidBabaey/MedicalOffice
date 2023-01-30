@@ -110,4 +110,9 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.Id == MedicalStaffId);
         return isExist;
     }
+    public async Task<List<MedicalStaff>> GetMedicalStaffBySearch(string name)
+    {
+        var medicalStaffs = await _dbContext.MedicalStaffs.Where(p => p.FirstName.Contains(name) || p.LastName.Contains(name)).ToListAsync();
+        return medicalStaffs;
+    }
 }

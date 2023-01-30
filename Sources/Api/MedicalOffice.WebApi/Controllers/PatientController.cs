@@ -48,18 +48,18 @@ public class PatientController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<PatientListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
+    public async Task<ActionResult<List<PatientListDTO>>> GetAll([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllPatientsQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllPatientsQuery() {OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [Authorize]
     [HttpGet("SearchByRequestedFeilds")]
-    public async Task<ActionResult<List<PatientListDTO>>> GetBySearch([FromQuery] ListDto dto, [FromQuery] SearchFields searchFields)
+    public async Task<ActionResult<List<PatientListDTO>>> GetBySearch([FromQuery] SearchFields searchFields)
     {
-        var response = await _mediator.Send(new GetPatientBySearchQuery() { DTO = dto, searchFields = searchFields });
+        var response = await _mediator.Send(new GetPatientBySearchQuery() {searchFields = searchFields });
 
         return Ok(response);
     }

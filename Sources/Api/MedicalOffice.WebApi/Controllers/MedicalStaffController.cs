@@ -2,8 +2,12 @@
 using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
+using MedicalOffice.Application.Dtos.SectionDTO;
+using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
+using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
+using MedicalOffice.Domain.Enums;
 using MedicalOffice.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +25,7 @@ public class MedicalStaffController : Controller
         _mediator = mediator;
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto, [FromQuery] string officeId)
     {
@@ -30,7 +34,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> UpdateMedicalStaff([FromBody] UpdateMedicalStaffDTO dto, [FromQuery] string officeId)
     {
@@ -39,7 +43,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
@@ -48,21 +52,36 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
+    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllMedicalStaffs() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllMedicalStaffs() {OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [Permission(BasicInfoPermissions.GetAllDetails)]
     [HttpPatch("permissions")]
     public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] MedicalStaffPermissionsDTO dto, [FromQuery] Guid officeId)
     {
         var response = await _mediator.Send(new UpdateMedicalStaffCommand() { DTO = dto, OffceId = officeId });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+    [Authorize]
+    [HttpGet("search")]
+    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetMedicalStaffBySearch([FromQuery] string name, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetMedicalStaffBySearch() { Name = name, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+    [HttpGet("titles")]
+    public async Task<ActionResult<Title>> GetAllTitles([FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetAllMedicalStaffQueryHandler { OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

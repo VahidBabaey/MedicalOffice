@@ -7,5 +7,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
     {
         Task<bool> CheckExistSectionId(Guid officeId, Guid sectionId);
         Task<List<Section>> GetSectionBySearch(string name);
+        Task<List<SectionNamesListDTO>> GetSectionNames(Guid officeId);
     }
 }

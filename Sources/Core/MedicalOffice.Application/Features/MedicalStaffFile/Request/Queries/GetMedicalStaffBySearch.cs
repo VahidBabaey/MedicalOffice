@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries
 {
-    public class GetAllMedicalStaffs : IRequest<List<MedicalStaffListDTO>>
+    public class GetMedicalStaffBySearch : IRequest<List<MedicalStaffListDTO>>
     {
+        public string Name { get; set; }
         public Guid OfficeId { get; set; }
     }
 }

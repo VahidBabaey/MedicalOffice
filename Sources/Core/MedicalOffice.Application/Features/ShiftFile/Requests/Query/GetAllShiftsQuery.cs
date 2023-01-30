@@ -11,7 +11,6 @@ namespace MedicalOffice.Application.Features.ShiftFile.Requests.Query
 {
     public class GetAllShiftsQuery : IRequest<List<ShiftListDTO>>
     {
-        public ListDto DTO { get; set; } = new ListDto();
         public Guid OfficeId { get; set; }
     }
 }

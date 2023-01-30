@@ -1,14 +1,11 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
 
-namespace MedicalOffice.Application.Dtos.SpecializationDTO;
+namespace MedicalOffice.Application.Dtos.SectionDTO;
 
-public class SpecializationListDTO: BaseDto<Guid>
-{ 
+public class SectionNamesListDTO: BaseDto<Guid>
+{
     /// <summary>
-    /// نام تخصص
+    /// نام بخش
     /// </summary>
     public string Name { get; set; } = string.Empty;
 }
-
-
-

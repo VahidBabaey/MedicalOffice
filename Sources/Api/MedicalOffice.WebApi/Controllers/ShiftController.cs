@@ -51,9 +51,9 @@ public class ShiftController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
+    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllShiftsQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllShiftsQuery() {OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

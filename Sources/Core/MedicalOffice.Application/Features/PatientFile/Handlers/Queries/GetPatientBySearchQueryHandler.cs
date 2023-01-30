@@ -37,7 +37,7 @@ public class GetPatientBySearchQueryHandler : IRequestHandler<GetPatientBySearch
         List<PatientListDTO> result = new();
         try
         {
-            var pateint = await _repository.SearchPateint(request.DTO.Skip, request.DTO.Take,request.searchFields.FirstName, request.searchFields.LastName, request.searchFields.NationalID, request.searchFields.Mobile, request.searchFields.FileNumber);
+            var pateint = await _repository.SearchPateint(request.searchFields.FirstName, request.searchFields.LastName, request.searchFields.NationalID, request.searchFields.Mobile, request.searchFields.FileNumber);
 
             result = _mapper.Map<List<PatientListDTO>>(pateint);
 

@@ -16,12 +16,6 @@ public class Specialization : BaseDomainEntity<Guid>
     /// تخصص کاربران
     /// </summary>
     public ICollection<MedicalStaffOfficeSpecialization>? MedicalStaffOfficeSpecializations { get; set; }
-
-    /// <summary>
-    /// بخش ها
-    /// </summary>
-    public ICollection<Service>? Services { get; set; }
-
     /// <summary>
     /// پزشکان
     /// </summary>
