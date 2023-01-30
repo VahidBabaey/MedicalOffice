@@ -48,11 +48,11 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
+    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllMedicalStaffs() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllMedicalStaffs() {OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

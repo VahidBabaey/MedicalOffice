@@ -38,7 +38,7 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Queries
 
             try
             {
-                var Specializations = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
+                var Specializations = await _repository.GetAll();
 
                 result = _mapper.Map<List<SpecializationListDTO>>(Specializations);
 
