@@ -52,11 +52,6 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// </summary>
         public string PhoneNumber { get; set; } = string.Empty;
         /// <summary>
-        /// شناسه کاربر
-        /// </summary>
-        public string Code { get; set; } = string.Empty;
-
-        /// <summary>
         /// پسورد
         /// </summary>
         //public string PasswordHash { get; set; } = string.Empty;
