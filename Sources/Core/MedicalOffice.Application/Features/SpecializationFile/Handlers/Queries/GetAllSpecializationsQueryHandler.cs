@@ -38,9 +38,9 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Queries
 
             try
             {
-                var Section = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
+                var Specializations = await _repository.GetAll();
 
-                result = _mapper.Map<List<SpecializationListDTO>>(Section);
+                result = _mapper.Map<List<SpecializationListDTO>>(Specializations);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

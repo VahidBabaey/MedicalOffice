@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands
     public class EditMedicalStaffCommand : IRequest<BaseResponse>
     {
         public UpdateMedicalStaffDTO DTO { get; set; } = new UpdateMedicalStaffDTO();
+        public Guid OfficeId { get; set; }
     }
 }

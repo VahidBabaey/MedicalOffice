@@ -23,36 +23,36 @@ public class MedicalStaffController : Controller
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddMedicalStaffCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddMedicalStaffCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [Authorize]
     [HttpPatch]
-    public async Task<ActionResult<Guid>> UpdateMedicalStaff([FromBody] UpdateMedicalStaffDTO dto)
+    public async Task<ActionResult<Guid>> UpdateMedicalStaff([FromBody] UpdateMedicalStaffDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditMedicalStaffCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditMedicalStaffCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [Authorize]
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteMedicalStaffCommand() { MedicalStaffId = id });
+        var response = await _mediator.Send(new DeleteMedicalStaffCommand() { MedicalStaffId = id, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllMedicalStaffs() { DTO = dto });
+        var response = await _mediator.Send(new GetAllMedicalStaffs() {OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

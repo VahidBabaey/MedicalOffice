@@ -11,5 +11,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands
     public class DeleteMedicalStaffCommand : IRequest<BaseResponse>
     {
         public Guid MedicalStaffId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

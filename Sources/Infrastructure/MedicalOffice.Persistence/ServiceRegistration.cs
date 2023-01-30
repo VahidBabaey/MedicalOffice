@@ -51,6 +51,8 @@ using MedicalOffice.Application.Dtos.FormCommitmentDTO;
 using MedicalOffice.Application.Dtos.FormCommitmentDTO.Validators;
 using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Dtos.Tariff.Validators;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO.Validators;
 
 namespace MedicalOffice.Persistence;
 
@@ -191,6 +193,7 @@ public static class ServiceRegistration
         services.AddScoped<IValidator<ReceptionsDTO>, AddReceptionValidator>();
         services.AddScoped<IValidator<AddFormCommitmentDTO>, AddFormCommitmentValidator>();
         services.AddScoped<IValidator<UpdateFormCommitmentDTO>, UpdateFormCommitmentValidator>();
+        services.AddScoped<IValidator<MedicalStaffDTO>,AddMedicalStaffValidator>();
 
         return services;
     }
