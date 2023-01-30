@@ -48,7 +48,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] string officeId)
     {
