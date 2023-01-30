@@ -66,7 +66,7 @@ public class SectionController : Controller
 
         return Ok(response);
     }
-    //[Authorize]
+    [Authorize]
     [HttpGet("names")]
     public async Task<ActionResult<List<SectionNamesListDTO>>> GetSectionNames([FromQuery] string officeId)
     {
