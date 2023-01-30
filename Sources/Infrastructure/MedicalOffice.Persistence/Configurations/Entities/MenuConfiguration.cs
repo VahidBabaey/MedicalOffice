@@ -11,8 +11,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
 {
     public class MenuConfiguration : BaseEntityTypeConfiguration<Menu, Guid>
     {
-        private static Menu MenuCreator(string guidId, string name, string persianName, string parent = null, string link = null)
-         => new() { Id = Guid.Parse(guidId), Name = name, PersianName = persianName, ParentId = Guid.Parse(parent), Link = link };
+        private static Menu MenuCreator(string guidId, string name, string persianName, string? parentId = null, bool isActive = true)
+         => new() { Id = Guid.Parse(guidId), Name = name, PersianName = persianName, ParentId = parentId != null ? Guid.Parse(parentId) : null, IsActive = isActive };
 
         public override void ConfigureEntity(EntityTypeBuilder<Menu> builder)
         {
@@ -39,18 +39,18 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 MenuCreator("0d9065d4-d5bc-4705-8530-e703360b69e9","َAtFirstLook","در یک نگاه","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06"),
 
                 MenuCreator("f0436c8d-0d2d-4b32-82a2-baac3a8f3d19","ElectronicPrescribing","نسخه نویسی الکترونیک"),
-                
+
                 MenuCreator("03fc5e29-4d7f-4a45-a898-e8cac402e226","LightPen","قلم نوری"),
-                
+
                 MenuCreator("cc41f355-f2d3-445c-a03e-7936a26f1128","reports","گزارش ها"),
 
                 MenuCreator("d60cdae5-54a9-4924-af24-c29e5978f609","Warehousing","انبارداری"),
-                MenuCreator("8f3efe85-509c-4df7-9790-e8d0125c9344","reports","تعاریف انبار","d60cdae5-54a9-4924-af24-c29e5978f609"),
-                MenuCreator("337151c9-5b77-411a-bd25-be18663a00a5","reports","حواله ورود","d60cdae5-54a9-4924-af24-c29e5978f609"),
-                MenuCreator("3b876efe-46c6-45b6-bfe8-3969d939981e","reports","حواله خروج","d60cdae5-54a9-4924-af24-c29e5978f609"),
-                MenuCreator("707c985a-4fcf-4e75-bc61-33e160c326f6","reports","گردش کالا","d60cdae5-54a9-4924-af24-c29e5978f609"),
-                MenuCreator("a8220a4f-087f-476f-a07a-33c1fb45b15d","reports","موجودی کالا","d60cdae5-54a9-4924-af24-c29e5978f609"),
-                MenuCreator("fb172545-8c71-4559-8b65-abdecbe7e644","reports","گزارشات انبار","d60cdae5-54a9-4924-af24-c29e5978f609"),
+                MenuCreator("8f3efe85-509c-4df7-9790-e8d0125c9344","DefinitionOfWarehousing","تعاریف انبار","d60cdae5-54a9-4924-af24-c29e5978f609"),
+                MenuCreator("337151c9-5b77-411a-bd25-be18663a00a5","EntranceRemittance","حواله ورود","d60cdae5-54a9-4924-af24-c29e5978f609"),
+                MenuCreator("3b876efe-46c6-45b6-bfe8-3969d939981e","ExitRemittance","حواله خروج","d60cdae5-54a9-4924-af24-c29e5978f609"),
+                MenuCreator("707c985a-4fcf-4e75-bc61-33e160c326f6","CirculationOfGoods","گردش کالا","d60cdae5-54a9-4924-af24-c29e5978f609"),
+                MenuCreator("a8220a4f-087f-476f-a07a-33c1fb45b15d","StockOfGoods","موجودی کالا","d60cdae5-54a9-4924-af24-c29e5978f609"),
+                MenuCreator("fb172545-8c71-4559-8b65-abdecbe7e644","StoreReports","گزارشات انبار","d60cdae5-54a9-4924-af24-c29e5978f609"),
 
                 MenuCreator("b809a0b1-15a4-492a-b3fe-929ff8470231","SMS","پیامک"),
                 MenuCreator("dca4d822-579d-4e31-b235-e7808faa804d","SMSSharge","شارژ پیامک","b809a0b1-15a4-492a-b3fe-929ff8470231"),
@@ -72,8 +72,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 MenuCreator("ba6e3459-d759-421c-8975-5bca504f4db6","DefinitionOfThematicBase","تعریف پایه موضوعی","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e"),
                 MenuCreator("5cefe46e-bfea-4ca7-9a1b-347cdd5a4ef1","DefinitionOfRefferrers","تعریف معرفین","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e"),
 
-                MenuCreator("d81547e7-2050-43b5-a127-6cbefb0d3580","Settings","تنظیمات"),
-                
+                MenuCreator("d81547e7-2050-43b5-a127-6cbefb0d3580","Settings","تنظیمات",isActive:false),
+
                 MenuCreator("f7829a47-bcd2-4ede-b3ba-2624222437cd","Support","پشتیبانی"),
                 MenuCreator("ea13c4f0-89f9-4d0d-b1aa-a8f7222600db","Ticket","تیکت","f7829a47-bcd2-4ede-b3ba-2624222437cd"),
                 MenuCreator("31535b28-a356-426a-b3ca-8605c13746f3","SupportContact","تماس با پشتیبانی","f7829a47-bcd2-4ede-b3ba-2624222437cd"),

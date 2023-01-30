@@ -10,6 +10,8 @@ namespace MedicalOffice.Domain.Entities
 {
     public class Permission : BaseDomainEntity<Guid>
     {
+        public Guid? ParentId { get; set; }
+
         /// <summary>
         /// نام دسترسی
         /// </summary>
@@ -21,14 +23,9 @@ namespace MedicalOffice.Domain.Entities
         public string PersianName { get; set; }
 
         /// <summary>
-        /// شناسه دسته بندی دسترسی
+        /// نمایش در دسترسی ها
         /// </summary>
-        public Guid PermissionCategoryId { get; set; }
-
-        /// <summary>
-        ///  ارتباط یک به چند با دسته بندی دسترسی 
-        /// </summary>
-        public PermissionCategory PermissionCategory { get; set; }
+        public bool IsShown { get; set; } = true;
 
         /// <summary>
         /// ارتباط چند به چند کاربران مطب و دسترسی هایشان

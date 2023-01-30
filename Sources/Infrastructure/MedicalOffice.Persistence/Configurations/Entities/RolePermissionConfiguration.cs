@@ -17,6 +17,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public void Configure(EntityTypeBuilder<RolePermission> builder)
         {
             builder
+                .HasAlternateKey(rp => new { rp.PermissionId, rp.RoleId});
+            builder
                 .HasData(new RolePermission[]
                 {
                 #region دسترسی های پزشک

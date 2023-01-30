@@ -9,9 +9,10 @@ namespace MedicalOffice.Domain.Entities
 {
     public class Menu : BaseDomainEntity<Guid>
     {
-        public Guid? ParentId{ get; set; }
-        public string Name{ get; set; }
-        public string PersianName{ get; set; }
-        public string? Link{ get; set; }
+        public Guid? ParentId { get; set; }
+        public string Name { get; set; }
+        public string PersianName { get; set; }
+        public string? Link { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }
