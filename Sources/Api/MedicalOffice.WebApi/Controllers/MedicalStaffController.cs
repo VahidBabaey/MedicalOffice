@@ -3,9 +3,11 @@ using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
+using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
+using MedicalOffice.Domain.Enums;
 using MedicalOffice.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -75,5 +77,12 @@ public class MedicalStaffController : Controller
         var response = await _mediator.Send(new GetMedicalStaffBySearch() { Name = name, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
+    }
+    [HttpGet("titles")]
+    public async Task<ActionResult<Title>> GetAllTitles([FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetAllMedicalStaffQueryHandler { OfficeId = Guid.Parse(officeId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

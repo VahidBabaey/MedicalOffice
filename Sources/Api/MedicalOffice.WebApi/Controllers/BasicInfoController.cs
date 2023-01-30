@@ -20,9 +20,9 @@ public class BasicInfoController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<BasicInfoListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
+    public async Task<ActionResult<List<BasicInfoListDTO>>> GetAll([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllBasicInfoQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllBasicInfoQuery() {OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

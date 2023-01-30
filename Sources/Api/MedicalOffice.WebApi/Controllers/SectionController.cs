@@ -51,9 +51,9 @@ public class SectionController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
+    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllSectionQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllSectionQuery() {OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -63,6 +63,14 @@ public class SectionController : Controller
     public async Task<ActionResult<List<SectionListDTO>>> GetSectionBySearch([FromQuery] string name, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new GetSectionBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+    //[Authorize]
+    [HttpGet("names")]
+    public async Task<ActionResult<List<SectionNamesListDTO>>> GetSectionNames([FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetSectionNamesQuery() { OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

@@ -18,10 +18,6 @@ public class ServiceDTO : ISectionIdDTO
     /// </summary>
     public string GenericCode { get; set; } = string.Empty;
     /// <summary>
-    /// آیدی تخصص مربوط به خدمت
-    /// </summary>
-    public Guid? SpecializationId { get; set; }
-    /// <summary>
     /// تعرفه توسط کاربر تعیین گردد یا خیر
     /// </summary>
     public bool HasTariff { get; set; }

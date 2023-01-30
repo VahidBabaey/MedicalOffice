@@ -8,7 +8,6 @@ namespace MedicalOffice.Application.Features.DrugFile.Requests.Queries
 {
     public class GetDrugQuery : IRequest<BaseResponse>
     {
-        public ListDto DTO { get; set; } = new ListDto();
         public Guid OfficeId { get; set; }
     }
 }

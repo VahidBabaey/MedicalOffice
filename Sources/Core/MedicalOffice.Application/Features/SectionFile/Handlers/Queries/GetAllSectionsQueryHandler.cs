@@ -32,7 +32,7 @@ public class GetAllSectionsQueryHandler : IRequestHandler<GetAllSectionQuery, Li
 
         try
         {
-            var Section = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
+            var Section = await _repository.GetAll();
 
             result = _mapper.Map<List<SectionListDTO>>(Section.Where(p => p.OfficeId == request.OfficeId));
 

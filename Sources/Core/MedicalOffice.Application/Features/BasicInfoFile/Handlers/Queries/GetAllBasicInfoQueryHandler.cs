@@ -31,7 +31,7 @@ namespace MedicalOffice.Application.Features.BasicInfoFile.Handlers.Queries
 
             try
             {
-                var basicInfos = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
+                var basicInfos = await _repository.GetAll();
                 var result = _mapper.Map<List<BasicInfoListDTO>>(basicInfos.Where(p => p.OfficeId == request.OfficeId));
 
                 log.Header = $"{_requestTitle} succeded";

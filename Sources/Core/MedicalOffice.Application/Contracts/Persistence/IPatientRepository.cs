@@ -14,6 +14,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> RemovePatientAddress(Guid patientId);
         Task<bool> RemovePatientContact(Guid patientId);
         Task<bool> RemovePatientTag(Guid patientId);
-        Task<List<PatientListDTO>> SearchPateint(int skip, int take, string firstName, string lastName, string nationalCode, string phoneNumber, string fileNumber);
+        Task<List<PatientListDTO>> SearchPateint(string firstName, string lastName, string nationalCode, string phoneNumber, string fileNumber);
     }
 }
