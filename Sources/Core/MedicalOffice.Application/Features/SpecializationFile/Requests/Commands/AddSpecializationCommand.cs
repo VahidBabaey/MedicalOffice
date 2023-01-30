@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Requests.Command
     public class AddSpecializationCommand : IRequest<BaseResponse>
     {
         public SpecializationDTO DTO { get; set; } = new SpecializationDTO();
+        public Guid OfficeId { get; set; }
     }
 }
