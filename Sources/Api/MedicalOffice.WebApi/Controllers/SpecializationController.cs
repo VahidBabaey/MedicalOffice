@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
-[Authorize]
+//[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class SpecializationController : Controller
@@ -33,7 +33,7 @@ public class SpecializationController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<SpecializationListDTO>>> GetAll([FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllSpecializationsQuery() { DTO = dto });
 
