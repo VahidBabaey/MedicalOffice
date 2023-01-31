@@ -9,14 +9,14 @@ using MedicalOffice.Domain.Common;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Queries;
 
-public class GetAllSectionsQueryHandler : IRequestHandler<GetAllSectionQuery, List<SectionListDTO>>
+public class GetSectionNamesQueryHandler : IRequestHandler<GetSectionNamesQuery, List<SectionNamesListDTO>>
 {
     private readonly ISectionRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetAllSectionsQueryHandler(ISectionRepository repository, IMapper mapper, ILogger logger)
+    public GetSectionNamesQueryHandler(ISectionRepository repository, IMapper mapper, ILogger logger)
     {
         _repository = repository;
         _mapper = mapper;
@@ -24,17 +24,15 @@ public class GetAllSectionsQueryHandler : IRequestHandler<GetAllSectionQuery, Li
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
-    public async Task<List<SectionListDTO>> Handle(GetAllSectionQuery request, CancellationToken cancellationToken)
+    public async Task<List<SectionNamesListDTO>> Handle(GetSectionNamesQuery request, CancellationToken cancellationToken)
     {
-        List<SectionListDTO> result = new();
+        List<SectionNamesListDTO> result = new();
 
         Log log = new();
 
         try
         {
-            var Section = await _repository.GetAll();
-
-            result = _mapper.Map<List<SectionListDTO>>(Section.Where(p => p.OfficeId == request.OfficeId));
+            result = await _repository.GetSectionNames(request.OfficeId);
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

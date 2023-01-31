@@ -26,17 +26,17 @@ public class SpecializationController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] SpecializationDTO dto, [FromQuery] string officeId)
+    public async Task<ActionResult<Guid>> Create([FromBody] SpecializationDTO dto)
     {
-        var response = await _mediator.Send(new AddSpecializationCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new AddSpecializationCommand() { DTO = dto});
 
         return Ok(response);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<SpecializationListDTO>>> GetAll([FromQuery] string officeId)
+    public async Task<ActionResult<List<SpecializationListDTO>>> GetAll()
     {
-        var response = await _mediator.Send(new GetAllSpecializationsQuery() {OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllSpecializationsQuery() {});
 
         return Ok(response);
     }

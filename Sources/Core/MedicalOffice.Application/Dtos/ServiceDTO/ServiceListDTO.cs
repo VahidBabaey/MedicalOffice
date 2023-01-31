@@ -23,10 +23,4 @@ public class ServiceListDTO : BaseDto<Guid>
     /// کد ژنریک
     /// </summary>
     public string GenericCode { get; set; } = string.Empty;
-
-    /// <summary>
-    /// آیدی تخصص مربوط به خدمت
-    /// </summary>
-    public Guid? SpecializationId { get; set; }
-
 }

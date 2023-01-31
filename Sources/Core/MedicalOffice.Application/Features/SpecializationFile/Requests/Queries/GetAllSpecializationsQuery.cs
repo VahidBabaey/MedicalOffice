@@ -11,6 +11,5 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Requests.Queries
 {
     public class GetAllSpecializationsQuery : IRequest<List<SpecializationListDTO>>
     {
-        public Guid OfficeId { get; set; }
     }
 }

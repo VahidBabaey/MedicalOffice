@@ -11,7 +11,6 @@ namespace MedicalOffice.Application.Features.PatientFile.Requests.Queries
 {
     public class GetPatientBySearchQuery : IRequest<List<PatientListDTO>> 
     {
-        public ListDto DTO { get; set; } = new ListDto();
         public SearchFields searchFields { get; set; } = new SearchFields();
         public PatientListDTO SearchDTO { get; set; } = new PatientListDTO();
     }

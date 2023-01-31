@@ -31,7 +31,7 @@ public class GetAllPatientsQueryHandler : IRequestHandler<GetAllPatientsQuery, L
 
         try
         {
-            var patients = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
+            var patients = await _repository.GetAll();
 
             result = _mapper.Map<List<PatientListDTO>>(patients);
 
