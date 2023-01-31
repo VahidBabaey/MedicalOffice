@@ -15,7 +15,7 @@ public class OfficeRepository : GenericRepository<Office, Guid>, IOfficeReposito
 
     public async Task<List<Office>> GetByUserId(Guid userId)
     {
-        var offices = await _dbcontext.UserOfficeRoles.Where(u => u.UserId == userId && u.OfficeId != null).Select(u => u.Office).ToListAsync();
+        var offices = await _dbcontext.UserOfficeRoles.Where(u => u.UserId == userId && u.OfficeId != null).Select(u => u.Office).Distinct().ToListAsync();
 
         return offices;
     }
