@@ -18,6 +18,7 @@ using MedicalOffice.Application.Dtos.Identity;
 using System.Net;
 using System.Security.Claims;
 using FluentValidation;
+using MedicalOffice.Application.Contracts.Persistence;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
@@ -30,6 +31,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly string _requestTitle;
+        private readonly IUserRepository _userRepository;
 
         public AuthenticateByPasswordCommandHandler(
             IValidator<AuthenticateByPasswordDTO> validator,
@@ -37,7 +39,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             UserManager<User> userManager,
             ITokenGenerator tokenGenerator,
             ILogger logger,
-            IMapper mapper)
+            IMapper mapper,
+            IUserRepository userRepository)
         {
             _validator = validator;
             _signInManager = signInManager;
@@ -46,6 +49,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             _logger = logger;
             _mapper = mapper;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
+            _userRepository = userRepository;
         }
 
         public async Task<BaseResponse> Handle(AuthenticateByPasswordCommand request, CancellationToken cancellationToken)
@@ -64,7 +68,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber && x.IsActive == true);
+            var user = await _userRepository.FindExistAndActiveUser(request.DTO.PhoneNumber, isActive: true);
+            //var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber && x.IsActive == true);
             if (user == null)
             {
                 var error = $"The User with phone number {request.DTO.PhoneNumber} is't exist!";

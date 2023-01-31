@@ -9,6 +9,7 @@ using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,6 +56,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             try
             {
                 var MedicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
+                MedicalStaff.OfficeId = request.OfficeId;
 
                 await _repository.Update(MedicalStaff);
 
@@ -68,10 +70,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 else
                 {
                     await _repository.DeleteUserOfficeRoleAsync(MedicalStaff.Id);
-                    foreach (var roleid in request.DTO.RoleIds)
-                    {
-                        //await _officeRepository.InsertToUserOfficeRole(roleid, MedicalStaff.Id);
-                    }
                 }
 
                 log.Type = LogType.Success;

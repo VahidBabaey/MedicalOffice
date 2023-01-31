@@ -24,15 +24,19 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly IMapper _mapper;
 
         private readonly string _requestTitle;
+        private readonly IUserRepository _userRepository;
+
         public RegisterUserCommandHandler(
             UserManager<User> userManager,
             RoleManager<Role> roleManager,
             IValidator<RegisterUserDTO> validator,
             IUserOfficeRoleRepository userOfficeRoleRepository,
             ILogger logger,
-            IMapper mapper
+            IMapper mapper,
+            IUserRepository userRepository
             )
         {
+            _userRepository = userRepository;
             _validator = validator;
             _userOfficeRoleRepository = userOfficeRoleRepository;
             _userManager = userManager;
@@ -45,7 +49,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            
+
 
             #region ValidateRequestDTO
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
@@ -80,7 +84,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             #endregion
 
             #region MakeSureUserIsntExist
-            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.DTO.PhoneNumber || p.NationalID == request.DTO.NationalID);
+            var existingUser = await _userRepository.CheckByPhoneOrNationalId(request.DTO.PhoneNumber, request.DTO.NationalID);
+            //var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.DTO.PhoneNumber || p.NationalID == request.DTO.NationalID);
             if (existingUser != null)
             {
                 var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";

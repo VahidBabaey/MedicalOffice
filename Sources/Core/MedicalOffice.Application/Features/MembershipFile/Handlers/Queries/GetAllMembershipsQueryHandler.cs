@@ -34,7 +34,7 @@ public class GetAllMembershipsQueryHandler : IRequestHandler<GetAllMemberships, 
 
         try
         {
-            var memberShip = await _repository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
+            var memberShip = await _repository.GetAll();
 
             result = _mapper.Map<List<MembershipListDTO>>(memberShip.Where(p => p.OfficeId == request.OfficeId));
 
