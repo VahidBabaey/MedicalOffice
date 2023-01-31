@@ -67,7 +67,7 @@ public class ReceptionController : Controller
 
         return Ok(response);
     }
-    
+
     //[Authorize]
     [HttpPost("Reception")]
     public async Task<ActionResult<Guid>> CreateReception([FromBody] ReceptionsDTO dto, [FromQuery] string officeId)
@@ -90,7 +90,7 @@ public class ReceptionController : Controller
     [HttpGet("dtails")]
     public async Task<ActionResult<List<DetailsofAllReceptionsDTO>>> GetAllDetails([FromQuery] Guid patientId, [FromQuery] Guid receptionId)
     {
-        var response = await _mediator.Send(new GetDetailsOfAllReceptionsQuery() { PatientId = patientId, ReceptionId = receptionId});
+        var response = await _mediator.Send(new GetDetailsOfAllReceptionsQuery() { PatientId = patientId, ReceptionId = receptionId });
 
         return Ok(response);
     }
@@ -107,7 +107,7 @@ public class ReceptionController : Controller
     [HttpPost("updatereceptiondetail")]
     public async Task<ActionResult<Guid>> UpdateReceptionDetail([FromBody] UpdateReceptionDetailDTO dto, [FromQuery] string receptiodDetailId, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new UpdateReceptionDetailCommand() { DTO = dto, ReceptiodDetailId = Guid.Parse(receptiodDetailId), OfficeId = Guid.Parse(officeId)});
+        var response = await _mediator.Send(new UpdateReceptionDetailCommand() { DTO = dto, ReceptiodDetailId = Guid.Parse(receptiodDetailId), OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -115,7 +115,7 @@ public class ReceptionController : Controller
     [HttpDelete("deletereceptiondetail")]
     public async Task<ActionResult<Guid>> DeleteReceptionDetail([FromQuery] string receptiodDetailId, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteReceptionDetailCommand() {ReceptiodDetailId = Guid.Parse(receptiodDetailId), OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new DeleteReceptionDetailCommand() { ReceptiodDetailId = Guid.Parse(receptiodDetailId), OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

@@ -32,6 +32,7 @@ using MedicalOffice.Application.Dtos;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MediatR;
 using MedicalOffice.Application.Dtos.Tariff;
+using MedicalOffice.Application.Dtos.CashDTO;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -135,6 +136,7 @@ public class MappingProfile : Profile
         CreateMap<ServiceDuration, ServiceDurationDetailsDTO>().ReverseMap();
         CreateMap<Tariff, TariffDTO>().ReverseMap();
         CreateMap<RoleDTO, Role>().ReverseMap();
+        CreateMap<CashesDTO, Cash>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDTO>

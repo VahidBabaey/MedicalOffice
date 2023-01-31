@@ -21,7 +21,7 @@ public class CashController : Controller
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] CashesDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddCashCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddCashCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

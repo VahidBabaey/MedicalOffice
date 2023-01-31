@@ -1,8 +1,10 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.CashDTO;
+using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection.PortableExecutable;
@@ -13,10 +15,12 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
 {
     private readonly IGenericRepository<Cash, Guid> _cashRepository;
     private readonly IGenericRepository<Reception, Guid> _receptionReception;
+    private readonly IGenericRepository<ReceptionDetail, Guid> _receptionReceptionDetail;
     private readonly ApplicationDbContext _dbContext;
 
-    public CashRepository(IGenericRepository<Reception, Guid> receptionReception, IGenericRepository<Cash, Guid> cashRepository, ApplicationDbContext dbContext) : base(dbContext)
+    public CashRepository(IGenericRepository<ReceptionDetail, Guid> receptionReceptionDetail, IGenericRepository<Reception, Guid> receptionReception, IGenericRepository<Cash, Guid> cashRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
+        _receptionReceptionDetail = receptionReceptionDetail;
         _dbContext = dbContext;
         _cashRepository = cashRepository;
         _receptionReception = receptionReception;
@@ -31,6 +35,35 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
             Recieved = recieved
         };
         await _cashRepository.Add(cash);
+
+        var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.Id == receptionId).ToListAsync();
+        foreach (var item in _list)
+        {
+            if (recieved > 0)
+            {
+                if (recieved > item.Debt)
+                {
+                    item.Received += item.Debt;
+                    item.Debt = 0;
+                    await _receptionReceptionDetail.Update(item);
+                    recieved = recieved - item.Debt;
+                }
+                else if (recieved < item.Debt)
+                {
+                    item.Received += recieved;
+                    item.Debt = item.Debt - recieved;
+                    await _receptionReceptionDetail.Update(item);
+                    recieved = 0;
+                }
+                else if (recieved == item.Debt)
+                {
+                    item.Received += recieved;
+                    item.Debt = 0;
+                    await _receptionReceptionDetail.Update(item);
+                    recieved = 0;
+                }
+            }
+        }
 
         return cash.Id;
     }
