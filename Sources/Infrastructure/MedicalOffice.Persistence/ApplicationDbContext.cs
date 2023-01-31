@@ -126,15 +126,15 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         {
             entry.Entity.LastUpdatedDate = DateTime.Now;
 
-            if (userId != Guid.Empty)
-                entry.Entity.LastUpdatedById = userId;
+            if (userId != null)
+                entry.Entity.LastUpdatedById = Guid.Parse(userId);
 
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedDate = DateTime.Now;
 
-                if (userId != Guid.Empty)
-                    entry.Entity.CreatedById = userId;
+                if (userId != null)
+                    entry.Entity.CreatedById = Guid.Parse(userId);
             }
 
         }
@@ -143,15 +143,15 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         {
             entry.Entity.LastUpdatedDate = DateTime.Now;
 
-            if (userId != Guid.Empty)
-                entry.Entity.LastUpdatedById = userId;
+            if (userId != null)
+                entry.Entity.LastUpdatedById = Guid.Parse(userId);
 
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedDate = DateTime.Now;
 
-                if (userId != Guid.Empty)
-                    entry.Entity.CreatedById = userId;
+                if (userId != null)
+                    entry.Entity.CreatedById = Guid.Parse(userId);
             }
         }
     }

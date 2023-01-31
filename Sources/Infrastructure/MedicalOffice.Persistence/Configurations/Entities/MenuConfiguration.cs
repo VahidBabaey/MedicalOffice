@@ -1,5 +1,6 @@
 ﻿using MedicalOffice.Domain.Entities;
 using MedicalOffice.Persistence.Configurations.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Persistence.Configurations.Entities
 {
-    public class MenuConfiguration : BaseEntityTypeConfiguration<Menu, Guid>
+    public class MenuConfiguration : IEntityTypeConfiguration<Menu>
     {
         private static Menu MenuCreator(string guidId, string name, string persianName, string? parentId = null, bool isActive = true)
          => new() { Id = Guid.Parse(guidId), Name = name, PersianName = persianName, ParentId = parentId != null ? Guid.Parse(parentId) : null, IsActive = isActive };
 
-        public override void ConfigureEntity(EntityTypeBuilder<Menu> builder)
+        public void Configure(EntityTypeBuilder<Menu> builder)
         {
             builder.HasData(new Menu[]
             {

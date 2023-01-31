@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MedicalOffice.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace MedicalOffice.Application.Contracts.Infrastructure
 {
     public interface IUserResolverService
     {
-        Task<Guid> GetUserId();
+        Task<string> GetUserId();
 
-        Task<List<Guid>> GetUserRoles();
+        Task<List<string>> GetUserRoles();
     }
 }

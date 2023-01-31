@@ -29,4 +29,9 @@ public class Role : IdentityRole<Guid>
     /// کاربر - آفیس - نقش
     /// </summary>
     public ICollection<UserOfficeRole> UserOfficeRoles { get; set; }
+
+    /// <summary>
+    /// ارتباط چند به چند نقش و دسترسی
+    /// </summary>
+    public ICollection<RolePermission> RolePermissions { get; set; }
 }

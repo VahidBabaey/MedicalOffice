@@ -16,19 +16,22 @@ namespace MedicalOffice.Application.Features.MenuFeature.Handlers.Queries
     {
         private readonly IMenuRepository _menuRepository;
         private readonly IUserResolverService _userResolver;
+        private readonly IRoleRepository _roleRepository;
 
-        public GetAllMenuItemsQueryHandler(IMenuRepository menuRepository, IUserResolverService userResolver)
+        public GetAllMenuItemsQueryHandler(IMenuRepository menuRepository, IUserResolverService userResolver,IRoleRepository roleRepository)
         {
             _menuRepository = menuRepository;
             _userResolver = userResolver;
+            _roleRepository = roleRepository;
         }
 
         public async Task<BaseResponse> Handle(GetAllMenuItemsQuery request, CancellationToken cancellationToken)
         {
             var userId = await _userResolver.GetUserId();
-            var roleIds = _userResolver.GetUserRoles().Result;
+            var roleNames = _userResolver.GetUserRoles().Result;
+            var roleIs = _roleRepository.GetAll().Result.Where(x => roleNames.Contains(x.Name)).Select(x=>x.Id).ToList();
 
-            var x = _menuRepository.GetAllByUserId(userId,request.OfficeId, roleIds);
+            var x = _menuRepository.GetAllByUserId(Guid.Parse(userId),request.OfficeId, roleIs);
 
             return ResponseBuilder.Success(HttpStatusCode.OK, "its Ok", x);
         }

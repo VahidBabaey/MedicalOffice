@@ -8,9 +8,24 @@ namespace MedicalOffice.Domain.Entities
 {
     public class RolePermission
     {
+        /// <summary>
+        /// آیدی دسترسی
+        /// </summary>
         public Guid PermissionId { get; set; }
+
+        /// <summary>
+        /// دسترسی
+        /// </summary>
+        public Permission Permission { get; set; }
+
+        /// <summary>
+        /// آیدی نقش
+        /// </summary>
         public Guid RoleId { get; set; }
-        public Permission Permission{ get; set; }
+
+        /// <summary>
+        /// نقش
+        /// </summary>
         public Role Role { get; set; }
     }
 }

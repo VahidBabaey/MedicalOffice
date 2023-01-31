@@ -90,7 +90,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                 {
                     var userOfficeRoles = _userOfficeRoleRepository.Add(new UserOfficeRole
                     {
-                        UserId = userId,
+                        UserId = Guid.Parse(userId),
                         RoleId = AdminRole.Id,
                         OfficeId = newOffice.Result.Id,
                     });
