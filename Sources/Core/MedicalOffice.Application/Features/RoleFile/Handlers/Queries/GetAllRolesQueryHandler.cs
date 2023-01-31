@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
+using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.RoleDTO;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,9 +34,10 @@ namespace MedicalOffice.Application.Features.RoleFile.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
         {
+            var mainRoles = new Guid[] { AdminRole.Id, SuperAdminRole.Id, PatientRole.Id };
             //var result = new List<RoleDTO>();
-            var roles = _roleRepository.GetAll().Result.Select(x=> _mapper.Map<RoleDTO>(x));
-
+            var roles = _roleRepository.GetAll().Result.Select(x=> _mapper.Map<RoleDTO>(x)).Where(x=>!mainRoles.Contains(x.Id));
+            
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
@@ -45,5 +48,4 @@ namespace MedicalOffice.Application.Features.RoleFile.Handlers.Queries
             return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", roles);
         }
     }
-
 }
