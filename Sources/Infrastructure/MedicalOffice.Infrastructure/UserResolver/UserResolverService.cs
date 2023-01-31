@@ -11,25 +11,24 @@ public class UserResolverService : IUserResolverService
         _context = context;
     }
 
-    public Task<string> GetUserId()
+    public async Task<Guid> GetUserId()
     {
         if (_context.HttpContext != null)
         {
-            return Task.FromResult(_context.HttpContext.User
-                .FindFirstValue(ClaimTypes.NameIdentifier));
+            return Guid.Parse(_context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
 
-        return Task.FromResult(string.Empty);
+        return Guid.Empty;
     }
 
-    public Task<List<string>> GetUserRoles()
+    public async Task<List<Guid>> GetUserRoles()
     {
         if (_context.HttpContext != null)
         {
-            var roles = Task.FromResult(_context.HttpContext.User.FindAll(ClaimTypes.Role).Select(x=>x.Value).ToList());   
+            var roles = _context.HttpContext.User.FindAll(ClaimTypes.Role).Select(x=>x.Value).Select(x=>Guid.Parse(x)).ToList();   
             return roles;   
         }
 
-        return Task.FromResult(new List<string>());
+        return new List<Guid>();
     }
 }

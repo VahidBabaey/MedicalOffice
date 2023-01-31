@@ -38,7 +38,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Queries
             var userId = _userResolverService.GetUserId().Result;
             var result = new List<OfficeListDTO>();
 
-            var offices = await _officeRepository.GetByUserId(Guid.Parse(userId));
+            var offices = await _officeRepository.GetByUserId(userId);
             if (offices.Any())
             {
                 foreach (var office in offices)

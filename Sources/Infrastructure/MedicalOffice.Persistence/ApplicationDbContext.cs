@@ -85,6 +85,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Room> Rooms=> Set<Room>();
     public DbSet<Device> Devices=> Set<Device>();
     public DbSet<MenuPermission> MenuPermissions=> Set<MenuPermission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<Menu> Menu=> Set<Menu>();
 
     private readonly IUserResolverService _userResolver;
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolverService userResolver) : base(options)
@@ -124,15 +126,15 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         {
             entry.Entity.LastUpdatedDate = DateTime.Now;
 
-            if (userId != null)
-                entry.Entity.LastUpdatedById = Guid.Parse(userId);
+            if (userId != Guid.Empty)
+                entry.Entity.LastUpdatedById = userId;
 
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedDate = DateTime.Now;
 
-                if (userId != null)
-                    entry.Entity.CreatedById = Guid.Parse(userId);
+                if (userId != Guid.Empty)
+                    entry.Entity.CreatedById = userId;
             }
 
         }
@@ -141,15 +143,15 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         {
             entry.Entity.LastUpdatedDate = DateTime.Now;
 
-            if (userId != null)
-                entry.Entity.LastUpdatedById = Guid.Parse(userId);
+            if (userId != Guid.Empty)
+                entry.Entity.LastUpdatedById = userId;
 
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedDate = DateTime.Now;
 
-                if (userId != null)
-                    entry.Entity.CreatedById = Guid.Parse(userId);
+                if (userId != Guid.Empty)
+                    entry.Entity.CreatedById = userId;
             }
         }
     }

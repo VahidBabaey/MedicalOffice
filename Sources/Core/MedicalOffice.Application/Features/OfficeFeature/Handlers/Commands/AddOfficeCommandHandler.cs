@@ -61,8 +61,8 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var userId = Guid.Parse(_userResolverService.GetUserId().Result);
-            var roles = _userResolverService.GetUserRoles().Result;
+            var userId =await _userResolverService.GetUserId();
+            var roles =await _userResolverService.GetUserRoles();
             var existingOffice = _officeRepository.GetAll().Result.Any(x => x.TelePhoneNumber == request.DTO.TelePhoneNumber);
 
             if (existingOffice)

@@ -9,8 +9,8 @@ namespace MedicalOffice.Application.Contracts.Infrastructure
 {
     public interface IUserResolverService
     {
-        Task<string> GetUserId();
+        Task<Guid> GetUserId();
 
-        Task<List<string>> GetUserRoles();
+        Task<List<Guid>> GetUserRoles();
     }
 }
