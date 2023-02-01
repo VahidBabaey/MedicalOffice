@@ -25,7 +25,7 @@ public class MedicalStaffController : Controller
         _mediator = mediator;
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffDTO dto, [FromQuery] string officeId)
     {
@@ -34,7 +34,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> UpdateMedicalStaff([FromBody] UpdateMedicalStaffDTO dto, [FromQuery] string officeId)
     {
@@ -52,7 +52,7 @@ public class MedicalStaffController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] string officeId)
     {
