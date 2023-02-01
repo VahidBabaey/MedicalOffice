@@ -10,11 +10,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public override void ConfigureEntity(EntityTypeBuilder<MedicalStaffServiceSharePercent> builder)
         {
             builder
-               .HasOne(e => e.UserOfficeRole)
-               .WithMany(e => e.MedicalStaffServiceSharePercents)
-               .HasForeignKey(e => e.UserOfficeRoleId)
-               .OnDelete(DeleteBehavior.NoAction);
-            builder
                .HasOne(e => e.Shift)
                .WithMany(e => e.MedicalStaffServiceSharePercents)
                .HasForeignKey(e => e.ShiftId)

@@ -14,11 +14,11 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     {
         _dbContext = dbContext;
     }
-    public Guid GetId (Guid id)
+    public Guid GetId (Guid userId)
     {
         var userOfficeRole =  _dbContext.UserOfficeRoles
-            .Select(p => new {p.Id, p.UserId})
-            .Where(p => p.UserId == id)
+            .Select(p => new {p.UserId})
+            .Where(p => p.UserId == userId)
             .FirstOrDefault();
 
         if (userOfficeRole == null)
