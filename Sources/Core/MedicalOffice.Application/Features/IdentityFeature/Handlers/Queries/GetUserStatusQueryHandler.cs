@@ -58,7 +58,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Queries
             }
 
             UserStatusDTO userStatus = new();
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.PhoneNumber == request.DTO.PhoneNumber);
+            var user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
 
             if (user == null)
             {
