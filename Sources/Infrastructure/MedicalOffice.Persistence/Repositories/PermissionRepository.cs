@@ -14,34 +14,9 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
     {
         _dbContext = dbContext;
     }
-    public Guid GetId (Guid userId)
-    {
-        var userOfficeRole =  _dbContext.UserOfficeRoles
-            .Select(p => new {p.UserId})
-            .Where(p => p.UserId == userId)
-            .FirstOrDefault();
-
-        if (userOfficeRole == null)
-            throw new NullReferenceException("userOfficeRole Id Not Found!");
-
-        Guid medicalStaffId = userOfficeRole.Id;
-
-        return medicalStaffId;
-    }
-
-    public Task<IReadOnlyList<Permission>> GetPermissionDetailsByMedicalStaffID(Guid Id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IReadOnlyList<Permission>> GetPermissionDetailsByUserID(Guid Id)
-    {
-        throw new NotImplementedException();
-    }
 
     public Task<bool> UserHasPermission(Guid userId, Guid officeId, string[] permission)
     {
-
         var result = _dbContext.UserOfficePermissions.Include(m => m.Permission)
             .Where(x => x.UserId == userId && x.OfficeId == officeId)
             .Any(x => permission.Contains(x.Permission.Name));

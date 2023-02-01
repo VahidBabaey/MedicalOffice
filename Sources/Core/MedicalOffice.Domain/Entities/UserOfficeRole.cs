@@ -8,30 +8,30 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class UserOfficeRole
 {
-    public User? User { get; set; }
+    public User User { get; set; }
 
     /// <summary>
     /// آیدی کاربر
     /// </summary>
-    public Guid? UserId { get; set; }
+    public Guid UserId { get; set; }
 
     /// <summary>
     /// مطب - مرکز درمانی
     /// </summary>
-    public Office? Office { get; set; }
+    public Office Office { get; set; }
 
     /// <summary>
     /// آیدی مطب یا مرکز درمانی
     /// </summary>
-    public Guid? OfficeId { get; set; }
+    public Guid OfficeId { get; set; }
 
     /// <summary>
     /// نقش
     /// </summary>
-    public Role? Role { get; set; }
+    public Role Role { get; set; }
 
     /// <summary>
     /// آیدی نقش
     /// </summary>
-    public Guid? RoleId { get; set; }
+    public Guid RoleId { get; set; }
 }
