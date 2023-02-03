@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Contracts.Persistence
 {
-    public interface IUserOfficePermissionRepository : IGenericRepository<UserOfficePermission, Guid>
+    public interface IUserOfficePermissionRepository : IGenericJointEntitiesRepository<UserOfficePermission>
     {
         Task AddUserOfficePermissions(List<UserOfficePermission> existingUserOfficePermissions, List<UserOfficePermission> userOfficePermissions);
     }

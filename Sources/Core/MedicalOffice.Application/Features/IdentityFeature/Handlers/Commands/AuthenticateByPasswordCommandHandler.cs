@@ -19,6 +19,7 @@ using System.Net;
 using System.Security.Claims;
 using FluentValidation;
 using MedicalOffice.Application.Contracts.Persistence;
+using NLog.LayoutRenderers.Wrappers;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
@@ -32,6 +33,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly IMapper _mapper;
         private readonly string _requestTitle;
         private readonly IUserRepository _userRepository;
+        private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
 
         public AuthenticateByPasswordCommandHandler(
             IValidator<AuthenticateByPasswordDTO> validator,
@@ -40,7 +42,9 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             ITokenGenerator tokenGenerator,
             ILogger logger,
             IMapper mapper,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IUserOfficeRoleRepository userOfficeRoleRepository
+            )
         {
             _validator = validator;
             _signInManager = signInManager;
@@ -50,6 +54,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             _mapper = mapper;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
             _userRepository = userRepository;
+            _userOfficeRoleRepository = userOfficeRoleRepository;
         }
 
         public async Task<BaseResponse> Handle(AuthenticateByPasswordCommand request, CancellationToken cancellationToken)
@@ -104,12 +109,21 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
             }
 
+            var OfficeRoles = _userOfficeRoleRepository.GetByUserId(user.Id).Result.Select(x => new OfficeRole { OfficeId = x.OfficeId, RoleId = x.RoleId }).ToList();
+            var OfficeRoleClaims = new List<Claim>();
+            for (int i = 0; i < OfficeRoles.Count; i++)
+            {
+                var type = OfficeRoles[i];
+                OfficeRoleClaims.Add(new Claim("OfficeRole", $"{OfficeRoles[i]}","OfficeRole"));
+            }
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())}
             .Union(userClaims)
-            .Union(roleClaims);
+            .Union(roleClaims)
+            .Union(OfficeRoleClaims);
 
             JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user, claims);
 
@@ -122,8 +136,13 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 Header = $"{_requestTitle} succeeded",
                 AdditionalData = authenticatedUser
             });
-
             return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", authenticatedUser);
         }
+    }
+
+    public class OfficeRole
+    {
+        public Guid OfficeId { get; set; }
+        public Guid RoleId { get; set; }
     }
 }

@@ -27,6 +27,7 @@ public interface IGenericRepository<T1, T2> where T1 : class where T2 : struct
     T1 GetByIds(params object[] ids);
 
     Task<T1?> GetByIDNoTrackingAsync(params object[] ids);
+
     Task SoftDelete(T2 id);
 }
 
