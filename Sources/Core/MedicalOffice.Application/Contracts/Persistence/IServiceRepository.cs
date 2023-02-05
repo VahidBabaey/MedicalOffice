@@ -9,7 +9,11 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<IReadOnlyList<Service>> GetServiceByID(Guid sectionId);
 
         Task<bool> CheckExistServiceListId(Guid officeId, Guid[] serviceId);
+
         Task<bool> CheckExistServiceId(Guid officeId, Guid serviceId);
+
         Task<List<Service>> GetServiceBySearch(string name);
+
+        Task<List<Service>> GetAllByOfficeId(Guid officeId);
     }
 }

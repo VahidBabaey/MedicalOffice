@@ -14,7 +14,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                    new UserRole()
                     {
                         UserId = Guid.Parse("EAEF7EDD-C18A-4CCE-A450-72EE26C18A8D"),
-                        RoleId = Guid.Parse("aca86b1a-8e36-4467-9e3c-2f826822df10")
+                        RoleId = Guid.Parse("aca86b1a-8e36-4467-9e3c-2f826822df10"),
                     },
                    new UserRole()
                     {

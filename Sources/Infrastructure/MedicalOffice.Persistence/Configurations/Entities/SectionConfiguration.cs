@@ -45,6 +45,21 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                         Name = "پوست",
                         Status = true
                     },
+                    new Section
+                    {
+                        Id = Guid.Parse("50a389f9-e6ed-437e-a503-2aa96d0a4f94"),
+                        OfficeId = Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0"),
+                        Name = "لیزر",
+                        Status = true
+                    },
+                    new Section
+                    {
+                        Id = Guid.Parse("0d3c5f9f-31fd-4fb2-819a-633160ecbeb6"),
+                        OfficeId = Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0"),
+                        Name = "جراحی",
+                        Status = true
+                    },
+
                 });
         }
     }
