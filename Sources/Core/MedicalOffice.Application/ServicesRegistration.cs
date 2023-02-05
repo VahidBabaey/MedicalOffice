@@ -4,22 +4,17 @@ using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Dtos.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
 using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
 using MedicalOffice.Application.Dtos.IdentityDTO;
-using MedicalOffice.Application.Responses;
 using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Dtos.OfficeDTO.Validators;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO.Validators;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
-using MedicalOffice.Domain.Entities;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators;
 using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Dtos.AppointmentsDTO.Validator;
 using MedicalOffice.WebApi.WebApi.Controllers;
-using PhoneNumberValidator = MedicalOffice.Application.Dtos.Common.CommonValidators.PhoneNumberValidator;
 
 namespace MedicalOffice.Application;
 

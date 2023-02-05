@@ -8,14 +8,6 @@ namespace MedicalOffice.Domain.Entities;
 public class MedicalStaffServiceSharePercent : BaseDomainEntity<Guid>
 {
     /// <summary>
-    /// کاربر
-    /// </summary>
-    public UserOfficeRole? UserOfficeRole { get; set; }
-    /// <summary>
-    /// آیدی کاربر
-    /// </summary>
-    public Guid UserOfficeRoleId { get; set; }
-    /// <summary>
     /// شیفت
     /// </summary>
     public Shift? Shift { get; set; }

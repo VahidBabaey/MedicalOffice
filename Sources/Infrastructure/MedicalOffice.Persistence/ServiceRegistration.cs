@@ -151,6 +151,7 @@ public static class ServiceRegistration
         services.AddScoped<ICashCartRepository, CashCartRepository>();
         services.AddScoped<ICashCheckRepository, CashCheckRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IMenuRepository, MenuRepository>();
 
 
         services.AddScoped<IValidator<SpecializationDTO>, AddSpecializationValidator>();
