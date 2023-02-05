@@ -48,9 +48,9 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             var totp = _totpHandler.Generate(request.DTO.PhoneNumber);
 
             //send sms to user.
-            var totpSms = new TotpSms(1, new string[] { request.DTO.PhoneNumber }, totp);
+            //var totpSms = new TotpSms(1, new string[] { request.DTO.PhoneNumber }, totp);
 
-            var sendMessageToUser = await _smsSender.SendTotpSmsAsync(totpSms);
+            //var sendMessageToUser = await _smsSender.SendTotpSmsAsync(totpSms);
 
             await _logger.Log(new Log
             {

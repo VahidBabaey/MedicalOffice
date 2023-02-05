@@ -1,10 +1,13 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MenuDTO;
 using MedicalOffice.Application.Features.MenuFeature.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,50 +26,93 @@ namespace MedicalOffice.Application.Features.MenuFeature.Handlers.Queries
         private readonly ILogger _logger;
 
         private readonly string _requestTitle;
+        private readonly IMapper _mapper;
 
         public GetAllMenuItemsQueryHandler(
             IMenuRepository menuRepository,
             IUserResolverService userResolver,
             IRoleRepository roleRepository,
             IUserOfficeRoleRepository userOfficeRoleRepository,
-            ILogger logger)
+            ILogger logger,
+            IMapper mapper)
         {
             _menuRepository = menuRepository;
             _userResolver = userResolver;
             _roleRepository = roleRepository;
             _userOfficeRoleRepository = userOfficeRoleRepository;
             _logger = logger;
+            _mapper = mapper;
 
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
         public async Task<BaseResponse> Handle(GetAllMenuItemsQuery request, CancellationToken cancellationToken)
         {
             var userId = await _userResolver.GetUserId();
-            var roleNames = _userResolver.GetUserRoles().Result;
+            var officeRoles = _userResolver.GetOfficeRoles().Result;
 
-            var allItemValidRoles = new[] { AdminRole.Id, SuperAdminRole.Id };
-            var isUserAdminOrSuperAdmin = _userOfficeRoleRepository
-                .GetByUserAndOfficeId(Guid.Parse(userId), request.OfficeId).Result
-                .Any(x => allItemValidRoles.Contains(x.RoleId));
+            var isUserAdminOrSuperAdmin = officeRoles.Any(x =>
+                (x.OfficeId == request.OfficeId && x.RoleId == AdminRole.Id) ||
+                x.RoleId == SuperAdminRole.Id);
 
             if (isUserAdminOrSuperAdmin)
             {
-                var result =await _menuRepository.GetAll();
+                var menuItems = await _menuRepository.GetAll();
 
                 await _logger.Log(new Log
                 {
                     Type = LogType.Success,
                     Header = $"{_requestTitle} succeded",
-                    AdditionalData = result
+                    AdditionalData = MenuItems(menuItems)
                 });
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", MenuItems(menuItems));
             }
 
-            var roleIs = _roleRepository.GetAll().Result.Where(x => roleNames.Contains(x.Name)).Select(x => x.Id).ToList();
+            var roleIs = officeRoles.Select(x => x.RoleId).ToList();
 
-            var x = await _menuRepository.GetAllByUserId(Guid.Parse(userId), request.OfficeId, roleIs);
+            var menuItemsByUserId = await _menuRepository.GetAllByUserId(Guid.Parse(userId), request.OfficeId, roleIs);
 
-            return ResponseBuilder.Success(HttpStatusCode.OK, "its Ok", x);
+            return ResponseBuilder.Success(HttpStatusCode.OK, "its Ok", MenuItems(menuItemsByUserId));
+        }
+
+        private List<MenuDto> MenuItems(IReadOnlyList<Menu> menu)
+        {
+            var menuGroups = menu.GroupBy(
+                p => p.ParentId,
+                (key, g) => new { ParentId = key, Menus = g.ToList() });
+
+            //var menuGroups = menu.OrderBy(a => a.ParentId).GroupBy(x => x.ParentId);
+            var menuItems = new List<MenuDto>();
+            var parent = new MenuDto();
+
+            foreach (var group in menuGroups)
+            {
+                if (group.ParentId == null)
+                {
+                    foreach (var item in group.Menus)
+                    {
+                        parent.ParentId = group.ParentId;
+                        parent.MenuId = item.Id;
+                        parent.Name = item.Name;
+                        parent.Link = item.Link;
+
+                        menuItems.Add(parent);
+                    }
+                }
+            }
+
+            //foreach (var item in menuItems)
+            //{
+            //    if (menuGroups.Any(x => x.ParentId != null && (Guid)x.ParentId == item.MenuId))
+            //    {
+            //        item.children = menuGroups.First(x => x.ParentId != null && (Guid)x.ParentId == item.MenuId).Menus;
+            //    }
+            //    else
+            //    {
+            //        item.children = null;
+            //    }
+            //}
+
+            return menuItems;
         }
     }
 }

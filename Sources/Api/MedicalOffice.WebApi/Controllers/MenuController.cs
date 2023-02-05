@@ -6,6 +6,7 @@ using MedicalOffice.Application.Features;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
 using MedicalOffice.Application.Features.MenuFeature.Requests.Queries;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,16 +15,16 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MenuController : ControllerBase
+    public class MenuController : Controller
     {
         private readonly IMediator _mediator;
-        public MenuController(
-            IMediator mediator)
+        public MenuController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [Authorize]
+        [Permission("")]
         [HttpGet]
         public async Task<ActionResult<List<Menu>>> GetAllMenuItems([FromQuery] string officeId)
         {

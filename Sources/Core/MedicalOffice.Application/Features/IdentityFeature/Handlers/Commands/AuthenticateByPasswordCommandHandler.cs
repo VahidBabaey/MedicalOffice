@@ -20,6 +20,7 @@ using System.Security.Claims;
 using FluentValidation;
 using MedicalOffice.Application.Contracts.Persistence;
 using NLog.LayoutRenderers.Wrappers;
+using MedicalOffice.Application.Constants;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
@@ -102,19 +103,22 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
             var userClaims = await _userManager.GetClaimsAsync(user);
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var roleClaims = new List<Claim>();
-            for (int i = 0; i < roles.Count; i++)
-            {
-                roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
-            }
+            //var roles = await _userManager.GetRolesAsync(user);
+            //var roleClaims = new List<Claim>();
+            //for (int i = 0; i < roles.Count; i++)
+            //{
+            //    roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+            //}
 
-            var OfficeRoles = _userOfficeRoleRepository.GetByUserId(user.Id).Result.Select(x => new OfficeRole { OfficeId = x.OfficeId, RoleId = x.RoleId }).ToList();
+            var OfficeRoles = _userOfficeRoleRepository.GetByUserId(user.Id).Result.Select(x =>
+            new OfficeRole{ OfficeId = x.OfficeId, RoleId = x.RoleId }).ToList();
+
             var OfficeRoleClaims = new List<Claim>();
             for (int i = 0; i < OfficeRoles.Count; i++)
             {
-                var type = OfficeRoles[i];
-                OfficeRoleClaims.Add(new Claim("OfficeRole", $"{OfficeRoles[i]}","OfficeRole"));
+                OfficeRoleClaims.Add(new Claim(
+                    "OfficeRole",
+                    $"{OfficeRoles[i].OfficeId}|{OfficeRoles[i].RoleId}"));
             }
 
             var claims = new[]
@@ -122,8 +126,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())}
             .Union(userClaims)
-            .Union(roleClaims)
             .Union(OfficeRoleClaims);
+            //.Union(roleClaims)
 
             JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user, claims);
 
@@ -138,11 +142,5 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             });
             return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", authenticatedUser);
         }
-    }
-
-    public class OfficeRole
-    {
-        public Guid OfficeId { get; set; }
-        public Guid RoleId { get; set; }
     }
 }

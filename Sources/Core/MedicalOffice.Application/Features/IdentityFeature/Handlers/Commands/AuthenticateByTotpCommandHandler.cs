@@ -2,6 +2,7 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.Identity;
@@ -28,6 +29,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly IMapper _mapper;
         private readonly string _requestTitle;
         private readonly IUserRepository _userRepository;
+        private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
 
         public AuthenticateByTotpCommandHandler(
             IUserRepository userRepository,
@@ -36,8 +38,10 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             ITokenGenerator tokenGenerator,
             ITotpHandler totpHandler,
             ILogger logger,
-            IMapper mapper)
+            IMapper mapper,
+            IUserOfficeRoleRepository userOfficeRoleRepository)
         {
+            _userOfficeRoleRepository = userOfficeRoleRepository;
             _userRepository = userRepository;
             _validator = validator;
             _userManager = userManager;
@@ -49,8 +53,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         }
         public async Task<BaseResponse> Handle(AuthenticateByTotpCommand request, CancellationToken cancellationToken)
         {
-
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -95,20 +97,31 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
             var userClaims = await _userManager.GetClaimsAsync(user);
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var roleClaims = new List<Claim>();
-            for (int i = 0; i < roles.Count; i++)
+            //var roles = await _userManager.GetRolesAsync(user);
+            //var roleClaims = new List<Claim>();
+            //for (int i = 0; i < roles.Count; i++)
+            //{
+            //    roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+            //}
+
+            var OfficeRoles = _userOfficeRoleRepository.GetByUserId(user.Id).Result.Select(x =>
+            new OfficeRole { OfficeId = x.OfficeId, RoleId = x.RoleId }).ToList();
+
+            var OfficeRoleClaims = new List<Claim>();
+            for (int i = 0; i < OfficeRoles.Count; i++)
             {
-                roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+                OfficeRoleClaims.Add(new Claim(
+                    "OfficeRole",
+                    $"{OfficeRoles[i].OfficeId}|{OfficeRoles[i].RoleId}"));
             }
 
             var claims = new[]
             {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                }
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())}
             .Union(userClaims)
-            .Union(roleClaims);
+            .Union(OfficeRoleClaims);
+            //.Union(roleClaims)
 
             JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user, claims);
 

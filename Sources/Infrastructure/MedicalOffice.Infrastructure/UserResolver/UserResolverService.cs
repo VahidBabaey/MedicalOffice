@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands;
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -25,14 +26,26 @@ public class UserResolverService : IUserResolverService
         return string.Empty;
     }
 
-    public async Task<List<string>> GetUserRoles()
+    public Task<List<OfficeRole>> GetOfficeRoles()
     {
         if (_context.HttpContext != null)
         {
-            var roleNames = _context.HttpContext.User.FindAll(ClaimTypes.Role).Select(x=>x.Value).ToList();
-            return roleNames;   
+            var OfficeRoleClaims = _context.HttpContext.User.Claims.Where(c => c.Type == "OfficeRole").ToList();
+
+            var OfficeRoles = new List<OfficeRole>();
+
+            foreach (var item in OfficeRoleClaims)
+            {
+                OfficeRoles.Add(new OfficeRole
+                {
+                    OfficeId = item.Value.Split("|")[0] != string.Empty ? Guid.Parse(item.Value.Split("|")[0]) : null,
+                    RoleId = Guid.Parse(item.Value.Split("|")[1])
+                });
+            }
+
+            return Task.FromResult(OfficeRoles);
         }
 
-        return new List<string>();
+        return Task.FromResult(new List<OfficeRole>());
     }
 }

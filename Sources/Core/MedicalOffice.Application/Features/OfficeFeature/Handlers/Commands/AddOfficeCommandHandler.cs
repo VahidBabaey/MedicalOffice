@@ -61,8 +61,8 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var userId =await _userResolverService.GetUserId();
-            var roles =await _userResolverService.GetUserRoles();
+            var userId = await _userResolverService.GetUserId();
+            var roles = await _userResolverService.GetOfficeRoles();
             var existingOffice = _officeRepository.GetAll().Result.Any(x => x.TelePhoneNumber == request.DTO.TelePhoneNumber);
 
             if (existingOffice)
@@ -86,7 +86,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 
                 var newOffice = _officeRepository.Add(office);
 
-                if (roles.Any(x => x.Equals(AdminRole.Name)))
+                if (roles.Any(x => x.RoleId == AdminRole.Id))
                 {
                     var userOfficeRoles = _userOfficeRoleRepository.Add(new UserOfficeRole
                     {

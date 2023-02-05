@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Domain.Entities;
+﻿using MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands;
+using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,6 @@ namespace MedicalOffice.Application.Contracts.Infrastructure
     {
         Task<string> GetUserId();
 
-        Task<List<string>> GetUserRoles();
+        Task<List<OfficeRole>> GetOfficeRoles();
     }
 }

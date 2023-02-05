@@ -18,12 +18,12 @@ public class UserOfficeRole
     /// <summary>
     /// مطب - مرکز درمانی
     /// </summary>
-    public Office Office { get; set; }
+    public Office? Office { get; set; }
 
     /// <summary>
     /// آیدی مطب یا مرکز درمانی
     /// </summary>
-    public Guid OfficeId { get; set; }
+    public Guid? OfficeId { get; set; }
 
     /// <summary>
     /// نقش
