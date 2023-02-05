@@ -1,14 +1,7 @@
 ﻿using MediatR;
-using MedicalOffice.Application;
-using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Dtos.MenuDTO;
-using MedicalOffice.Application.Features;
-using MedicalOffice.Application.Features.AppointmentFeature.Requests.Queries;
 using MedicalOffice.Application.Features.MenuFeature.Requests.Queries;
-using MedicalOffice.Domain.Entities;
-using MedicalOffice.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers
@@ -24,11 +17,19 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [Authorize]
-        [Permission("")]
-        [HttpGet]
-        public async Task<ActionResult<List<Menu>>> GetAllMenuItems([FromQuery] string officeId)
+        [HttpGet("user")]
+        public async Task<ActionResult<List<MenuDto>>> GetMenuByUser([FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new GetAllMenuItemsQuery() { OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new GetMenuByUserQuery() { OfficeId = Guid.Parse(officeId) });
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<List<MenuDto>>> GetAllMenu([FromQuery] string officeId)
+        {
+            var response = await _mediator.Send(new GetMenuQuery() { OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

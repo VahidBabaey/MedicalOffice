@@ -25,9 +25,9 @@ namespace MedicalOffice.Persistence.Repositories
                 permissions = await _dbContext.RolePermissions.Where(x => roleIds.Contains(x.RoleId)).Select(x => x.PermissionId).ToListAsync();
             }
 
-            var menu = await _dbContext.MenuPermissions.Where(x => permissions.Contains(x.PermissionId)).Select(x => x.Menu).ToListAsync();
+            var Menu = await _dbContext.MenuPermissions.Where(x => permissions.Contains(x.PermissionId)).Select(x=>x.Menu).ToListAsync();
 
-            return menu;
+            return Menu;
         }
     }
 }

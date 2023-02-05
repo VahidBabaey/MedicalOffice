@@ -4,14 +4,17 @@ namespace MedicalOffice.Application.Dtos.MenuDTO
 {
     public class MenuDto
     {
-        public Guid MenuId { get; set; }
+        public Guid Id { get; set; }
 
         public Guid? ParentId { get; set; }
 
         public string Name { get; set; }
 
+        public string PersianName { get; set; }
+
         public string? Link { get; set; }
 
-        public List<Menu> children { get; set; }
+        public List<MenuDto> children { get; set; }=new List<MenuDto>();
     }
+
 }
