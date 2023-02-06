@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Dtos.Common.CommonValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO.Validators
     {
         public AddMedicalStaffValidator()
         {
+            Include(new NationalIdValidator());
+            Include(new PhoneNumberValidator());
         }
     }
 }

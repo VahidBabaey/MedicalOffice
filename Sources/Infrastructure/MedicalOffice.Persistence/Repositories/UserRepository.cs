@@ -20,14 +20,16 @@ namespace MedicalOffice.Persistence.Repositories
 
         public async Task<User?> CheckByPhoneOrNationalId(string phoneNumber, string nationalId)
         {
+
             var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber || x.NationalID == nationalId);
+            return user;
 
-            if (user != null)
-            {
-                return user;
-            }
+            //if (user != null)
+            //{
+            //    return user;
+            //}
 
-            return null;
+            //return null;
         }
 
         public async Task<User?> FindExistAndActiveUser(string phoneNumber, bool isActive)
@@ -46,5 +48,6 @@ namespace MedicalOffice.Persistence.Repositories
         {
             throw new NotImplementedException();
         }
+
     }
 }

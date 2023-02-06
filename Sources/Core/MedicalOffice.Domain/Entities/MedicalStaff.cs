@@ -44,19 +44,19 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// شناسه کاربر سیستم
         /// </summary>
-        public Guid? UserId { get; set; }
+        public Guid UserId { get; set; }
         /// <summary>
         /// (ارتباط یک به چند کاربر مطب با کاربر سیستم (هر کاربر سیستم میتواند در هر مطب کاربر متفاوتی باشد
         /// </summary>
-        public User? User { get; set; }
+        public User User { get; set; }
         /// <summary>
         /// آیدی مطب
         /// </summary>
-        public Guid? OfficeId { get; set; }
+        public Guid OfficeId { get; set; }
         /// <summary>
         /// ارتباط یک به چند کاربر مطب با مطب
         /// </summary>
-        public Office? Office { get; set; }
+        public Office Office { get; set; }
         /// <summary>
         /// شناسه نقش کاربر مطب 
         /// </summary>

@@ -4,6 +4,8 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IUserOfficeRoleRepository :IGenericJointEntitiesRepository<UserOfficeRole>
     {
+        Task DeleteUserOfficeRoleAsync(Guid UserId);
+
         Task<UserOfficeRole> InsertToUserOfficeRole(Guid roleId, Guid UserId, Guid officeId);
 
         Task AddUserOfficeRoles(List<UserOfficeRole> userOfficeRoles);

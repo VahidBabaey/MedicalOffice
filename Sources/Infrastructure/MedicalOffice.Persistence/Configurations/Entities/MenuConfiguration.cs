@@ -31,13 +31,13 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 MenuCreator("fbcb96d0-5c1d-4e64-bc91-2863b8e1b98f","AppointmentSetting","تنظیمات وقت دهی","8a239c9f-4943-44d5-affc-2836c8da52a6"),
                 MenuCreator("24fee1ff-cb20-498d-bc82-5a5770c1534e","Appointment","وقت دهی","8a239c9f-4943-44d5-affc-2836c8da52a6"),
 
-                MenuCreator("6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06","Visit","ویزیت"),
-                MenuCreator("a4568ac3-3157-49b2-95db-ae969c82b263","Visit","ویزیت","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06"),
-                MenuCreator("9c711d69-5783-4586-a9a5-a7ce5a51de2a","PMH","PMH","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06"),
-                MenuCreator("35b49377-58ec-4312-b51c-5211df74b379","Paraclinic","پاراکلینیک","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06"),
-                MenuCreator("2ee4d34e-d3a6-4cdb-b28a-fe2cb2fbd8dc","Graphs","نمودارها","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06"),
-                MenuCreator("7e25e8ea-3591-4367-81a3-48389ebfe33c","Forms","فرم ها","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06"),
-                MenuCreator("0d9065d4-d5bc-4705-8530-e703360b69e9","َAtFirstLook","در یک نگاه","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06"),
+                MenuCreator("6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06","Visit","ویزیت",isActive:false),
+                MenuCreator("a4568ac3-3157-49b2-95db-ae969c82b263","Visit","ویزیت","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06", isActive : false),
+                MenuCreator("9c711d69-5783-4586-a9a5-a7ce5a51de2a","PMH","PMH","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06", isActive : false),
+                MenuCreator("35b49377-58ec-4312-b51c-5211df74b379","Paraclinic","پاراکلینیک","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06", isActive : false),
+                MenuCreator("2ee4d34e-d3a6-4cdb-b28a-fe2cb2fbd8dc","Graphs","نمودارها","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06", isActive : false),
+                MenuCreator("7e25e8ea-3591-4367-81a3-48389ebfe33c","Forms","فرم ها","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06", isActive : false),
+                MenuCreator("0d9065d4-d5bc-4705-8530-e703360b69e9","َAtFirstLook","در یک نگاه","6a32cd92-f719-4ce0-b8c2-1e8b17ce5a06", isActive : false),
 
                 MenuCreator("f0436c8d-0d2d-4b32-82a2-baac3a8f3d19","ElectronicPrescribing","نسخه نویسی الکترونیک"),
 
@@ -66,7 +66,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 MenuCreator("4d742e89-e8bc-44d1-ba16-f8326856264c","DefinitionOfServices","تعریف خدمات","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e"),
                 MenuCreator("2cf199d3-9361-4e7e-9cad-79f38c33a631","DefinitionOfShifts","تعریف شیفت","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e"),
                 MenuCreator("fb0ceffb-9b69-4811-8cf3-d159165fcb48","DefinitionOfMembership","تعریف عضویت","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e"),
-                MenuCreator("cad65760-68fc-43be-804c-4d22d957c887","DefinitionOfKCoefficient","تعریف ضریب K","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e"),
+                MenuCreator("cad65760-68fc-43be-804c-4d22d957c887","DefinitionOfKCoefficient","تعریف ضریب K","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e",isActive:false),
                 MenuCreator("5572e148-1703-47a3-ab9c-2ddd8b129d2e","DefinitionOfDrug","تعریف دارو","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e"),
                 MenuCreator("c7f11f6b-7490-4127-be99-46212d645b5a","DefinitionOfDrugInteractions","تعریف تداخلات دارو","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e"),
                 MenuCreator("36c67308-ccb3-4d0f-95b3-91593fa66463","DefinitionOfExperiment","تعریف آزمایش","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e"),
@@ -76,7 +76,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 MenuCreator("d81547e7-2050-43b5-a127-6cbefb0d3580","Settings","تنظیمات",isActive:false),
 
                 MenuCreator("f7829a47-bcd2-4ede-b3ba-2624222437cd","Support","پشتیبانی"),
-                MenuCreator("ea13c4f0-89f9-4d0d-b1aa-a8f7222600db","Ticket","تیکت","f7829a47-bcd2-4ede-b3ba-2624222437cd"),
+                MenuCreator("ea13c4f0-89f9-4d0d-b1aa-a8f7222600db","Ticket","تیکت","f7829a47-bcd2-4ede-b3ba-2624222437cd", isActive : false),
                 MenuCreator("31535b28-a356-426a-b3ca-8605c13746f3","SupportContact","تماس با پشتیبانی","f7829a47-bcd2-4ede-b3ba-2624222437cd"),
             });
         }
