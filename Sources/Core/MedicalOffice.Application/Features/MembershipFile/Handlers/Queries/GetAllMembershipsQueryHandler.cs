@@ -37,7 +37,7 @@ public class GetAllMembershipsQueryHandler : IRequestHandler<GetAllMemberships, 
         {
             var memberShip = await _repository.GetAll();
 
-            var result = _mapper.Map<List<MembershipListDTO>>(insurances.Where(p => p.OfficeId == request.OfficeId));
+            var result = _mapper.Map<List<MembershipListDTO>>(memberShip.Where(p => p.OfficeId == request.OfficeId));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

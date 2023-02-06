@@ -88,7 +88,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// پذیرش ها
         /// </summary>
-        public ICollection<Reception>? Receptions { get; set; }
+        public ICollection<Reception>? Receptions { get; set; }    
         /// <summary>
         /// کاربران پذیرش
         /// </summary>
