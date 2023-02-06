@@ -13,6 +13,8 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 {
     private readonly IUserOfficeRoleRepository _UserOfficeRoleRepository;
     private readonly ApplicationDbContext _dbContext;
+    
+    string roleName = "";
 
     public MedicalStaffRepository(IUserOfficeRoleRepository UserOfficeRoleRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
@@ -49,20 +51,59 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
     }
 
-    public async Task<IEnumerable<MedicalStaffListDTO>> GetAllMedicalStaffs()
+    public async Task<List<MedicalStaffListDTO>> GetAllMedicalStaffs(Guid officeID)
     {
-        var _list = await _dbContext.MedicalStaffs.Select(p => new MedicalStaffListDTO
-        {
-            Id = p.Id,
-            FirstName = p.FirstName,
-            LastName = p.LastName,
-            PhoneNumber = p.PhoneNumber,
-            //ProfilePicture = p.ProfilePicture,
-            SpecializationId = p.SpecializationId,
-            SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Name }).Where(x => x.Id == p.SpecializationId).FirstOrDefault().Name
-        }).ToListAsync();
+        List<MedicalStaffListDTO> medicalStaffListDTOs = new List<MedicalStaffListDTO>();
+        var _list = await _dbContext.MedicalStaffs.Where(p => p.OfficeId == officeID).ToListAsync();
 
-        return _list;
+        foreach (var item in _list)
+        {
+            var _userOfficeRoleids = await _dbContext.UserOfficeRoles.Where(p => p.UserId == item.UserId && p.UserId != null).Include(x => x.Role).Where(x => !(x.Role.PersianName.Contains("بیمار") || x.Role.PersianName.Contains("سوپر ادمین"))).ToListAsync();
+            Guid[] RoleIds = new Guid[_userOfficeRoleids.Count];
+            int i = 0;
+            foreach (var item2 in _userOfficeRoleids)
+            {
+                RoleIds.SetValue(item2.RoleId, i);
+                i++;
+                roleName += _dbContext.Roles.Select(x => new { x.Id, x.PersianName }).Where(x => x.Id == item2.RoleId).FirstOrDefault().PersianName + "، ";
+            };
+            MedicalStaffListDTO medicalStaffListDTO = new()
+            {
+                Id = item.Id,
+                FirstName = item.FirstName,
+                LastName = item.LastName,
+                PhoneNumber = item.PhoneNumber,
+                MedicalNumber = item.MedicalNumber,
+                SpecializationId = item.SpecializationId,
+                SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Name }).Where(x => x.Id == item.SpecializationId).FirstOrDefault().Name,
+                IHIOPassword = item.IHIOPassword,
+                IHIOUserName = item.IHIOUserName,
+                Title = item.Title,
+                NationalID = item.NationalID,
+                RoleNames = roleName,
+                RoleIds = RoleIds
+            };
+            medicalStaffListDTOs.Add(medicalStaffListDTO);
+            roleName = "";
+        }
+        return medicalStaffListDTOs;
+
+        //var _list = await _dbContext.MedicalStaffs.Where(p => p.OfficeId == officeID).Select(p => new MedicalStaffListDTO
+        //{
+        //    Id = p.Id,
+        //    FirstName = p.FirstName,
+        //    LastName = p.LastName,
+        //    PhoneNumber = p.PhoneNumber, 
+        //    MedicalNumber = p.MedicalNumber,
+        //    SpecializationId = p.SpecializationId,
+        //    SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Name }).Where(x => x.Id == p.SpecializationId).FirstOrDefault().Name,
+        //    IHIOPassword = p.IHIOPassword,
+        //    IHIOUserName = p.IHIOUserName,
+        //    Title = p.Title,
+        //    NationalID = p.NationalID,
+        //}).ToListAsync();
+
+        //return _list;
     }
 
     public async Task<IEnumerable<MedicalStaffNameListDTO>> GetAllMedicalStaffsName()
@@ -75,6 +116,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         }).ToListAsync();
 
         return (IEnumerable<MedicalStaffNameListDTO>)_list;
+            roleName = "";
     }
 
     public Task<List<MedicalStaffNamesDTO>> GetAllMedicalStaffsNamesandRoles()
@@ -109,5 +151,10 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
     {
         bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.Id == MedicalStaffId);
         return isExist;
+    }
+    public async Task<List<MedicalStaff>> GetMedicalStaffBySearch(string name)
+    {
+        var medicalStaffs = await _dbContext.MedicalStaffs.Where(p => p.FirstName.Contains(name) || p.LastName.Contains(name)).ToListAsync();
+        return medicalStaffs;
     }
 }

@@ -31,7 +31,7 @@ public class Role : IdentityRole<Guid>
     public ICollection<UserOfficeRole> UserOfficeRoles { get; set; }
 
     /// <summary>
-    /// برای ارتباط چند به چند دسته دسترسی ها با نقش
+    /// ارتباط چند به چند نقش و دسترسی
     /// </summary>
-    public ICollection<PermissionCategory> PermissionCategory{ get; set; }
+    public ICollection<RolePermission> RolePermissions { get; set; }
 }

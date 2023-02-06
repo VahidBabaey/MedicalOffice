@@ -9,6 +9,7 @@ using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,9 +41,22 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
             Log log = new();
 
+            var validationMedicalStaffId = await _repository.CheckMedicalStaffExist(request.DTO.Id, request.OfficeId);
+
+            if (!validationMedicalStaffId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
             try
             {
                 var MedicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
+                MedicalStaff.OfficeId = request.OfficeId;
 
                 await _repository.Update(MedicalStaff);
 
@@ -56,10 +70,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 else
                 {
                     await _repository.DeleteUserOfficeRoleAsync(MedicalStaff.Id);
-                    foreach (var roleid in request.DTO.RoleIds)
-                    {
-                        //await _officeRepository.InsertToUserOfficeRole(roleid, MedicalStaff.Id);
-                    }
                 }
 
                 log.Type = LogType.Success;

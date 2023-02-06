@@ -23,11 +23,22 @@ public class SectionRepository : GenericRepository<Section, Guid>, ISectionRepos
     }
     public async Task<List<Section>> GetSectionBySearch(string name)
     {
-        List<SectionListDTO> ExperimentListDTOs = new List<SectionListDTO>();
-
         var sections = await _dbContext.Sections.Where(p => p.Name.Contains(name)).ToListAsync();
-
         return sections;
     }
-
+    public async Task<List<SectionNamesListDTO>> GetSectionNames(Guid officeId)
+    {
+        List<SectionNamesListDTO> sectionNamesListDTOs = new List<SectionNamesListDTO>();
+        var sections = await _dbContext.Sections.Where(p => p.Status == true && p.OfficeId == officeId).ToListAsync();
+        foreach (var item in sections)
+        {
+            SectionNamesListDTO sectionNamesListDTO = new()
+            {
+                Id = item.Id,
+                Name = item.Name,
+            };
+            sectionNamesListDTOs.Add(sectionNamesListDTO);
+        }
+        return sectionNamesListDTOs;  
+    }
 }

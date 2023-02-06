@@ -28,7 +28,8 @@ public class ServiceController : Controller
     {
         var response = await _mediator.Send(new AddServiceCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+
     }
 
     [HttpDelete]
@@ -36,7 +37,7 @@ public class ServiceController : Controller
     {
         var response = await _mediator.Send(new DeleteServiceCommand() { OfficeId = Guid.Parse(officeId), ServiceId = id });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [HttpPatch]
@@ -44,17 +45,27 @@ public class ServiceController : Controller
     {
         var response = await _mediator.Send(new EditServiceCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [HttpGet]
-    public async Task<ActionResult<List<ServiceListDTO>>> GetAll([FromQuery] ListDto dto, Guid sectionId)
+    [HttpGet("names")]
+    public async Task<ActionResult<List<ServiceIdNameDTO>>> GetAllServiceNames([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllServicesBySectionIDQuery() { DTO = dto, SectionId = sectionId });
+        var response = await _mediator.Send(new GetAllServiceNamesQuery() { OfficeId = Guid.Parse(officeId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+
+    //TODO: return true status code not only OK!
+    [HttpGet("section-services")]
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAllBySectionId(Guid sectionId, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetAllServicesBySectionIDQuery() { SectionId = sectionId, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
+    //TODO: return true status code not only OK!
     [HttpGet("Search")]
     public async Task<ActionResult<List<ServiceListDTO>>> GetSectionBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] string sectionId)
     {

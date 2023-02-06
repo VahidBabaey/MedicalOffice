@@ -22,45 +22,45 @@ public class DrugController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<DrugListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
+    public async Task<ActionResult<List<DrugListDTO>>> GetAll([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetDrugQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetDrugQuery() {OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpGet("drug-shape")]
-    public async Task<ActionResult<List<DrugShapeListDTO>>> GetDrugsShape([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<DrugShapeListDTO>>> GetDrugsShape()
     {
-        var response = await _mediator.Send(new GetDrugShapeQuery() { DTO = dto });
+        var response = await _mediator.Send(new GetDrugShapeQuery() {});
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpGet("drug-consumption")]
-    public async Task<ActionResult<List<DrugConsumptionListDTO>>> GetDrugsConsumption([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<DrugConsumptionListDTO>>> GetDrugsConsumption()
     {
-        var response = await _mediator.Send(new GetDrugConsumptionQuery() { DTO = dto });
+        var response = await _mediator.Send(new GetDrugConsumptionQuery() {});
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpGet("drug-usage")]
-    public async Task<ActionResult<List<DrugUsageListDTO>>> GetDrugsUsage([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<DrugUsageListDTO>>> GetDrugsUsage()
     {
-        var response = await _mediator.Send(new GetDrugUsageQuery() { DTO = dto });
+        var response = await _mediator.Send(new GetDrugUsageQuery() {});
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpGet("drug-section")]
-    public async Task<ActionResult<List<DrugSectionListDTO>>> GetDrugsSection([FromQuery] ListDto dto)
+    public async Task<ActionResult<List<DrugSectionListDTO>>> GetDrugsSection()
     {
-        var response = await _mediator.Send(new GetDrugSectionQuery() { DTO = dto });
+        var response = await _mediator.Send(new GetDrugSectionQuery() {});
 
         return Ok(response);
     }

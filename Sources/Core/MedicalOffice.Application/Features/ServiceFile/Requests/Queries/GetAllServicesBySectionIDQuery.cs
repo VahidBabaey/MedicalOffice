@@ -7,6 +7,6 @@ namespace MedicalOffice.Application.Features.ServiceFile.Requests.Queries;
 
 public class GetAllServicesBySectionIDQuery : IRequest<BaseResponse>
 {
-    public ListDto DTO { get; set; } = new ListDto();
     public Guid SectionId { get; set; }
+    public Guid OfficeId { get; set; }
 }

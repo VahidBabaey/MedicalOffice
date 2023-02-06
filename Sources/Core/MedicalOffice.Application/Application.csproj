@@ -11,12 +11,15 @@
     <Compile Remove="Dtos\Ban\**" />
     <Compile Remove="Features\MedicalStaffFile\Handlers\**" />
     <Compile Remove="Features\MedicalStaffFile\Requests\**" />
+    <Compile Remove="Features\NewFolder1\**" />
     <EmbeddedResource Remove="Dtos\Ban\**" />
     <EmbeddedResource Remove="Features\MedicalStaffFile\Handlers\**" />
     <EmbeddedResource Remove="Features\MedicalStaffFile\Requests\**" />
+    <EmbeddedResource Remove="Features\NewFolder1\**" />
     <None Remove="Dtos\Ban\**" />
     <None Remove="Features\MedicalStaffFile\Handlers\**" />
     <None Remove="Features\MedicalStaffFile\Requests\**" />
+    <None Remove="Features\NewFolder1\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +51,10 @@
   <ItemGroup>
     <Folder Include="Features\BasicInfoFile\Handlers\Commands\" />
     <Folder Include="Features\BasicInfoFile\Requests\Commands\" />
+    <Folder Include="Features\MenuFeature\Handlers\Commands\" />
+    <Folder Include="Features\MenuFeature\Requests\Commands\" />
+    <Folder Include="Features\PermissionFile\Handlers\Commands\" />
+    <Folder Include="Features\PermissionFile\Handlers\Queries\" />
     <Folder Include="Features\RoleFile\Handlers\Commands\" />
 	<Folder Include="Features\RoleFile\Requests\Commands\" />
   </ItemGroup>

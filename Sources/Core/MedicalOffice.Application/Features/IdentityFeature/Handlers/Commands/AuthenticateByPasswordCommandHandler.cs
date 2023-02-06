@@ -18,6 +18,9 @@ using MedicalOffice.Application.Dtos.Identity;
 using System.Net;
 using System.Security.Claims;
 using FluentValidation;
+using MedicalOffice.Application.Contracts.Persistence;
+using NLog.LayoutRenderers.Wrappers;
+using MedicalOffice.Application.Constants;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
@@ -30,6 +33,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly string _requestTitle;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
 
         public AuthenticateByPasswordCommandHandler(
             IValidator<AuthenticateByPasswordDTO> validator,
@@ -37,7 +42,10 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             UserManager<User> userManager,
             ITokenGenerator tokenGenerator,
             ILogger logger,
-            IMapper mapper)
+            IMapper mapper,
+            IUserRepository userRepository,
+            IUserOfficeRoleRepository userOfficeRoleRepository
+            )
         {
             _validator = validator;
             _signInManager = signInManager;
@@ -46,12 +54,12 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             _logger = logger;
             _mapper = mapper;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
+            _userRepository = userRepository;
+            _userOfficeRoleRepository = userOfficeRoleRepository;
         }
 
         public async Task<BaseResponse> Handle(AuthenticateByPasswordCommand request, CancellationToken cancellationToken)
         {
-            
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -66,7 +74,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber && x.IsActive == true);
+            var user = await _userRepository.FindExistAndActiveUser(request.DTO.PhoneNumber, isActive: true);
+            //var user = await _userManager.Users.SingleOrDefaultAsync(x => x.PhoneNumber == request.DTO.PhoneNumber && x.IsActive == true);
             if (user == null)
             {
                 var error = $"The User with phone number {request.DTO.PhoneNumber} is't exist!";
@@ -94,11 +103,22 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
             var userClaims = await _userManager.GetClaimsAsync(user);
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var roleClaims = new List<Claim>();
-            for (int i = 0; i < roles.Count; i++)
+            //var roles = await _userManager.GetRolesAsync(user);
+            //var roleClaims = new List<Claim>();
+            //for (int i = 0; i < roles.Count; i++)
+            //{
+            //    roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+            //}
+
+            var OfficeRoles = _userOfficeRoleRepository.GetByUserId(user.Id).Result.Select(x =>
+            new OfficeRole{ OfficeId = x.OfficeId, RoleId = x.RoleId }).ToList();
+
+            var OfficeRoleClaims = new List<Claim>();
+            for (int i = 0; i < OfficeRoles.Count; i++)
             {
-                roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+                OfficeRoleClaims.Add(new Claim(
+                    "OfficeRole",
+                    $"{OfficeRoles[i].OfficeId}|{OfficeRoles[i].RoleId}"));
             }
 
             var claims = new[]
@@ -106,7 +126,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())}
             .Union(userClaims)
-            .Union(roleClaims);
+            .Union(OfficeRoleClaims);
+            //.Union(roleClaims)
 
             JwtSecurityToken JwtSecurityToken = await _tokenGenerator.GenerateToken(user, claims);
 
@@ -119,7 +140,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 Header = $"{_requestTitle} succeeded",
                 AdditionalData = authenticatedUser
             });
-
             return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", authenticatedUser);
         }
     }

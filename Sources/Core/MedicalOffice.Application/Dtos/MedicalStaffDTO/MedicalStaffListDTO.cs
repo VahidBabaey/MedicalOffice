@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,22 +19,46 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// نام
         /// </summary>
         public string FirstName { get; set; } = string.Empty;
-
         /// <summary>
         /// نام خانوادگی
         /// </summary>
         public string LastName { get; set; } = string.Empty;
-
+        /// <summary>
+        /// شماره نظام پزشکی
+        /// </summary>
+        public string MedicalNumber { get; set; } = string.Empty;
         /// <summary>
         /// شماره تلفن
         /// </summary>
         public string PhoneNumber { get; set; } = string.Empty;
-
         /// <summary>
-        /// آیدی تخصص
+        /// کد ملی
+        /// </summary>
+        public string NationalID { get; set; } = string.Empty;
+        /// <summary>
+        /// عنوان
+        /// </summary>
+        public Title? Title { get; set; }
+        /// <summary>
+        /// نام کاربری بیمه سلامت
+        /// </summary>
+        public string IHIOUserName { get; set; } = string.Empty;
+        /// <summary>
+        /// رمز عبور بیمه سلامت
+        /// </summary>
+        public string IHIOPassword { get; set; } = string.Empty;
+        /// <summary>
+        /// لیست نقش ها
+        /// </summary>
+        public Guid[]? RoleIds { get; set; }
+        /// <summary>
+        /// نام نقش ها
+        /// </summary>
+        public string RoleNames { get; set; } = string.Empty;
+        /// <summary>
+        /// آی دی تخصص
         /// </summary>
         public Guid? SpecializationId { get; set; }
-
         /// <summary>
         /// نام تخصص
         /// </summary>

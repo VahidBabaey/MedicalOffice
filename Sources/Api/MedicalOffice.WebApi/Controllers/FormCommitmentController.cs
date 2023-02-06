@@ -48,9 +48,9 @@ public class FormCommitmentController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<FormCommitmentListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
+    public async Task<ActionResult<List<FormCommitmentListDTO>>> GetAll([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GatAllFormCommitmentQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GatAllFormCommitmentQuery() {OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

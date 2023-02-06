@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.Identity;
@@ -16,27 +17,24 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, BaseResponse>
     {
-        private readonly RoleManager<Role> _roleManager;
-        private readonly UserManager<User> _userManager;
         private readonly IValidator<RegisterUserDTO> _validator;
-        private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
+        private readonly UserManager<User> _userManager;
+        private readonly IUserRepository _userRepository;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
-
         private readonly string _requestTitle;
+
         public RegisterUserCommandHandler(
-            UserManager<User> userManager,
-            RoleManager<Role> roleManager,
             IValidator<RegisterUserDTO> validator,
-            IUserOfficeRoleRepository userOfficeRoleRepository,
+            UserManager<User> userManager,
+            IUserRepository userRepository,
             ILogger logger,
             IMapper mapper
             )
         {
             _validator = validator;
-            _userOfficeRoleRepository = userOfficeRoleRepository;
             _userManager = userManager;
-            _roleManager = roleManager;
+            _userRepository = userRepository;
             _logger = logger;
             _mapper = mapper;
 
@@ -45,7 +43,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            
+
 
             #region ValidateRequestDTO
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
@@ -63,24 +61,8 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             }
             #endregion
 
-            #region MakeSurePatientRoleExistsOrThrowException();
-            var patientRole = _roleManager.FindByNameAsync("PATIENT").Result;
-            if (patientRole == null)
-            {
-                const string error = "There is no suitable Role for assigning to user";
-
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
-            }
-            #endregion
-
             #region MakeSureUserIsntExist
-            var existingUser = await _userManager.Users.SingleOrDefaultAsync(p => p.PhoneNumber == request.DTO.PhoneNumber || p.NationalID == request.DTO.NationalID);
+            var existingUser = await _userRepository.CheckByPhoneOrNationalId(request.DTO.PhoneNumber, request.DTO.NationalID);
             if (existingUser != null)
             {
                 var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";
@@ -118,7 +100,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             #endregion
 
             #region MakeSureUserRoleIsAddedOrThrowException()
-            var userRoleAddition = await _userManager.AddToRoleAsync(user, patientRole.NormalizedName);
+            var userRoleAddition = await _userManager.AddToRoleAsync(user, PatientRole.NormalizedName);
             if (!userRoleAddition.Succeeded)
             {
                 await _userManager.DeleteAsync(user);

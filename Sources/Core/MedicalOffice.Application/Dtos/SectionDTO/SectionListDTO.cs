@@ -1,6 +1,8 @@
-﻿namespace MedicalOffice.Application.Dtos.SectionDTO;
+﻿using MedicalOffice.Application.Dtos.Common;
 
-public class SectionListDTO
+namespace MedicalOffice.Application.Dtos.SectionDTO;
+
+public class SectionListDTO : BaseDto<Guid>
 {
     /// <summary>
     /// نام بخش

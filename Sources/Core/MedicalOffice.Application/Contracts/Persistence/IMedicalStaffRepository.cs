@@ -7,6 +7,8 @@ namespace MedicalOffice.Application.Contracts.Persistence
     {
         Task DeleteUserOfficeRoleAsync(Guid UserId);
 
+        Task<List<MedicalStaffListDTO>> GetAllMedicalStaffs(Guid officeID);
+
         Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber);
 
         Task UpdateUserOfficeRoleAsync(Guid roleId, Guid UserId);
@@ -16,6 +18,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<List<MedicalStaffNamesDTO>> GetAllMedicalStaffsNamesandRoles();
 
         Task<bool> CheckMedicalStaffExist(Guid MedicalStaffId, Guid officeId);
-        Task<IEnumerable<MedicalStaffListDTO>> GetAllMedicalStaffs();
+        Task<List<MedicalStaff>> GetMedicalStaffBySearch(string name);
     }
 }

@@ -12,7 +12,6 @@ namespace MedicalOffice.Application.Features.DrugFile.Requests.Queries
 {
     public class GetDrugShapeQuery : IRequest<BaseResponse>
     {
-      public ListDto DTO { get; set; } = new ListDto();
     }
 
 }

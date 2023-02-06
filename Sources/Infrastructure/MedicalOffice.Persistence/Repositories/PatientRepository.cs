@@ -72,8 +72,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
 
         return patientTag;
     }
-    public async Task<List<PatientListDTO>> SearchPateint(int skip,
-                                                          int take,
+    public async Task<List<PatientListDTO>> SearchPateint(
                                                           string firstName,
                                                           string lastName,
                                                           string nationalCode,
@@ -114,8 +113,6 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
             }
 
             return patientList
-                .Skip(skip)
-                .Take(take)
                 .ToList();
         }
         catch (Exception)

@@ -35,9 +35,6 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
         public async Task<BaseResponse> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
-
-            
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -89,4 +86,3 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
         }
     }
 }
-

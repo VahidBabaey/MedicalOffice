@@ -6,7 +6,6 @@ using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Queries;
-using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using System;

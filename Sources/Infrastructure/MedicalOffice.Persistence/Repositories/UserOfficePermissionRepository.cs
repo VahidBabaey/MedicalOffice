@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Persistence.Repositories
 {
-    public class UserOfficePermissionRepository : GenericRepository<UserOfficePermission, Guid>, IUserOfficePermissionRepository
+    public class UserOfficePermissionRepository : GenericJointEntitiesRepository<UserOfficePermission>, IUserOfficePermissionRepository
     {
         private readonly ApplicationDbContext _dbContext;
 
