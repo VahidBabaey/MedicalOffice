@@ -43,28 +43,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           RoleId= Guid.Parse("70508B44-EAE8-4D40-9318-651AE5B38F40")
                     }
                 });
-
-            //builder
-            //    .HasMany(MedicalStaff => MedicalStaff.UserOfficeRoles)
-            //    .WithOne(e => e.MedicalStaff)
-
-            //    .HasForeignKey(e => e.MedicalStaffId)
-            //    .OnDelete(DeleteBehavior.NoAction);
-            //builder
-            //    .HasMany(MedicalStaff => MedicalStaff.Receptions)
-            //    .WithOne(e => e.MedicalStaff)
-            //    .HasForeignKey(e => e.LoggedInMedicalStaffId)
-            //    .OnDelete(DeleteBehavior.NoAction);
-            //builder
-            //    .HasMany(MedicalStaff => MedicalStaff.ReceptionMedicalStaffs)
-            //    .WithOne(e => e.MedicalStaff)
-            //    .HasForeignKey(e => e.MedicalStaffId)
-            //    .OnDelete(DeleteBehavior.NoAction);
-            //builder
-            //    .HasMany(MedicalStaff => MedicalStaff.Appointments)
-            //    .WithOne(e => e.MedicalStaff)
-            //    .HasForeignKey(e => e.MedicalStaffId)
-            //    .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

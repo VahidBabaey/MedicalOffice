@@ -61,8 +61,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
         public async Task<BaseResponse> Handle(SearchByStaffAndServiceQuery request, CancellationToken cancellationToken)
         {
-            
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {

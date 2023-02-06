@@ -72,6 +72,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
                 Id = item.Id,
                 FirstName = item.FirstName,
                 LastName = item.LastName,
+                PhoneNumber = item.PhoneNumber,
                 MedicalNumber = item.MedicalNumber,
                 SpecializationId = item.SpecializationId,
                 SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Name }).Where(x => x.Id == item.SpecializationId).FirstOrDefault().Name,

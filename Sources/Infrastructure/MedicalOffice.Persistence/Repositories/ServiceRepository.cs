@@ -8,7 +8,7 @@ namespace MedicalOffice.Persistence.Repositories;
 
 public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepository
 {
-    
+
     private readonly ApplicationDbContext _dbContext;
 
     public ServiceRepository(ApplicationDbContext dbContext) : base(dbContext)
@@ -34,7 +34,7 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
         int exixt = 0;
         foreach (var item in serviceId)
         {
-        bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Id == item);
+            bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Id == item);
             if (isExist == false)
             {
                 exixt = 1;
@@ -62,6 +62,13 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
     public async Task<List<Service>> GetServiceBySearch(string name)
     {
         var services = await _dbContext.Services.Where(p => p.Name.Contains(name)).ToListAsync();
+
+        return services;
+    }
+
+    public async Task<List<Service>> GetAllByOfficeId(Guid officeId)
+    {
+        var services = await _dbContext.Services.Where(x => x.OfficeId == officeId).ToListAsync();
 
         return services;
     }

@@ -79,11 +79,13 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<MedicalStaffRole> MedicalStaffRoles => Set<MedicalStaffRole>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
     public DbSet<UserOfficePermission> UserOfficePermissions => Set<UserOfficePermission>();
-    public DbSet<MedicalStaffOfficeSpecialization> MedicalStaffOfficeSpecializations => Set<MedicalStaffOfficeSpecialization>();
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
     public DbSet<ServiceDuration> ServiceDurations=> Set<ServiceDuration>();
     public DbSet<Room> Rooms=> Set<Room>();
     public DbSet<Device> Devices=> Set<Device>();
+    public DbSet<MenuPermission> MenuPermissions=> Set<MenuPermission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<Menu> Menu=> Set<Menu>();
 
     private readonly IUserResolverService _userResolver;
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolverService userResolver) : base(options)

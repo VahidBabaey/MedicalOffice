@@ -10,32 +10,36 @@ namespace MedicalOffice.Domain.Entities
 {
     public class Permission : BaseDomainEntity<Guid>
     {
+        public Guid? ParentId { get; set; }
+
         /// <summary>
         /// نام دسترسی
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// نام فارسی دسترسی
         /// </summary>
-        public string? PersianName { get; set; }
+        public string PersianName { get; set; }
 
         /// <summary>
-        /// شناسه دسته بندی دسترسی
+        /// نمایش در دسترسی ها
         /// </summary>
-        public Guid PermissionCategoryId { get; set; }
-
-        /// <summary>
-        ///  ارتباط یک به چند با دسته بندی دسترسی 
-        /// </summary>
-        public PermissionCategory? PermissionCategory { get; set; }
-
-
-
+        public bool IsShown { get; set; } = true;
 
         /// <summary>
         /// ارتباط چند به چند کاربران مطب و دسترسی هایشان
         /// </summary>
-        public ICollection<UserOfficePermission>? UserOfficePermissions { get; set; } = new List<UserOfficePermission>();
+        public ICollection<UserOfficePermission> UserOfficePermissions { get; set; } = new List<UserOfficePermission>();
+
+        /// <summary>
+        /// ارتباط چند به چند منو و دسترسی
+        /// </summary>
+        public ICollection<MenuPermission> MenuPermissions { get; set; }
+
+        /// <summary>
+        /// ارتباط چند به چند نقش و دسترسی
+        /// </summary>
+        public ICollection<RolePermission> RolePermissions { get; set; }
     }
 }
