@@ -50,7 +50,7 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
         return memberShipService;
     }
 
-    public async Task<List<ServicesOfMemeberShipListDTO>> GetAllServicesOfMemberShip(Guid officeId, Guid memberShipId)
+    public async Task<List<ServicesOfMemeberShipListDTO>> GetAllServicesOfMemberShip(int skip, int take, Guid officeId, Guid memberShipId)
     {
         List<ServicesOfMemeberShipListDTO> servicesOfMemeberShipListDTOs = new List<ServicesOfMemeberShipListDTO>();
 
@@ -66,7 +66,7 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
 
         servicesOfMemeberShipListDTOs.Add(servicesOfMemeberShipDTO);
         }
-        return servicesOfMemeberShipListDTOs;
+        return (List<ServicesOfMemeberShipListDTO>)servicesOfMemeberShipListDTOs.Skip(skip).Take(take);
     }
     public async Task<bool> CheckExistMemberShipServiceId(Guid Id)
     {

@@ -5,7 +5,9 @@ using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 
-public class GetSectionNamesQuery : IRequest<BaseResponse>
+public class GetInsuranceBySearchQuery : IRequest<BaseResponse>
 {
+    public ListDto Dto { get; set; } = new ListDto();
+    public string Name { get; set; }
     public Guid OfficeId { get; set; }
 }

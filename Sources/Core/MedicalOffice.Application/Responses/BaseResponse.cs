@@ -11,7 +11,8 @@ public class BaseResponse
         bool success,
         string message,
         List<string> errors,
-        List<object> data)
+        List<object> data
+        )
     {
         StatusCode = statusCode;
         Success = success;

@@ -22,9 +22,9 @@ public class DrugController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<DrugListDTO>>> GetAll([FromQuery] string officeId)
+    public async Task<ActionResult<List<DrugListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetDrugQuery() {OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetDrugQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -95,9 +95,9 @@ public class DrugController : Controller
 
     [Authorize]
     [HttpGet("Search")]
-    public async Task<ActionResult<List<DrugListDTO>>> GetDrugBySearch([FromQuery] string name, [FromQuery] string officeId)
+    public async Task<ActionResult<List<DrugListDTO>>> GetDrugBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetDrugBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetDrugBySearchQuery() { Dto = dto , Name = name, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

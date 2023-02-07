@@ -44,7 +44,7 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Queries
                 log.Type = LogType.Success;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
             }
 
             catch (Exception error)

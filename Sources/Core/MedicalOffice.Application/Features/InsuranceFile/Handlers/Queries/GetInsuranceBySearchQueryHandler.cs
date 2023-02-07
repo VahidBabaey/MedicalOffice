@@ -3,25 +3,23 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
-using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.ServiceDTO;
-using MedicalOffice.Application.Features.MembershipFile.Requests.Queries;
-using MedicalOffice.Application.Features.ServiceFile.Requests.Queries;
+using MedicalOffice.Application.Dtos.SectionDTO;
+using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
-using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Common;
 using System.Net;
 
-namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Queries;
+namespace MedicalOffice.Application.Features.SectionFile.Handlers.Queries;
 
-public class GetAllMembershipsQueryHandler : IRequestHandler<GetAllMemberships, BaseResponse>
+public class GetInsuranceBySearchQueryHandler : IRequestHandler<GetInsuranceBySearchQuery, BaseResponse>
 {
-    private readonly IMembershipRepository _repository;
+    private readonly IInsuranceRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetAllMembershipsQueryHandler(IMembershipRepository repository, IMapper mapper, ILogger logger)
+    public GetInsuranceBySearchQueryHandler(IInsuranceRepository repository, IMapper mapper, ILogger logger)
     {
         _repository = repository;
         _mapper = mapper;
@@ -29,14 +27,14 @@ public class GetAllMembershipsQueryHandler : IRequestHandler<GetAllMemberships, 
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
-    public async Task<BaseResponse> Handle(GetAllMemberships request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(GetInsuranceBySearchQuery request, CancellationToken cancellationToken)
     {
         Log log = new();
 
         try
         {
-            var memberShip = await _repository.GetAllWithPaggination(request.Dto.Skip, request.Dto.Take);
-            var result = _mapper.Map<List<MembershipListDTO>>(memberShip.Where(p => p.OfficeId == request.OfficeId));
+            var Section = await _repository.GetInsuranceBySearch(request.Name);
+            var result = _mapper.Map<List<InsuranceListDTO>>(Section.Where(p => p.OfficeId == request.OfficeId));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

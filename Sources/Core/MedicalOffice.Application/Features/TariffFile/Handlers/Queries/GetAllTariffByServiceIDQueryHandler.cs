@@ -2,8 +2,8 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.ExperimentDTO;
-using MedicalOffice.Application.Features.Experiment.Requests.Queries;
+using MedicalOffice.Application.Dtos.InsuranceDTO;
+using MedicalOffice.Application.Features.TariffFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using System;
@@ -13,42 +13,40 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.Experiment.Handlers.Queries
+namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 {
 
-    public class GetAllExperimentQueryHandler : IRequestHandler<GetAllExperimentQuery, BaseResponse>
+    public class GetAllTariffByServiceIDQueryHandler : IRequestHandler<GetAllTariffByServiceIDQuery, BaseResponse>
     {
-        private readonly IOfficeRepository _officeRepository;
-        private readonly IExperimentRepository _repository;
+        private readonly IServiceTariffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllExperimentQueryHandler(IOfficeRepository officeRepository, IExperimentRepository repository, IMapper mapper, ILogger logger)
+        public GetAllTariffByServiceIDQueryHandler(IServiceTariffRepository repository, IMapper mapper, ILogger logger)
         {
-            _officeRepository = officeRepository;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(GetAllExperimentQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetAllTariffByServiceIDQuery request, CancellationToken cancellationToken)
         {
             Log log = new();
 
             try
             {
-                var experiments = await _repository.GetAllWithPaggination(request.Dto.Skip, request.Dto.Take);
-                var result = _mapper.Map<List<ExperimentListDTO>>(experiments.Where(p => p.OfficeId == request.OfficeId));
+                var tariffsofService = await _repository.GetTariffsofService(request.Dto.Skip, request.Dto.Take,request.OfficeId, request.ServiceId);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
-                log.AdditionalData = result;
+                log.AdditionalData = tariffsofService;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = tariffsofService.Count(), tariffsofService = tariffsofService });
             }
+
             catch (Exception error)
             {
                 log.Header = $"{_requestTitle} failed";
@@ -60,4 +58,5 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Queries
             }
         }
     }
+
 }

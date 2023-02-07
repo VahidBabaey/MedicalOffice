@@ -107,8 +107,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
-            var IsuserOfficeRoleExist = _usercOfficeRoleRepository
-                .GetAll().Result
+            var IsuserOfficeRoleExist = _usercOfficeRoleRepository.GetAll().Result
                 .Any(uor => uor.UserId == user.Id && uor.OfficeId == request.DTO.OfficeId && uor.RoleId == request.DTO.RoleId);
             if (IsuserOfficeRoleExist)
             {

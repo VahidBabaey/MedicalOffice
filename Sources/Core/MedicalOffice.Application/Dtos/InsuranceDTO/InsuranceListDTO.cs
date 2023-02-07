@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.InsuranceDTO;
 
-public class InsuranceListDTO
+public class InsuranceListDTO : BaseDto<Guid>
 {
 
     /// <summary>

@@ -51,17 +51,17 @@ public class ShiftController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] string officeId)
+    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllShiftsQuery() {OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllShiftsQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpGet("Search")]
-    public async Task<ActionResult<List<ShiftListDTO>>> GetShiftBySearch([FromQuery] string name, [FromQuery] string officeId)
+    public async Task<ActionResult<List<ShiftListDTO>>> GetShiftBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetShiftBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetShiftBySearchQuery() {Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

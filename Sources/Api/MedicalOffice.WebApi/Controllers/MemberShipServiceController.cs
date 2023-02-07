@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Commands;
@@ -48,9 +49,9 @@ public class MemberShipServiceController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShip(Guid memberShipId, [FromQuery] string officeId)
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShip(Guid memberShipId, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllServicesOfMemberShipQuery() { MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllServicesOfMemberShipQuery() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

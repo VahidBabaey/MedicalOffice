@@ -29,7 +29,7 @@ public class PictureController : Controller
 
     [Authorize]
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id)
     {
         var response = await _mediator.Send(new DeletePictureCommand() { PictureId = id });
 

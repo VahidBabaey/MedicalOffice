@@ -11,7 +11,7 @@ namespace MedicalOffice.Application.Responses
     {
         public static BaseResponse Success(HttpStatusCode statusCode, string message, params object[] data)
         {
-            return new() { StatusCode = statusCode, Success = true, StatusDescription = message, Data = data.ToList() };
+            return new() { StatusCode = statusCode, Success = true, StatusDescription = message, Data = data.ToList()};
         }
 
         public static BaseResponse Faild(HttpStatusCode statusCode, string message, params string[] errors)
