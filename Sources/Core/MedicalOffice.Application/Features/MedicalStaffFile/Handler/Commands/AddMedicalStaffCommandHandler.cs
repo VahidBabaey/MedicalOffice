@@ -13,6 +13,7 @@ using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,16 +23,13 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 {
-
     public class AddMedicalStaffCommandHandler : IRequestHandler<AddMedicalStaffCommand, BaseResponse>
     {
         private readonly IValidator<MedicalStaffDTO> _validator;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
-        private readonly IMedicalStaffRoleRepository _medicalStaffRoleRepository;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly IMedicalStaffRepository _medicalStaffrepository;
-        private readonly IOfficeRepository _officeRepository;
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
@@ -46,8 +44,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             UserManager<User> userManager,
             IMedicalStaffRepository medicalStaffrepository,
             IUserOfficeRoleRepository userOfficeRoleRepository,
-            IMedicalStaffRoleRepository medicalStaffRoleRepository,
-            IOfficeRepository officeRepository,
             IUserRepository userRepository
             )
         {
@@ -58,8 +54,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             _userManager = userManager;
             _userOfficeRoleRepository = userOfficeRoleRepository;
             _medicalStaffrepository = medicalStaffrepository;
-            _medicalStaffRoleRepository = medicalStaffRoleRepository;
-            _officeRepository = officeRepository;
             _userRepository = userRepository;
 
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -95,7 +89,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             //Check user is exist
             var user = await _userRepository.CheckByPhoneOrNationalId(request.DTO.PhoneNumber, request.DTO.NationalID);
 
-            //Create user is not exist
+            //Create user if is not exist
             if (user == null)
             {
                 var newUser = _mapper.Map<User>(request.DTO);
@@ -104,22 +98,18 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 newUser.NormalizedUserName = request.DTO.PhoneNumber;
 
                 var userCreation = await _userManager.CreateAsync(newUser);
-                if (userCreation.Succeeded)
+                if (!userCreation.Succeeded)
                 {
-                    user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
-                }
-                else
-                {
-                    var error = $"There is a medical staff with this phoneNumber in this office";
-
                     await _logger.Log(new Log
                     {
                         Type = LogType.Error,
                         Header = $"{_requestTitle} failed",
-                        AdditionalData = error
-                    });
-                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                        AdditionalData = userCreation.Errors.Select(x => x.Description)
+                    }); ;
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", userCreation.Errors.Select(x => x.Description).ToArray());
                 }
+
+                user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
             }
 
             //Create medicalStaff
@@ -131,7 +121,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             //Add role to user office roles
             var roleName = new List<string>();
             var userOfficeRoles = new List<UserOfficeRole>();
-            var medicalstaffRole = new List<MedicalStaffRole>();
             if (request.DTO.RoleIds != null)
             {
                 foreach (var roleId in request.DTO.RoleIds)
@@ -146,17 +135,10 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                             OfficeId = request.OfficeId
                         });
 
-                        medicalstaffRole.Add(new MedicalStaffRole
-                        {
-                            RoleId = role.Id,
-                            MedicalStaffId = medicalStaff.Id
-                        });
-
                         roleName.Add(role.NormalizedName);
                     }
                 }
                 await _userOfficeRoleRepository.AddUserOfficeRoles(userOfficeRoles);
-                await _medicalStaffRoleRepository.InsertToMedicalStaffRole(medicalstaffRole);
                 await _userManager.AddToRolesAsync(user, roleName);
             }
 

@@ -30,7 +30,7 @@ namespace MedicalOffice.Domain.Entities
         /// کد ملی
         /// </summary>
         public string NationalID { get; set; } = string.Empty;
-        
+
         /// <summary>
         /// فعال یا غیرفعال
         /// </summary>
@@ -56,14 +56,16 @@ namespace MedicalOffice.Domain.Entities
         /// </summary>
         public ICollection<Appointment> AppointmentsLastUpdatedBy { get; set; }
 
+        public ICollection<MedicalStaff> MedicalStaffs { get; set; }
+
         public DateTime CreatedDate { get; set; }
-        
+
         public Guid CreatedById { get; set; }
-       
+
         public DateTime LastUpdatedDate { get; set; }
-       
+
         public Guid LastUpdatedById { get; set; }
-        
+
         public bool IsDeleted { get; set; }
     }
 }

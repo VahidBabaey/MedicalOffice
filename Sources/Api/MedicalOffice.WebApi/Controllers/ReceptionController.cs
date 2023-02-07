@@ -61,9 +61,9 @@ public class ReceptionController : Controller
 
     [Authorize]
     [HttpGet("MedicalStaffs")]
-    public async Task<ActionResult<List<MedicalStaffNamesDTO>>> GetAllMedicalStaffs()
+    public async Task<ActionResult<List<MedicalStaffNamesDTO>>> GetAllMedicalStaffs([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllMedicalStaffsNamesandRolesQuery());
+        var response = await _mediator.Send(new GetAllMedicalStaffsNamesandRolesQuery() { OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -90,7 +90,7 @@ public class ReceptionController : Controller
     [HttpGet("dtails")]
     public async Task<ActionResult<List<DetailsofAllReceptionsDTO>>> GetAllDetails([FromQuery] Guid patientId)
     {
-        var response = await _mediator.Send(new GetDetailsOfAllReceptionsQuery() { PatientId = patientId});
+        var response = await _mediator.Send(new GetDetailsOfAllReceptionsQuery() { PatientId = patientId });
 
         return Ok(response);
     }

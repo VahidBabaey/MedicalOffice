@@ -97,9 +97,5 @@ namespace MedicalOffice.Domain.Entities
         /// وقت دهی ها
         /// </summary>
         public ICollection<Appointment>? Appointments { get; set; }
-        /// <summary>
-        /// کادر درمان - نقش
-        /// </summary>
-        public ICollection<MedicalStaffRole>? MedicalStaffRoles { get; set; }
     }
 }
