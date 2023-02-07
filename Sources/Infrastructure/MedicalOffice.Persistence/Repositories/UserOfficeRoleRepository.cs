@@ -35,7 +35,7 @@ public class UserOfficeRoleRepository : GenericJointEntitiesRepository<UserOffic
 
     public async Task<List<UserOfficeRole>> GetByUserId(Guid userId)
     {
-        var userOfficeRole = await _dbContext.UserOfficeRoles.Include(x=>x.Role).Where(urf => urf.UserId == userId).ToListAsync();
+        var userOfficeRole = await _dbContext.UserOfficeRoles.Include(x => x.Role).Where(urf => urf.UserId == userId).ToListAsync();
 
         return userOfficeRole;
     }
@@ -45,5 +45,14 @@ public class UserOfficeRoleRepository : GenericJointEntitiesRepository<UserOffic
         var userOfficeRole = await _dbContext.UserOfficeRoles.Where(urf => urf.UserId == userId && urf.OfficeId == officeId).ToListAsync();
 
         return userOfficeRole;
+    }
+
+    public async Task DeleteUserOfficeRoleAsync(Guid userId, Guid OfficeId)
+    {
+        var medicalStaffs = await _dbContext.UserOfficeRoles.Where(ur => ur.UserId == userId && ur.OfficeId == OfficeId).ToListAsync();
+
+        _dbContext.UserOfficeRoles.RemoveRange(medicalStaffs);
+
+        _dbContext.SaveChanges();
     }
 }

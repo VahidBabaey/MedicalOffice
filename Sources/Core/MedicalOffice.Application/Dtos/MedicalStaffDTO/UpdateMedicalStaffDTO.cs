@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
 {
-    public class UpdateMedicalStaffDTO : BaseDto<Guid>
+    public class UpdateMedicalStaffDTO : BaseDto<Guid>, IPhoneNumberDTO, INationalIdDTO
     {
         /// <summary>
         /// عکس کادر درمان

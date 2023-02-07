@@ -1,95 +1,197 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.AspNetCore.Identity;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 {
-
     public class EditMedicalStaffCommandHandler : IRequestHandler<EditMedicalStaffCommand, BaseResponse>
     {
-        private readonly IMedicalStaffRepository _repository;
-        private readonly IUserOfficeRoleRepository _repositoryUserOfficeRole;
-        private readonly ICryptoServiceProvider _cryptoServiceProvider;
+        private readonly IValidator<UpdateMedicalStaffDTO> _validator;
+        private readonly IMedicalStaffRepository _medicalStaffrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly string _requestTitle;
 
-        public EditMedicalStaffCommandHandler(IUserOfficeRoleRepository repositoryUserOfficeRole, IMedicalStaffRepository repository, IMapper mapper, ILogger logger, ICryptoServiceProvider cryptoServiceProvider)
+        public EditMedicalStaffCommandHandler(
+            IValidator<UpdateMedicalStaffDTO> validator,
+            IUserOfficeRoleRepository userOfficeRoleRepository,
+            IMedicalStaffRepository medicalStaffRepository,
+            IUserRepository userRepository,
+            IMapper mapper,
+            ILogger logger,
+            UserManager<User> userManager,
+            RoleManager<Role> roleManager)
         {
-            _repositoryUserOfficeRole = repositoryUserOfficeRole;
-            _repository = repository;
-            _cryptoServiceProvider = cryptoServiceProvider;
+            _validator = validator;
+            _userOfficeRoleRepository = userOfficeRoleRepository;
+            _medicalStaffrepository = medicalStaffRepository;
+            _userRepository = userRepository;
+            _userManager = userManager;
+            _roleManager = roleManager;
             _mapper = mapper;
             _logger = logger;
+
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
         public async Task<BaseResponse> Handle(EditMedicalStaffCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
-
-            Log log = new();
-
-            var validationMedicalStaffId = await _repository.CheckMedicalStaffExist(request.DTO.Id, request.OfficeId);
-
-            if (!validationMedicalStaffId)
+            //Validate
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("ID isn't exist");
-
-                log.Type = LogType.Error;
-                return response;
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            try
+            //Check staff is exist
+            var existingMedicalStaff = await _medicalStaffrepository.GetById(request.DTO.Id);
+            if (existingMedicalStaff == null)
             {
-                var MedicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
-                MedicalStaff.OfficeId = request.OfficeId;
+                var error = $"The medicalStaff isn't exist";
 
-                await _repository.Update(MedicalStaff);
-
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data=(new { Id = MedicalStaff.Id });
-                if (request.DTO.RoleIds == null)
+                await _logger.Log(new Log
                 {
-                    throw new NullReferenceException("Role not Found");
-                }
-                else
-                {
-                    await _repository.DeleteUserOfficeRoleAsync(MedicalStaff.Id);
-                }
-
-                log.Type = LogType.Success;
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
-            catch (Exception error)
+
+            var newMedicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
+            newMedicalStaff.UserId = existingMedicalStaff.UserId;
+            newMedicalStaff.OfficeId = request.OfficeId;
+
+            //Check user is exist or not
+            var user = new User();
+            if (request.DTO.PhoneNumber != existingMedicalStaff.PhoneNumber ||
+                request.DTO.NationalID != existingMedicalStaff.NationalID)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
+                var existingUserByPhoneNumber = await _userRepository.GetUserByPhoneNumber(request.DTO.PhoneNumber);
+                var existingUserByNationalId = await _userRepository.GetUserByNationalId(request.DTO.NationalID);
 
-                log.Type = LogType.Error;
+                if (existingUserByPhoneNumber != null && existingUserByNationalId != null)
+                {
+                    switch (existingUserByNationalId.Id == existingUserByNationalId.Id)
+                    {
+                        case true:
+                            var isStaffExistingStaffInOffice = await _medicalStaffrepository.CheckExistByOfficeIdAndPhoneNumber(request.OfficeId, request.DTO.PhoneNumber);
+                            if (isStaffExistingStaffInOffice)
+                            {
+                                await _logger.Log(new Log
+                                {
+                                    Type = LogType.Error,
+                                    Header = $"{_requestTitle} failed",
+                                    AdditionalData = "There is a medical staff with this phoneNumber in this office"
+                                });
+                                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
+                                    "There is a medical staff with this phoneNumber in this office");
+                            }
+
+                            user = existingUserByPhoneNumber;
+                            break;
+
+                        case false:
+                            var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";
+                            await _logger.Log(new Log
+                            {
+                                Type = LogType.Error,
+                                Header = $"{_requestTitle} failed",
+                                AdditionalData = error
+                            });
+                            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                    }
+                }
+
+                var invalidPhoneAndNationalId = (existingUserByPhoneNumber != null && existingUserByNationalId == null) || (existingUserByPhoneNumber == null && existingUserByNationalId != null);
+                if (invalidPhoneAndNationalId)
+                {
+                    var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error
+                    });
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+                }
+
+                var noUserExist = existingUserByPhoneNumber == null && existingUserByNationalId == null;
+                if (noUserExist)
+                {
+                    var newUser = _mapper.Map<User>(request.DTO);
+                    newUser.Id = Guid.NewGuid();
+                    newUser.UserName = request.DTO.PhoneNumber;
+                    newUser.NormalizedUserName = request.DTO.PhoneNumber;
+
+                    var userCreation = await _userManager.CreateAsync(newUser);
+                    if (!userCreation.Succeeded)
+                    {
+                        await _logger.Log(new Log
+                        {
+                            Type = LogType.Error,
+                            Header = $"{_requestTitle} failed",
+                            AdditionalData = userCreation.Errors.Select(x => x.Description)
+                        }); ;
+                        return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", userCreation.Errors.Select(x => x.Description).ToArray());
+                    }
+
+                    user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
+                }
+                newMedicalStaff.UserId = user.Id;
             }
 
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
+            //update medicalStaff
+            //await _medicalStaffrepository.Update(newMedicalStaff);
+            await _medicalStaffrepository.Patch(existingMedicalStaff,newMedicalStaff,true);
 
-            await _logger.Log(log);
+            //Add role to user office roles
+            var roleName = new List<string>();
+            var userOfficeRoles = new List<UserOfficeRole>();
+            if (request.DTO.RoleIds != null)
+            {
+                await _userOfficeRoleRepository.DeleteUserOfficeRoleAsync(newMedicalStaff.UserId, request.OfficeId);
 
-            return response;
+                foreach (var roleId in request.DTO.RoleIds)
+                {
+                    Role role = await _roleManager.FindByIdAsync(roleId.ToString());
+                    if (role != null)
+                    {
+                        userOfficeRoles.Add(new UserOfficeRole
+                        {
+                            RoleId = roleId,
+                            UserId = newMedicalStaff.UserId,
+                            OfficeId = request.OfficeId
+                        });
+
+                        roleName.Add(role.NormalizedName);
+                    }
+                }
+                await _userOfficeRoleRepository.AddUserOfficeRoles(userOfficeRoles);
+                await _userManager.AddToRolesAsync(user, roleName);
+            }
+
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = existingMedicalStaff.Id
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", existingMedicalStaff.Id);
         }
     }
-
 }

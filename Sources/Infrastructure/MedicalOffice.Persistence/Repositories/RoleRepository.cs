@@ -12,6 +12,4 @@ public class RoleRepository : GenericRepository<Role, Guid>, IRoleRepository
     {
         _dbContext = dbContext;
     }
-
-
 }

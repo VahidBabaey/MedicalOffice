@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.MedicalStaffDTO.Validators
 {
-    public class AddMedicalStaffValidator : AbstractValidator<MedicalStaffDTO>
+    public class UpdateMedicalStaffValidator : AbstractValidator<UpdateMedicalStaffDTO>
     {
-        public AddMedicalStaffValidator()
+        public UpdateMedicalStaffValidator()
         {
             Include(new NationalIdValidator());
             Include(new PhoneNumberValidator());

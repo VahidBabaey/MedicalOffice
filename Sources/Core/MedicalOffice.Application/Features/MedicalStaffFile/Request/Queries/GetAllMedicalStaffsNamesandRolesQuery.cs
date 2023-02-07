@@ -11,6 +11,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries
 {
     public class GetAllMedicalStaffsNamesandRolesQuery : IRequest<List<MedicalStaffNamesDTO>>
     {
-        public MedicalStaffNamesDTO DTO { get; set; } = new MedicalStaffNamesDTO();
+        //public MedicalStaffNamesDTO DTO { get; set; } = new MedicalStaffNamesDTO();
+        public Guid OfficeId { get; set; }
     }
 }
