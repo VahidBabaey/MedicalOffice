@@ -39,9 +39,9 @@ public class MembershipController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] string officeId)
+    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllMemberships() {OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllMemberships() {Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

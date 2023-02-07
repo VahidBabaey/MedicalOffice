@@ -5,11 +5,13 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Common;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Queries;
 
-public class GetSectionNamesQueryHandler : IRequestHandler<GetSectionNamesQuery, List<SectionNamesListDTO>>
+public class GetSectionNamesQueryHandler : IRequestHandler<GetSectionNamesQuery, BaseResponse>
 {
     private readonly ISectionRepository _repository;
     private readonly IMapper _mapper;
@@ -24,29 +26,31 @@ public class GetSectionNamesQueryHandler : IRequestHandler<GetSectionNamesQuery,
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
-    public async Task<List<SectionNamesListDTO>> Handle(GetSectionNamesQuery request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(GetSectionNamesQuery request, CancellationToken cancellationToken)
     {
-        List<SectionNamesListDTO> result = new();
-
         Log log = new();
 
         try
         {
-            result = await _repository.GetSectionNames(request.OfficeId);
+            var result = await _repository.GetSectionNames(request.OfficeId);
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;
+            log.AdditionalData = result;
+            await _logger.Log(log);
+
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
         }
+
         catch (Exception error)
         {
             log.Header = $"{_requestTitle} failed";
-            log.AdditionalData=error.Message;
+            log.AdditionalData = error.Message;
             log.Type = LogType.Error;
+            await _logger.Log(log);
+
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
-
-        await _logger.Log(log);
-
-        return result;
     }
 
 }

@@ -30,4 +30,11 @@ public class TariffController : Controller
 
         return Ok(response);
     }
+    [HttpGet("search")]
+    public async Task<ActionResult<List<TariffListDTO>>> GetTariffsofService([FromQuery] string officeId, [FromQuery] string serviceId, [FromQuery] ListDto dto)
+    {
+        var response = await _mediator.Send(new GetAllTariffByServiceIDQuery() {Dto = dto, OfficeId = Guid.Parse(officeId), ServiceId = Guid.Parse(serviceId) });
+
+        return Ok(response);
+    }
 }

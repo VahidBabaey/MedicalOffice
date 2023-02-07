@@ -39,7 +39,7 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Queries
 
             try
             {
-                var experiments = await _repository.GetAll();
+                var experiments = await _repository.GetAllWithPaggination(request.Dto.Skip, request.Dto.Take);
                 var result = _mapper.Map<List<ExperimentListDTO>>(experiments.Where(p => p.OfficeId == request.OfficeId));
 
                 log.Header = $"{_requestTitle} succeded";
@@ -47,7 +47,7 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Queries
                 log.AdditionalData = result;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
             }
             catch (Exception error)
             {

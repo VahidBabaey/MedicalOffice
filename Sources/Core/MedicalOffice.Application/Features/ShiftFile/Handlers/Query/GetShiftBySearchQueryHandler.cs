@@ -2,18 +2,21 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Features.ShiftFile.Requests.Query;
 using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
 {
-    public class GetShiftBySearchQueryHandler : IRequestHandler<GetShiftBySearchQuery, List<ShiftListDTO>>
+    public class GetShiftBySearchQueryHandler : IRequestHandler<GetShiftBySearchQuery, BaseResponse>
     {
         private readonly IShiftRepository _repository;
         private readonly IMapper _mapper;
@@ -28,31 +31,32 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<ShiftListDTO>> Handle(GetShiftBySearchQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetShiftBySearchQuery request, CancellationToken cancellationToken)
         {
-            List<ShiftListDTO> result = new();
-
             Log log = new();
 
             try
             {
                 var shifts = await _repository.GetShiftBySearch(request.Name);
-
-                result = _mapper.Map<List<ShiftListDTO>>(shifts.Where(p => p.OfficeId == request.OfficeId));
+                var result = _mapper.Map<List<ShiftListDTO>>(shifts.Where(p => p.OfficeId == request.OfficeId));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
+                log.AdditionalData = result;
+                await _logger.Log(log);
+
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
             }
+
             catch (Exception error)
             {
                 log.Header = $"{_requestTitle} failed";
-                log.AdditionalData=error.Message;
+                log.AdditionalData = error.Message;
                 log.Type = LogType.Error;
+                await _logger.Log(log);
+
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
-
-            await _logger.Log(log);
-
-            return result;
         }
     }
 
