@@ -156,7 +156,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             }
 
             //update medicalStaff
-            //await _medicalStaffrepository.Update(newMedicalStaff);
             await _medicalStaffrepository.Patch(existingMedicalStaff,newMedicalStaff,true);
 
             //Add role to user office roles
