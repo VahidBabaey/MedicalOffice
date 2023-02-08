@@ -10,7 +10,7 @@ public interface IGenericRepository<T1, T2> where T1 : class where T2 : struct
 
     Task<IReadOnlyList<T1>> GetAll();
 
-    Task<IReadOnlyList<T1>> GetAllWithPaggination(int skip, int take);
+    Task<IReadOnlyList<T1>> GetAllWithPagination(int skip, int take);
 
     Task<T1> Add(T1 entity);
 

@@ -9,11 +9,11 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
 {
     public class MedicalStaffNameListDTO : BaseDto<Guid>
     {
-
         /// <summary>
         /// نام
         /// </summary>
         public string FirstName { get; set; } = string.Empty;
+
         /// <summary>
         /// نام خانوادگی
         /// </summary>

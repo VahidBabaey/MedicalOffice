@@ -61,7 +61,7 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
         return await _dbContext.Set<T1>().ToListAsync();
     }
 
-    public async Task<IReadOnlyList<T1>> GetAllWithPaggination(int skip, int take)
+    public async Task<IReadOnlyList<T1>> GetAllWithPagination(int skip, int take)
     {
         return await _dbContext.Set<T1>().Skip(skip).Take(take).ToListAsync();
     }

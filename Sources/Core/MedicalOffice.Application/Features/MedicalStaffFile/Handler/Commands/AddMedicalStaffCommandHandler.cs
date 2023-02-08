@@ -119,27 +119,17 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             medicalStaff = await _medicalStaffrepository.Add(medicalStaff);
 
             //Add role to user office roles
-            var roleName = new List<string>();
-            var userOfficeRoles = new List<UserOfficeRole>();
-            if (request.DTO.RoleIds != null)
+            await _userOfficeRoleRepository.Add(new UserOfficeRole
             {
-                foreach (var roleId in request.DTO.RoleIds)
-                {
-                    Role role = await _roleManager.FindByIdAsync(roleId.ToString());
-                    if (role != null)
-                    {
-                        userOfficeRoles.Add(new UserOfficeRole
-                        {
-                            RoleId = roleId,
-                            UserId = user.Id,
-                            OfficeId = request.OfficeId
-                        });
+                RoleId = request.DTO.RoleId,
+                UserId = user.Id,
+                OfficeId = request.OfficeId
+            });
 
-                        roleName.Add(role.NormalizedName);
-                    }
-                }
-                await _userOfficeRoleRepository.AddUserOfficeRoles(userOfficeRoles);
-                await _userManager.AddToRolesAsync(user, roleName);
+            Role role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
+            if (role != null)
+            {
+                await _userManager.AddToRoleAsync(user, role.NormalizedName);
             }
 
             await _logger.Log(new Log

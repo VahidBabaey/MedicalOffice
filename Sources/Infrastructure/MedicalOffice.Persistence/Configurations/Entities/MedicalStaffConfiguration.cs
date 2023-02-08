@@ -27,21 +27,22 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           NationalID= "0113048998",
                           Title= Title.MrDoctor,
                           SpecializationId= Guid.Parse("3BA9DDBE-0D1E-47CC-807F-3EA8D9A04EF3"),
-                          UserId = Guid.Parse("28b4f560-5a36-4816-8646-b94486bb7464")
+                          UserId = Guid.Parse("28b4f560-5a36-4816-8646-b94486bb7464"),
+                          RoleId = Guid.Parse("70508b44-eae8-4d40-9318-651ae5b38f40")
                     },
                     new MedicalStaff
                     {
                           Id = Guid.Parse("703224e8-efc5-4998-b602-08dae7043559"),
                           OfficeId= Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0"),
                           FirstName= "رضا",
-
                           LastName= "احمدی",
                           MedicalNumber= "1235678",
                           PhoneNumber= "+989122684568",
                           NationalID= "0112857469",
                           Title= Title.MrDoctor,
                           SpecializationId= Guid.Parse("3BA9DDBE-0D1E-47CC-807F-3EA8D9A04EF3"),
-                          UserId= Guid.Parse("d53c3b49-47ed-4647-aef5-01397ea68cea")
+                          UserId= Guid.Parse("d53c3b49-47ed-4647-aef5-01397ea68cea"),
+                          RoleId = Guid.Parse("779c69ef-6857-4e19-b24e-1c4c4b2635d7")
                     }
                 });
         }

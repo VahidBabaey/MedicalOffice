@@ -18,6 +18,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<List<MedicalStaffNamesDTO>> GetAllMedicalStaffsNamesandRoles(Guid officeId);
 
         Task<bool> CheckMedicalStaffExist(Guid MedicalStaffId, Guid officeId);
-        Task<List<MedicalStaff>> GetMedicalStaffBySearch(string name);
+
+        Task<List<MedicalStaff>> GetMedicalStaffBySearch(string name, Guid officeId);
     }
 }

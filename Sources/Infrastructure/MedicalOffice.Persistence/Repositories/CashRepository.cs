@@ -35,7 +35,7 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         return cash.Id;
     }
 
-    public async Task<List<CashListDTO>> GetPatientCashes(Guid receptionId)
+    public Task<List<CashListDTO>> GetPatientCashes(Guid receptionId)
     {
         List<CashListDTO> list = new();
 
@@ -80,10 +80,10 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
             list.Add(cashListDTO);
         }
 
-        return list;
+        return Task.FromResult(list);
     }
 
-    public async Task<decimal> GetCashDifferenceWithRecieved(Guid receptionId)
+    public Task<decimal> GetCashDifferenceWithRecieved(Guid receptionId)
     {
         long CashCost = 0;
 
@@ -106,7 +106,7 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
             CashCost += itemcart.Cost;
         }
 
-        return receptionRecieved - CashCost;
+        return Task.FromResult(receptionRecieved - CashCost);
     }
 
     public async void UpdateDebtForReception(Guid receptionId)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.RoleDTO
 {
-    public class RoleDTO
+    public class RoleListDTO
     {
         /// <summary>
         /// شناسه نقش
