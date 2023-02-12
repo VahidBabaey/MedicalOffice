@@ -47,7 +47,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             _deviceRepository = deviceRepository;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
-
         public async Task<BaseResponse> Handle(AddAppointmentCommand request, CancellationToken cancellationToken)
         {
             var validationResult = _validator.ValidateAsync(request.DTO, cancellationToken).Result;

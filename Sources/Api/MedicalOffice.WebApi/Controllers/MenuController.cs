@@ -27,9 +27,9 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<List<MenuDto>>> GetAllMenu([FromQuery] string officeId)
+        public async Task<ActionResult<List<MenuDto>>> GetAllMenu()
         {
-            var response = await _mediator.Send(new GetMenuQuery() { OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new GetMenuQuery() {});
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

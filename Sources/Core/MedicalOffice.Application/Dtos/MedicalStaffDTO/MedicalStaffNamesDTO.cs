@@ -13,14 +13,17 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// نام
         /// </summary>
         public string FirstName { get; set; } = string.Empty;
+
         /// <summary>
         /// نام خانوادگی
         /// </summary>
         public string LastName { get; set; } = string.Empty;
+
         /// <summary>
         /// نام نقش
         /// </summary>
         public string RoleName { get; set; } = string.Empty;
+
         /// <summary>
         /// آیدی نقش
         /// </summary>

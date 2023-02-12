@@ -32,7 +32,7 @@ public class GetAllPatientsQueryHandler : IRequestHandler<GetAllPatientsQuery, B
 
         try
         {
-            var patients = await _repository.GetAllWithPaggination(request.Dto.Skip, request.Dto.Take);
+            var patients = await _repository.GetAllWithPagination(request.Dto.Skip, request.Dto.Take);
             var result = _mapper.Map<List<PatientListDTO>>(patients);
 
             log.Header = $"{_requestTitle} succeded";

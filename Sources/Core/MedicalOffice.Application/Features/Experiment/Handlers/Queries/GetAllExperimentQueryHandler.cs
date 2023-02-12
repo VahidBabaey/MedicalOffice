@@ -39,7 +39,7 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Queries
 
             try
             {
-                var experiments = await _repository.GetAllWithPaggination(request.Dto.Skip, request.Dto.Take);
+                var experiments = await _repository.GetAllWithPagination(request.Dto.Skip, request.Dto.Take);
                 var result = _mapper.Map<List<ExperimentListDTO>>(experiments.Where(p => p.OfficeId == request.OfficeId));
 
                 log.Header = $"{_requestTitle} succeded";

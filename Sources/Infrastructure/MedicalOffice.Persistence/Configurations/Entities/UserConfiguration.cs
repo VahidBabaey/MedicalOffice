@@ -25,6 +25,26 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                         NormalizedUserName = "+989126592427",
                         FirstName = "پرستو",
                         LastName =  "هاشمی"
+                    },
+                    new User()
+                    {
+                        Id = Guid.Parse("28b4f560-5a36-4816-8646-b94486bb7464"),
+                        PhoneNumber= "+989126802366",
+                        NationalID= "0113048998",
+                        UserName = "+989126802366",
+                        NormalizedUserName = "+989126802366",
+                        FirstName = "سپیده",
+                        LastName =  "هاشمی"
+                    },
+                    new User()
+                    {
+                        Id = Guid.Parse("d53c3b49-47ed-4647-aef5-01397ea68cea"),
+                        PhoneNumber= "+989122684568",
+                        NationalID= "0112857469",
+                        UserName = "+989122684568",
+                        NormalizedUserName = "+989122684568",
+                        FirstName = "رضا",
+                        LastName =  "احمدی"
                     }
                 });
             builder.HasQueryFilter(u => u.IsDeleted == false);

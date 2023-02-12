@@ -79,7 +79,7 @@ public class MappingProfile : Profile
         CreateMap<DrugIntraction, DrugIntractionDTO>().ReverseMap();
         CreateMap<DrugIntraction, UpdateDrugIntractionDTO>().ReverseMap();
         CreateMap<DrugIntraction, DrugIntractionListDTO>().ReverseMap();
-        CreateMap<Role, RoleDTO>().ReverseMap();
+        CreateMap<Role, RoleListDTO>().ReverseMap();
         CreateMap<MedicalStaff, MedicalStaffDTO>().ReverseMap();
         CreateMap<MedicalStaff, UpdateMedicalStaffDTO>().ReverseMap();
         CreateMap<MedicalStaff, MedicalStaffListDTO>().ReverseMap();
@@ -116,6 +116,7 @@ public class MappingProfile : Profile
         CreateMap<User, RegisterUserWithoutPassDTO>().ReverseMap();
         CreateMap<User, AuthenticatedUserDTO>().ReverseMap();
         CreateMap<User, MedicalStaffDTO>().ReverseMap();
+        CreateMap<User, UpdateMedicalStaffDTO>().ReverseMap();
         CreateMap<Membership, MembershipNamesDTO>().ReverseMap();
         CreateMap<ReceptionDiscount, ReceptionDiscountDTO>().ReverseMap();
         CreateMap<Reception, ReceptionsDTO>().ReverseMap();
@@ -135,7 +136,7 @@ public class MappingProfile : Profile
         CreateMap<MedicalStaffSchedule, MedicalStaffScheduleDetailsDTO>().ReverseMap();
         CreateMap<ServiceDuration, ServiceDurationDetailsDTO>().ReverseMap();
         CreateMap<Tariff, TariffDTO>().ReverseMap();
-        CreateMap<RoleDTO, Role>().ReverseMap();
+        CreateMap<RoleListDTO, Role>().ReverseMap();
         CreateMap<Menu, MenuDto>().ReverseMap();
         CreateMap<ServiceIdNameDTO, Service>().ReverseMap();
     }

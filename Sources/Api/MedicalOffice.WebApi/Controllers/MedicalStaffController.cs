@@ -70,6 +70,7 @@ public class MedicalStaffController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
     [Authorize]
     [HttpGet("search")]
     public async Task<ActionResult<List<MedicalStaffListDTO>>> GetMedicalStaffBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
@@ -78,6 +79,7 @@ public class MedicalStaffController : Controller
 
         return Ok(response);
     }
+
     [HttpGet("titles")]
     public async Task<ActionResult<Title>> GetAllTitles([FromQuery] string officeId)
     {

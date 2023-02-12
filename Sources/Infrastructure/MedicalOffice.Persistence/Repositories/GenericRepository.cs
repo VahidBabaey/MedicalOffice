@@ -61,7 +61,7 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
         return await _dbContext.Set<T1>().ToListAsync();
     }
 
-    public async Task<IReadOnlyList<T1>> GetAllWithPaggination(int skip, int take)
+    public async Task<IReadOnlyList<T1>> GetAllWithPagination(int skip, int take)
     {
         return await _dbContext.Set<T1>().Skip(skip).Take(take).ToListAsync();
     }
@@ -136,11 +136,38 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
         if (property == null)
             throw new ArgumentException("entity is not recognized!");
-
+_dbContext.Update(entity);
+        await _dbContext.SaveChangesAsync();
         property.SetValue(entity, true);
+
+        
+    }
+
+    public async Task<T1> Patch(T1 entity, T1 newEntity, bool replaceIfNull)
+    {
+        var properties = typeof(T1).GetProperties();
+        if (replaceIfNull)
+        {
+            foreach (var property in properties)
+            {
+                var newValue = property.GetValue(newEntity);
+                property.SetValue(entity, newValue);
+            }
+        }
+        else
+        {
+            foreach (var property in properties)
+            {
+                var newValue = property.GetValue(newEntity);
+                if (newValue != null)
+                    property.SetValue(entity, newValue);
+            }
+        }
 
         _dbContext.Update(entity);
         await _dbContext.SaveChangesAsync();
+
+        return entity;
     }
 
     public IQueryable<T1> TableNoTracking => this._dbContext.Set<T1>().AsNoTracking();

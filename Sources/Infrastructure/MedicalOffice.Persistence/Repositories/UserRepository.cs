@@ -18,9 +18,29 @@ namespace MedicalOffice.Persistence.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task<User?> CheckByPhoneAndNationalId(string phoneNumber, string nationalId)
+        {
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.NationalID == nationalId);
+            return user;
+        }
+
         public async Task<User?> CheckByPhoneOrNationalId(string phoneNumber, string nationalId)
         {
+
             var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber || x.NationalID == nationalId);
+            return user;
+
+            //if (user != null)
+            //{
+            //    return user;
+            //}
+
+            //return null;
+        }
+
+        public async Task<User?> FindExistAndActiveUser(string phoneNumber, bool isActive)
+        {
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.IsActive == isActive);
 
             if (user != null)
             {
@@ -30,9 +50,21 @@ namespace MedicalOffice.Persistence.Repositories
             return null;
         }
 
-        public async Task<User?> FindExistAndActiveUser(string phoneNumber, bool isActive)
+        public async Task<User?> GetUserByNationalId(string nationalId)
         {
-            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.IsActive == isActive);
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.NationalID == nationalId);
+
+            if (user != null)
+            {
+                return user;
+            }
+
+            return null;
+        }
+
+        public async Task<User?> GetUserByPhoneNumber(string phoneNumber)
+        {
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
 
             if (user != null)
             {

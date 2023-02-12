@@ -76,7 +76,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<SocialHistory> SocialHistories => Set<SocialHistory>();
     public DbSet<Specialization> Specializations => Set<Specialization>();
     public DbSet<Tariff> Tariffs => Set<Tariff>();
-    public DbSet<MedicalStaffRole> MedicalStaffRoles => Set<MedicalStaffRole>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
     public DbSet<UserOfficePermission> UserOfficePermissions => Set<UserOfficePermission>();
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();

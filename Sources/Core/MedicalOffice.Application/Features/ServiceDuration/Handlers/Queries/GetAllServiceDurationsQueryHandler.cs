@@ -37,7 +37,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 
             try
             {
-                var allServices = await _ServiceDurationRepository.GetAllWithPaggination(request.DTO.Skip, request.DTO.Take);
+                var allServices = await _ServiceDurationRepository.GetAllWithPagination(request.DTO.Skip, request.DTO.Take);
 
                 var result = _mappper.Map<List<ServiceDurationListDTO>>(allServices);
 
