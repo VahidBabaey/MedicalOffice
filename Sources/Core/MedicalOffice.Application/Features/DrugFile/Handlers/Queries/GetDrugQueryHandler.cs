@@ -3,9 +3,11 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,14 +39,14 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Queries
 
             try
             {
-                var drug = await _repository.GetAllDrugs(request.OfficeId);
-                var result = _mapper.Map<List<DrugListDTO>>(drug);
+                var drugs = await _repository.GetAllDrugs(request.OfficeId);
+                var result = drugs.Skip(request.Dto.Skip).Take(request.Dto.Take).Select(x => _mapper.Map<DrugListDTO>(x));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = drugs.Count(), result = result });
             }
 
             catch (Exception error)

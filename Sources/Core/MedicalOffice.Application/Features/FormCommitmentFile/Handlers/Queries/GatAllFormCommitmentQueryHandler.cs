@@ -38,14 +38,14 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Queries
 
             try
             {
-                var formCommitments = await _repository.GetAllWithPagination(request.Dto.Skip, request.Dto.Take);
-                var result = _mapper.Map<List<FormCommitmentListDTO>>(formCommitments.Where(p => p.OfficeId == request.OfficeId));
+                var formCommitments = _repository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId);
+                var result = formCommitments.Skip(request.Dto.Skip).Take(request.Dto.Take).Select(x => _mapper.Map<FormCommitmentListDTO>(x));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = formCommitments.Count(), result = result });
             }
             catch (Exception error)
             {

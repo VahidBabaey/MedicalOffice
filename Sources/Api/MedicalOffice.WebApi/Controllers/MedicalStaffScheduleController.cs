@@ -47,7 +47,7 @@ public class MedicalStaffScheduleController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffScheduleListDTO>>> GetAll(Guid medicalStaffId)
+    public async Task<ActionResult<List<MedicalStaffScheduleListDTO>>> GetByMedicalStaffId(Guid medicalStaffId)
     {
         var response = await _mediator.Send(new GetAllMedicalStaffScheduleQuery() { MedicalStaffId = medicalStaffId });
 

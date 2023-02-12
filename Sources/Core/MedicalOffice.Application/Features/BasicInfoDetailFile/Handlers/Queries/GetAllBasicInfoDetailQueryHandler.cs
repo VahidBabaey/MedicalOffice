@@ -3,9 +3,11 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System.Net;
 
 namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Queries
@@ -33,14 +35,14 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Querie
             try
             {
                 var basicInfoDetails = await _repository.GetByBasicInfoId(request.BasicInfoId);
-                var result = _mapper.Map<List<BasicInfoDetailListDTO>>(basicInfoDetails);
+                var result = basicInfoDetails.Skip(request.DTO.Skip).Take(request.DTO.Take).Select(x => _mapper.Map<BasicInfoDetailListDTO>(x));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.AdditionalData = result;
                 log.Type = LogType.Success;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = basicInfoDetails.Count(), result = result });
             }
             catch (Exception error)
             {

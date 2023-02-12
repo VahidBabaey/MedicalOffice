@@ -49,9 +49,9 @@ namespace MedicalOffice.Persistence.Repositories
             }
             return insuranceListDTOs;
         }
-        public async Task<List<Insurance>> GetInsuranceBySearch(string name)
+        public async Task<List<Insurance>> GetInsuranceBySearch(string name, Guid officeId)
         {
-            var insurances = await _dbContext.Insurances.Where(p => p.Name.Contains(name)).ToListAsync();
+            var insurances = await _dbContext.Insurances.Where(p => p.Name.Contains(name) && p.OfficeId == officeId).ToListAsync();
             return insurances;
         }
         public async Task<List<InsuranceNamesDTO>> GetInsuranceNames(Guid officeId)
