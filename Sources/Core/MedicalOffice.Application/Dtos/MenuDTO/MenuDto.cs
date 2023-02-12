@@ -14,7 +14,10 @@ namespace MedicalOffice.Application.Dtos.MenuDTO
 
         public string? Link { get; set; }
 
-        public List<MenuDto> children { get; set; }=new List<MenuDto>();
+        public bool IsActive { get; set; }
+
+        public List<MenuDto> children { get; set; } = new List<MenuDto>();
+
     }
 
 }
