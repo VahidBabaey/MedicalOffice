@@ -21,7 +21,7 @@ public class MemberShipServiceController : Controller
         _mediator = mediator;
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] MemberShipServiceDTO dto, [FromQuery] string officeId)
     {
@@ -29,7 +29,7 @@ public class MemberShipServiceController : Controller
 
         return Ok(response);
     }
-    //[Authorize]
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
@@ -37,7 +37,7 @@ public class MemberShipServiceController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    //[Authorize]
+    [Authorize]
     [HttpGet("services")]
     public async Task<ActionResult<List<ServiceListDTO>>> GetAll()
     {
@@ -46,7 +46,7 @@ public class MemberShipServiceController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateMemberShipServiceDTO dto, [FromQuery] string officeId)
     {
@@ -55,7 +55,7 @@ public class MemberShipServiceController : Controller
         return Ok(response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShip(Guid memberShipId, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
@@ -63,7 +63,7 @@ public class MemberShipServiceController : Controller
 
         return Ok(response);
     }
-    //[Authorize]
+    [Authorize]
     [HttpGet("servicesbysearch")]
     public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShipBySearch(Guid memberShipId, [FromQuery] string officeId, [FromQuery] ListDto dto, string name)
     {
