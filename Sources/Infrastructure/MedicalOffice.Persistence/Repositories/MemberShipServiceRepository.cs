@@ -54,7 +54,7 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
     {
         List<ServicesOfMemeberShipListDTO> servicesOfMemeberShipListDTOs = new List<ServicesOfMemeberShipListDTO>();
 
-        var services = await _dbContext.Services.Where(p => p.OfficeId == officeId).Include(p => p.MemberShipServices).Where(x => (x.MemberShipServices.Where(y => y.MembershipId == memberShipId).Any())).ToListAsync();
+        var services = await _dbContext.Services.Where(p => p.OfficeId == officeId).Include(p => p.MemberShipServices).Where(x => (x.MemberShipServices.Where(y => y.MembershipId == memberShipId).Any())).Skip(skip).Take(take).ToListAsync();
 
         foreach (var item in services)
         {
@@ -66,11 +66,34 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
 
         servicesOfMemeberShipListDTOs.Add(servicesOfMemeberShipDTO);
         }
-        return (List<ServicesOfMemeberShipListDTO>)servicesOfMemeberShipListDTOs.Skip(skip).Take(take);
+        return servicesOfMemeberShipListDTOs;
     }
-    public async Task<bool> CheckExistMemberShipServiceId(Guid Id)
+    public async Task<List<ServicesOfMemeberShipListDTO>> GetAllServicesOfMemberShipBySearch(int skip, int take, Guid officeId, Guid memberShipId, string name)
     {
-        bool isExist = await _dbContext.MemberShipServices.AnyAsync(p => p.Id == Id);
+        List<ServicesOfMemeberShipListDTO> servicesOfMemeberShipListDTOs = new List<ServicesOfMemeberShipListDTO>();
+
+        var services = await _dbContext.Services.Where(p => p.OfficeId == officeId && p.Name.Contains(name)).Include(p => p.MemberShipServices).Where(x => (x.MemberShipServices.Where(y => y.MembershipId == memberShipId).Any())).Skip(skip).Take(take).ToListAsync();
+
+        foreach (var item in services)
+        {
+            ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
+            {
+                ServicesName = item.Name,
+                Discount = item.MemberShipServices.Select(p => new { p.Discount, p.MembershipId }).Where(p => p.MembershipId == memberShipId).FirstOrDefault().Discount
+            };
+
+            servicesOfMemeberShipListDTOs.Add(servicesOfMemeberShipDTO);
+        }
+        return servicesOfMemeberShipListDTOs;
+    }
+    public async Task<bool> CheckExistMemberShipServiceId(Guid officeId, Guid Id)
+    {
+        bool isExist = await _dbContext.MemberShipServices.AnyAsync(p => p.Id == Id && p.OfficeId == officeId);
         return isExist;
+    }
+    public async Task<Guid> GetMembershipServiceId(Guid serviceId, Guid membershipId)
+    {
+        var memberShipService = await _dbContext.MemberShipServices.Where(p => p.ServiceId == serviceId || p.MembershipId == membershipId).FirstOrDefaultAsync();
+        return memberShipService.Id;
     }
 }

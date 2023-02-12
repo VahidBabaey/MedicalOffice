@@ -9,5 +9,6 @@ public class UpdateMembershipValidator : AbstractValidator<UpdateMembershipDTO>
         RuleFor(x => x.Name).NotEmpty().Length(1, 100);
         RuleFor(x => x.IsActive).NotEmpty();
         RuleFor(x => x.Discount).NotEmpty();
+        RuleFor(x => x.Discount).NotEmpty().LessThanOrEqualTo(100);
     }
 }

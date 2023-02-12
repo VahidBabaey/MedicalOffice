@@ -4,6 +4,7 @@ using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Commands;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Queries;
+using MedicalOffice.Application.Features.ServiceFile.Requests.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,9 +29,16 @@ public class MemberShipServiceController : Controller
 
         return Ok(response);
     }
-
     [Authorize]
-    [HttpGet("Services")]
+    [HttpDelete]
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new DeleteMembershipServiceCommand() { OfficeId = Guid.Parse(officeId), MembershipServiceId = id });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+    [Authorize]
+    [HttpGet("services")]
     public async Task<ActionResult<List<ServiceListDTO>>> GetAll()
     {
         var response = await _mediator.Send(new GetAllServicesQuery());
@@ -52,6 +60,14 @@ public class MemberShipServiceController : Controller
     public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShip(Guid memberShipId, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllServicesOfMemberShipQuery() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+    [Authorize]
+    [HttpGet("servicesbysearch")]
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShipBySearch(Guid memberShipId, [FromQuery] string officeId, [FromQuery] ListDto dto, string name)
+    {
+        var response = await _mediator.Send(new GetAllServicesOfMemberShipQueryBySearch() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId), Name = name});
 
         return Ok(response);
     }

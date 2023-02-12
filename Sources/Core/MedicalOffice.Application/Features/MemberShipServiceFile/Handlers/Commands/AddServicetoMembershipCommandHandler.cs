@@ -29,10 +29,10 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddServicetoMembershipCommandHandler(IValidator<MemberShipServiceDTO> validator, IServiceRepository serviceRepository, IOfficeRepository officeRepository,  IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
+        public AddServicetoMembershipCommandHandler(IValidator<MemberShipServiceDTO> validator, IServiceRepository serviceRepository, IOfficeRepository officeRepository, IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
         {
             _serviceRepository = serviceRepository;
-           _officeRepository = officeRepository;
+            _officeRepository = officeRepository;
             _validator = validator;
             _repository = repository;
             _mapper = mapper;
@@ -75,20 +75,7 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
                 try
                 {
 
-                    foreach (var srvid in request.DTO.ServiceId)
-                    {
-                        if (await _serviceRepository.CheckExistServiceId(request.OfficeId, srvid) == false)
-                        {
-                            response.Success = false;
-                            response.StatusDescription = $"{_requestTitle} failed";
-                            response.Errors.Add("ServiceID isn't exist");
-
-                            log.Type = LogType.Error;
-                            return response;
-                        }
-
-                        await _repository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount, srvid, request.DTO.MembershipId);
-                    }
+                    await _repository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount.ToString(), request.DTO.ServiceId, request.DTO.MembershipId);
 
                     response.Success = true;
                     response.StatusDescription = $"{_requestTitle} succeded";
