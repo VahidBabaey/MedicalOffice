@@ -103,9 +103,9 @@ public class MappingProfile : Profile
         CreateMap<PatientReferralForm, PatientReferralFormListDTO>().ReverseMap();
         CreateMap<PatientCommitmentForm, AddPatientCommitmentsFormDTO>().ReverseMap();
         CreateMap<PatientCommitmentForm, PatientCommitmentsFormListDTO>().ReverseMap();
-        CreateMap<Permission, PermissionDTO>().ReverseMap();
-        CreateMap<Permission, UpdatePermissionDTO>().ReverseMap();
-        CreateMap<Permission, PermissionListDTO>().ReverseMap();
+        CreateMap<Permission, PastPermissionDTO>().ReverseMap();
+        CreateMap<Permission, UpdateLastPermissionDTO>().ReverseMap();
+        CreateMap<Permission, PastPermissionListDTO>().ReverseMap();
         CreateMap<FormCommitment, AddFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, UpdateFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, FormCommitmentListDTO>().ReverseMap();
