@@ -22,12 +22,14 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
         private readonly IValidator<UpdateMemberShipServiceDTO> _validator;
         private readonly IMemberShipServiceRepository _repository;
         private readonly IServiceRepository _serviceRepository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditServicetoMembershipCommandHandler(IValidator<UpdateMemberShipServiceDTO> validator, IServiceRepository serviceRepository,  IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
+        public EditServicetoMembershipCommandHandler(IOfficeRepository officeRepository, IValidator<UpdateMemberShipServiceDTO> validator, IServiceRepository serviceRepository, IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _serviceRepository = serviceRepository;
             _validator = validator;
             _repository = repository;
@@ -44,13 +46,25 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
 
             Log log = new();
 
-            var validationMembershipServiceId = await _repository.CheckExistMemberShipServiceId(request.DTO.Id);
+            var validationMembershipServiceId = await _repository.CheckExistMemberShipServiceId(request.OfficeId, request.DTO.Id);
 
             if (!validationMembershipServiceId)
             {
                 response.Success = false;
                 response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add("ID isn't exist");
+
+                log.Type = LogType.Error;
+                return response;
+            }
+
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                response.Success = false;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add("OfficeID isn't exist");
 
                 log.Type = LogType.Error;
                 return response;
@@ -70,19 +84,9 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
             {
                 try
                 {
-                    foreach (var srvid in request.DTO.ServiceId)
-                    {
-                        if (await _serviceRepository.CheckExistServiceId(request.OfficeId, srvid) == false)
-                        {
-                            response.Success = false;
-                            response.StatusDescription = $"{_requestTitle} failed";
-                            response.Errors.Add("ServiceID isn't exist");
 
-                            log.Type = LogType.Error;
-                            return response;
-                        }
-                        await _repository.UpdateServiceOfMemberShipAsync(request.DTO.Discount,request.OfficeId, request.DTO.Id, srvid, request.DTO.MembershipId);
-                    }
+                    await _repository.UpdateServiceOfMemberShipAsync(request.DTO.Discount.ToString(), request.OfficeId, request.DTO.Id, request.DTO.ServiceId, request.DTO.MembershipId);
+
 
                     response.Success = true;
                     response.StatusDescription = $"{_requestTitle} succeded";

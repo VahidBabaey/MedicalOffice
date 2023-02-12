@@ -71,6 +71,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
             {
                 try
                 {
+                    Convert.ToInt64(request.DTO.Discount);
                     var membership = _mapper.Map<Membership>(request.DTO);
                     membership.OfficeId = request.OfficeId;
 

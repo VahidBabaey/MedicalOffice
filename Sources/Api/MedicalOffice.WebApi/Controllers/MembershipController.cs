@@ -19,7 +19,7 @@ public class MembershipController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] MembershipDTO dto, [FromQuery] string officeId)
     {
@@ -28,7 +28,7 @@ public class MembershipController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
@@ -37,7 +37,7 @@ public class MembershipController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
     public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
@@ -46,7 +46,7 @@ public class MembershipController : Controller
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateMembershipDTO dto, [FromQuery] string officeId)
     {
