@@ -59,7 +59,7 @@ public class UpdateReceptionDetailCommandHandler : IRequestHandler<UpdateRecepti
         {
             try
             {
-                await _repository.UpdateReceptionService(request.ReceptiodDetailId, request.DTO.ServiceId, request.DTO.MedicalStaffs);
+                await _repository.UpdateReceptionService(request.ReceptiodDetailId, request.DTO.MedicalStaffId, request.DTO.ShiftId, request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
 
                 //await _repositoryCash.AddCashForAnyReceptionDetail(receptionDetail.OfficeId, receptionDetail.ReceptionId, receptionDetail.Cost);
 
