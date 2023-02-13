@@ -3,7 +3,7 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MenuDTO;
-using MedicalOffice.Application.Dtos.Permission;
+using MedicalOffice.Application.Dtos.PermissionDTO;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
