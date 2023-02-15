@@ -2,10 +2,12 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System.Net;
 
 namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries;
@@ -39,7 +41,7 @@ public class GetServicesBySearchQueryHandler : IRequestHandler<GetServiceBySearc
             log.AdditionalData = result;
             await _logger.Log(log);
 
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = services.Count(), result = result });
         }
 
         catch (Exception error)

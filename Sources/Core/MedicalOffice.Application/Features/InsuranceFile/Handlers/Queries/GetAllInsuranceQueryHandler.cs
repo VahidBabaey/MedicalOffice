@@ -3,9 +3,11 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +39,8 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Queries
 
             try
             {
-                var insurances = await _repository.GetAllWithPagination(request.Dto.Skip, request.Dto.Take);
+                var insurances = _repository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId);
+                var result = insurances.Skip(request.Dto.Skip).Take(request.Dto.Take).Select(x => _mapper.Map<InsuranceListDTO>(x));
 
                 var result = _mapper.Map<List<InsuranceListDTO>>(insurances.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false));
                 log.Header = $"{_requestTitle} succeded";
@@ -45,7 +48,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Queries
                 log.AdditionalData = result;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = insurances.Count(), result = result });
             }
 
             catch (Exception error)

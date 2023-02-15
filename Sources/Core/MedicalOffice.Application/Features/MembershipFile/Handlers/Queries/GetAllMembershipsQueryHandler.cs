@@ -3,6 +3,7 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Queries;
@@ -43,7 +44,7 @@ public class GetAllMembershipsQueryHandler : IRequestHandler<GetAllMemberships, 
             log.AdditionalData = result;
             await _logger.Log(log);
 
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = memberShips.Count(), result = result });
         }
 
         catch (Exception error)

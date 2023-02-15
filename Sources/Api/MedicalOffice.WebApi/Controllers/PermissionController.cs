@@ -1,10 +1,11 @@
 ﻿using MediatR;
-using MedicalOffice.Application.Dtos.PermissionDTO;
-using MedicalOffice.Application.Dtos.MedicalStaffDTO;
-using MedicalOffice.Application.Features.PermissionFile.Requests.Commands;
+using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.Permission;
+using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Queries;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
@@ -19,39 +20,12 @@ public class PermissionController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
-    [HttpPost]
-    public async Task<ActionResult<Guid>> Create(string id, [FromBody] PermissionDTO dto)
-    {
-        var response = await _mediator.Send(new AddPermissionCommand() { MedicalStaffid = id, DTO = dto });
-
-        return Ok(response);
-    }
-
-    [Authorize]
-    [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdatePermissionDTO dto)
-    {
-        var response = await _mediator.Send(new EditPermissionCommand() { DTOUp = dto });
-
-        return Ok(response);
-    }
-
-    [Authorize]
-    [HttpGet("medicalStaffs")]
-    public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetAll()
-    {
-        var response = await _mediator.Send(new GetAllMedicalStaffsName());
-
-        return Ok(response);
-    }
-
-    [Authorize]
+    //[Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetPermissionDetails(Guid id)
+    public async Task<ActionResult<List<PermissionListDto>>> GetAll()
     {
-        var response = await _mediator.Send(new GetPermissionDetailsofMedicalStaff() { UserOfficeRoleId = id});
+        var response = await _mediator.Send(new GetPermissionsQuery() {});
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

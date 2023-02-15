@@ -45,7 +45,7 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Queries
                 log.Type = LogType.Success;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = formCommitments.Count(), result = result });
             }
             catch (Exception error)
             {

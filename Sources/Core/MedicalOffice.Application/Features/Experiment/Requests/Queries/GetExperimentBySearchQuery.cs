@@ -13,7 +13,6 @@ namespace MedicalOffice.Application.Features.Experiment.Requests.Queries
     public class GetExperimentBySearchQuery : IRequest<BaseResponse>
     {
         public ListDto Dto { get; set; } = new ListDto();
-
         public string Name { get; set; }
         public Guid OfficeId { get; set; }
     }

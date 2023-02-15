@@ -40,7 +40,7 @@ public class GetAllServicesBySectionIDQueryHandler : IRequestHandler<GetAllServi
             log.AdditionalData = result;
             await _logger.Log(log);
 
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = services.Count(), result = result });
         }
 
         catch (Exception error)

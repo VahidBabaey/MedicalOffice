@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MedicalOffice.Application.Dtos.PermissionDTO;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
 using MedicalOffice.Application.Dtos.BasicInfoListDTO;
 using MedicalOffice.Application.Dtos.DrugDTO;
@@ -33,6 +32,7 @@ using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MediatR;
 using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Dtos.MenuDTO;
+using MedicalOffice.Application.Dtos.Permission;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -103,9 +103,6 @@ public class MappingProfile : Profile
         CreateMap<PatientReferralForm, PatientReferralFormListDTO>().ReverseMap();
         CreateMap<PatientCommitmentForm, AddPatientCommitmentsFormDTO>().ReverseMap();
         CreateMap<PatientCommitmentForm, PatientCommitmentsFormListDTO>().ReverseMap();
-        CreateMap<Permission, PermissionDTO>().ReverseMap();
-        CreateMap<Permission, UpdatePermissionDTO>().ReverseMap();
-        CreateMap<Permission, PermissionListDTO>().ReverseMap();
         CreateMap<FormCommitment, AddFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, UpdateFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, FormCommitmentListDTO>().ReverseMap();
@@ -139,6 +136,7 @@ public class MappingProfile : Profile
         CreateMap<RoleListDTO, Role>().ReverseMap();
         CreateMap<Menu, MenuDto>().ReverseMap();
         CreateMap<ServiceIdNameDTO, Service>().ReverseMap();
+        CreateMap<PermissionListDto, Permission>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDTO>
