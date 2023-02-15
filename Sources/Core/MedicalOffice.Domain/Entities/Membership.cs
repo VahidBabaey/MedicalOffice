@@ -39,10 +39,6 @@ public class Membership : BaseDomainEntity<Guid>
     public ICollection<ReceptionDiscount>? ReceptionDiscounts { get; set; }
     
     /// <summary>
-    /// فعال یا غیرفعال
-    /// </summary>
-    public bool IsActive { get; set; }
-    /// <summary>
     /// از این مدل برای برقراری ارتباط یک به چند بین عضویت-سرویس استفاده می شود
     /// </summary>
     public ICollection<MemberShipService> MemberShipServices { get; set; } = new List<MemberShipService>();

@@ -39,8 +39,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Queries
 
             try
             {
-                var insurances = _repository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId);
-                var result = insurances.Skip(request.Dto.Skip).Take(request.Dto.Take).Select(x => _mapper.Map<InsuranceListDTO>(x));
+                var insurances = await _repository.GetAllWithPagination(request.Dto.Skip, request.Dto.Take);
 
                 var result = _mapper.Map<List<InsuranceListDTO>>(insurances.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false));
                 log.Header = $"{_requestTitle} succeded";
