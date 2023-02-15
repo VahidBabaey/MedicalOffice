@@ -13,6 +13,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Requests.Queries
 {
     public class GetMembershipBySearchQuery : IRequest<BaseResponse>
     {
+        public ListDto Dto { get; set; } = new ListDto();
         public Guid OfficeId { get; set; }
         public string Name { get; set; }
     }

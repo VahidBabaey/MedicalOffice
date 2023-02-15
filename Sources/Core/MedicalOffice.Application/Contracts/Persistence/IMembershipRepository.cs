@@ -7,7 +7,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
     {
         Task<bool> CheckExistMembershipId(Guid officeId, Guid membershipId);
         Task DeleteMembershipIdofServiceAsync(Guid membershipId);
-        Task<List<Membership>> GetMembershipBySearch(string name);
+        Task<List<Membership>> GetMembershipBySearch(string name, int take, int skip);
         Task<MemberShipService> InsertMembershipIdofServiceAsync(string tariff, Guid serviceId, Guid membershipId);
         Task<string> SearchServicesforMemberShip(Guid memid);
         Task UpdateMembershipIdofServiceAsync(Guid serviceId, Guid membershipId);

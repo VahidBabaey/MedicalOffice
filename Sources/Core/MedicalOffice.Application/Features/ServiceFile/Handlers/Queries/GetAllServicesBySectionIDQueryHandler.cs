@@ -32,7 +32,7 @@ public class GetAllServicesBySectionIDQueryHandler : IRequestHandler<GetAllServi
 
         try
         {
-            var services = await _repository.GetBySectionId(request.SectionId);
+            var services = await _repository.GetBySectionId(request.SectionId, request.Dto.Take, request.Dto.Skip);
             var result = _mapper.Map<List<ServiceListDTO>>(services);
 
             log.Header = $"{_requestTitle} succeded";

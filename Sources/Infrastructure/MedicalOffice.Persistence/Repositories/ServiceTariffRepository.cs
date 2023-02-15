@@ -26,7 +26,7 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
     public async Task<List<TariffListDTO>> GetTariffsofService(int skip, int take, Guid officeId, Guid serviceId)
     {
         List<TariffListDTO> tariffListDTOs = new();
-        var tariffs = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.OfficeId == officeId).ToListAsync();
+        var tariffs = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
         foreach (var item in tariffs)
         {
             TariffListDTO tariffListDTO = new();
@@ -43,6 +43,11 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
             tariffListDTOs.Add(tariffListDTO);
         }
         return (List<TariffListDTO>)tariffListDTOs.Skip(skip).Take(take);
+    }
+    public async Task<bool> CheckExistTariffId(Guid officeId, Guid tariffId)
+    {
+        bool isExist = await _dbContext.Tariffs.AnyAsync(p => p.Id == tariffId && p.OfficeId == officeId);
+        return isExist;
     }
 
 }

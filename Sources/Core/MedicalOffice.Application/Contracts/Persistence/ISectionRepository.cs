@@ -6,7 +6,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
     public interface ISectionRepository : IGenericRepository<Section, Guid>
     {
         Task<bool> CheckExistSectionId(Guid officeId, Guid sectionId);
-        Task<List<Section>> GetSectionBySearch(string name);
+        Task<List<Section>> GetSectionBySearch(string name, int take, int skip);
         Task<List<SectionNamesListDTO>> GetSectionNames(Guid officeId);
     }
 }

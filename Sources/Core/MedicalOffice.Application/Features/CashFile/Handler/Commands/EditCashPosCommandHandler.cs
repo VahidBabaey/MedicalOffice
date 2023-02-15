@@ -8,6 +8,7 @@ using MedicalOffice.Application.Features.CashFile.Request.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
@@ -66,6 +67,7 @@ public class EditCashPosCommandHandler : IRequestHandler<EditCashPosCommand, Bas
                 await _repository.Update(cashpos);
 
                 response.Success = true;
+                response.StatusCode = HttpStatusCode.OK;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = cashpos.Id });
 
@@ -74,6 +76,7 @@ public class EditCashPosCommandHandler : IRequestHandler<EditCashPosCommand, Bas
             catch (Exception error)
             {
                 response.Success = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
                 response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 

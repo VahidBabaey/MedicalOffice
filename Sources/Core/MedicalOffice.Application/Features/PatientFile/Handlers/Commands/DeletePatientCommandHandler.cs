@@ -4,6 +4,7 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Features.PatientFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.PatientFile.Handlers.Commands;
 
@@ -37,7 +38,9 @@ public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand,
             await _repositorycontact.RemovePatientContact(request.PatientId);
             await _repositoryaddress.RemovePatientAddress(request.PatientId);
             await _repositorytag.RemovePatientTag(request.PatientId);
+
             response.Success = true;
+            response.StatusCode = HttpStatusCode.OK;
             response.StatusDescription = $"{_requestTitle} succeded";
             response.Data = (new { Id = request.PatientId });
 
@@ -46,6 +49,7 @@ public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand,
         catch (Exception error)
         {
             response.Success = false;
+            response.StatusCode = HttpStatusCode.BadRequest;
             response.StatusDescription = $"{_requestTitle} failed";
             response.Errors.Add(error.Message);
 

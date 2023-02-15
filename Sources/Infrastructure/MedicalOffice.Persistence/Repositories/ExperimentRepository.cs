@@ -19,9 +19,9 @@ public class ExperimentRepository : GenericRepository<Experiment, Guid>, IExperi
         bool isExist = await _dbContext.ExperimentPres.AnyAsync(p => p.OfficeId == officeId && p.Id == experimentId);
         return isExist;
     }
-    public async Task<List<Experiment>> GetExperimentBySearch(string name)
+    public async Task<List<Experiment>> GetExperimentBySearch(string name, int take, int skip)
     {
-        var experiments = await _dbContext.ExperimentPres.Where(p => p.Name.Contains(name)).ToListAsync();
+        var experiments = await _dbContext.ExperimentPres.Where(p => p.Name.Contains(name)).Take(take).Skip(skip).ToListAsync();
 
         return experiments;
     }

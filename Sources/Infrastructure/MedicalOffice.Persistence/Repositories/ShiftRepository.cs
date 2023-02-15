@@ -24,9 +24,9 @@ namespace MedicalOffice.Persistence.Repositories
             bool isExist = await _dbContext.Shifts.AnyAsync(p => p.OfficeId == officeId && p.Id == shiftId);
             return isExist;
         }
-        public async Task<List<Shift>> GetShiftBySearch(string name)
+        public async Task<List<Shift>> GetShiftBySearch(string name, int take, int skip)
         {
-            var shifts = await _dbContext.Shifts.Where(p => p.Name.Contains(name)).ToListAsync();
+            var shifts = await _dbContext.Shifts.Where(p => p.Name.Contains(name)).Take(take).Skip(skip).ToListAsync();
 
             return shifts;
         }

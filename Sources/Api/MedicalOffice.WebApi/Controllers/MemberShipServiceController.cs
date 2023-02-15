@@ -5,6 +5,7 @@ using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Commands;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Queries;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Commands;
+using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,9 +40,9 @@ public class MemberShipServiceController : Controller
     }
     [Authorize]
     [HttpGet("services")]
-    public async Task<ActionResult<List<ServiceListDTO>>> GetAll()
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAll([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllServicesQuery());
+        var response = await _mediator.Send(new GetAllServicesQuery() { OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

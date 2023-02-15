@@ -8,6 +8,7 @@ using MedicalOffice.Application.Features.PatientFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.PatientFile.Handlers.Commands;
 
@@ -63,6 +64,7 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
                 await _repositorytag.RemovePatientTag(patient.Id);
 
                 response.Success = true;
+                response.StatusCode = HttpStatusCode.OK;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = patient.Id });
                 if (request.DTO.PhoneNumber == null)
@@ -89,6 +91,7 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
             catch (Exception error)
             {
                 response.Success = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
                 response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 

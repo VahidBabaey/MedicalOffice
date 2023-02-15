@@ -13,9 +13,9 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
     {
         _dbContext = dbContext;
     }
-    public async Task<IEnumerable<DrugListDTO>> GetAllDrugs(Guid officeId)
+    public async Task<IEnumerable<DrugListDTO>> GetAllDrugs(Guid officeId, int take, int skip)
     {
-        var _list = await _dbContext.Drugs.Where(p => p.OfficeId == officeId).Select(p => new DrugListDTO
+        var _list = await _dbContext.Drugs.Where(p => p.OfficeId == officeId && p.IsDeleted == false).Select(p => new DrugListDTO
         {
             Id = p.Id,
             Name = p.Name,
@@ -33,7 +33,7 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
             Number = p.Number,
             IsShow = p.IsShow,
             IsHybrid = p.IsHybrid
-        }).ToListAsync();
+        }).Take(take).Skip(skip).ToListAsync();
 
         return (IEnumerable<DrugListDTO>)_list;
     }
@@ -62,9 +62,9 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
         bool isExist = await _dbContext.Drugs.AnyAsync(p => p.Id == drugId && p.OfficeId == officeId);
         return isExist;
     }
-    public async Task<List<Drug>> GetDrugBySearch(string name)
+    public async Task<List<Drug>> GetDrugBySearch(string name, int take, int skip)
     {
-        var drugs = await _dbContext.Drugs.Where(p => p.Name.Contains(name)).ToListAsync();
+        var drugs = await _dbContext.Drugs.Where(p => p.Name.Contains(name)).Take(take).Skip(skip).ToListAsync();
 
         return drugs;
     }

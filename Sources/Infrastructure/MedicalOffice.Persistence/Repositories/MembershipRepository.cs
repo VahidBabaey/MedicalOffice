@@ -84,9 +84,9 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
         bool isExist = await _dbContext.Memberships.AnyAsync(p => p.OfficeId == officeId && p.Id == membershipId);
         return isExist;
     }
-    public async Task<List<Membership>> GetMembershipBySearch(string name)
+    public async Task<List<Membership>> GetMembershipBySearch(string name, int take, int skip)
     {
-        var memberships = await _dbContext.Memberships.Where(p => p.Name.Contains(name)).ToListAsync();
+        var memberships = await _dbContext.Memberships.Where(p => p.Name.Contains(name)).Take(take).Skip(skip).ToListAsync();
 
         return memberships;
     }

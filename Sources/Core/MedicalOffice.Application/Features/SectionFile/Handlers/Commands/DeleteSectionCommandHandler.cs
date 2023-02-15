@@ -6,6 +6,7 @@ using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using Microsoft.Data.SqlClient;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 
@@ -45,6 +46,8 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
             await _repository.Delete(request.SectionId);
 
             response.Success = true;
+            response.StatusCode = HttpStatusCode.OK;
+            response.StatusCode = HttpStatusCode.OK;
             response.StatusDescription = $"{_requestTitle} succeded";
             response.Data = (new { Id = request.SectionId });
 
@@ -53,6 +56,7 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
         catch (Exception error)
         {
             response.Success = false;
+            response.StatusCode = HttpStatusCode.BadRequest;
             response.StatusDescription = $"{_requestTitle} failed";
             response.Errors.Add(error.Message);
 

@@ -41,7 +41,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries
                 AdditionalData = services
             });
 
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", services);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = services.Count(), result = services });
         }
     }
 }

@@ -31,7 +31,7 @@ public class GetServicesBySearchQueryHandler : IRequestHandler<GetServiceBySearc
 
         try
         {
-            var services = await _repository.GetServiceBySearch(request.Name);
+            var services = await _repository.GetServiceBySearch(request.Name, request.Dto.Take, request.Dto.Skip);
             var result = _mapper.Map<List<ServiceListDTO>>(services.Where(p => p.OfficeId == request.OfficeId && p.SectionId == request.SectionId));
 
             log.Header = $"{_requestTitle} succeded";

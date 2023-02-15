@@ -37,8 +37,8 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
 
             try
             {
-                var shifts = await _repository.GetShiftBySearch(request.Name);
-                var result = _mapper.Map<List<ShiftListDTO>>(shifts.Where(p => p.OfficeId == request.OfficeId));
+                var shifts = await _repository.GetShiftBySearch(request.Name, request.Dto.Take, request.Dto.Skip);
+                var result = _mapper.Map<List<ShiftListDTO>>(shifts.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

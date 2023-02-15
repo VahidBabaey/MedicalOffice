@@ -8,6 +8,7 @@ using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,9 +50,10 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
 
             try
             {
-                await _repository.Delete(request.BasicInfoDetailId);
+                await _repository.SoftDelete(request.BasicInfoDetailId);
 
                 response.Success = true;
+                response.StatusCode = HttpStatusCode.OK;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = request.BasicInfoDetailId });
 
@@ -60,6 +62,7 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
             catch (Exception error)
             {
                 response.Success = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
                 response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 

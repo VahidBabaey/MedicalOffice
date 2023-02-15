@@ -40,7 +40,7 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Queries
             try
             {
                 var experiments = await _repository.GetAllWithPagination(request.Dto.Skip, request.Dto.Take);
-                var result = _mapper.Map<List<ExperimentListDTO>>(experiments.Where(p => p.OfficeId == request.OfficeId));
+                var result = _mapper.Map<List<ExperimentListDTO>>(experiments.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

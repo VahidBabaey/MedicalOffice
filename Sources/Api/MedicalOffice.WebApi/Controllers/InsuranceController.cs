@@ -4,6 +4,7 @@ using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
+using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,12 +32,12 @@ public class InsuranceController : Controller
     }
 
     [Authorize]
-    [HttpDelete]
-    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
+    [HttpDelete("list-insurance")]
+    public async Task<IActionResult> RemoveList([FromBody] InsuranceListIDDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteInsuranceCommand() { InsuranceID = id, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new DeleteInsuranceListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        return Ok(response);
     }
 
     [Authorize]

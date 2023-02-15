@@ -32,8 +32,8 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Queries
 
             try
             {
-                var drug = await _repository.GetDrugBySearch(request.Name);
-                var result = _mapper.Map<List<DrugListDTO>>(drug.Where(p => p.OfficeId == request.OfficeId));
+                var drug = await _repository.GetDrugBySearch(request.Name, request.Dto.Take, request.Dto.Skip);
+                var result = _mapper.Map<List<DrugListDTO>>(drug.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

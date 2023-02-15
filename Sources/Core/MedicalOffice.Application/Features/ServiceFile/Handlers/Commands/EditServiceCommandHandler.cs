@@ -8,6 +8,7 @@ using MedicalOffice.Application.Features.ServiceFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 {
@@ -67,6 +68,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                     await _repository.Update(service);
 
                     response.Success = true;
+                    response.StatusCode = HttpStatusCode.OK;
                     response.StatusDescription = $"{_requestTitle} succeded";
                     response.Data = (new { Id = service.Id });
 
@@ -75,6 +77,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 catch (Exception error)
                 {
                     response.Success = false;
+                    response.StatusCode = HttpStatusCode.BadRequest;
                     response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 

@@ -32,8 +32,8 @@ public class GetSectionBySearchQueryHandler : IRequestHandler<GetSectionBySearch
 
         try
         {
-            var Section = await _repository.GetSectionBySearch(request.Name);
-            var result = _mapper.Map<List<SectionListDTO>>(Section.Where(p => p.OfficeId == request.OfficeId));
+            var Section = await _repository.GetSectionBySearch(request.Name, request.Dto.Take, request.Dto.Skip);
+            var result = _mapper.Map<List<SectionListDTO>>(Section.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

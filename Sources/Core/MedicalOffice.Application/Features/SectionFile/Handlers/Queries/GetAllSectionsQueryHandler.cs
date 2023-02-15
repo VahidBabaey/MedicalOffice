@@ -34,7 +34,7 @@ public class GetAllSectionsQueryHandler : IRequestHandler<GetAllSectionQuery, Ba
         try
         {
             var Section = await _repository.GetAllWithPagination(request.Dto.Skip, request.Dto.Take);
-            var result = _mapper.Map<List<SectionListDTO>>(Section.Where(p => p.OfficeId == request.OfficeId));
+            var result = _mapper.Map<List<SectionListDTO>>(Section.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

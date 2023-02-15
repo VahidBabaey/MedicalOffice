@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.ExperimentDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Features.Experiment.Requests.Queries;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Commands;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Queries;
 using Microsoft.AspNetCore.Authorization;
@@ -44,6 +46,14 @@ public class MembershipController : Controller
         var response = await _mediator.Send(new GetAllMemberships() {Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
+    }
+    [Authorize]
+    [HttpGet("search")]
+    public async Task<ActionResult<List<MembershipListDTO>>> GetMembershipBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
+    {
+        var response = await _mediator.Send(new GetMembershipBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]

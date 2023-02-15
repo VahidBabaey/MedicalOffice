@@ -54,14 +54,15 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
     {
         List<ServicesOfMemeberShipListDTO> servicesOfMemeberShipListDTOs = new List<ServicesOfMemeberShipListDTO>();
 
-        var services = await _dbContext.Services.Where(p => p.OfficeId == officeId).Include(p => p.MemberShipServices).Where(x => (x.MemberShipServices.Where(y => y.MembershipId == memberShipId).Any())).Skip(skip).Take(take).ToListAsync();
+        var services = await _dbContext.Services.Where(p => p.OfficeId == officeId && p.IsDeleted == false).Include(p => p.MemberShipServices).Where(x => (x.MemberShipServices.Where(y => y.MembershipId == memberShipId).Any())).Skip(skip).Take(take).ToListAsync();
 
         foreach (var item in services)
         {
             ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
             {
                 ServicesName = item.Name,
-                Discount = item.MemberShipServices.Select(p => new { p.Discount, p.MembershipId }).Where(p => p.MembershipId == memberShipId).FirstOrDefault().Discount
+                Discount = item.MemberShipServices.Select(p => new { p.Discount, p.MembershipId }).Where(p => p.MembershipId == memberShipId).FirstOrDefault().Discount,
+                Id = item.Id
             };
 
         servicesOfMemeberShipListDTOs.Add(servicesOfMemeberShipDTO);
@@ -72,14 +73,15 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
     {
         List<ServicesOfMemeberShipListDTO> servicesOfMemeberShipListDTOs = new List<ServicesOfMemeberShipListDTO>();
 
-        var services = await _dbContext.Services.Where(p => p.OfficeId == officeId && p.Name.Contains(name)).Include(p => p.MemberShipServices).Where(x => (x.MemberShipServices.Where(y => y.MembershipId == memberShipId).Any())).Skip(skip).Take(take).ToListAsync();
+        var services = await _dbContext.Services.Where(p => p.OfficeId == officeId && p.Name.Contains(name) && p.IsDeleted == false).Include(p => p.MemberShipServices).Where(x => (x.MemberShipServices.Where(y => y.MembershipId == memberShipId).Any())).Skip(skip).Take(take).ToListAsync();
 
         foreach (var item in services)
         {
             ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
             {
                 ServicesName = item.Name,
-                Discount = item.MemberShipServices.Select(p => new { p.Discount, p.MembershipId }).Where(p => p.MembershipId == memberShipId).FirstOrDefault().Discount
+                Discount = item.MemberShipServices.Select(p => new { p.Discount, p.MembershipId }).Where(p => p.MembershipId == memberShipId).FirstOrDefault().Discount,
+                Id = item.Id
             };
 
             servicesOfMemeberShipListDTOs.Add(servicesOfMemeberShipDTO);

@@ -37,7 +37,7 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Queries
 
             try
             {
-                var drug = await _repository.GetAllDrugs(request.OfficeId);
+                var drug = await _repository.GetAllDrugs(request.OfficeId, request.Dto.Take, request.Dto.Skip);
                 var result = _mapper.Map<List<DrugListDTO>>(drug);
 
                 log.Header = $"{_requestTitle} succeded";

@@ -34,8 +34,8 @@ public class GetMembershipBySearchQueryHandler : IRequestHandler<GetMembershipBy
 
         try
         {
-            var memberShip = await _repository.GetMembershipBySearch(request.Name);
-            var result = _mapper.Map<List<MembershipListDTO>>(memberShip.Where(p => p.OfficeId == request.OfficeId));
+            var memberShip = await _repository.GetMembershipBySearch(request.Name, request.Dto.Take, request.Dto.Skip);
+            var result = _mapper.Map<List<MembershipListDTO>>(memberShip.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;
