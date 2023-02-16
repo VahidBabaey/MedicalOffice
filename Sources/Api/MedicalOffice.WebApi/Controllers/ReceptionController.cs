@@ -104,7 +104,7 @@ public class ReceptionController : Controller
         return Ok(response);
     }
     //[Authorize]
-    [HttpPost("updatereceptiondetail")]
+    [HttpPatch("updatereceptiondetail")]
     public async Task<ActionResult<Guid>> UpdateReceptionDetail([FromBody] UpdateReceptionDetailDTO dto, [FromQuery] string receptiodDetailId, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new UpdateReceptionDetailCommand() { DTO = dto, ReceptiodDetailId = Guid.Parse(receptiodDetailId), OfficeId = Guid.Parse(officeId) });

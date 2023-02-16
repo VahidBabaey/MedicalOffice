@@ -26,7 +26,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
     //Task<ReceptionServiceDto> GetReceptionServiceInfo(Guid receptionDetailId);
     Task<Reception> SummarizeReception(Guid receptionId);
     Task<ReceptionSummaryDto> GetReceptionSummary(Guid receptionId);
-    Task DeleteReceptionService(Guid receptionDetailId);
+    Task DeleteReceptionService(Guid receptionDetailId, Guid officeId);
     Task<int> GetFactorNo();
     Task<int> GetFactorNoToday();
 
