@@ -39,8 +39,8 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Queries
 
             try
             {
-                var drug = await _repository.GetAllDrugs(request.OfficeId, request.Dto.Take, request.Dto.Skip);
-                var result = _mapper.Map<List<DrugListDTO>>(drug);
+                var drug = await _repository.GetAllDrugs(request.OfficeId);
+                var result = _mapper.Map<List<DrugListDTO>>(drug.Take(request.Dto.Take).Skip(request.Dto.Skip));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

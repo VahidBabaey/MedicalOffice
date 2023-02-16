@@ -7,6 +7,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
     {
         Task<bool> CheckExistServiceId(Guid officeId, Guid serviceId);
         Task<bool> CheckExistTariffId(Guid officeId, Guid tariffId);
-        Task<List<TariffListDTO>> GetTariffsofService(int skip, int take, Guid officeId, Guid serviceId);
+        Task<List<TariffListDTO>> GetTariffsofService(Guid officeId, Guid serviceId);
     }
 }

@@ -46,7 +46,7 @@ public class GetAllServicesQueryHandler : IRequestHandler<GetAllServicesQuery, B
             log.AdditionalData = result;
             await _logger.Log(log);
 
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = service.Count(), result = result });
         }
 
         catch (Exception error)

@@ -10,7 +10,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> CheckExistDrugSectionId(Guid drugSectionId);
         Task<bool> CheckExistDrugShapeId(Guid drugShapeId);
         Task<bool> CheckExistDrugUsageId(Guid drugUsageId);
-        Task<IEnumerable<DrugListDTO>> GetAllDrugs(Guid officeId, int take, int skip);
-        Task<List<Drug>> GetDrugBySearch(string name, int take, int skip);
+        Task<IEnumerable<DrugListDTO>> GetAllDrugs(Guid officeId);
+        Task<IEnumerable<DrugListDTO>> GetDrugBySearch(string name);
     }
 }

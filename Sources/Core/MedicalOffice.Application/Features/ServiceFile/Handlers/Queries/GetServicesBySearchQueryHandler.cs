@@ -33,8 +33,8 @@ public class GetServicesBySearchQueryHandler : IRequestHandler<GetServiceBySearc
 
         try
         {
-            var services = await _repository.GetServiceBySearch(request.Name, request.Dto.Take, request.Dto.Skip);
-            var result = _mapper.Map<List<ServiceListDTO>>(services.Where(p => p.OfficeId == request.OfficeId && p.SectionId == request.SectionId));
+            var services = await _repository.GetServiceBySearch(request.Name, request.SectionId);
+            var result = _mapper.Map<List<ServiceListDTO>>(services.Where(p => p.OfficeId == request.OfficeId && p.SectionId == request.SectionId).Take(request.Dto.Take).Skip(request.Dto.Skip));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

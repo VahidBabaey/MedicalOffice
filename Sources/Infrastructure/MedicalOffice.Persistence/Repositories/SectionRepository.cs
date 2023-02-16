@@ -21,9 +21,9 @@ public class SectionRepository : GenericRepository<Section, Guid>, ISectionRepos
         bool isExist = await _dbContext.Sections.AnyAsync(p => p.Id == sectionId && p.OfficeId == officeId);
         return isExist;
     }
-    public async Task<List<Section>> GetSectionBySearch(string name, int take, int skip)
+    public async Task<List<Section>> GetSectionBySearch(string name)
     {
-        var sections = await _dbContext.Sections.Where(p => p.Name.Contains(name)).Take(take).Skip(skip).ToListAsync();
+        var sections = await _dbContext.Sections.Where(p => p.Name.Contains(name)).ToListAsync();
         return sections;
     }
     public async Task<List<SectionNamesListDTO>> GetSectionNames(Guid officeId)

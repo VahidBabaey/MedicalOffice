@@ -33,15 +33,15 @@ public class GetAllSectionsQueryHandler : IRequestHandler<GetAllSectionQuery, Ba
 
         try
         {
-            var Section = await _repository.GetAllWithPagination(request.Dto.Skip, request.Dto.Take);
-            var result = _mapper.Map<List<SectionListDTO>>(Section.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false));
+            var Section = await _repository.GetAll();
+            var result = _mapper.Map<List<SectionListDTO>>(Section.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).Take(request.Dto.Take).Skip(request.Dto.Skip));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;
             log.AdditionalData = result;
             await _logger.Log(log);
 
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = Section.Count(), result = result });
         }
 
         catch (Exception error)

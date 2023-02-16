@@ -76,11 +76,12 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
                 try
                 {
 
-                    await _repository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount.ToString(), request.DTO.ServiceId, request.DTO.MembershipId);
+                    var membershipservice = await _repository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount.ToString(), request.DTO.ServiceId, request.DTO.MembershipId);
 
                     response.Success = true;
                     response.StatusCode = HttpStatusCode.OK;
                     response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = membershipservice });
 
                     log.Type = LogType.Success;
                 }

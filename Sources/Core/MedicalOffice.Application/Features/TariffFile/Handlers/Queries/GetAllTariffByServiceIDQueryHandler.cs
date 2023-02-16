@@ -37,14 +37,15 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 
             try
             {
-                var tariffsofService = await _repository.GetTariffsofService(request.Dto.Skip, request.Dto.Take,request.OfficeId, request.ServiceId);
+                var tariffsofService = await _repository.GetTariffsofService(request.OfficeId, request.ServiceId);
+                var tariffsofServicePagination = tariffsofService.Take(request.Dto.Take).Skip(request.Dto.Skip);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
                 log.AdditionalData = tariffsofService;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = tariffsofService.Count(), tariffsofService = tariffsofService });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = tariffsofServicePagination.Count(), tariffsofService = tariffsofService });
             }
 
             catch (Exception error)
