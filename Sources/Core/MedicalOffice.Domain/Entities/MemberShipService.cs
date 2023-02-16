@@ -39,3 +39,5 @@ namespace MedicalOffice.Domain.Entities
         public string Discount { get; set; } = string.Empty;
     }
 }
+
+//Todo service and serviceid are not null
