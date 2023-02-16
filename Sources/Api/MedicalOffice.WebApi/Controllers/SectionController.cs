@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Dtos.ShiftDTO;
@@ -36,6 +37,14 @@ public class SectionController : Controller
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new DeleteSectionCommand() { SectionId = id, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+    [Authorize]
+    [HttpDelete("list-section")]
+    public async Task<IActionResult> RemoveList([FromBody] SectionListIDDTO dto, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new DeleteSectionListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

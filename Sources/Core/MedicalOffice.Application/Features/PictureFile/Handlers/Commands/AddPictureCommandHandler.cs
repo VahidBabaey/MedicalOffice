@@ -11,6 +11,7 @@ using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Collections.Specialized.BitVector32;
@@ -57,6 +58,7 @@ public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseR
                 var picture = _mapper.Map<Picture>(await _repository.RegisterPictureAsync(request.DTO));
 
                 response.Success = true;
+                response.StatusCode = HttpStatusCode.OK;
                 response.StatusDescription = $"{_requestTitle} succeded";
 
                 log.Type = LogType.Success;
@@ -64,6 +66,7 @@ public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseR
             catch (Exception error)
             {
                 response.Success = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
                 response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 

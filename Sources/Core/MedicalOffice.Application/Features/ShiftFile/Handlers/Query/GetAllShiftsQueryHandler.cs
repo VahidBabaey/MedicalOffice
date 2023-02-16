@@ -38,15 +38,15 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
 
             try
             {
-                var shifts = await _repository.GetAllWithPagination(request.Dto.Skip, request.Dto.Take);
-                var result = _mapper.Map<List<ShiftListDTO>>(shifts.Where(p => p.OfficeId == request.OfficeId));
+                var shifts = await _repository.GetAll();
+                var result = _mapper.Map<List<ShiftListDTO>>(shifts.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).Take(request.Dto.Take).Skip(request.Dto.Skip));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
                 log.AdditionalData = result;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = shifts.Count(), result = result });
             }
 
             catch (Exception error)

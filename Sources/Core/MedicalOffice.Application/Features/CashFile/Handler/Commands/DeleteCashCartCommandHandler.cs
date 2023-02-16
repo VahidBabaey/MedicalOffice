@@ -8,6 +8,7 @@ using MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
@@ -46,6 +47,7 @@ public class DeleteCashCartCommandHandler : IRequestHandler<DeleteCashCartComman
             await _repository.Delete(request.CashCartId);
 
             response.Success = true;
+            response.StatusCode = HttpStatusCode.OK;
             response.StatusDescription = $"{_requestTitle} succeded";
             response.Data = (new { Id = request.CashCartId });
 
@@ -54,6 +56,7 @@ public class DeleteCashCartCommandHandler : IRequestHandler<DeleteCashCartComman
         catch (Exception error)
         {
             response.Success = false;
+            response.StatusCode = HttpStatusCode.BadRequest;
             response.StatusDescription = $"{_requestTitle} failed";
             response.Errors.Add(error.Message);
 

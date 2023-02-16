@@ -8,6 +8,7 @@ using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 
@@ -65,6 +66,7 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
             await _repository.Update(section);
 
             response.Success = true;
+            response.StatusCode = HttpStatusCode.OK;
             response.StatusDescription = $"{_requestTitle} succeded";
             response.Data = (new { Id = section.Id });
 
@@ -73,6 +75,7 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
         catch (Exception error)
         {
             response.Success = false;
+            response.StatusCode = HttpStatusCode.BadRequest;
             response.StatusDescription = $"{_requestTitle} failed";
             response.Errors.Add(error.Message);
 

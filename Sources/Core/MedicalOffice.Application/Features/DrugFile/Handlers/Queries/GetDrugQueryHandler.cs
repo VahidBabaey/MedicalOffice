@@ -39,14 +39,14 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Queries
 
             try
             {
-                var drugs = await _repository.GetAllDrugs(request.OfficeId);
-                var result = drugs.Skip(request.Dto.Skip).Take(request.Dto.Take).Select(x => _mapper.Map<DrugListDTO>(x));
+                var drug = await _repository.GetAllDrugs(request.OfficeId);
+                var result = _mapper.Map<List<DrugListDTO>>(drug.Take(request.Dto.Take).Skip(request.Dto.Skip));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = drugs.Count(), result = result });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = drug.Count(), result = result });
             }
 
             catch (Exception error)

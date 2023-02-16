@@ -4,7 +4,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IServiceRepository : IGenericRepository<Service, Guid>
     {
-        Task<IReadOnlyList<Service>> GetBySectionId(Guid sectionId, Guid officeId);
+        Task<IReadOnlyList<Service>> GetBySectionId(Guid sectionId);
 
         Task<IReadOnlyList<Service>> GetServiceByID(Guid sectionId);
 
@@ -12,7 +12,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         Task<bool> CheckExistServiceId(Guid officeId, Guid serviceId);
 
-        Task<List<Service>> GetServiceBySearch(string name, Guid officeId, Guid sectionId);
+        Task<List<Service>> GetServiceBySearch(string name, Guid sectionId);
 
         Task<List<Service>> GetAllByOfficeId(Guid officeId);
     }

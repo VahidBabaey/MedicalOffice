@@ -38,8 +38,8 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Queries
 
             try
             {
-                var formCommitments = _repository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId);
-                var result = formCommitments.Skip(request.Dto.Skip).Take(request.Dto.Take).Select(x => _mapper.Map<FormCommitmentListDTO>(x));
+                var formCommitments = await _repository.GetAll();
+                var result = _mapper.Map<List<FormCommitmentListDTO>>(formCommitments.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).Take(request.Dto.Take).Skip(request.Dto.Skip));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

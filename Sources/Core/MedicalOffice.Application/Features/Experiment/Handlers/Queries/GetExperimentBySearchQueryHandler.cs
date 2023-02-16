@@ -41,8 +41,8 @@ namespace MedicalOffice.Application.Features.Experiment.Handlers.Queries
 
             try
             {
-                var experiments = _repository.GetExperimentBySearch(request.Name).Result.Where(p => p.OfficeId == request.OfficeId);
-                var result = experiments.Skip(request.Dto.Skip).Take(request.Dto.Take).Select(x => _mapper.Map<ExperimentListDTO>(x));
+                var experiments = await _repository.GetExperimentBySearch(request.Name);
+                var result = _mapper.Map<List<ExperimentListDTO>>(experiments.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).Take(request.Dto.Take).Skip(request.Dto.Skip));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

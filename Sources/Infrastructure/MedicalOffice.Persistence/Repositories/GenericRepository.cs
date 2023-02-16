@@ -65,7 +65,7 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
     {
         return await _dbContext.Set<T1>().Skip(skip).Take(take).ToListAsync();
     }
-    
+
     public async Task Update(T1 entity)
     {
         _dbContext.Entry(entity).State = EntityState.Modified;
@@ -81,7 +81,7 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
         foreach (var property in properties)
         {
-            var fetchResult =  _dbContext.Set<T1>()
+            var fetchResult = _dbContext.Set<T1>()
                 .Where(delegate (T1 t)
                 {
                     var propertyValue = property.GetValue(t);
@@ -136,11 +136,9 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
         if (property == null)
             throw new ArgumentException("entity is not recognized!");
-_dbContext.Update(entity);
-        await _dbContext.SaveChangesAsync();
+        _dbContext.Update(entity);
         property.SetValue(entity, true);
-
-        
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<T1> Patch(T1 entity, T1 newEntity, bool replaceIfNull)

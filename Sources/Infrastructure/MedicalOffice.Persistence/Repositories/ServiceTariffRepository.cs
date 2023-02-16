@@ -23,10 +23,10 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
         bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Id == serviceId);
         return isExist;
     }
-    public async Task<List<TariffListDTO>> GetTariffsofService(int skip, int take, Guid officeId, Guid serviceId)
+    public async Task<List<TariffListDTO>> GetTariffsofService(Guid officeId, Guid serviceId)
     {
         List<TariffListDTO> tariffListDTOs = new();
-        var tariffs = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.OfficeId == officeId).ToListAsync();
+        var tariffs = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
         foreach (var item in tariffs)
         {
             TariffListDTO tariffListDTO = new();
@@ -42,7 +42,12 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
             tariffListDTO.InsuranceName = _dbContext.Insurances.Select(p => new { p.Id, p.Name }).Where(p => p.Id == item.InsuranceId).FirstOrDefault().Name;
             tariffListDTOs.Add(tariffListDTO);
         }
-        return (List<TariffListDTO>)tariffListDTOs.Skip(skip).Take(take);
+        return tariffListDTOs;
+    }
+    public async Task<bool> CheckExistTariffId(Guid officeId, Guid tariffId)
+    {
+        bool isExist = await _dbContext.Tariffs.AnyAsync(p => p.Id == tariffId && p.OfficeId == officeId);
+        return isExist;
     }
 
 }

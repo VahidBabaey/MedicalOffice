@@ -16,9 +16,9 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
         _dbContext = dbContext;
     }
 
-    public async Task<IReadOnlyList<Service>> GetBySectionId(Guid sectionId , Guid officeId)
+    public async Task<IReadOnlyList<Service>> GetBySectionId(Guid sectionId)
     {
-        return await _dbContext.Services.Where(srv => srv.SectionId == sectionId && srv.OfficeId == officeId).ToListAsync();
+        return await _dbContext.Services.Where(srv => srv.SectionId == sectionId).ToListAsync();
     }
     public async Task<IReadOnlyList<Service>> GetServiceByID(Guid Id)
     {
@@ -59,16 +59,16 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
         bool isExist = await _dbContext.Specializations.AnyAsync(p => p.Id == specializationId);
         return isExist;
     }
-    public async Task<List<Service>> GetServiceBySearch(string name, Guid officeId, Guid sectionId)
+    public async Task<List<Service>> GetServiceBySearch(string name, Guid sectionId)
     {
-        var services = await _dbContext.Services.Where(p => p.Name.Contains(name) && p.OfficeId == officeId && p.SectionId == sectionId).ToListAsync();
+        var services = await _dbContext.Services.Where(p => p.Name.Contains(name) && p.SectionId == sectionId).ToListAsync();
 
         return services;
     }
 
     public async Task<List<Service>> GetAllByOfficeId(Guid officeId)
     {
-        var services = await _dbContext.Services.Where(x => x.OfficeId == officeId).ToListAsync();
+        var services = await _dbContext.Services.Where(x => x.OfficeId == officeId && x.IsDeleted == false).ToListAsync();
 
         return services;
     }

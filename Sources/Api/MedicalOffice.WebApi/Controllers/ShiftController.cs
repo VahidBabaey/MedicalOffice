@@ -34,10 +34,10 @@ public class ShiftController : Controller
         return Ok(response);
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
+    [HttpDelete("list-shift")]
+    public async Task<IActionResult> RemoveList([FromBody] ShiftListIDDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteShiftCommand() { ShiftID = id, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new DeleteShiftListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

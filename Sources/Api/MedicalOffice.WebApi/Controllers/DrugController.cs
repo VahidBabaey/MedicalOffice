@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.DrugDTO;
+using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.DrugFile.Handlers.Queries;
 using MedicalOffice.Application.Features.DrugFile.Requests.Commands;
 using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
+using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,12 +87,12 @@ public class DrugController : Controller
     }
 
     [Authorize]
-    [HttpDelete]
-    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
+    [HttpDelete("list-drug")]
+    public async Task<IActionResult> RemoveList([FromBody] DrugListIDDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteDrugCommand() { DrugId = id, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new DeleteDrugListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        return Ok(response);
     }
 
     [Authorize]

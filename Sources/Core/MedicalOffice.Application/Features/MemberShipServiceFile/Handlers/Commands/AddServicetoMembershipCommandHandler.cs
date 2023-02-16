@@ -14,6 +14,7 @@ using NLog.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -75,16 +76,19 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
                 try
                 {
 
-                    await _repository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount.ToString(), request.DTO.ServiceId, request.DTO.MembershipId);
+                    var membershipservice = await _repository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount.ToString(), request.DTO.ServiceId, request.DTO.MembershipId);
 
                     response.Success = true;
+                    response.StatusCode = HttpStatusCode.OK;
                     response.StatusDescription = $"{_requestTitle} succeded";
+                    response.Data = (new { Id = membershipservice });
 
                     log.Type = LogType.Success;
                 }
                 catch (Exception error)
                 {
                     response.Success = false;
+                    response.StatusCode = HttpStatusCode.BadRequest;
                     response.StatusDescription = $"{_requestTitle} failed";
                     response.Errors.Add(error.Message);
 

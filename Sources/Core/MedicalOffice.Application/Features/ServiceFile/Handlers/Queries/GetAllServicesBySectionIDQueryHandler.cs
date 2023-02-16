@@ -32,8 +32,8 @@ public class GetAllServicesBySectionIDQueryHandler : IRequestHandler<GetAllServi
 
         try
         {
-            var services = await _repository.GetBySectionId(request.SectionId, request.OfficeId);
-            var result = services.Skip(request.Dto.Skip).Take(request.Dto.Take).Select(x => _mapper.Map<ServiceListDTO>(x));
+            var services = await _repository.GetBySectionId(request.SectionId);
+            var result = _mapper.Map<List<ServiceListDTO>>(services.Take(request.Dto.Take).Skip(request.Dto.Skip));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

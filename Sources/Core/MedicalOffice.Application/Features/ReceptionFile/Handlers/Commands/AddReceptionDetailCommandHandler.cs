@@ -14,6 +14,7 @@ using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
@@ -71,6 +72,7 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
                 }
 
                 response.Success = true;
+                response.StatusCode = HttpStatusCode.OK;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = receptionDetail });
 
@@ -79,6 +81,7 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
             catch (Exception error)
             {
                 response.Success = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
                 response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 
