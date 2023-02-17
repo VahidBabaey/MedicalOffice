@@ -15,6 +15,13 @@ public class PermissionRepository : GenericRepository<Permission, Guid>, IPermis
         _dbContext = dbContext;
     }
 
+    public async Task<List<Permission>> GetByParentIds(List<Guid?> parentIds)
+    {
+        var permissions = await _dbContext.Permissions.Where(p => parentIds.Contains(p.Id)).ToListAsync();
+
+        return permissions;
+    }
+
     public Task<bool> UserHasPermission(Guid userId, Guid officeId, string[] permission)
     {
         var result = _dbContext.UserOfficePermissions.Include(m => m.Permission)

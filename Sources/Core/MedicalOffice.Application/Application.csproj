@@ -49,13 +49,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Permission\Validators\" />
+    <Folder Include="Dtos\PermissionDTO\Validators\" />
     <Folder Include="Features\BasicInfoFile\Handlers\Commands\" />
     <Folder Include="Features\BasicInfoFile\Requests\Commands\" />
     <Folder Include="Features\MenuFeature\Handlers\Commands\" />
     <Folder Include="Features\MenuFeature\Requests\Commands\" />
-    <Folder Include="Features\PermissionFile\Handlers\Commands\" />
-    <Folder Include="Features\PermissionFile\Requests\Commands\" />
     <Folder Include="Features\RoleFile\Handlers\Commands\" />
 	<Folder Include="Features\RoleFile\Requests\Commands\" />
   </ItemGroup>

@@ -53,9 +53,9 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     RolePermissionCreator("8c07113f-ec06-4db0-90c7-e1d292525c7c","789a92c9-28b4-4200-b9f0-e1ebe8b9a7bf"),
                     RolePermissionCreator("8c07113f-ec06-4db0-90c7-e1d292525c7c","dd63bb5f-c4a7-4d1e-9be5-76ec499f2e98"),
 
-                    RolePermissionCreator("8c07113f-ec06-4db0-90c7-e1d292525c7c","9301e02e-c11d-4c8f-bc72-c40c6322eebb"),
-                    RolePermissionCreator("8c07113f-ec06-4db0-90c7-e1d292525c7c","202eafde-1b56-428b-9b0b-60a8d5efe812"),
-                    RolePermissionCreator("8c07113f-ec06-4db0-90c7-e1d292525c7c","0f8e8881-c090-4d01-9ba7-c2fdb42549b3"),
+                    RolePermissionCreator("8c07113f-ec06-4db0-90c7-e1d292525c7c","7dbb0a47-6aa3-442e-959a-e4d5fffeeac4"),
+                    RolePermissionCreator("8c07113f-ec06-4db0-90c7-e1d292525c7c","74d411ab-8667-4801-b412-7c015d556466"),
+                    RolePermissionCreator("8c07113f-ec06-4db0-90c7-e1d292525c7c","931f674f-c2a5-434b-97b1-438a9131e55d"),
                 #endregion
 
                 #region دسترسی متخصص
@@ -80,9 +80,9 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","789a92c9-28b4-4200-b9f0-e1ebe8b9a7bf"),
                     RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","dd63bb5f-c4a7-4d1e-9be5-76ec499f2e98"),
 
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","9301e02e-c11d-4c8f-bc72-c40c6322eebb"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","202eafde-1b56-428b-9b0b-60a8d5efe812"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","0f8e8881-c090-4d01-9ba7-c2fdb42549b3"),
+                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","7dbb0a47-6aa3-442e-959a-e4d5fffeeac4"),
+                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","74d411ab-8667-4801-b412-7c015d556466"),
+                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","931f674f-c2a5-434b-97b1-438a9131e55d"),
                 #endregion
 
                 #region دسترسی کارشناس
@@ -107,9 +107,9 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","789a92c9-28b4-4200-b9f0-e1ebe8b9a7bf"),
                     RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","dd63bb5f-c4a7-4d1e-9be5-76ec499f2e98"),
 
-                    RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","9301e02e-c11d-4c8f-bc72-c40c6322eebb"),
-                    RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","202eafde-1b56-428b-9b0b-60a8d5efe812"),
-                    RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","0f8e8881-c090-4d01-9ba7-c2fdb42549b3"),
+                    RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","7dbb0a47-6aa3-442e-959a-e4d5fffeeac4"),
+                    RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","74d411ab-8667-4801-b412-7c015d556466"),
+                    RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","931f674f-c2a5-434b-97b1-438a9131e55d"),
 
                     #endregion
 
@@ -135,9 +135,9 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","789a92c9-28b4-4200-b9f0-e1ebe8b9a7bf"),
                     RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","dd63bb5f-c4a7-4d1e-9be5-76ec499f2e98"),
 
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","9301e02e-c11d-4c8f-bc72-c40c6322eebb"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","202eafde-1b56-428b-9b0b-60a8d5efe812"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","0f8e8881-c090-4d01-9ba7-c2fdb42549b3"),
+                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","7dbb0a47-6aa3-442e-959a-e4d5fffeeac4"),
+                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","74d411ab-8667-4801-b412-7c015d556466"),
+                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","931f674f-c2a5-434b-97b1-438a9131e55d"),
                 #endregion
 
                 #region دسترسی منشی
@@ -184,9 +184,9 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     RolePermissionCreator("779c69ef-6857-4e19-b24e-1c4c4b2635d7","e7ec3e67-8ba8-46d4-8a6c-9f003c264978"),
                     RolePermissionCreator("779c69ef-6857-4e19-b24e-1c4c4b2635d7","a952610e-01a1-4df8-a50b-87c750a8ce39"),
 
-                    RolePermissionCreator("779c69ef-6857-4e19-b24e-1c4c4b2635d7","9301e02e-c11d-4c8f-bc72-c40c6322eebb"),
-                    RolePermissionCreator("779c69ef-6857-4e19-b24e-1c4c4b2635d7","202eafde-1b56-428b-9b0b-60a8d5efe812"),
-                    RolePermissionCreator("779c69ef-6857-4e19-b24e-1c4c4b2635d7","0f8e8881-c090-4d01-9ba7-c2fdb42549b3"),
+                    RolePermissionCreator("779c69ef-6857-4e19-b24e-1c4c4b2635d7","7dbb0a47-6aa3-442e-959a-e4d5fffeeac4"),
+                    RolePermissionCreator("779c69ef-6857-4e19-b24e-1c4c4b2635d7","74d411ab-8667-4801-b412-7c015d556466"),
+                    RolePermissionCreator("779c69ef-6857-4e19-b24e-1c4c4b2635d7","931f674f-c2a5-434b-97b1-438a9131e55d"),
 	            #endregion
                 });
         }

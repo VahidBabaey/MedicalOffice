@@ -1,4 +1,4 @@
-﻿namespace MedicalOffice.Application.Dtos.Permission
+﻿namespace MedicalOffice.Application.Dtos.PermissionDTO
 {
     public class PermissionListDto
     {

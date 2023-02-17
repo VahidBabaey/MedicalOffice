@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Persistence.Repositories
 {
-    public class GenericJointEntitiesRepository<T1> : IGenericJointEntitiesRepository<T1> where T1 : class
+    public class GenericRelationalEntitiesRepository<T1> : IGenericRelationalEntitiesRepository<T1> where T1 : class
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public GenericJointEntitiesRepository(ApplicationDbContext dbContext)
+        public GenericRelationalEntitiesRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -25,6 +25,15 @@ namespace MedicalOffice.Persistence.Repositories
             await _dbContext.SaveChangesAsync();
 
             return entity;
+        }
+
+        public async Task<List<T1>> AddRange(List<T1> entities)
+        {
+            await _dbContext.AddRangeAsync(entities);
+
+            await _dbContext.SaveChangesAsync();
+
+            return entities;
         }
 
         public async Task Delete(T1 entity)

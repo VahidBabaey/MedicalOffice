@@ -28,11 +28,11 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// سرویس
         /// </summary>
-        public Service? Service { get; set; }
+        public Service Service { get; set; }
         /// <summary>
         /// آیدی سرویس
         /// </summary>
-        public Guid? ServiceId { get; set; }
+        public Guid ServiceId { get; set; }
         /// <summary>
         /// تخفیف
         /// </summary>

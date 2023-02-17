@@ -2,7 +2,6 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.MenuDTO;
 using MedicalOffice.Application.Dtos.PermissionDTO;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
@@ -17,24 +16,56 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
 {
-    internal class GetPermissionsQueryHandler : IRequestHandler<GetPermissionsQuery, BaseResponse>
+    public class GetStaffPermissionsQueryHandler : IRequestHandler<GetStaffPermissionsQuery, BaseResponse>
     {
-        private readonly IPermissionRepository _PermissionRepository;
-        private readonly ILogger _logger;
+        private readonly IMedicalStaffRepository _medicalStaffRepository;
+        private readonly IUserOfficePermissionRepository _userOfficePermissionRepository;
+        private readonly IPermissionRepository _permissionRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetPermissionsQueryHandler(IPermissionRepository permissionRepository, ILogger logger, IMapper mapper)
+        public GetStaffPermissionsQueryHandler(
+            IMedicalStaffRepository medicalStaffRepository,
+            IUserOfficePermissionRepository userOfficePermissionRepository,
+            IPermissionRepository permissionRepository,
+            IMapper mapper,
+            ILogger logger)
         {
-            _PermissionRepository = permissionRepository;
-            _logger = logger;
+            _medicalStaffRepository = medicalStaffRepository;
+            _userOfficePermissionRepository = userOfficePermissionRepository;
             _mapper = mapper;
-            _requestTitle = GetType().Name.Replace("QueryHandler","");
+            _logger = logger;
+            _permissionRepository = permissionRepository;
+
+            _requestTitle = GetType().Name.Replace("QueryHandler", "");
         }
 
-        public async Task<BaseResponse> Handle(GetPermissionsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetStaffPermissionsQuery request, CancellationToken cancellationToken)
         {
-            var permissions = _PermissionRepository.GetAll().Result.ToList();
+            var isStaffExist = _medicalStaffRepository.CheckMedicalStaffExist(request.StaffId, request.OfficeId).Result;
+
+            if (!isStaffExist)
+            {
+                var error = "staff isn't exist in this office";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+
+                return ResponseBuilder.Success(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var permissions = await _userOfficePermissionRepository.GetPermissionsByStaffId(request.StaffId, request.OfficeId);
+
+            var parentIds = permissions.Select(x => x.ParentId).Distinct().ToList();
+
+            var parentPermissions = await _permissionRepository.GetByParentIds(parentIds);
+
+            permissions.AddRange(parentPermissions);
+
             var result = GetMenu(permissions);
 
             await _logger.Log(new Log

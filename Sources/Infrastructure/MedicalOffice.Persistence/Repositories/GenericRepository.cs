@@ -168,5 +168,10 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
         return entity;
     }
 
+    Task<IReadOnlyList<T1>> IGenericRepository<T1, T2>.GetByIds(params object[] ids)
+    {
+        throw new NotImplementedException();
+    }
+
     public IQueryable<T1> TableNoTracking => this._dbContext.Set<T1>().AsNoTracking();
 }
