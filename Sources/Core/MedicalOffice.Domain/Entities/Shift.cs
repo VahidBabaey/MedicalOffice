@@ -33,9 +33,9 @@ public class Shift : BaseDomainEntity<Guid>
     public string EndTime { get; set; } = string.Empty;
     
     /// <summary>
-    /// آیا شیفت روز های تعطبل نیز هست یا خیر
+    /// آیا شیفت روز بعد هست؟
     /// </summary>
-    public bool HolidayShift { get; set; }
+    public bool Nextday { get; set; }
     
     /// <summary>
     /// پذیرش ها

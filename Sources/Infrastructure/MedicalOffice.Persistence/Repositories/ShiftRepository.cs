@@ -30,5 +30,37 @@ namespace MedicalOffice.Persistence.Repositories
 
             return shifts;
         }
+        public async Task<bool> CheckTimeConflict(string startTime, string endTime, bool nextday)
+        {
+            bool isConflict = false;
+            var shifts = await _dbContext.Shifts.ToListAsync();
+
+            foreach (var item in shifts)
+            {
+                if (item.Nextday == false)
+                {
+                    if (TimeOnly.Parse(item.StartTime) < TimeOnly.Parse(startTime) && TimeOnly.Parse(item.EndTime) > TimeOnly.Parse(startTime))
+                    {
+                        isConflict = true;
+                    }
+                    else if (TimeOnly.Parse(item.StartTime) < TimeOnly.Parse(endTime) && TimeOnly.Parse(item.EndTime) > TimeOnly.Parse(endTime))
+                    {
+                        isConflict = true;
+                    }
+                }
+                if (item.Nextday == true && nextday == false)
+                {
+                    if (TimeOnly.Parse(item.StartTime) < TimeOnly.Parse(startTime) || TimeOnly.Parse(item.EndTime) > TimeOnly.Parse(startTime))
+                    {
+                        isConflict = true;
+                    }
+                    else if (TimeOnly.Parse(item.StartTime) < TimeOnly.Parse(endTime) || TimeOnly.Parse(item.EndTime) > TimeOnly.Parse(endTime))
+                    {
+                        isConflict = true;
+                    }
+                }
+            }
+            return isConflict;
+        }
     }
 }

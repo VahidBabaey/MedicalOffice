@@ -28,7 +28,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddShiftCommandHandler(IValidator<ShiftDTO> validator, IOfficeRepository officeRepository,  IShiftRepository repository, IMapper mapper, ILogger logger)
+        public AddShiftCommandHandler(IValidator<ShiftDTO> validator, IOfficeRepository officeRepository, IShiftRepository repository, IMapper mapper, ILogger logger)
         {
             _officeRepository = officeRepository;
             _validator = validator;
@@ -56,41 +56,54 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
                 return response;
             }
 
-            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            var validationShiftConflict = await _repository.CheckTimeConflict(request.DTO.StartTime, request.DTO.EndTime, request.DTO.NextDay);
 
-            if (!validationResult.IsValid)
+            if (validationShiftConflict)
             {
                 response.Success = false;
                 response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+                response.Errors.Add("There are conflicts between shifts");
 
                 log.Type = LogType.Error;
+                return response;
             }
-            else
+
+            if (request.DTO.NextDay == false)
             {
-                try
-                {
-                    var shift = _mapper.Map<Shift>(request.DTO);
-                    shift.OfficeId = request.OfficeId;
+                var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
-                    shift = await _repository.Add(shift);
-
-                    response.Success = true;
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data = (new { Id = shift.Id });
-
-                    log.Type = LogType.Success;
-                }
-                catch (Exception error)
+                if (!validationResult.IsValid)
                 {
                     response.Success = false;
-                    response.StatusCode = HttpStatusCode.BadRequest;
                     response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
+                    response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
 
                     log.Type = LogType.Error;
+                    return response;
                 }
+            }
+            try
+            {
+                var shift = _mapper.Map<Shift>(request.DTO);
+                shift.OfficeId = request.OfficeId;
+
+                shift = await _repository.Add(shift);
+
+                response.Success = true;
+                response.StatusCode = HttpStatusCode.OK;
+                response.StatusDescription = $"{_requestTitle} succeded";
+                response.Data = (new { Id = shift.Id });
+
+                log.Type = LogType.Success;
+            }
+            catch (Exception error)
+            {
+                response.Success = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.StatusDescription = $"{_requestTitle} failed";
+                response.Errors.Add(error.Message);
+
+                log.Type = LogType.Error;
             }
 
             log.Header = response.StatusDescription;
