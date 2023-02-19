@@ -42,9 +42,9 @@ public class PermissionController : Controller
 
     [Authorize]
     [HttpPatch]
-    public async Task<ActionResult<Guid>> ChangeStaffPermission([FromQuery] string officeId, [FromQuery] string staffId, [FromBody] List<PermissionDto> dto)
+    public async Task<ActionResult<Guid>> ChangeStaffPermission([FromBody] UpdateStaffPermissionDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddStaffPermissionsCommand() { DTO = dto, OfficeId = Guid.Parse(officeId), StaffId = Guid.Parse(staffId) });
+        var response = await _mediator.Send(new UpdateStaffPermissionsCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
