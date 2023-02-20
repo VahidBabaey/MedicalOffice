@@ -162,7 +162,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             var roleName = new List<string>();
             var userOfficeRoles = new List<UserOfficeRole>();
 
-            await _userOfficeRoleRepository.DeleteUserOfficeRoleAsync(newMedicalStaff.UserId, request.OfficeId);
+            await _userOfficeRoleRepository.SoftDeleteRange(newMedicalStaff.UserId, request.OfficeId);
 
             Role role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
             if (role != null)

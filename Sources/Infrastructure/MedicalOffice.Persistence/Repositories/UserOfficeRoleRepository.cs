@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
 
-public class UserOfficeRoleRepository : GenericRelationalEntitiesRepository<UserOfficeRole>, IUserOfficeRoleRepository
+public class UserOfficeRoleRepository : GenericRepository<UserOfficeRole,Guid>, IUserOfficeRoleRepository
 {
     private readonly IGenericRepository<UserOfficeRole, Guid> _repositoryUserOfficeRole;
 

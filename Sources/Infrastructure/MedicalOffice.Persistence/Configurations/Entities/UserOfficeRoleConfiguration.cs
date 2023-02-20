@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MedicalOffice.Persistence.Configurations.Entities
 {
-    public class UserOfficeRoleRoleConfiguration : IEntityTypeConfiguration<UserOfficeRole>
+    public class UserOfficeRoleRoleConfiguration : BaseEntityTypeConfiguration<UserOfficeRole,Guid>
     {
-        public void Configure(EntityTypeBuilder<UserOfficeRole> builder)
+        public override void ConfigureEntity(EntityTypeBuilder<UserOfficeRole> builder)
         {
             builder.HasKey(x => new { x.UserId, x.RoleId });
             builder
