@@ -45,7 +45,7 @@ public class DeleteReceptionDetailCommandHandler : IRequestHandler<DeleteRecepti
 
             try
             {
-            await _repository.DeleteReceptionService(request.ReceptiodDetailId);
+            await _repository.DeleteReceptionService(request.ReceptiodDetailId, request.OfficeId);
 
                 //await _repositoryCash.AddCashForAnyReceptionDetail(receptionDetail.OfficeId, receptionDetail.ReceptionId, receptionDetail.Cost);
 
