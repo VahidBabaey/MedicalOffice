@@ -30,7 +30,9 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
         private readonly ILogger _logger;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly IMedicalStaffRepository _medicalStaffrepository;
+        private readonly IRolePermissionRepository _rolePermissionRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IUserOfficePermissionRepository _userOfficePermissionRepository;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
 
@@ -38,13 +40,15 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
         public AddMedicalStaffCommandHandler(
             IValidator<MedicalStaffDTO> validator,
-            IMapper mapper,
-            ILogger logger,
             RoleManager<Role> roleManager,
             UserManager<User> userManager,
+            IMapper mapper,
+            ILogger logger,
             IMedicalStaffRepository medicalStaffrepository,
             IUserOfficeRoleRepository userOfficeRoleRepository,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            IRolePermissionRepository rolePermissionRepository,
+            IUserOfficePermissionRepository userOfficePermissionRepository
             )
         {
             _validator = validator;
@@ -55,6 +59,8 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             _userOfficeRoleRepository = userOfficeRoleRepository;
             _medicalStaffrepository = medicalStaffrepository;
             _userRepository = userRepository;
+            _rolePermissionRepository = rolePermissionRepository;
+            _userOfficePermissionRepository = userOfficePermissionRepository;
 
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
@@ -125,6 +131,19 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 UserId = user.Id,
                 OfficeId = request.OfficeId
             });
+
+            var permissions = await _rolePermissionRepository.GetByRoleId(request.DTO.RoleId);
+            var userOfficePermissions = new List<UserOfficePermission>();
+            foreach (var item in permissions)
+            {
+                userOfficePermissions.Add(new UserOfficePermission
+                {
+                    UserId = user.Id,
+                    OfficeId = request.OfficeId,
+                    PermissionId = item.Id
+                });
+            }
+            await _userOfficePermissionRepository.AddRange(userOfficePermissions);
 
             Role role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
             if (role != null)

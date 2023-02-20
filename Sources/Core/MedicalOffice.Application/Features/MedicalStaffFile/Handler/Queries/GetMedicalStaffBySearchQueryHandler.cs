@@ -33,7 +33,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
             try
             {
                 var medicalStaffs = await _repository.GetMedicalStaffBySearch(request.Name, request.OfficeId);
-                var result = medicalStaffs.Skip(request.Dto.Skip).Take(request.Dto.Take).Select(x => _mapper.Map<MedicalStaffListDTO>(x));
+                var result = _mapper.Map<List<MedicalStaffListDTO>>(medicalStaffs.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
                 await _logger.Log(new Log
                 {

@@ -32,7 +32,7 @@ using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MediatR;
 using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Dtos.MenuDTO;
-using MedicalOffice.Application.Dtos.Permission;
+using MedicalOffice.Application.Dtos.PermissionDTO;
 
 namespace MedicalOffice.Application.Profiles;
 

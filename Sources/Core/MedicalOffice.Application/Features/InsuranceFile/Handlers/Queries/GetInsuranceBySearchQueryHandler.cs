@@ -33,8 +33,8 @@ public class GetInsuranceBySearchQueryHandler : IRequestHandler<GetInsuranceBySe
 
         try
         {
-            var Section = await _repository.GetInsuranceBySearch(request.Name);
-            var result = _mapper.Map<List<InsuranceListDTO>>(Section.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).Take(request.Dto.Take).Skip(request.Dto.Skip));
+            var insurances = _repository.GetInsuranceBySearch(request.Name).Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+            var result = _mapper.Map<List<InsuranceListDTO>>(insurances.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;

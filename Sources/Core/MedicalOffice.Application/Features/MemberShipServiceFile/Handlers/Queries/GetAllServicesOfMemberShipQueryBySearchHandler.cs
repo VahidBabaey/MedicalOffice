@@ -38,7 +38,7 @@ public class GetAllServicesOfMemberShipQueryBySearchHandler : IRequestHandler<Ge
         try
         {
             var services = await _repository.GetAllServicesOfMemberShipBySearch(request.OfficeId, request.MemberShipId, request.Name);
-            var result = _mapper.Map<List<ServicesOfMemeberShipListDTO>>(services.Take(request.Dto.Take).Skip(request.Dto.Skip));
+            var result = _mapper.Map<List<ServicesOfMemeberShipListDTO>>(services.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;
