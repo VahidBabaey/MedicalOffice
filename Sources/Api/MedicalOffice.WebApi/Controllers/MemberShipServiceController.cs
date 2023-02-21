@@ -28,7 +28,7 @@ public class MemberShipServiceController : Controller
     {
         var response = await _mediator.Send(new AddServicetoMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
     [Authorize]
     [HttpDelete]
@@ -44,7 +44,7 @@ public class MemberShipServiceController : Controller
     {
         var response = await _mediator.Send(new GetAllServicesQuery() { OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -53,7 +53,7 @@ public class MemberShipServiceController : Controller
     {
         var response = await _mediator.Send(new EditServicetoMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -62,7 +62,7 @@ public class MemberShipServiceController : Controller
     {
         var response = await _mediator.Send(new GetAllServicesOfMemberShipQuery() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
     [Authorize]
     [HttpGet("servicesbysearch")]
@@ -70,6 +70,6 @@ public class MemberShipServiceController : Controller
     {
         var response = await _mediator.Send(new GetAllServicesOfMemberShipQueryBySearch() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId), Name = name});
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

@@ -12,12 +12,14 @@ namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 
 public class DeleteShiftListCommandHandler : IRequestHandler<DeleteShiftListCommand, BaseResponse>
 {
+    private readonly IOfficeRepository _officeRepository;
     private readonly IShiftRepository _repository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteShiftListCommandHandler(IShiftRepository repository, ILogger logger)
+    public DeleteShiftListCommandHandler(IOfficeRepository officeRepository, IShiftRepository repository, ILogger logger)
     {
+        _officeRepository = officeRepository;
         _repository = repository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -27,7 +29,19 @@ public class DeleteShiftListCommandHandler : IRequestHandler<DeleteShiftListComm
     {
         BaseResponse response = new();
 
-        Log log = new();
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            var error = $"OfficeID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = response.Errors
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
 
         foreach (var item in request.DTO.ShiftId)
         {
@@ -35,12 +49,14 @@ public class DeleteShiftListCommandHandler : IRequestHandler<DeleteShiftListComm
 
             if (!validationSectionId)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("ID isn't exist");
-
-                log.Type = LogType.Error;
-                return response;
+                var error = $"ID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
         }
 
@@ -51,28 +67,22 @@ public class DeleteShiftListCommandHandler : IRequestHandler<DeleteShiftListComm
                 await _repository.SoftDelete(item);
             }
 
-            response.Success = true;
-            response.StatusCode = HttpStatusCode.OK;
-            response.StatusDescription = $"{_requestTitle} succeded";
-            response.Data = (new { Id = request.DTO.ShiftId });
-
-            log.Type = LogType.Success;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
         }
         catch (Exception error)
         {
-            response.Success = false;
-            response.StatusCode = HttpStatusCode.BadRequest;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add(error.Message);
-
-            log.Type = LogType.Error;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
     }
 }

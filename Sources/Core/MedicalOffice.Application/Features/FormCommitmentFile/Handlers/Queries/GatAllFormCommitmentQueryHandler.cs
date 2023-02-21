@@ -19,13 +19,15 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Queries
 {
     public class GatAllFormCommitmentQueryHandler : IRequestHandler<GatAllFormCommitmentQuery, BaseResponse>
     {
+        private readonly IOfficeRepository _officeRepository;
         private readonly IFormCommitmentRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GatAllFormCommitmentQueryHandler(IFormCommitmentRepository repository, IMapper mapper, ILogger logger)
+        public GatAllFormCommitmentQueryHandler(IOfficeRepository officeRepository, IFormCommitmentRepository repository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -34,26 +36,43 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GatAllFormCommitmentQuery request, CancellationToken cancellationToken)
         {
-            Log log = new();
+            BaseResponse response = new();
+
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = $"OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             try
             {
                 var formCommitments = await _repository.GetAll();
-                var result = _mapper.Map<List<FormCommitmentListDTO>>(formCommitments.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).Take(request.Dto.Take).Skip(request.Dto.Skip));
+                var result = _mapper.Map<List<FormCommitmentListDTO>>(formCommitments.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).Skip(request.Dto.Skip).Take(request.Dto.Take));
 
-                log.Header = $"{_requestTitle} succeded";
-                log.Type = LogType.Success;
-                await _logger.Log(log);
-
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = formCommitments.Where(p => p.IsDeleted == false).Count(), result = result }
+                });
                 return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = formCommitments.Count(), result = result });
             }
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData = error.Message;
-                log.Type = LogType.Error;
-                await _logger.Log(log);
-
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }

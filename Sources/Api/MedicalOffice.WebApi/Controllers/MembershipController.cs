@@ -27,7 +27,7 @@ public class MembershipController : Controller
     {
         var response = await _mediator.Send(new AddMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -36,7 +36,7 @@ public class MembershipController : Controller
     {
         var response = await _mediator.Send(new DeleteMembershipCommand() { OfficeId = Guid.Parse(officeId), MembershipId = id });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -45,7 +45,7 @@ public class MembershipController : Controller
     {
         var response = await _mediator.Send(new GetAllMemberships() {Dto = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
     [Authorize]
     [HttpGet("search")]
@@ -62,6 +62,6 @@ public class MembershipController : Controller
     {
         var response = await _mediator.Send(new EditMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

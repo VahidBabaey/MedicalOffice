@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
-//[Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ShiftController : Controller
@@ -31,7 +31,7 @@ public class ShiftController : Controller
     {
         var response = await _mediator.Send(new AddShiftCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [HttpDelete("list-shift")]
@@ -39,7 +39,7 @@ public class ShiftController : Controller
     {
         var response = await _mediator.Send(new DeleteShiftListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [HttpPatch]
@@ -47,7 +47,7 @@ public class ShiftController : Controller
     {
         var response = await _mediator.Send(new EditShiftCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [HttpGet]
@@ -55,14 +55,14 @@ public class ShiftController : Controller
     {
         var response = await _mediator.Send(new GetAllShiftsQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [HttpGet("Search")]
+    [HttpGet("search")]
     public async Task<ActionResult<List<ShiftListDTO>>> GetShiftBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetShiftBySearchQuery() {Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

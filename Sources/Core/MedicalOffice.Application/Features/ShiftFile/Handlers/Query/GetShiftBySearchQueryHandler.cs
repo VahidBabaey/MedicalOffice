@@ -7,6 +7,7 @@ using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Features.ShiftFile.Requests.Query;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +19,15 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
 {
     public class GetShiftBySearchQueryHandler : IRequestHandler<GetShiftBySearchQuery, BaseResponse>
     {
+        private readonly IOfficeRepository _officeRepository;
         private readonly IShiftRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetShiftBySearchQueryHandler(IShiftRepository repository, IMapper mapper, ILogger logger)
+        public GetShiftBySearchQueryHandler(IOfficeRepository officeRepository, IShiftRepository repository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -33,28 +36,44 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
 
         public async Task<BaseResponse> Handle(GetShiftBySearchQuery request, CancellationToken cancellationToken)
         {
-            Log log = new();
+            BaseResponse response = new();
+
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = $"OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             try
             {
                 var shifts = await _repository.GetShiftBySearch(request.Name);
-                var result = _mapper.Map<List<ShiftListDTO>>(shifts.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).Take(request.Dto.Take).Skip(request.Dto.Skip));
+                var result = _mapper.Map<List<ShiftListDTO>>(shifts.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).Skip(request.Dto.Skip).Take(request.Dto.Take));
 
-                log.Header = $"{_requestTitle} succeded";
-                log.Type = LogType.Success;
-                log.AdditionalData = result;
-                await _logger.Log(log);
-
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = shifts.Count(), result = result }
+                });
                 return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = shifts.Count(), result = result });
             }
 
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData = error.Message;
-                log.Type = LogType.Error;
-                await _logger.Log(log);
-
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }

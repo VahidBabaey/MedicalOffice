@@ -42,30 +42,32 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
         {
             BaseResponse response = new();
 
-            Log log = new();
-
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("OfficeID isn't exist");
-
-                log.Type = LogType.Error;
-                return response;
+                var error = $"OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             var validationShiftConflict = await _repository.CheckTimeConflict(request.DTO.StartTime, request.DTO.EndTime, request.DTO.NextDay);
 
             if (validationShiftConflict)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("There are conflicts between shifts");
-
-                log.Type = LogType.Error;
-                return response;
+                var error = $"There are conflicts between shifts";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             if (request.DTO.NextDay == false)
@@ -74,12 +76,14 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 
                 if (!validationResult.IsValid)
                 {
-                    response.Success = false;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                    log.Type = LogType.Error;
-                    return response;
+                    var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = response.Errors
+                    });
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
                 }
             }
             try
@@ -89,29 +93,24 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 
                 shift = await _repository.Add(shift);
 
-                response.Success = true;
-                response.StatusCode = HttpStatusCode.OK;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = shift.Id });
-
-                log.Type = LogType.Success;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = shift.Id
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", shift.Id);
             }
             catch (Exception error)
             {
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
-
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
 

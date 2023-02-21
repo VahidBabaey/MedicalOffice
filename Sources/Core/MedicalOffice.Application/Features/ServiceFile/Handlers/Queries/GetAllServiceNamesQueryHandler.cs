@@ -17,13 +17,15 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries
 {
     public class GetAllServiceNamesQueryHandler : IRequestHandler<GetAllServiceNamesQuery, BaseResponse>
     {
+        private readonly IOfficeRepository _officeRepository;
         private readonly IServiceRepository _serviceRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllServiceNamesQueryHandler(IServiceRepository serviceRepository,IMapper mapper,ILogger logger)
+        public GetAllServiceNamesQueryHandler(IOfficeRepository officeRepository, IServiceRepository serviceRepository,IMapper mapper,ILogger logger)
         {
+            _officeRepository = officeRepository;
             _serviceRepository = serviceRepository;
             _mapper = mapper;
             _logger = logger;
@@ -32,16 +34,46 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries
         }
         public async Task<BaseResponse> Handle(GetAllServiceNamesQuery request, CancellationToken cancellationToken)
         {
-            var services = _serviceRepository.GetAllByOfficeId(request.OfficeId).Result.Select(x=>_mapper.Map<ServiceIdNameDTO>(x)).ToList();
-            
-            await _logger.Log(new Log
-            {
-                Type = LogType.Success,
-                Header = $"{_requestTitle} succeded",
-                AdditionalData = services
-            });
 
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = services.Count(), result = services });
+            BaseResponse response = new();
+
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = $"OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            try
+            {
+                var services = _serviceRepository.GetAllByOfficeId(request.OfficeId).Result.Select(x => _mapper.Map<ServiceIdNameDTO>(x)).ToList();
+
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = services
+                });
+
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = services.Count(), result = services });
+            }
+            catch (Exception error)
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
 
     public async Task<IReadOnlyList<Service>> GetBySectionId(Guid sectionId)
     {
-        return await _dbContext.Services.Where(srv => srv.SectionId == sectionId).ToListAsync();
+        return await _dbContext.Services.Where(srv => srv.SectionId == sectionId && srv.IsDeleted == false).ToListAsync();
     }
     public async Task<IReadOnlyList<Service>> GetServiceByID(Guid Id)
     {
@@ -61,7 +61,7 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
     }
     public async Task<List<Service>> GetServiceBySearch(string name, Guid sectionId)
     {
-        var services = await _dbContext.Services.Where(p => p.Name.Contains(name) && p.SectionId == sectionId).ToListAsync();
+        var services = await _dbContext.Services.Where(p => p.Name.Contains(name) && p.SectionId == sectionId && p.IsDeleted == false).ToListAsync();
 
         return services;
     }

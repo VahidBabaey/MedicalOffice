@@ -21,12 +21,14 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
     {
         private readonly IValidator<UpdateMembershipDTO> _validator;
         private readonly IMembershipRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditMembershipCommandHandler(IValidator<UpdateMembershipDTO> validator, IMembershipRepository repository, IMapper mapper, ILogger logger)
+        public EditMembershipCommandHandler(IValidator<UpdateMembershipDTO> validator, IOfficeRepository officeRepository,  IMembershipRepository repository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _validator = validator;
             _repository = repository;
             _mapper = mapper;
@@ -38,29 +40,46 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
         {
             BaseResponse response = new();
 
-            Log log = new();
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = $"OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             var validationMembershipId = await _repository.CheckExistMembershipId(request.OfficeId, request.DTO.Id);
 
             if (!validationMembershipId)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("ID isn't exist");
-
-                log.Type = LogType.Error;
-                return response;
+                var error = $"ID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                log.Type = LogType.Error;
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             else
             {
@@ -72,31 +91,25 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
                     await _repository.Update(membership);
 
-                    response.Success = true;
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data = (new { Id = membership.Id });
-
-                    log.Type = LogType.Success;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Success,
+                        Header = $"{_requestTitle} succeded",
+                        AdditionalData = membership.Id
+                    });
+                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", membership.Id);
                 }
                 catch (Exception error)
                 {
-                    response.Success = false;
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error.Message
+                    });
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
             }
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
-
-
 }

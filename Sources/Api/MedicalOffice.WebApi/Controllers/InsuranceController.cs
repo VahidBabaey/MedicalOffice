@@ -37,7 +37,7 @@ public class InsuranceController : Controller
     {
         var response = await _mediator.Send(new DeleteInsuranceListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -63,6 +63,6 @@ public class InsuranceController : Controller
     {
         var response = await _mediator.Send(new GetInsuranceBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

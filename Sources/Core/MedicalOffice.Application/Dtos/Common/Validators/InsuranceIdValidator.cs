@@ -26,7 +26,7 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
                 .NotEmpty()
                 .MustAsync(async (insuranceId, token) =>
                     {
-                        return await _insuranceRepository.CheckExistInsuranceId(insuranceId, officeId);
+                        return await _insuranceRepository.CheckExistInsuranceId(officeId, insuranceId);
 
                     })
                 .WithMessage("{PropertyName} isn't exist");

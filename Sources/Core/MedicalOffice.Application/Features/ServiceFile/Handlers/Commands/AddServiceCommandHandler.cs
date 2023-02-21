@@ -17,19 +17,24 @@ using MedicalOffice.Application.Features.ServiceFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using static System.Collections.Specialized.BitVector32;
 
 namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 {
     public class AddServiceCommandHandler : IRequestHandler<AddServiceCommand, BaseResponse>
     {
+        private readonly ISectionRepository _sectionrepository;
         private readonly IValidator<ServiceDTO> _validator;
         private readonly IServiceRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddServiceCommandHandler(IValidator<ServiceDTO> validator, IServiceRepository repository, IMapper mapper, ILogger logger)
+        public AddServiceCommandHandler(ISectionRepository sectionrepository, IOfficeRepository officeRepository, IValidator<ServiceDTO> validator, IServiceRepository repository, IMapper mapper, ILogger logger)
         {
+            _sectionrepository = sectionrepository;
+            _officeRepository = officeRepository;
             _validator = validator;
             _repository = repository;
             _mapper = mapper;
@@ -41,17 +46,46 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
         {
             BaseResponse response = new();
 
-            Log log = new();
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = $"OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var validationSectionId = await _sectionrepository.CheckExistSectionId(request.OfficeId, request.DTO.SectionId);
+
+            if (!validationSectionId)
+            {
+                var error = $"SectionID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                log.Type = LogType.Error;
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             else
             {
@@ -62,32 +96,25 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
                     service = await _repository.Add(service);
 
-                    response.Success = true;
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data = (new { Id = service.Id });
-
-                    log.Type = LogType.Success;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Success,
+                        Header = $"{_requestTitle} succeded",
+                        AdditionalData = service.Id
+                    });
+                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", service.Id);
                 }
                 catch (Exception error)
                 {
-                    response.Success = false;
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error.Message
+                    });
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
             }
-
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
 }

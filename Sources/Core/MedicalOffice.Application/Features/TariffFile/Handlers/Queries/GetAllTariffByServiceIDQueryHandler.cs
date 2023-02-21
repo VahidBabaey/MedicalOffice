@@ -18,13 +18,17 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 
     public class GetAllTariffByServiceIDQueryHandler : IRequestHandler<GetAllTariffByServiceIDQuery, BaseResponse>
     {
+        private readonly IServiceRepository _serviceRepository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IServiceTariffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllTariffByServiceIDQueryHandler(IServiceTariffRepository repository, IMapper mapper, ILogger logger)
+        public GetAllTariffByServiceIDQueryHandler(IServiceRepository serviceRepository, IOfficeRepository officeRepository, IServiceTariffRepository repository, IMapper mapper, ILogger logger)
         {
+            _serviceRepository = serviceRepository;
+            _officeRepository = officeRepository;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -33,28 +37,58 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetAllTariffByServiceIDQuery request, CancellationToken cancellationToken)
         {
-            Log log = new();
+            BaseResponse response = new();
+
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = $"OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var validationServiceId = await _serviceRepository.CheckExistServiceId(request.OfficeId, request.ServiceId);
+
+            if (!validationServiceId)
+            {
+                var error = $"ServiceID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = response.Errors
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             try
             {
                 var tariffsofService = await _repository.GetTariffsofService(request.OfficeId, request.ServiceId);
-                var tariffsofServicePagination = tariffsofService.Take(request.Dto.Take).Skip(request.Dto.Skip);
+                var tariffsofServicePagination = tariffsofService.Skip(request.Dto.Skip).Take(request.Dto.Take);
 
-                log.Header = $"{_requestTitle} succeded";
-                log.Type = LogType.Success;
-                log.AdditionalData = tariffsofService;
-                await _logger.Log(log);
-
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = tariffsofServicePagination.Count(), tariffsofService = tariffsofService });
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = tariffsofService.Count(), result = tariffsofServicePagination }
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = tariffsofService.Count(), result = tariffsofServicePagination });
             }
 
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData = error.Message;
-                log.Type = LogType.Error;
-                await _logger.Log(log);
-
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }

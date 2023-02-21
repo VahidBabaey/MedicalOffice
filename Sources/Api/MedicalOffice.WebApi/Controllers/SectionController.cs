@@ -29,7 +29,7 @@ public class SectionController : Controller
     {
         var response = await _mediator.Send(new AddSectionCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -38,15 +38,7 @@ public class SectionController : Controller
     {
         var response = await _mediator.Send(new DeleteSectionCommand() { SectionId = id, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
-    }
-    [Authorize]
-    [HttpDelete("list-section")]
-    public async Task<IActionResult> RemoveList([FromBody] SectionListIDDTO dto, [FromQuery] string officeId)
-    {
-        var response = await _mediator.Send(new DeleteSectionListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
-
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -55,7 +47,7 @@ public class SectionController : Controller
     {
         var response = await _mediator.Send(new EditSectionCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -64,7 +56,7 @@ public class SectionController : Controller
     {
         var response = await _mediator.Send(new GetAllSectionQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -73,7 +65,7 @@ public class SectionController : Controller
     {
         var response = await _mediator.Send(new GetSectionBySearchQuery() {Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
     [Authorize]
     [HttpGet("names")]
@@ -81,6 +73,6 @@ public class SectionController : Controller
     {
         var response = await _mediator.Send(new GetSectionNamesQuery() { OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

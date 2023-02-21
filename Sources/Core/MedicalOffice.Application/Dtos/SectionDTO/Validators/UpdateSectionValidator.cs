@@ -6,7 +6,6 @@ public class UpdateSectionValidator : AbstractValidator<UpdateSectionDTO>
 {
     public UpdateSectionValidator()
     {
-        RuleFor(x => x.Name).NotEmpty();
-        RuleFor(x => x.Name).Length(1, 50);
+        RuleFor(x => x.Name).NotEmpty().Length(1, 50);
     }
 }

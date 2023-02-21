@@ -8,19 +8,22 @@ using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Common;
+using MedicalOffice.Domain.Entities;
 using System.Net;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Queries;
 
 public class GetInsuranceNamesQueryHandler : IRequestHandler<GetInsuranceNamesQuery, BaseResponse>
 {
+    private readonly IOfficeRepository _officeRepository;
     private readonly IInsuranceRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetInsuranceNamesQueryHandler(IInsuranceRepository repository, IMapper mapper, ILogger logger)
+    public GetInsuranceNamesQueryHandler(IOfficeRepository officeRepository, IInsuranceRepository repository, IMapper mapper, ILogger logger)
     {
+        _officeRepository = officeRepository;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
@@ -29,29 +32,44 @@ public class GetInsuranceNamesQueryHandler : IRequestHandler<GetInsuranceNamesQu
 
     public async Task<BaseResponse> Handle(GetInsuranceNamesQuery request, CancellationToken cancellationToken)
     {
-        Log log = new();
+        BaseResponse response = new();
+
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            var error = $"OfficeID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = response.Errors
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
 
         try
         {
             var result = await _repository.GetInsuranceNames(request.OfficeId);
 
-            log.Header = $"{_requestTitle} succeded";
-            log.Type = LogType.Success;
-            log.AdditionalData = result;
-            await _logger.Log(log);
-
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = new { total = result.Count(), result = result }
+            });
             return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
         }
 
         catch (Exception error)
         {
-            log.Header = $"{_requestTitle} failed";
-            log.AdditionalData = error.Message;
-            log.Type = LogType.Error;
-            await _logger.Log(log);
-
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
     }
-
 }

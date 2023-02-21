@@ -12,12 +12,14 @@ namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 
 public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand, BaseResponse>
 {
+    private readonly IOfficeRepository _officeRepository;
     private readonly ISectionRepository _repository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteSectionCommandHandler(ISectionRepository repository, ILogger logger)
+    public DeleteSectionCommandHandler(IOfficeRepository officeRepository, ISectionRepository repository, ILogger logger)
     {
+        _officeRepository = officeRepository;
         _repository = repository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -27,47 +29,54 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
     {
         BaseResponse response = new();
 
-        Log log = new();
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            var error = $"OfficeID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = response.Errors
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
 
         var validationSectionId = await _repository.CheckExistSectionId(request.OfficeId, request.SectionId);
 
         if (!validationSectionId)
         {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add("ID isn't exist");
-
-            log.Type = LogType.Error;
-            return response;
+            var error = $"ID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = response.Errors
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         try
         {
-            await _repository.Delete(request.SectionId);
+            await _repository.SoftDelete(request.SectionId);
 
-            response.Success = true;
-            response.StatusCode = HttpStatusCode.OK;
-            response.StatusCode = HttpStatusCode.OK;
-            response.StatusDescription = $"{_requestTitle} succeded";
-            response.Data = (new { Id = request.SectionId });
-
-            log.Type = LogType.Success;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
         }
         catch (Exception error)
         {
-            response.Success = false;
-            response.StatusCode = HttpStatusCode.BadRequest;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add(error.Message);
-
-            log.Type = LogType.Error;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
     }
 }

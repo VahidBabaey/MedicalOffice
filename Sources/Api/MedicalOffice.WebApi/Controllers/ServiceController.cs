@@ -61,14 +61,14 @@ public class ServiceController : Controller
     {
         var response = await _mediator.Send(new GetAllServicesBySectionIDQuery() { Dto = dto, SectionId = sectionId, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [HttpGet("Search")]
+    [HttpGet("search")]
     public async Task<ActionResult<List<ServiceListDTO>>> GetServicenBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] string sectionId, [FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetServiceBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId), SectionId = Guid.Parse(sectionId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }
