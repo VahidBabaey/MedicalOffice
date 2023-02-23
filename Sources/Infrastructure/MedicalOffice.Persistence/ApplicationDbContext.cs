@@ -104,9 +104,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<User>().ToTable("Users");
         modelBuilder.Entity<Role>().ToTable("Roles");
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRole");
-
         modelBuilder.Entity<MedicalStaffSchedule>().HasKey(entity=>entity.Id);
-
         //modelBuilder.Seed();
     }
 

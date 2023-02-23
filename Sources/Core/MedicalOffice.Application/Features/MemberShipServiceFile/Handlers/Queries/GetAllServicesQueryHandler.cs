@@ -19,15 +19,15 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Quer
 public class GetAllServicesQueryHandler : IRequestHandler<GetAllServicesQuery, BaseResponse>
 {
     private readonly IOfficeRepository _officeRepository;
-    private readonly IServiceRepository _repository;
+    private readonly IServiceRepository _servicerepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetAllServicesQueryHandler(IOfficeRepository officeRepository, IServiceRepository repository, IMapper mapper, ILogger logger)
+    public GetAllServicesQueryHandler(IOfficeRepository officeRepository, IServiceRepository servicerepository, IMapper mapper, ILogger logger)
     {
         _officeRepository = officeRepository;
-        _repository = repository;
+        _servicerepository = servicerepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -36,26 +36,24 @@ public class GetAllServicesQueryHandler : IRequestHandler<GetAllServicesQuery, B
     public async Task<BaseResponse> Handle(GetAllServicesQuery request, CancellationToken cancellationToken)
     {
 
-        BaseResponse response = new();
-
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         try
         {
-            var services = await _repository.GetAll();
-            var result = _mapper.Map<List<ServiceListDTO>>(services.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false));
+            var services =  _servicerepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+            var result = _mapper.Map<List<ServiceListDTO>>(services);
 
             await _logger.Log(new Log
             {

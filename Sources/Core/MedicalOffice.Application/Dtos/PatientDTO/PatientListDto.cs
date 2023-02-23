@@ -33,8 +33,8 @@ public class PatientListDTO : BaseDto<Guid>
     /// </summary>
     public string BirthDate { get; set; } = string.Empty;
     /// <summary>
-    /// آیدی بیمه
+    /// نام بیمه
     /// </summary>
-    public Guid InsuranceId { get; set; }
+    public string InsuranceName { get; set; }
 
 }

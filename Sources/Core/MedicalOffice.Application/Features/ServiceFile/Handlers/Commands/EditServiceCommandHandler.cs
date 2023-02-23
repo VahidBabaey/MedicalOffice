@@ -19,17 +19,17 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
         private readonly ISectionRepository _sectionrepository;
         private readonly IOfficeRepository _officeRepository;
         private readonly IValidator<UpdateServiceDTO> _validator;
-        private readonly IServiceRepository _repository;
+        private readonly IServiceRepository _servicerepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditServiceCommandHandler(ISectionRepository sectionrepository, IOfficeRepository officeRepository, IValidator<UpdateServiceDTO> validator, IServiceRepository repository, IMapper mapper, ILogger logger)
+        public EditServiceCommandHandler(ISectionRepository sectionrepository, IOfficeRepository officeRepository, IValidator<UpdateServiceDTO> validator, IServiceRepository servicerepository, IMapper mapper, ILogger logger)
         {
             _sectionrepository = sectionrepository;
             _officeRepository = officeRepository;
             _validator = validator;
-            _repository = repository;
+            _servicerepository = servicerepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -37,32 +37,31 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(EditServiceCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                var error = $"OfficeID isn't exist";
+                var error = "OfficeID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var validationServiceId = await _repository.CheckExistServiceId(request.OfficeId ,request.DTO.Id);
+            var validationServiceId = await _servicerepository.CheckExistServiceId(request.OfficeId ,request.DTO.Id);
 
             if (!validationServiceId)
             {
-                var error = $"ID isn't exist";
+                var error = "ID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -71,12 +70,12 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
             if (!validationSectionId)
             {
-                var error = $"SectionID isn't exist";
+                var error = "SectionID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -90,7 +89,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -101,7 +100,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                     var service = _mapper.Map<Service>(request.DTO);
                     service.OfficeId = request.OfficeId;
 
-                    await _repository.Update(service);
+                    await _servicerepository.Update(service);
 
                     await _logger.Log(new Log
                     {

@@ -25,7 +25,7 @@ public class PatientController : Controller
     {
         var response = await _mediator.Send(new AddPatientCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -34,7 +34,7 @@ public class PatientController : Controller
     {
         var response = await _mediator.Send(new DeletePatientCommand() { PatientId = patientId, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -43,7 +43,7 @@ public class PatientController : Controller
     {
         var response = await _mediator.Send(new EditPatientCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -52,7 +52,7 @@ public class PatientController : Controller
     {
         var response = await _mediator.Send(new GetAllPatientsQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -61,6 +61,6 @@ public class PatientController : Controller
     {
         var response = await _mediator.Send(new GetPatientBySearchQuery() {Dto = dto, searchFields = searchFields });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

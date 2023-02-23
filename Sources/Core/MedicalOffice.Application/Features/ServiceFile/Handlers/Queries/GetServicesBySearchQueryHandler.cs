@@ -16,16 +16,16 @@ public class GetServicesBySearchQueryHandler : IRequestHandler<GetServiceBySearc
 {
     private readonly ISectionRepository _sectionrepository;
     private readonly IOfficeRepository _officeRepository;
-    private readonly IServiceRepository _repository;
+    private readonly IServiceRepository _servicerepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetServicesBySearchQueryHandler(ISectionRepository sectionrepository, IOfficeRepository officeRepository, IServiceRepository repository, IMapper mapper, ILogger logger)
+    public GetServicesBySearchQueryHandler(ISectionRepository sectionrepository, IOfficeRepository officeRepository, IServiceRepository servicerepository, IMapper mapper, ILogger logger)
     {
         _sectionrepository = sectionrepository;
         _officeRepository = officeRepository;
-        _repository = repository;
+        _servicerepository = servicerepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -33,18 +33,17 @@ public class GetServicesBySearchQueryHandler : IRequestHandler<GetServiceBySearc
 
     public async Task<BaseResponse> Handle(GetServiceBySearchQuery request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -53,20 +52,20 @@ public class GetServicesBySearchQueryHandler : IRequestHandler<GetServiceBySearc
 
         if (!validationSectionId)
         {
-            var error = $"SectionID isn't exist";
+            var error = "SectionID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         try
         {
-            var services = await _repository.GetServiceBySearch(request.Name, request.SectionId);
-            var result = _mapper.Map<List<ServiceListDTO>>(services.Where(p => p.OfficeId == request.OfficeId && p.SectionId == request.SectionId).Skip(request.Dto.Skip).Take(request.Dto.Take));
+            var services = await _servicerepository.GetServiceBySearch(request.Name, request.SectionId, request.OfficeId);
+            var result = _mapper.Map<List<ServiceListDTO>>(services.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             await _logger.Log(new Log
             {

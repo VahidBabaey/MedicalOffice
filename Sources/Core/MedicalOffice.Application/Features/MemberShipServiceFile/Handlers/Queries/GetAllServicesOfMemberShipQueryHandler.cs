@@ -20,16 +20,16 @@ public class GetAllServicesOfMemberShipQueryHandler : IRequestHandler<GetAllServ
 {
     private readonly IMembershipRepository _membershiprepository;
     private readonly IOfficeRepository _officeRepository;
-    private readonly IMemberShipServiceRepository _repository;
+    private readonly IMemberShipServiceRepository _membershipservicerepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetAllServicesOfMemberShipQueryHandler(IMembershipRepository membershiprepository, IOfficeRepository officeRepository, IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
+    public GetAllServicesOfMemberShipQueryHandler(IMembershipRepository membershiprepository, IOfficeRepository officeRepository, IMemberShipServiceRepository membershipservicerepository, IMapper mapper, ILogger logger)
     {
         _membershiprepository = membershiprepository;
         _officeRepository = officeRepository;
-        _repository = repository;
+        _membershipservicerepository = membershipservicerepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -37,18 +37,17 @@ public class GetAllServicesOfMemberShipQueryHandler : IRequestHandler<GetAllServ
 
     public async Task<BaseResponse> Handle(GetAllServicesOfMemberShipQuery request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -57,19 +56,19 @@ public class GetAllServicesOfMemberShipQueryHandler : IRequestHandler<GetAllServ
 
         if (!validationMembershipId)
         {
-            var error = $"MembershipID isn't exist";
+            var error = "MembershipID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         try
         {
-            var services = await _repository.GetAllServicesOfMemberShip(request.OfficeId, request.MemberShipId);
+            var services = await _membershipservicerepository.GetAllServicesOfMemberShip(request.OfficeId, request.MemberShipId);
             var result = _mapper.Map<List<ServicesOfMemeberShipListDTO>>(services.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             await _logger.Log(new Log

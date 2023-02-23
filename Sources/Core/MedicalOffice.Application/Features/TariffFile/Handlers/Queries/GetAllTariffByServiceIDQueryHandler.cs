@@ -20,35 +20,32 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
     {
         private readonly IServiceRepository _serviceRepository;
         private readonly IOfficeRepository _officeRepository;
-        private readonly IServiceTariffRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly IServiceTariffRepository _tariffrepository;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllTariffByServiceIDQueryHandler(IServiceRepository serviceRepository, IOfficeRepository officeRepository, IServiceTariffRepository repository, IMapper mapper, ILogger logger)
+        public GetAllTariffByServiceIDQueryHandler(IServiceRepository serviceRepository, IOfficeRepository officeRepository, IServiceTariffRepository tariffrepository, ILogger logger)
         {
             _serviceRepository = serviceRepository;
             _officeRepository = officeRepository;
-            _repository = repository;
-            _mapper = mapper;
+            _tariffrepository = tariffrepository;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
         public async Task<BaseResponse> Handle(GetAllTariffByServiceIDQuery request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                var error = $"OfficeID isn't exist";
+                var error = "OfficeID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -62,14 +59,14 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             try
             {
-                var tariffsofService = await _repository.GetTariffsofService(request.OfficeId, request.ServiceId);
+                var tariffsofService = await _tariffrepository.GetTariffsofService(request.OfficeId, request.ServiceId);
                 var tariffsofServicePagination = tariffsofService.Skip(request.Dto.Skip).Take(request.Dto.Take);
 
                 await _logger.Log(new Log

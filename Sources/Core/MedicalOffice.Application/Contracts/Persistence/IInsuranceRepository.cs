@@ -6,8 +6,9 @@ namespace MedicalOffice.Application.Contracts.Persistence
     public interface IInsuranceRepository : IGenericRepository<Insurance, Guid>
     {
         Task<bool> CheckExistInsuranceId(Guid officeId, Guid insuranceId);
-        Task<IReadOnlyList<Insurance>> GetAllAdditionalInsuranceNames();
-        Task<List<Insurance>> GetInsuranceBySearch(string name);
+        Task<bool> CheckExistInsuranceName(Guid officeId, string insuranceName);
+        Task<IReadOnlyList<Insurance>> GetAllAdditionalInsuranceNames(Guid officeId);
+        Task<List<Insurance>> GetInsuranceBySearch(string name, Guid officeId);
         Task<List<InsuranceNamesDTO>> GetInsuranceNames(Guid officeId);
     }
 }

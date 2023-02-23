@@ -35,18 +35,16 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries
         public async Task<BaseResponse> Handle(GetAllServiceNamesQuery request, CancellationToken cancellationToken)
         {
 
-            BaseResponse response = new();
-
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                var error = $"OfficeID isn't exist";
+                var error = "OfficeID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }

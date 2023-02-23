@@ -11,5 +11,6 @@ namespace MedicalOffice.Application.Features.PictureFile.Requests.Commands
     public class DeletePictureCommand : IRequest<BaseResponse>
     {
         public Guid PictureId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

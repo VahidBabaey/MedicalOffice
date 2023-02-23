@@ -39,14 +39,14 @@ public class GetPatientBySearchQueryHandler : IRequestHandler<GetPatientBySearch
         try
         {
             var pateint = await _repository.SearchPateint(request.searchFields.FirstName, request.searchFields.LastName, request.searchFields.NationalID, request.searchFields.Mobile, request.searchFields.FileNumber);
-            var result = _mapper.Map<List<PatientListDTO>>(pateint);
+            var result = _mapper.Map<List<PatientListDTO>>(pateint.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;
             log.AdditionalData = result;
             await _logger.Log(log);
 
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = pateint.Count(), result = result });
         }
 
         catch (Exception error)

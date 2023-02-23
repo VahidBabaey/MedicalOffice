@@ -33,18 +33,16 @@ public class GetAllServicesBySectionIDQueryHandler : IRequestHandler<GetAllServi
     public async Task<BaseResponse> Handle(GetAllServicesBySectionIDQuery request, CancellationToken cancellationToken)
     {
 
-        BaseResponse response = new();
-
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -53,12 +51,12 @@ public class GetAllServicesBySectionIDQueryHandler : IRequestHandler<GetAllServi
 
         if (!validationSectionId)
         {
-            var error = $"SectionID isn't exist";
+            var error = "SectionID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }

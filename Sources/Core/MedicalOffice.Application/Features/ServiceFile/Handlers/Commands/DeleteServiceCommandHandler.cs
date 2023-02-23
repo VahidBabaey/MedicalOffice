@@ -18,15 +18,15 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
     public class DeleteServiceCommandHandler : IRequestHandler<DeleteServiceCommand, BaseResponse>
     {
         private readonly IOfficeRepository _officeRepository;
-        private readonly IServiceRepository _repository;
+        private readonly IServiceRepository _servicerepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public DeleteServiceCommandHandler(IOfficeRepository officeRepository, IServiceRepository repository, IMapper mapper, ILogger logger)
+        public DeleteServiceCommandHandler(IOfficeRepository officeRepository, IServiceRepository servicerepository, IMapper mapper, ILogger logger)
         {
             _officeRepository = officeRepository;
-            _repository = repository;
+            _servicerepository = servicerepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -34,39 +34,38 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(DeleteServiceCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                var error = $"OfficeID isn't exist";
+                var error = "OfficeID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var validationServiceId = await _repository.CheckExistServiceId(request.OfficeId, request.ServiceId);
+            var validationServiceId = await _servicerepository.CheckExistServiceId(request.OfficeId, request.ServiceId);
 
             if (!validationServiceId)
             {
-                var error = $"ID isn't exist";
+                var error = "ID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             try
             {
-                await _repository.SoftDelete(request.ServiceId);
+                await _servicerepository.SoftDelete(request.ServiceId);
 
                 await _logger.Log(new Log
                 {

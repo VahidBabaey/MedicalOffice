@@ -15,14 +15,16 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Querie
 
     public class GetAllBasicInfoDetailQueryHandler : IRequestHandler<GetAllBasicInfoDetailQuery, BaseResponse>
     {
-        private readonly IBasicInfoDetailRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
+        private readonly IBasicInfoDetailRepository _basicinfodetailrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllBasicInfoDetailQueryHandler(IBasicInfoDetailRepository repository, IMapper mapper, ILogger logger)
+        public GetAllBasicInfoDetailQueryHandler(IOfficeRepository officeRepository, IBasicInfoDetailRepository basicinfodetailrepository, IMapper mapper, ILogger logger)
         {
-            _repository = repository;
+            _officeRepository = officeRepository;
+            _basicinfodetailrepository = basicinfodetailrepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -30,28 +32,57 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Querie
 
         public async Task<BaseResponse> Handle(GetAllBasicInfoDetailQuery request, CancellationToken cancellationToken)
         {
-            var log = new Log();
+
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var validationBasicInfoId = await _basicinfodetailrepository.CheckExistBasicInfoId(request.OfficeId, request.BasicInfoId);
+
+            if (!validationBasicInfoId)
+            {
+                var error = "BasicInfoId isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             try
             {
-                var basicInfoDetails = await _repository.GetByBasicInfoId(request.BasicInfoId);
+                var basicInfoDetails = await _basicinfodetailrepository.GetByBasicInfoId(request.BasicInfoId);
                 var result = basicInfoDetails.Skip(request.DTO.Skip).Take(request.DTO.Take).Select(x => _mapper.Map<BasicInfoDetailListDTO>(x));
 
-                log.Header = $"{_requestTitle} succeded";
-                log.AdditionalData = result;
-                log.Type = LogType.Success;
-                await _logger.Log(log);
-
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = basicInfoDetails.Count(), result = result }
+                });
                 return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = basicInfoDetails.Count(), result = result });
             }
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData = error.Message;
-                log.Type = LogType.Error;
-                await _logger.Log(log);
-
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} succeeded", error.Message);
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
     }

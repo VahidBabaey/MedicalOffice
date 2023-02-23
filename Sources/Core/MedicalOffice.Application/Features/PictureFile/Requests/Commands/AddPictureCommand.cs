@@ -13,6 +13,7 @@ namespace MedicalOffice.Application.Features.PictureFile.Requests.Commands
 {
     public class AddPictureCommand : IRequest<BaseResponse>
     {
+        public Guid OfficeId { get; set; }
         public PictureUploadDTO DTO { get; set; } = new PictureUploadDTO();
         public PatientPicturesDTO DTOpatientpicture { get; set; } = new PatientPicturesDTO();
     }

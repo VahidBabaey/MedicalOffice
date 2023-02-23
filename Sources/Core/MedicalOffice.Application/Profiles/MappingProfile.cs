@@ -150,7 +150,7 @@ public class MappingProfile : Profile
                 FileNumber = source.FileNumber,
                 Mobile = source.PatientContacts.Single(p => p.IsDefault).ContactValue,
                 FatherName = source.FatherName,
-                InsuranceId = source.InsuranceId,
+                InsuranceName = source.Insurance.Name,
                 FirstName = source.FirstName,
                 LastName = source.LastName
             };

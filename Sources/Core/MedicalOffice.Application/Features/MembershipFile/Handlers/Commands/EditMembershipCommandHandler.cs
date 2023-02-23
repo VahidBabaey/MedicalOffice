@@ -20,17 +20,17 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
     public class EditMembershipCommandHandler : IRequestHandler<EditMembershipCommand, BaseResponse>
     {
         private readonly IValidator<UpdateMembershipDTO> _validator;
-        private readonly IMembershipRepository _repository;
+        private readonly IMembershipRepository _membershiprepository;
         private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditMembershipCommandHandler(IValidator<UpdateMembershipDTO> validator, IOfficeRepository officeRepository,  IMembershipRepository repository, IMapper mapper, ILogger logger)
+        public EditMembershipCommandHandler(IValidator<UpdateMembershipDTO> validator, IOfficeRepository officeRepository,  IMembershipRepository membershiprepository, IMapper mapper, ILogger logger)
         {
             _officeRepository = officeRepository;
             _validator = validator;
-            _repository = repository;
+            _membershiprepository = membershiprepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -38,32 +38,31 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(EditMembershipCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                var error = $"OfficeID isn't exist";
+                var error = "OfficeID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var validationMembershipId = await _repository.CheckExistMembershipId(request.OfficeId, request.DTO.Id);
+            var validationMembershipId = await _membershiprepository.CheckExistMembershipId(request.OfficeId, request.DTO.Id);
 
             if (!validationMembershipId)
             {
-                var error = $"ID isn't exist";
+                var error = "ID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -77,7 +76,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -89,7 +88,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
                     var membership = _mapper.Map<Membership>(request.DTO);
                     membership.OfficeId = request.OfficeId;
 
-                    await _repository.Update(membership);
+                    await _membershiprepository.Update(membership);
 
                     await _logger.Log(new Log
                     {

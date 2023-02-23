@@ -34,4 +34,9 @@ public class BasicInfoDetailRepository : GenericRepository<BasicInfoDetail, Guid
         bool isExist = await _dbContext.BasicInfoDetail.AnyAsync(p => p.Id == basicInfoDetailId);
         return isExist;
     }
+    public async Task<bool> CheckExistBasicInfoDetailName(string basicinfodetailName, Guid BasicInfoId)
+    {
+        bool isExist = await _dbContext.BasicInfoDetail.AnyAsync(p => p.InfoDetailName == basicinfodetailName && p.basicInfoId == BasicInfoId && p.IsDeleted == false);
+        return isExist;
+    }
 }

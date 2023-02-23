@@ -13,53 +13,52 @@ namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand, BaseResponse>
 {
     private readonly IOfficeRepository _officeRepository;
-    private readonly ISectionRepository _repository;
+    private readonly ISectionRepository _sectionrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteSectionCommandHandler(IOfficeRepository officeRepository, ISectionRepository repository, ILogger logger)
+    public DeleteSectionCommandHandler(IOfficeRepository officeRepository, ISectionRepository sectionrepository, ILogger logger)
     {
         _officeRepository = officeRepository;
-        _repository = repository;
+        _sectionrepository = sectionrepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(DeleteSectionCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
-        var validationSectionId = await _repository.CheckExistSectionId(request.OfficeId, request.SectionId);
+        var validationSectionId = await _sectionrepository.CheckExistSectionId(request.OfficeId, request.SectionId);
 
         if (!validationSectionId)
         {
-            var error = $"ID isn't exist";
+            var error = "ID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         try
         {
-            await _repository.SoftDelete(request.SectionId);
+            await _sectionrepository.SoftDelete(request.SectionId);
 
             await _logger.Log(new Log
             {
@@ -74,7 +73,7 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = error.Message
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }

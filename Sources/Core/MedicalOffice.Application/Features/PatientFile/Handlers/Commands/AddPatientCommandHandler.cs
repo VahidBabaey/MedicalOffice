@@ -10,6 +10,7 @@ using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using System.Net;
+using static System.Collections.Specialized.BitVector32;
 
 namespace MedicalOffice.Application.Features.PatientFile.Handlers.Commands;
 
@@ -37,29 +38,32 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
 
         BaseResponse response = new();
 
-        Log log = new();
-
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add("OfficeID isn't exist");
-
-            log.Type = LogType.Error;
-            return response;
+            var error = $"OfficeID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = response.Errors
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-            log.Type = LogType.Error;
+            var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = response.Errors
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
         else
         {
@@ -70,51 +74,40 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
 
                 patient = await _repository.Add(patient);
 
-                response.Success = true;
-                response.StatusCode = HttpStatusCode.OK;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = patient.Id });
-                if (request.DTO.PhoneNumber == null)
+                foreach (var mobile in request.DTO.PhoneNumber)
                 {
+                    await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
+                }
+                foreach (var address in request.DTO.Address)
+                {
+                    await _repository.InsertAddressofPatientAsync(patient.Id, address);
+                }
+                foreach (var tag in request.DTO.Tag)
+                {
+                    await _repository.InsertTagofPatientAsync(patient.Id, tag);
+                }
 
-                }
-                else
+                await _logger.Log(new Log
                 {
-                    foreach (var mobile in request.DTO.PhoneNumber)
-                    {
-                        await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
-                    }
-                    foreach (var address in request.DTO.Address)
-                    {
-                        await _repository.InsertAddressofPatientAsync(patient.Id, address);
-                    }
-                    foreach (var tag in request.DTO.Tag)
-                    {
-                        await _repository.InsertTagofPatientAsync(patient.Id, tag);
-                    }
-                }
-                log.Type = LogType.Success;
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = patient.Id
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", patient.Id);
+
             }
             catch (Exception error)
             {
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
     }
-
-
 }
 
 

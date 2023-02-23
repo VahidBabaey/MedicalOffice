@@ -17,18 +17,16 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
     public class DeleteMembershipServiceCommandHandler : IRequestHandler<DeleteMembershipServiceCommand, BaseResponse>
     {
-        private readonly IMemberShipServiceRepository _repository;
-        private readonly IServiceRepository _servicerepository;
+        private readonly IMemberShipServiceRepository _membershipservicerepository;
         private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public DeleteMembershipServiceCommandHandler(IOfficeRepository officeRepository, IServiceRepository servicerepository, IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
+        public DeleteMembershipServiceCommandHandler(IOfficeRepository officeRepository, IMemberShipServiceRepository membershipservicerepository, IMapper mapper, ILogger logger)
         {
             _officeRepository = officeRepository;
-            _servicerepository = servicerepository;
-            _repository = repository;
+            _membershipservicerepository = membershipservicerepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -36,39 +34,38 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(DeleteMembershipServiceCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                var error = $"OfficeID isn't exist";
+                var error = "OfficeID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var validationServiceId = await _repository.CheckExistMemberShipServiceId(request.OfficeId, request.MembershipServiceId);
+            var validationMembershipServiceId = await _membershipservicerepository.CheckExistMemberShipServiceId(request.OfficeId, request.MembershipServiceId);
 
-            if (!validationServiceId)
+            if (!validationMembershipServiceId)
             {
-                var error = $"ID isn't exist";
+                var error = "ID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             try
             {
-                await _repository.SoftDelete(request.MembershipServiceId);
+                await _membershipservicerepository.SoftDelete(request.MembershipServiceId);
 
                 await _logger.Log(new Log
                 {

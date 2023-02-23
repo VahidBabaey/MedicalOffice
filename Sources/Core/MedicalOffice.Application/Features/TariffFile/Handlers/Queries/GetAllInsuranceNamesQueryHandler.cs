@@ -21,41 +21,38 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
     public class GetAllInsuranceNamesQueryHandler : IRequestHandler<GetAllInsuranceNamesQuery, BaseResponse>
     {
         private readonly IOfficeRepository _officeRepository;
-        private readonly IInsuranceRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly IInsuranceRepository _insurancerepository;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllInsuranceNamesQueryHandler(IOfficeRepository officeRepository, IInsuranceRepository repository, IMapper mapper, ILogger logger)
+        public GetAllInsuranceNamesQueryHandler(IOfficeRepository officeRepository, IInsuranceRepository insurancerepository, ILogger logger)
         {
             _officeRepository = officeRepository;
-            _repository = repository;
-            _mapper = mapper;
+            _insurancerepository = insurancerepository;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
         public async Task<BaseResponse> Handle(GetAllInsuranceNamesQuery request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                var error = $"OfficeID isn't exist";
+                var error = "OfficeID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             try
             {
-                var insuranceNames = await _repository.GetInsuranceNames(request.OfficeId);
+                var insuranceNames = await _insurancerepository.GetInsuranceNames(request.OfficeId);
                 await _logger.Log(new Log
                 {
                     Type = LogType.Success,

@@ -59,9 +59,9 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
         bool isExist = await _dbContext.Specializations.AnyAsync(p => p.Id == specializationId);
         return isExist;
     }
-    public async Task<List<Service>> GetServiceBySearch(string name, Guid sectionId)
+    public async Task<List<Service>> GetServiceBySearch(string name, Guid sectionId, Guid officeId)
     {
-        var services = await _dbContext.Services.Where(p => p.Name.Contains(name) && p.SectionId == sectionId && p.IsDeleted == false).ToListAsync();
+        var services = await _dbContext.Services.Where(p => p.Name.Contains(name) && p.OfficeId == officeId && p.SectionId == sectionId && p.IsDeleted == false).ToListAsync();
 
         return services;
     }
@@ -71,5 +71,10 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
         var services = await _dbContext.Services.Where(x => x.OfficeId == officeId && x.IsDeleted == false).ToListAsync();
 
         return services;
+    }
+    public async Task<bool> CheckExistServiceName(Guid officeId, string serviceName)
+    {
+        bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Name == serviceName);
+        return isExist;
     }
 }

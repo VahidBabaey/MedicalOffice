@@ -18,9 +18,9 @@ namespace MedicalOffice.Persistence.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<IReadOnlyList<Insurance>> GetAllAdditionalInsuranceNames()
+        public async Task<IReadOnlyList<Insurance>> GetAllAdditionalInsuranceNames(Guid officeId)
         {
-            return await _dbContext.Insurances.Where(srv => srv.IsAdditionalInsurance == true).ToListAsync();
+            return await _dbContext.Insurances.Where(p => p.IsAdditionalInsurance == true && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
         }
         public async Task<bool> CheckExistInsuranceId(Guid officeId, Guid insuranceId)
         {
@@ -49,9 +49,9 @@ namespace MedicalOffice.Persistence.Repositories
             }
             return insuranceListDTOs;
         }
-        public async Task<List<Insurance>> GetInsuranceBySearch(string name)
+        public async Task<List<Insurance>> GetInsuranceBySearch(string name, Guid officeId)
         {
-            var insurances = await _dbContext.Insurances.Where(p => p.Name.Contains(name)).ToListAsync();
+            var insurances = await _dbContext.Insurances.Where(p => p.Name.Contains(name) && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
             return insurances;
         }
         public async Task<List<InsuranceNamesDTO>> GetInsuranceNames(Guid officeId)
@@ -68,6 +68,11 @@ namespace MedicalOffice.Persistence.Repositories
                 insuranceNamesListDTOs.Add(insuranceNamesListDTO);
             }
             return insuranceNamesListDTOs;
+        }
+        public async Task<bool> CheckExistInsuranceName(Guid officeId, string insuranceName)
+        {
+            bool isExist = await _dbContext.Insurances.AnyAsync(p => p.OfficeId == officeId && p.Name == insuranceName);
+            return isExist;
         }
     }
 }

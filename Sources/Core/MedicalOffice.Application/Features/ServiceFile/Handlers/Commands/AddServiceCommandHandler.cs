@@ -25,18 +25,18 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
     {
         private readonly ISectionRepository _sectionrepository;
         private readonly IValidator<ServiceDTO> _validator;
-        private readonly IServiceRepository _repository;
+        private readonly IServiceRepository _servicerepository;
         private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddServiceCommandHandler(ISectionRepository sectionrepository, IOfficeRepository officeRepository, IValidator<ServiceDTO> validator, IServiceRepository repository, IMapper mapper, ILogger logger)
+        public AddServiceCommandHandler(ISectionRepository sectionrepository, IOfficeRepository officeRepository, IValidator<ServiceDTO> validator, IServiceRepository servicerepository, IMapper mapper, ILogger logger)
         {
             _sectionrepository = sectionrepository;
             _officeRepository = officeRepository;
             _validator = validator;
-            _repository = repository;
+            _servicerepository = servicerepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -44,18 +44,17 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(AddServiceCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                var error = $"OfficeID isn't exist";
+                var error = "OfficeID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -64,12 +63,26 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
             if (!validationSectionId)
             {
-                var error = $"SectionID isn't exist";
+                var error = "SectionID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var validationServiceName = await _servicerepository.CheckExistServiceName(request.OfficeId, request.DTO.Name);
+
+            if (validationServiceName)
+            {
+                var error = "Name Must be Unique";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -83,7 +96,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -94,7 +107,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                     var service = _mapper.Map<Service>(request.DTO);
                     service.OfficeId = request.OfficeId;
 
-                    service = await _repository.Add(service);
+                    service = await _servicerepository.Add(service);
 
                     await _logger.Log(new Log
                     {

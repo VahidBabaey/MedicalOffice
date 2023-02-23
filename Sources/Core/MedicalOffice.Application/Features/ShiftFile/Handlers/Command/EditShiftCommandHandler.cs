@@ -21,17 +21,17 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
     public class EditShiftCommandHandler : IRequestHandler<EditShiftCommand, BaseResponse>
     {
         private readonly IValidator<UpdateShiftDTO> _validator;
-        private readonly IShiftRepository _repository;
+        private readonly IShiftRepository _shiftrepository;
         private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditShiftCommandHandler(IOfficeRepository officeRepository, IValidator<UpdateShiftDTO> validator, IShiftRepository repository, IMapper mapper, ILogger logger)
+        public EditShiftCommandHandler(IOfficeRepository officeRepository, IValidator<UpdateShiftDTO> validator, IShiftRepository shiftrepository, IMapper mapper, ILogger logger)
         {
             _officeRepository = officeRepository;
             _validator = validator;
-            _repository = repository;
+            _shiftrepository = shiftrepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -39,32 +39,31 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 
         public async Task<BaseResponse> Handle(EditShiftCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                var error = $"OfficeID isn't exist";
+                var error = "OfficeID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var validationShiftId = await _repository.CheckExistShiftId(request.OfficeId, request.DTO.Id);
+            var validationShiftId = await _shiftrepository.CheckExistShiftId(request.OfficeId, request.DTO.Id);
 
             if (!validationShiftId)
             {
-                var error = $"ID isn't exist";
+                var error = "ID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -80,7 +79,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
                     {
                         Type = LogType.Error,
                         Header = $"{_requestTitle} failed",
-                        AdditionalData = response.Errors
+                        AdditionalData = error
                     });
                     return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
                 }
@@ -91,7 +90,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
                 var shift = _mapper.Map<Shift>(request.DTO);
                 shift.OfficeId = request.OfficeId;
 
-                await _repository.Update(shift);
+                await _shiftrepository.Update(shift);
 
                 await _logger.Log(new Log
                 {

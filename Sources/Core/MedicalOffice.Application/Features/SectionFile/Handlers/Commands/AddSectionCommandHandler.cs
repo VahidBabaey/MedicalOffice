@@ -16,17 +16,17 @@ namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseResponse>
 {
     private readonly IValidator<AddSectionDTO> _validator;
-    private readonly ISectionRepository _repository;
+    private readonly ISectionRepository _sectionrepository;
     private readonly IOfficeRepository _officeRepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddSectionCommandHandler(IValidator<AddSectionDTO> validator, IOfficeRepository officeRepository, ISectionRepository repository, IMapper mapper, ILogger logger)
+    public AddSectionCommandHandler(IValidator<AddSectionDTO> validator, IOfficeRepository officeRepository, ISectionRepository sectionrepository, IMapper mapper, ILogger logger)
     {
         _officeRepository = officeRepository;
         _validator = validator;
-        _repository = repository;
+        _sectionrepository = sectionrepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -34,18 +34,31 @@ public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseR
 
     public async Task<BaseResponse> Handle(AddSectionCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
+
+        var validationSectionName = await _sectionrepository.CheckExistSectionName(request.OfficeId, request.DTO.Name);
+
+        if (validationSectionName)
+        {
+            var error = "Name Must be Unique";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -59,7 +72,7 @@ public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseR
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -70,7 +83,7 @@ public class AddSectionCommandHandler : IRequestHandler<AddSectionCommand, BaseR
                 var section = _mapper.Map<Section>(request.DTO);
                 section.OfficeId = request.OfficeId;
 
-                section = await _repository.Add(section);
+                section = await _sectionrepository.Add(section);
 
                 await _logger.Log(new Log
                 {

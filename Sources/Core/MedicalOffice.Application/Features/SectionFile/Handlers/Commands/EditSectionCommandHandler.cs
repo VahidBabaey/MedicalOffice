@@ -16,16 +16,16 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
 {
     private readonly IOfficeRepository _officeRepository;
     private readonly IValidator<UpdateSectionDTO> _validator;
-    private readonly ISectionRepository _repository;
+    private readonly ISectionRepository _sectionrepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public EditSectionCommandHandler(IOfficeRepository officeRepository, IValidator<UpdateSectionDTO> validator, ISectionRepository repository, IMapper mapper, ILogger logger)
+    public EditSectionCommandHandler(IOfficeRepository officeRepository, IValidator<UpdateSectionDTO> validator, ISectionRepository sectionrepository, IMapper mapper, ILogger logger)
     {
         _officeRepository = officeRepository;
         _validator = validator;
-        _repository = repository;
+        _sectionrepository = sectionrepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -33,32 +33,31 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
 
     public async Task<BaseResponse> Handle(EditSectionCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
-        var validationSectionId = await _repository.CheckExistSectionId(request.OfficeId, request.DTO.Id);
+        var validationSectionId = await _sectionrepository.CheckExistSectionId(request.OfficeId, request.DTO.Id);
 
         if (!validationSectionId)
         {
-            var error = $"ID isn't exist";
+            var error = "ID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -72,7 +71,7 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -82,7 +81,7 @@ public class EditSectionCommandHandler : IRequestHandler<EditSectionCommand, Bas
             var section = _mapper.Map<Section>(request.DTO);
             section.OfficeId = request.OfficeId;
 
-            await _repository.Update(section);
+            await _sectionrepository.Update(section);
 
             await _logger.Log(new Log
             {

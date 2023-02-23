@@ -24,7 +24,7 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
         {
             var picture = new Picture();
             picture.PictureName = pictureUploadDTO.Picturename;
-            picture.OfficeId = pictureUploadDTO.OfficeId;
+            //picture.OfficeId = pictureUploadDTO.OfficeId;
             picture.PatientId = pictureUploadDTO.PatientId;
 
             
@@ -81,5 +81,10 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
         }
 
         return PatientPicturesDTO;
+    }
+    public async Task<bool> CheckExistPictureId(Guid officeId, Guid pictureId)
+    {
+        bool isExist = await _dbContext.Pictures.AnyAsync(p => p.OfficeId == officeId && p.Id == pictureId);
+        return isExist;
     }
 }

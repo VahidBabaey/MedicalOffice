@@ -21,15 +21,17 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
     public class EditFormCommitmentCommandHandler : IRequestHandler<EditFormCommitmentCommand, BaseResponse>
     {
         private readonly IValidator<UpdateFormCommitmentDTO> _validator;
-        private readonly IFormCommitmentRepository _repository;
+        private readonly IFormCommitmentRepository _formcommitmentrepository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditFormCommitmentCommandHandler(IValidator<UpdateFormCommitmentDTO> validator, IFormCommitmentRepository repository, IMapper mapper, ILogger logger)
+        public EditFormCommitmentCommandHandler(IOfficeRepository officeRepository, IValidator<UpdateFormCommitmentDTO> validator, IFormCommitmentRepository formcommitmentrepository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _validator = validator;
-            _repository = repository;
+            _formcommitmentrepository = formcommitmentrepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -37,31 +39,47 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
 
         public async Task<BaseResponse> Handle(EditFormCommitmentCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
-            Log log = new();
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
-            var validationFormCommitmentId = await _repository.CheckExistFormCommitmentId(request.OfficeId, request.DTO.Id);
+            if (!validationOfficeId)
+            {
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var validationFormCommitmentId = await _formcommitmentrepository.CheckExistFormCommitmentId(request.OfficeId, request.DTO.Id);
 
             if (!validationFormCommitmentId)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("ID isn't exist");
-
-                log.Type = LogType.Error;
-                return response;
+                var error = "ID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                log.Type = LogType.Error;
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             else
             {
@@ -70,31 +88,27 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
                     var formcommitment = _mapper.Map<FormCommitment>(request.DTO);
                     formcommitment.OfficeId = request.OfficeId;
 
-                    await _repository.Update(formcommitment);
+                    await _formcommitmentrepository.Update(formcommitment);
 
-                    response.Success = true;
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data = (new { Id = formcommitment.Id });
-
-                    log.Type = LogType.Success;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Success,
+                        Header = $"{_requestTitle} succeded",
+                        AdditionalData = formcommitment.Id
+                    });
+                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", formcommitment.Id);
                 }
                 catch (Exception error)
                 {
-                    response.Success = false;
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error.Message
+                    });
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
             }
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
 }

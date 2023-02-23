@@ -56,7 +56,7 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
 
         var services = await _dbContext.Services.Where(p => p.OfficeId == officeId && p.IsDeleted == false).Include(p => p.MemberShipServices).Where(x => (x.MemberShipServices.Where(y => y.MembershipId == memberShipId).Any())).ToListAsync();
 
-        var membershipServices = await _dbContext.MemberShipServices.Include(c => c.Service).Where(c => c.MembershipId == memberShipId && c.OfficeId == officeId && c.Service.IsDeleted == false).ToListAsync();
+        var membershipServices = await _dbContext.MemberShipServices.Include(c => c.Service).Where(c => c.MembershipId == memberShipId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false).ToListAsync();
 
         //foreach (var item in services)
         //{
@@ -88,7 +88,7 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
         List<ServicesOfMemeberShipListDTO> servicesOfMemeberShipListDTOs = new List<ServicesOfMemeberShipListDTO>();
 
         var membershipServices = await _dbContext.MemberShipServices.Include(x => x.Service)
-            .Where(c => c.MembershipId == memberShipId && c.OfficeId == officeId && c.Service.Name.Contains(name) && c.Service.IsDeleted == false).ToListAsync();
+            .Where(c => c.MembershipId == memberShipId && c.OfficeId == officeId && c.Service.Name.Contains(name) && c.Service.IsDeleted == false && c.IsDeleted == false).ToListAsync();
 
         foreach (var item in membershipServices)
         {
@@ -125,5 +125,10 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
     {
         var memberShipService = await _dbContext.MemberShipServices.Where(p => p.ServiceId == serviceId || p.MembershipId == membershipId).FirstOrDefaultAsync();
         return memberShipService.Id;
+    }
+    public async Task<bool> CheckExistServiceIdofMembership(Guid officeId, Guid serviceId)
+    {
+        bool isExist = await _dbContext.MemberShipServices.AnyAsync(p => p.ServiceId == serviceId && p.OfficeId == officeId);
+        return isExist;
     }
 }

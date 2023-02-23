@@ -6,6 +6,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
     public interface IMemberShipServiceRepository : IGenericRepository<MemberShipService, Guid>
     {
         Task<bool> CheckExistMemberShipServiceId(Guid officeId, Guid Id);
+        Task<bool> CheckExistServiceIdofMembership(Guid officeId, Guid serviceId);
         Task<List<ServicesOfMemeberShipListDTO>> GetAllServicesOfMemberShip(Guid officeId, Guid memberShipId);
         Task<List<ServicesOfMemeberShipListDTO>> GetAllServicesOfMemberShipBySearch(Guid officeId, Guid memberShipId, string name);
         Task<Guid> GetMembershipServiceId(Guid serviceId, Guid membershipId);

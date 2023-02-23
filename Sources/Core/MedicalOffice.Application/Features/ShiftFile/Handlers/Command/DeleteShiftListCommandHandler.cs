@@ -13,48 +13,47 @@ namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 public class DeleteShiftListCommandHandler : IRequestHandler<DeleteShiftListCommand, BaseResponse>
 {
     private readonly IOfficeRepository _officeRepository;
-    private readonly IShiftRepository _repository;
+    private readonly IShiftRepository _shiftrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteShiftListCommandHandler(IOfficeRepository officeRepository, IShiftRepository repository, ILogger logger)
+    public DeleteShiftListCommandHandler(IOfficeRepository officeRepository, IShiftRepository shiftrepository, ILogger logger)
     {
         _officeRepository = officeRepository;
-        _repository = repository;
+        _shiftrepository = shiftrepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(DeleteShiftListCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         foreach (var item in request.DTO.ShiftId)
         {
-            var validationSectionId = await _repository.CheckExistShiftId(request.OfficeId, item);
+            var validationSectionId = await _shiftrepository.CheckExistShiftId(request.OfficeId, item);
 
             if (!validationSectionId)
             {
-                var error = $"ID isn't exist";
+                var error = "ID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -64,7 +63,7 @@ public class DeleteShiftListCommandHandler : IRequestHandler<DeleteShiftListComm
         {
             foreach (var item in request.DTO.ShiftId)
             {
-                await _repository.SoftDelete(item);
+                await _shiftrepository.SoftDelete(item);
             }
 
             await _logger.Log(new Log

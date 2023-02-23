@@ -13,48 +13,47 @@ namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 public class DeleteServiceTariffListCommandHandler : IRequestHandler<DeleteTariffListCommand, BaseResponse>
 {
     private readonly IOfficeRepository _officeRepository;
-    private readonly IServiceTariffRepository _repository;
+    private readonly IServiceTariffRepository _tariffrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteServiceTariffListCommandHandler(IOfficeRepository officeRepository, IServiceTariffRepository repository, ILogger logger)
+    public DeleteServiceTariffListCommandHandler(IOfficeRepository officeRepository, IServiceTariffRepository tariffrepository, ILogger logger)
     {
         _officeRepository = officeRepository;
-        _repository = repository;
+        _tariffrepository = tariffrepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(DeleteTariffListCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
-
+        
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         foreach (var item in request.DTO.TariffId)
         {
-            var validationSectionId = await _repository.CheckExistTariffId(request.OfficeId, item);
+            var validationSectionId = await _tariffrepository.CheckExistTariffId(request.OfficeId, item);
 
             if (!validationSectionId)
             {
-                var error = $"ID isn't exist";
+                var error = "ID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -64,7 +63,7 @@ public class DeleteServiceTariffListCommandHandler : IRequestHandler<DeleteTarif
         {
             foreach (var item in request.DTO.TariffId)
             {
-                await _repository.SoftDelete(item);
+                await _tariffrepository.SoftDelete(item);
             }
 
             await _logger.Log(new Log

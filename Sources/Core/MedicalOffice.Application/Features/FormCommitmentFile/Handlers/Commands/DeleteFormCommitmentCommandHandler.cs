@@ -16,62 +16,71 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
 {
     public class DeleteFormCommitmentCommandHandler : IRequestHandler<DeleteFormCommitmentCommand, BaseResponse>
     {
-        private readonly IFormCommitmentRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
+        private readonly IFormCommitmentRepository _formcommitmentrepository;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public DeleteFormCommitmentCommandHandler(IFormCommitmentRepository repository, ILogger logger)
+        public DeleteFormCommitmentCommandHandler(IOfficeRepository officeRepository, IFormCommitmentRepository formcommitmentrepository, ILogger logger)
         {
-            _repository = repository;
+            _officeRepository = officeRepository;
+            _formcommitmentrepository = formcommitmentrepository;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
         public async Task<BaseResponse> Handle(DeleteFormCommitmentCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
-            Log log = new();
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
-            var validationFormCommitmentId = await _repository.CheckExistFormCommitmentId(request.OfficeId, request.FormCommitmentID);
+            if (!validationOfficeId)
+            {
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var validationFormCommitmentId = await _formcommitmentrepository.CheckExistFormCommitmentId(request.OfficeId, request.FormCommitmentID);
 
             if (!validationFormCommitmentId)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("ID isn't exist");
-
-                log.Type = LogType.Error;
-                return response;
+                var error = "ID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             try
             {
-                await _repository.SoftDelete(request.FormCommitmentID);
+                await _formcommitmentrepository.SoftDelete(request.FormCommitmentID);
 
-                response.Success = true;
-                response.StatusCode = HttpStatusCode.OK;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = request.FormCommitmentID });
-
-                log.Type = LogType.Success;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
             }
             catch (Exception error)
             {
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
-
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
 }

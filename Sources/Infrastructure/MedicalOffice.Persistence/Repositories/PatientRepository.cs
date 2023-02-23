@@ -72,12 +72,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
 
         return patientTag;
     }
-    public async Task<List<PatientListDTO>> SearchPateint(
-                                                          string firstName,
-                                                          string lastName,
-                                                          string nationalCode,
-                                                          string phoneNumber,
-                                                          string fileNumber)
+    public async Task<List<PatientListDTO>> SearchPateint(string firstName, string lastName, string nationalCode, string phoneNumber, string fileNumber)
     {
         try
         {
@@ -103,24 +98,55 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                     Id = item.Id,
                     BirthDate = item.BirthDate,
                     FileNumber = item.FileNumber,
-                    Mobile = item.PatientContacts.First().ContactValue,
+                    Mobile = item.PatientContacts.FirstOrDefault()?.ContactValue ?? "",
                     FatherName = item.FatherName,
-                    InsuranceId = item.InsuranceId,
+                    InsuranceName = item.Insurance?.Name ?? "",
                     FirstName = item.FirstName,
                     LastName = item.LastName
                 };
                 patientList.Add(patientListDto);
             }
 
-            return patientList
-                .ToList();
+            return patientList.ToList();
         }
         catch (Exception)
         {
             throw;
         }
+    }
+    public async Task<List<PatientListDTO>> GetAllPateint(Guid officeId)
+    {
+        try
+        {
+            List<PatientListDTO> patientList = new();
 
 
+            var list = await _dbContext.Patients.Include(p => p.Insurance)
+                .Include(p => p.PatientContacts).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
+                .ToListAsync();
+
+            foreach (var item in list)
+            {
+                PatientListDTO patientListDto = new()
+                {
+                    Id = item.Id,
+                    BirthDate = item.BirthDate,
+                    FileNumber = item.FileNumber,
+                    Mobile = item.PatientContacts.FirstOrDefault()?.ContactValue ?? "",
+                    FatherName = item.FatherName,
+                    InsuranceName = item.Insurance?.Name ?? "",
+                    FirstName = item.FirstName,
+                    LastName = item.LastName
+                };
+                patientList.Add(patientListDto);
+            }
+
+            return patientList.ToList();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
     public async Task<bool> RemovePatientContact(Guid patientId)
     {

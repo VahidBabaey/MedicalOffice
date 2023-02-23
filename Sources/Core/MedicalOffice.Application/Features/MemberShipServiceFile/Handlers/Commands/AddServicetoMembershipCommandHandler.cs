@@ -23,19 +23,17 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
     public class AddServicetoMembershipCommandHandler : IRequestHandler<AddServicetoMembershipCommand, BaseResponse>
     {
         private readonly IValidator<MemberShipServiceDTO> _validator;
-        private readonly IMemberShipServiceRepository _repository;
+        private readonly IMemberShipServiceRepository _membershipservicerepository;
         private readonly IOfficeRepository _officeRepository;
-        private readonly IServiceRepository _serviceRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddServicetoMembershipCommandHandler(IValidator<MemberShipServiceDTO> validator, IServiceRepository serviceRepository, IOfficeRepository officeRepository, IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
+        public AddServicetoMembershipCommandHandler(IValidator<MemberShipServiceDTO> validator, IOfficeRepository officeRepository, IMemberShipServiceRepository membershipservicerepository, IMapper mapper, ILogger logger)
         {
-            _serviceRepository = serviceRepository;
             _officeRepository = officeRepository;
             _validator = validator;
-            _repository = repository;
+            _membershipservicerepository = membershipservicerepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -45,18 +43,30 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
         public async Task<BaseResponse> Handle(AddServicetoMembershipCommand request, CancellationToken cancellationToken)
         {
 
-            BaseResponse response = new();
-
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                var error = $"OfficeID isn't exist";
+                var error = "OfficeID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var validationServiceIdofMembership = await _membershipservicerepository.CheckExistServiceIdofMembership(request.OfficeId, request.DTO.ServiceId);
+
+            if (validationServiceIdofMembership)
+            {
+                var error = "ServiceId is Exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -70,7 +80,7 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = response.Errors
+                    AdditionalData = error
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
@@ -78,7 +88,7 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
             {
                 try
                 {
-                    var membershipservice = await _repository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount.ToString(), request.DTO.ServiceId, request.DTO.MembershipId);
+                    var membershipservice = await _membershipservicerepository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount.ToString(), request.DTO.ServiceId, request.DTO.MembershipId);
 
                     await _logger.Log(new Log
                     {

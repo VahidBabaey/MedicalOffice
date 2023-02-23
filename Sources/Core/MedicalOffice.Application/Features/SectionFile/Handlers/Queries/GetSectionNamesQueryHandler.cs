@@ -14,41 +14,38 @@ namespace MedicalOffice.Application.Features.SectionFile.Handlers.Queries;
 public class GetSectionNamesQueryHandler : IRequestHandler<GetSectionNamesQuery, BaseResponse>
 {
     private readonly IOfficeRepository _officeRepository;
-    private readonly ISectionRepository _repository;
-    private readonly IMapper _mapper;
+    private readonly ISectionRepository _sectionrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetSectionNamesQueryHandler(IOfficeRepository officeRepository, ISectionRepository repository, IMapper mapper, ILogger logger)
+    public GetSectionNamesQueryHandler(IOfficeRepository officeRepository, ISectionRepository sectionrepository, ILogger logger)
     {
         _officeRepository = officeRepository;
-        _repository = repository;
-        _mapper = mapper;
+        _sectionrepository = sectionrepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(GetSectionNamesQuery request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         try
         {
-            var result = await _repository.GetSectionNames(request.OfficeId);
+            var result = await _sectionrepository.GetSectionNames(request.OfficeId);
 
             await _logger.Log(new Log
             {

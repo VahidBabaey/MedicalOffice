@@ -16,49 +16,83 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using System.Net;
+using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.PictureFile.Handlers.Queries;
-public class GetAllPicturesofPatientQueryHandler : IRequestHandler<GetAllPicturesofPatientQuery, List<PatientPicturesDTO>>
+public class GetAllPicturesofPatientQueryHandler : IRequestHandler<GetAllPicturesofPatientQuery, BaseResponse>
 {
+    private readonly IPatientRepository _patientrepository;
+    private readonly IOfficeRepository _officeRepository;
     private readonly IPictureRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetAllPicturesofPatientQueryHandler(IPictureRepository repository, IMapper mapper, ILogger logger)
+    public GetAllPicturesofPatientQueryHandler(IPatientRepository patientrepository, IOfficeRepository officeRepository, IPictureRepository repository, IMapper mapper, ILogger logger)
     {
+        _patientrepository = patientrepository;
+        _officeRepository = officeRepository;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
-    public async Task<List<PatientPicturesDTO>> Handle(GetAllPicturesofPatientQuery request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(GetAllPicturesofPatientQuery request, CancellationToken cancellationToken)
     {
-        List<PatientPicturesDTO> result = new();
+        BaseResponse response = new();
 
-        Log log = new();
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            var error = $"OfficeID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = response.Errors
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
+
+        var validationPatientId = await _patientrepository.CheckExistPatientId(request.OfficeId, request.PatientId);
+
+        if (!validationPatientId)
+        {
+            var error = $"ID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = response.Errors
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
 
         try
         {
             var pictures = await _repository.GetByPatientId(request.PatientId);
 
-            result = _mapper.Map<List<PatientPicturesDTO>>(pictures);
+            var result = _mapper.Map<List<PatientPicturesDTO>>(pictures.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
-            log.Header = $"{_requestTitle} succeded";
-            log.Type = LogType.Success;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = new { total = pictures.Count(), result = result }
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = pictures.Count(), result = result });
         }
         catch (Exception error)
         {
-            log.Header = $"{_requestTitle} failed";
-            log.AdditionalData=error.Message;
-            log.Type = LogType.Error;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
-
-        await _logger.Log(log);
-
-
-        return result;
     }
-
 }

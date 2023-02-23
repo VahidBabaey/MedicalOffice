@@ -54,6 +54,8 @@ using MedicalOffice.Application.Dtos.SpecializationDTO.Validators;
 using MedicalOffice.Application.Dtos.SpecializationDTO;
 using MedicalOffice.Application.Dtos.Tariff.Validators;
 using MedicalOffice.Application.Dtos.Tariff;
+using MedicalOffice.Application.Dtos.PictureDTO.Validator;
+using MedicalOffice.Application.Dtos.PictureDTO;
 
 namespace MedicalOffice.Application;
 
@@ -165,6 +167,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<PatientReferralFormDTO>, AddPatientReferralFormValidator>();
         services.AddScoped<IValidator<PatientIllnessFormDTO>, AddPatientIllnessFormValidator>();
         services.AddScoped<IValidator<AddPatientCommitmentsFormDTO>, AddPatientCommitmentsFormValidator>();
+        services.AddScoped<IValidator<PictureUploadDTO>, AddPictureValidator>();
         #endregion
 
         #region CashCart
