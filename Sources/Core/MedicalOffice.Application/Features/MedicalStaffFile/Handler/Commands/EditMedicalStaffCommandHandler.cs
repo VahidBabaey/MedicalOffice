@@ -168,9 +168,13 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 OfficeId = request.OfficeId
             });
 
+<<<<<<< HEAD
             #region RemoveOldStaffPermissions
             await _userOfficePermissionRepository.SoftDeleteRange(request.OfficeId, user.Id);
             #endregion
+=======
+            await _userOfficeRoleRepository.SoftDeleteRange(newMedicalStaff.UserId, request.OfficeId);
+>>>>>>> 1411ec0a3de11a9c52506cee9d023bfacef19a13
 
             #region AddNewPermissions
             var permissions = await _rolePermissionRepository.GetByRoleId(request.DTO.RoleId);
