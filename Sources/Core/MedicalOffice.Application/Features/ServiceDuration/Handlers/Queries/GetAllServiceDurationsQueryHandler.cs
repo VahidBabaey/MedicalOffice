@@ -33,39 +33,21 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 
         public async Task<BaseResponse> Handle(GetAllServiceDurationQuery request, CancellationToken cancellationToken)
         {
-            
 
-            try
+            var services = _ServiceDurationRepository.GetAll().Result.Where(x => x.OfficeId == request.OfficeId).ToList();
+            var result = _mappper.Map<List<ServiceDurationListDTO>>(services.Skip(request.DTO.Skip).Take(request.DTO.Take));
+
+            await _logger.Log(new Log
             {
-                var allServices = await _ServiceDurationRepository.GetAllWithPagination(request.DTO.Skip, request.DTO.Take);
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = new { total = services.Count, result = result }
+            });
 
-                var result = _mappper.Map<List<ServiceDurationListDTO>>(allServices);
+            return ResponseBuilder.Success(HttpStatusCode.OK,
+                $"{_requestTitle} succeeded",
+                new { total = services.Count, result = result });
 
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Success,
-                    Header = $"{_requestTitle} succeeded",
-                    AdditionalData = result
-                });
-
-                return ResponseBuilder.Success(HttpStatusCode.OK,
-                    $"{_requestTitle} succeeded",
-                    result);
-            }
-
-            catch (Exception error)
-            {
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} faild",
-                    AdditionalData = error.Message
-                });
-
-                return ResponseBuilder.Faild(HttpStatusCode.NotFound,
-                    $"{_requestTitle} failed",
-                    error.Message);
-            }
         }
     }
 }

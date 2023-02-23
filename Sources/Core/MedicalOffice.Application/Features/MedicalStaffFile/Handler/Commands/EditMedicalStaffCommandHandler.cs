@@ -24,6 +24,8 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly string _requestTitle;
+        private readonly IRolePermissionRepository _rolePermissionRepository;
+        private readonly IUserOfficePermissionRepository _userOfficePermissionRepository;
 
         public EditMedicalStaffCommandHandler(
             IValidator<UpdateMedicalStaffDTO> validator,
@@ -159,27 +161,37 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             await _medicalStaffrepository.Patch(existingMedicalStaff, newMedicalStaff, true);
 
             //Add role to user office roles
-            var roleName = new List<string>();
-            var userOfficeRoles = new List<UserOfficeRole>();
+            await _userOfficeRoleRepository.Add(new UserOfficeRole
+            {
+                RoleId = request.DTO.RoleId,
+                UserId = user.Id,
+                OfficeId = request.OfficeId
+            });
 
-            await _userOfficeRoleRepository.DeleteUserOfficeRoleAsync(newMedicalStaff.UserId, request.OfficeId);
+            #region RemoveOldStaffPermissions
+            await _userOfficePermissionRepository.SoftDeleteRange(request.OfficeId, user.Id);
+            #endregion
 
+            #region AddNewPermissions
+            var permissions = await _rolePermissionRepository.GetByRoleId(request.DTO.RoleId);
+            var userOfficePermissions = new List<UserOfficePermission>();
+            foreach (var item in permissions)
+            {
+                userOfficePermissions.Add(new UserOfficePermission
+                {
+                    UserId = user.Id,
+                    OfficeId = request.OfficeId,
+                    PermissionId = item.Id
+                });
+            }
+            await _userOfficePermissionRepository.AddRange(userOfficePermissions)
+            #endregion
+;
             Role role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
             if (role != null)
             {
-                userOfficeRoles.Add(new UserOfficeRole
-                {
-                    RoleId = request.DTO.RoleId,
-                    UserId = newMedicalStaff.UserId,
-                    OfficeId = request.OfficeId
-                });
-
-                roleName.Add(role.NormalizedName);
+                await _userManager.AddToRoleAsync(user, role.NormalizedName);
             }
-
-            await _userOfficeRoleRepository.AddUserOfficeRoles(userOfficeRoles);
-            await _userManager.AddToRolesAsync(user, roleName);
-
 
             await _logger.Log(new Log
             {

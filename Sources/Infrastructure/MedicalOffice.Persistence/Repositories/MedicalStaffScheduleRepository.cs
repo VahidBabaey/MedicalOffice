@@ -21,6 +21,7 @@ public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSche
     }
     public async Task UpdateMedicalStaffsSchedule(Guid MedicalStaffid, int day, MedicalStaffScheduleDTO MedicalStaffWorkHoursProgramDTO)
     {
+        //each day have one record why you create list?????
         var _list = await _dbContext.MedicalStaffSchedules.Where(p => p.MedicalStaffId == MedicalStaffid && (int)p.WeekDay == day).ToListAsync();
 
         foreach (var item in _list)
@@ -51,9 +52,10 @@ public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSche
             _dbContext.SaveChanges();
         }
     }
-    public async Task<List<MedicalStaffSchedule>> GetMedicalStaffScheduleById(Guid? medicalStaffId)
+    public async Task<List<MedicalStaffSchedule>> GetMedicalStaffScheduleByStaffId(Guid? medicalStaffId, Guid OfficeId)
     {
-        return await _dbContext.MedicalStaffSchedules.Where(x=>x.MedicalStaffId == medicalStaffId).ToListAsync();
+        var staffSchedules = await _dbContext.MedicalStaffSchedules.Where(x => x.MedicalStaffId == medicalStaffId && x.OfficeId == OfficeId).ToListAsync();
+        return staffSchedules;
     }
 
     public async Task<List<Guid>> AddRangle(List<MedicalStaffSchedule> MedicalStaffSchedules)
@@ -66,9 +68,9 @@ public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSche
         return addedEntities;
     }
 
-    public Task DeleteRangle(List<MedicalStaffSchedule> MedicalStaffSchedules)
+    public Task UpdateRange(List<MedicalStaffSchedule> MedicalStaffSchedules)
     {
-        _dbContext.RemoveRange(MedicalStaffSchedules);
+        _dbContext.UpdateRange(MedicalStaffSchedules);
         _dbContext.SaveChanges();
 
         return Task.CompletedTask;

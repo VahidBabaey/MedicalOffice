@@ -48,7 +48,6 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 
         public async Task<BaseResponse> Handle(AddServiceDurationCommand request, CancellationToken cancellationToken)
         {
-            
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -64,71 +63,70 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
-            var existingMedicalStaff = await _medicalStaffRepository.CheckMedicalStaffExist(request.DTO.MedicalStaffId, request.OfficeId);
-            if (!existingMedicalStaff)
+            #region checkStaffExist
+            var isStaffExist = await _medicalStaffRepository.CheckMedicalStaffExist(request.DTO.MedicalStaffId, request.OfficeId);
+            if (!isStaffExist)
             {
-                var error = new ArgumentException("This MedicalStaff does not exist!");
+                var error = "This MedicalStaff isn't exist!";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} faild",
-                    AdditionalData = error.Message
+                    AdditionalData = error
                 });
 
-                return ResponseBuilder.Faild(HttpStatusCode.NotFound,
-                    $"{_requestTitle} failed",
-                    error.Message);
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
+            #endregion
 
-            var existingService = _serviceRepository.GetAll().Result.Any(x =>
-            x.Id == request.DTO.ServiceId &&
-            x.OfficeId == request.OfficeId);
+            #region checkServiceExist
+            var existingService = await _serviceRepository.CheckExistServiceId(request.OfficeId, request.DTO.ServiceId);
 
             if (!existingService)
             {
-                var error = new ArgumentException("This Service does not exist!");
+                var error = "This service isn't exist!";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} faild",
-                    AdditionalData = error.Message
+                    AdditionalData = error
                 });
 
-                return ResponseBuilder.Faild(HttpStatusCode.NotFound,
-                    $"{_requestTitle} failed",
-                    error.Message);
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
+            #endregion
 
+            #region checkStaffServiceExist
+            var isStaffServiceExist = _serviceDurationRepository.CheckStaffHasServiceDuration(request.DTO.ServiceId, request.OfficeId);
+            if (isStaffExist)
+            {
+                var error = "This staff has service duration";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} faild",
+                    AdditionalData = error
+                });
+
+                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+            }
+            #endregion
+
+            #region AddServiceDuration            
             var serviceDuration = _mapper.Map<ServiceDuration>(request.DTO);
+            serviceDuration.OfficeId = request.OfficeId;
 
-            try
+            var newServiceDuration = _serviceDurationRepository.Add(serviceDuration).Result;
+
+            await _logger.Log(new Log
             {
-                var newServiceDuration = _serviceDurationRepository.Add(serviceDuration).Result;
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = newServiceDuration
+            });
 
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Success,
-                    Header = $"{_requestTitle} succeeded",
-                    AdditionalData = newServiceDuration
-                }); ;
-
-                return ResponseBuilder.Success(HttpStatusCode.OK,
-                    $"{_requestTitle} succeeded",
-                    newServiceDuration.Id);
-            }
-            catch (Exception error)
-            {
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} faild",
-                    AdditionalData = error.Message
-                });
-
-                return ResponseBuilder.Faild(HttpStatusCode.InternalServerError,
-                    $"{_requestTitle} failed",
-                    error.Message);
-            }
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", newServiceDuration.Id);
+            #endregion
         }
     }
 }

@@ -22,7 +22,7 @@ namespace MedicalOffice.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<bool> CheckStaffHasService(Guid? medicalStaffId, Guid serviceId)
+        public Task<bool> CheckStaffHasServiceDuration(Guid? medicalStaffId, Guid serviceId)
         {
             return Task.FromResult(_dbContext.ServiceDurations.Any(x => x.ServiceId == serviceId && x.MedicalStaffId == medicalStaffId));
         }
