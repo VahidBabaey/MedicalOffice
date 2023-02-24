@@ -20,10 +20,12 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
         private readonly ILogger _logger;
         private readonly IMapper _mappper;
         private readonly IServiceDurationRepositopry _ServiceDurationRepository;
-
         private readonly string _requestTitle;
 
-        public GetAllServiceDurationsQueryHandler(ILogger logger, IMapper mappper, IServiceDurationRepositopry serviceDurationRepository)
+        public GetAllServiceDurationsQueryHandler(
+            ILogger logger, 
+            IMapper mappper, 
+            IServiceDurationRepositopry serviceDurationRepository)
         {
             _logger = logger;
             _mappper = mappper;
@@ -33,7 +35,6 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 
         public async Task<BaseResponse> Handle(GetAllServiceDurationQuery request, CancellationToken cancellationToken)
         {
-
             var services = _ServiceDurationRepository.GetAll().Result.Where(x => x.OfficeId == request.OfficeId).ToList();
             var result = _mappper.Map<List<ServiceDurationListDTO>>(services.Skip(request.DTO.Skip).Take(request.DTO.Take));
 

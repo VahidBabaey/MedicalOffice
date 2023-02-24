@@ -48,6 +48,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 
         public async Task<BaseResponse> Handle(AddServiceDurationCommand request, CancellationToken cancellationToken)
         {
+            #region Validate
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -62,43 +63,11 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     $"{_requestTitle} failed",
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
-
-            #region checkStaffExist
-            var isStaffExist = await _medicalStaffRepository.CheckMedicalStaffExist(request.DTO.MedicalStaffId, request.OfficeId);
-            if (!isStaffExist)
-            {
-                var error = "This MedicalStaff isn't exist!";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} faild",
-                    AdditionalData = error
-                });
-
-                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
-            }
-            #endregion
-
-            #region checkServiceExist
-            var existingService = await _serviceRepository.CheckExistServiceId(request.OfficeId, request.DTO.ServiceId);
-
-            if (!existingService)
-            {
-                var error = "This service isn't exist!";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} faild",
-                    AdditionalData = error
-                });
-
-                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
-            }
             #endregion
 
             #region checkStaffServiceExist
-            var isStaffServiceExist = _serviceDurationRepository.CheckStaffHasServiceDuration(request.DTO.ServiceId, request.OfficeId);
-            if (isStaffExist)
+            var isStaffServiceExist = await _serviceDurationRepository.CheckStaffHasServiceDuration(request.DTO.MedicalStaffId, request.DTO.ServiceId);
+            if (isStaffServiceExist)
             {
                 var error = "This staff has service duration";
                 await _logger.Log(new Log

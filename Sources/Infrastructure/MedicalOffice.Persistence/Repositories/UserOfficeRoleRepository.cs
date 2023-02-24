@@ -40,9 +40,9 @@ public class UserOfficeRoleRepository : GenericRepository<UserOfficeRole,Guid>, 
         return userOfficeRole;
     }
 
-    public async Task<List<UserOfficeRole>> GetByUserAndOfficeId(Guid userId, Guid officeId)
+    public async Task<UserOfficeRole> GetByUserAndOfficeId(Guid userId, Guid officeId)
     {
-        var userOfficeRole = await _dbContext.UserOfficeRoles.Where(urf => urf.UserId == userId && urf.OfficeId == officeId).ToListAsync();
+        var userOfficeRole = await _dbContext.UserOfficeRoles.FirstAsync(urf => urf.UserId == userId && urf.OfficeId == officeId);
 
         return userOfficeRole;
     }

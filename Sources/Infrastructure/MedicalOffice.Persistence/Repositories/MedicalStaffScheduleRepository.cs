@@ -48,9 +48,11 @@ public class MedicalStaffScheduleRepository : GenericRepository<MedicalStaffSche
 
         foreach (var item in _list)
         {
-            _dbContext.Remove(item);
-            _dbContext.SaveChanges();
+            item.IsDeleted = true;
         }
+
+        _dbContext.UpdateRange(_list);
+        _dbContext.SaveChanges();
     }
     public async Task<List<MedicalStaffSchedule>> GetMedicalStaffScheduleByStaffId(Guid? medicalStaffId, Guid OfficeId)
     {

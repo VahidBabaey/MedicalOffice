@@ -2,11 +2,6 @@
 using MedicalOffice.Persistence.Configurations.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MedicalOffice.Persistence.Configurations.Entities
 {
@@ -14,7 +9,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
     {
         public override void ConfigureEntity(EntityTypeBuilder<ServiceDuration> builder)
         {
-            builder              
+            builder
                 .HasOne(sd => sd.Office)
                 .WithMany(o => o.ServiceDuration)
                 .HasForeignKey(sd => sd.OfficeId)
@@ -30,6 +25,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                             Duration= 30
                         }
                     });
+            builder
+                .HasQueryFilter(x => x.IsDeleted == false);
         }
     }
 }

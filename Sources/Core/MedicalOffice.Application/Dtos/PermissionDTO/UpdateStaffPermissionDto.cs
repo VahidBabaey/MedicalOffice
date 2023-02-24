@@ -1,4 +1,4 @@
-﻿namespace MedicalOffice.Application
+﻿namespace MedicalOffice.Application.Dtos.PermissionDTO
 {
     public class UpdateStaffPermissionDto
     {

@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MedicalOffice.Application;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.DrugDTO;
 using MedicalOffice.Application.Dtos.PermissionDTO;

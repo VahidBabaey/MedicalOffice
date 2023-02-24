@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.ServiceDurationDTO.Validators
 {
-    public class AddServiceDurationValidator : AbstractValidator<ServiceDurationDTO>
+    public class EditServiceDurationValidator : AbstractValidator<EditServiceDurationDTO>
     {
         private readonly IMedicalStaffRepository _medicalStaffRepository;
         private readonly IServiceRepository _serviceRepository;
         private readonly IOfficeResolver _officeResolver;
         private static readonly int minDuration = 1;
-        public AddServiceDurationValidator(
+        public EditServiceDurationValidator(
             IMedicalStaffRepository medicalStaffRepository,
             IServiceRepository serviceRepository,
             IOfficeResolver officeResolver
