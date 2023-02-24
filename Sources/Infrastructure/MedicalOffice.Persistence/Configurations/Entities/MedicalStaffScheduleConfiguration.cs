@@ -15,9 +15,11 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public override void ConfigureEntity(EntityTypeBuilder<MedicalStaffSchedule> builder)
         {
             builder
-                .HasOne(x=>x.MedicalStaff)
-                .WithMany(x=>x.MedicalStaffSchedules)
-                .HasForeignKey(x=>x.MedicalStaffId)
+                .HasQueryFilter(m => m.IsDeleted == false);
+            builder
+                .HasOne(x => x.MedicalStaff)
+                .WithMany(x => x.MedicalStaffSchedules)
+                .HasForeignKey(x => x.MedicalStaffId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasData(new MedicalStaffSchedule[]
@@ -25,6 +27,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                         new MedicalStaffSchedule{
                             Id = Guid.Parse("cde5859d-3a54-4fa0-93b1-42ca4a574fd7"),
                             MedicalStaffId= Guid.Parse("803224e8-efc5-4998-b602-08dae7043559"),
+                            OfficeId = Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0"),
                             MaxAppointmentCount= 10,
                             WeekDay= 0,
                             MorningStart= "07:00",

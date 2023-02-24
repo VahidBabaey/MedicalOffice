@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Application.Contracts.Persistence;
+﻿using MedicalOffice.Application.Constants;
+using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Domain.Entities;
@@ -66,7 +67,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
             //    roleName += _dbContext.Roles.Select(x => new { x.Id, x.PersianName }).Where(x => x.Id == item2.RoleId).FirstOrDefault().PersianName + "، ";
             //};
 
-            
+
             MedicalStaffListDTO medicalStaffListDTO = new()
             {
                 Id = item.Id,
@@ -80,7 +81,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
                 IHIOUserName = item.IHIOUserName,
                 Title = item.Title,
                 NationalID = item.NationalID,
-                RoleName = _dbContext.Roles.SingleOrDefault(x=>x.Id == item.RoleId).Name,
+                RoleName = _dbContext.Roles.SingleOrDefault(x => x.Id == item.RoleId).Name,
                 RoleId = item.RoleId,
                 IsTechnicalAssistant = item.IsTechnicalAssistant,
             };
@@ -156,5 +157,13 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
     {
         var medicalStaffs = await _dbContext.MedicalStaffs.Where(p => p.FirstName.Contains(name) || p.LastName.Contains(name) && p.OfficeId == officeId).ToListAsync();
         return medicalStaffs;
+    }
+
+    public async Task<List<MedicalStaff>> GetAllDoctorsAndExperts(Guid officeId)
+    {
+        var validRoles = new[] { ExpertRole.Id, DoctorRole.Id };
+        var staffs = await _dbContext.MedicalStaffs.Where(x => x.OfficeId == officeId && x.User.UserOfficeRoles.Any(u => validRoles.Contains(u.RoleId))).ToListAsync();
+
+        return staffs;
     }
 }

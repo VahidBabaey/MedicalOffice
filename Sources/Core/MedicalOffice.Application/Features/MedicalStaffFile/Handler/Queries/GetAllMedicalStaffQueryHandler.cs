@@ -11,7 +11,7 @@ using System.Net;
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
 {
 
-    public class GetAllMedicalStaffQueryHandler : IRequestHandler<GetAllMedicalStaffs, BaseResponse>
+    public class GetAllMedicalStaffQueryHandler : IRequestHandler<GetAllMedicalStaffsQuery, BaseResponse>
     {
         private readonly IMedicalStaffRepository _repository;
         private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(GetAllMedicalStaffs request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetAllMedicalStaffsQuery request, CancellationToken cancellationToken)
         {
             try
             {

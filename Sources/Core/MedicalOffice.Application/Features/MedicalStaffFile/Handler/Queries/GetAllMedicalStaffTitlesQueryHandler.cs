@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 {
-    public class GetAllMedicalStaffTitlesQueryHandler : IRequestHandler<GetAllMedicalStaffQueryHandler, BaseResponse>
+    public class GetAllMedicalStaffTitlesQueryHandler : IRequestHandler<GetAllMedicalStaffTitleQuery, BaseResponse>
     {
-        public Task<BaseResponse> Handle(GetAllMedicalStaffQueryHandler request, CancellationToken cancellationToken)
+        public Task<BaseResponse> Handle(GetAllMedicalStaffTitleQuery request, CancellationToken cancellationToken)
         {
             
             var medicalStaffTiltles = Enum.GetValues<Title>().ToList().Select(a => new 

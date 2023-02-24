@@ -18,7 +18,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
     {
         private readonly IValidator<MedicalStaffScheduleDTO> _validator;
         private readonly IMedicalStaffScheduleRepository _medicalStaffScheduleRepository;
-        private readonly IMedicalStaffRepository _medicalStaffRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
@@ -27,13 +26,11 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
         public AddMedicalStaffScheduleHandler(
             IValidator<MedicalStaffScheduleDTO> validator,
             IMedicalStaffScheduleRepository medicalStaffScheduleRepository,
-            IMedicalStaffRepository medicalStaffRepository,
             IMapper mapper,
             ILogger logger)
         {
             _validator = validator;
             _medicalStaffScheduleRepository = medicalStaffScheduleRepository;
-            _medicalStaffRepository = medicalStaffRepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -41,8 +38,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
 
         public async Task<BaseResponse> Handle(AddMedicalStaffScheduleCommand request, CancellationToken cancellationToken)
         {
-            
-
             #region CheckValidation
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
@@ -61,100 +56,52 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
             }
             #endregion
 
-            try
+            #region CheckScheduleExist
+            var existingSchedule = _medicalStaffScheduleRepository.GetMedicalStaffScheduleByStaffId(request.DTO.MedicalStaffId,request.OfficeId).Result.ToList();
+
+            if (existingSchedule.Count != 0)
             {
-                var existingStaff = _medicalStaffRepository.GetById(request.DTO.MedicalStaffId).Result;
-                if (existingStaff == null)
-                {
-                    //var error = new ArgumentException("medicalStaff isn't exist");
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} faild",
-                        AdditionalData = new ArgumentException("medicalStaff isn't exist").Message
-                    });
+                var error = "This staff schedule is exist";
 
-                    return ResponseBuilder.Faild(HttpStatusCode.InternalServerError,
-                        $"{_requestTitle} failed",
-                        new ArgumentException("medicalStaff isn't exist").Message);
-                }
-                #region UpdateExistingWorkHours
-                var existingSchedule = _medicalStaffScheduleRepository.GetMedicalStaffScheduleById(request.DTO.MedicalStaffId).Result.ToList();
-
-                if (existingSchedule.Count != 0)
-                {
-                    List<DayOfWeek> weekDays = existingSchedule.Select(x => x.WeekDay)
-                        .Intersect(request.DTO.MedicalStaffSchedule.Select(x => x.WeekDay)).ToList();
-
-                    if (weekDays != null)
-                    {
-                        foreach (var day in weekDays)
-                        {
-                            var daySchedule = existingSchedule.SingleOrDefault(x => x.WeekDay == day);
-
-                            var requestedSchedule = request.DTO.MedicalStaffSchedule.SingleOrDefault(x => x.WeekDay == day);
-
-                            daySchedule.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
-                            daySchedule.MorningStart = requestedSchedule.MorningStart;
-                            daySchedule.MorningEnd = requestedSchedule.MorningEnd;
-                            daySchedule.EveningStart = requestedSchedule.EveningStart;
-                            daySchedule.EveningEnd = requestedSchedule.EveningEnd;
-
-                            await _medicalStaffScheduleRepository.Update(daySchedule);
-
-                            request.DTO.MedicalStaffSchedule.Remove(requestedSchedule);
-                        }
-                    }
-                }
-                #endregion
-
-                #region AddNewWorkHours
-                var newWorkHours = new List<Guid>();
-
-                if (request.DTO.MedicalStaffSchedule.Count != 0)
-                {
-                    var MedicalStaffSchedule = new List<MedicalStaffSchedule>();
-
-                    foreach (var item in request.DTO.MedicalStaffSchedule)
-                    {
-                        var schedule = _mapper.Map<MedicalStaffSchedule>(item);
-                        schedule.MedicalStaffId = request.DTO.MedicalStaffId;
-                        schedule.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
-
-                        MedicalStaffSchedule.Add(schedule);
-                    }
-                    newWorkHours = await _medicalStaffScheduleRepository.AddRangle(MedicalStaffSchedule);
-                }
-                #endregion
-
-                #region FinalResponse
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Success,
-                    Header = $"{_requestTitle} succeeded",
-                    AdditionalData = newWorkHours
-                }); ;
-
-                return ResponseBuilder.Success(HttpStatusCode.OK,
-                    $"{_requestTitle} succeeded",
-                    newWorkHours);
-
-                #endregion
-            }
-            catch (Exception error)
-
-            {
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} faild",
-                    AdditionalData = error.Message
+                    AdditionalData = error
                 });
 
-                return ResponseBuilder.Faild(HttpStatusCode.InternalServerError,
-                    $"{_requestTitle} failed",
-                    error.Message);
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
+            #endregion
+
+            #region AddNewWorkHours
+            var newWorkHours = new List<MedicalStaffSchedule>();
+
+            if (request.DTO.MedicalStaffSchedule.Count != 0)
+            {
+                var MedicalStaffSchedule = new List<MedicalStaffSchedule>();
+
+                foreach (var item in request.DTO.MedicalStaffSchedule)
+                {
+                    var schedule = _mapper.Map<MedicalStaffSchedule>(item);
+                    schedule.MedicalStaffId = request.DTO.MedicalStaffId;
+                    schedule.MaxAppointmentCount = request.DTO.MaxAppointmentCount;
+                    schedule.OfficeId = request.OfficeId;
+
+                    MedicalStaffSchedule.Add(schedule);
+                }
+                newWorkHours = await _medicalStaffScheduleRepository.AddRange(MedicalStaffSchedule);
+            }
+
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = newWorkHours.Select(x => x.Id)
+            });
+
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", newWorkHours.Select(x => x.Id));
+            #endregion
         }
     }
 }

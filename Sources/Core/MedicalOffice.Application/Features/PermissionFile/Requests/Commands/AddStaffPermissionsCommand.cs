@@ -4,10 +4,9 @@ using MedicalOffice.Application.Responses;
 
 namespace MedicalOffice.Application.Features.PermissionFile.Requests.Commands
 {
-    public class AddStaffPermissionsCommand : IRequest<BaseResponse>
+    public class UpdateStaffPermissionsCommand : IRequest<BaseResponse>
     {
-        public List<PermissionDto> DTO { get; set; }
+        public UpdateStaffPermissionDto DTO { get; set; }
         public Guid OfficeId { get; set; }
-        public Guid StaffId { get; set; }
     }
 }

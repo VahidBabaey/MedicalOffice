@@ -134,7 +134,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
 
                     var appointments = _appointmentRepository.GetByPeriodAndStaff(request.DTO.StartDate, request.DTO.EndDate, staffId).Result.ToList();
 
-                    var staffSchedule = _staffScheduleRepository.GetMedicalStaffScheduleById(staffId).Result.ToList();
+                    var staffSchedule = _staffScheduleRepository.GetMedicalStaffScheduleByStaffId(staffId,request.OfficeId).Result.ToList();
 
                     var eachStaffAppointments = FreeTimeGenerator.StaffPeriodAppointmetsCounts(service, appointments, staffSchedule, request.DTO.StartDate, request.DTO.EndDate);
 
@@ -194,7 +194,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                     appointments.AddRange(deviceAppointments);
                 }
 
-                var staffSchedule = _staffScheduleRepository.GetMedicalStaffScheduleById(request.DTO.MedicalStaffId).Result.ToList();
+                var staffSchedule = _staffScheduleRepository.GetMedicalStaffScheduleByStaffId(request.DTO.MedicalStaffId,request.OfficeId).Result.ToList();
                 if (staffSchedule == null)
                 {
                     var error = new ArgumentException("This staff doesn't have schedule!");

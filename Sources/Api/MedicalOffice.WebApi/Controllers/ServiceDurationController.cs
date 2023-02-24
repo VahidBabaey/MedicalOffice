@@ -3,6 +3,7 @@ using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
+using MedicalOffice.Application.Features.ServiceDurationFeature.Requests.Commands;
 using MedicalOffice.Application.Features.ServiceDurationScheduling.Requests.Commands;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
@@ -32,10 +33,18 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [HttpPatch]
+        public async Task<ActionResult<Guid>> Update(EditServiceDurationDTO dto, [FromQuery] string officeId)
+        {
+            var response = await _mediator.Send(new EditServiceDurationCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
         [HttpGet]
         public async Task<ActionResult<ServiceDurationListDTO>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new GetAllServiceDurationQuery() { DTO = dto , OfficeId = Guid.Parse(officeId) });
+            var response = await _mediator.Send(new GetAllServiceDurationQuery() { DTO = dto , OfficeId = Guid.Parse(officeId)});
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

@@ -71,7 +71,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
             }
             #endregion
 
-            var hasStaffService = _serviceDurationRepository.CheckStaffHasService(request.DTO.MedicalStaffId, request.DTO.ServiceId).Result;
+            var hasStaffService = _serviceDurationRepository.CheckStaffHasServiceDuration(request.DTO.MedicalStaffId, request.DTO.ServiceId).Result;
             if (!hasStaffService)
             {
                 result.Message = "The staff doesn't provide this service";

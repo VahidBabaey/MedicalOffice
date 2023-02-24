@@ -12,7 +12,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         {
             builder
                 .HasQueryFilter(m => m.IsDeleted == false);
-
             builder
                 .HasData(new MedicalStaff[]
                 {
