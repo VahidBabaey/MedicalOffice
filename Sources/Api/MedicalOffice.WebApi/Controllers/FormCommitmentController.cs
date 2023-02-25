@@ -19,7 +19,7 @@ public class FormCommitmentController : Controller
         _mediator = mediator;
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] AddFormCommitmentDTO dto, [FromQuery] string officeId)
     {
@@ -28,7 +28,7 @@ public class FormCommitmentController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
@@ -37,7 +37,7 @@ public class FormCommitmentController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateFormCommitmentDTO dto, [FromQuery] string officeId)
     {
@@ -46,7 +46,7 @@ public class FormCommitmentController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<FormCommitmentListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {

@@ -19,7 +19,7 @@ public class BasicInfoDetailController : Controller
         _mediator = mediator;
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] BasicInfoDetailDTO dto, [FromQuery] string officeId)
     {
@@ -28,7 +28,7 @@ public class BasicInfoDetailController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string basicinfoId, [FromQuery] string officerId)
     {
@@ -37,7 +37,7 @@ public class BasicInfoDetailController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid Id, [FromQuery] string officeId)
     {
@@ -46,7 +46,7 @@ public class BasicInfoDetailController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateBasicInfoDetailDTO dto, [FromQuery] string officeId)
     {
