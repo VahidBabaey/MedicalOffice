@@ -190,12 +190,6 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<ReceptionsDTO>, AddReceptionValidator>();
         #endregion
 
-        #region FormCommitment
-        services.AddScoped<IValidator<AddFormCommitmentDTO>, AddFormCommitmentValidator>();
-        services.AddScoped<IValidator<AddFormCommitmentDTO>, AddFormCommitmentValidator>();
-        services.AddScoped<IValidator<UpdateFormCommitmentDTO>, UpdateFormCommitmentValidator>();
-        #endregion
-
         return services;
     }
     public static IServiceCollection AddApplication(this IServiceCollection services)

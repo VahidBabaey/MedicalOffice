@@ -23,16 +23,16 @@ public class GetAllPicturesofPatientQueryHandler : IRequestHandler<GetAllPicture
 {
     private readonly IPatientRepository _patientrepository;
     private readonly IOfficeRepository _officeRepository;
-    private readonly IPictureRepository _repository;
+    private readonly IPictureRepository _picturerepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetAllPicturesofPatientQueryHandler(IPatientRepository patientrepository, IOfficeRepository officeRepository, IPictureRepository repository, IMapper mapper, ILogger logger)
+    public GetAllPicturesofPatientQueryHandler(IPatientRepository patientrepository, IOfficeRepository officeRepository, IPictureRepository picturerepository, IMapper mapper, ILogger logger)
     {
         _patientrepository = patientrepository;
         _officeRepository = officeRepository;
-        _repository = repository;
+        _picturerepository = picturerepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -40,18 +40,17 @@ public class GetAllPicturesofPatientQueryHandler : IRequestHandler<GetAllPicture
 
     public async Task<BaseResponse> Handle(GetAllPicturesofPatientQuery request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -60,19 +59,19 @@ public class GetAllPicturesofPatientQueryHandler : IRequestHandler<GetAllPicture
 
         if (!validationPatientId)
         {
-            var error = $"ID isn't exist";
+            var error = "ID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         try
         {
-            var pictures = await _repository.GetByPatientId(request.PatientId);
+            var pictures = await _picturerepository.GetByPatientId(request.PatientId);
 
             var result = _mapper.Map<List<PatientPicturesDTO>>(pictures.Skip(request.Dto.Skip).Take(request.Dto.Take));
 

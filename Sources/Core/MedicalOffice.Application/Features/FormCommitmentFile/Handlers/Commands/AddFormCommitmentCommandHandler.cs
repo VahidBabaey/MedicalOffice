@@ -23,17 +23,15 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
 {
     public class AddFormCommitmentCommandHandler : IRequestHandler<AddFormCommitmentCommand, BaseResponse>
     {
-        private readonly IValidator<AddFormCommitmentDTO> _validator;
         private readonly IFormCommitmentRepository _formcommitmentrepository;
         private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddFormCommitmentCommandHandler(IOfficeRepository officeRepository, IValidator<AddFormCommitmentDTO> validator, IFormCommitmentRepository formcommitmentrepository, IMapper mapper, ILogger logger)
+        public AddFormCommitmentCommandHandler(IOfficeRepository officeRepository, IFormCommitmentRepository formcommitmentrepository, IMapper mapper, ILogger logger)
         {
             _officeRepository = officeRepository;
-            _validator = validator;
             _formcommitmentrepository = formcommitmentrepository;
             _mapper = mapper;
             _logger = logger;
@@ -62,20 +60,6 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
             if (validationFormCommitmentName)
             {
                 var error = "Name Must be Unique";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
-            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
-
-            if (!validationResult.IsValid)
-            {
-                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

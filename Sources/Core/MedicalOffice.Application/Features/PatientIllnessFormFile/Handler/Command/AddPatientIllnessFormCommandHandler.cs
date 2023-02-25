@@ -22,15 +22,17 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Comm
     public class AddPatientIllnessFormCommandHandler : IRequestHandler<AddPatientIllnessFormCommand, BaseResponse>
     {
         private readonly IValidator<PatientIllnessFormDTO> _validator;
-        private readonly IPatientIllnessFormRepository _repository;
+        private readonly IPatientIllnessFormRepository _patientillnessformrepository;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddPatientIllnessFormCommandHandler(IValidator<PatientIllnessFormDTO> validator, IPatientIllnessFormRepository repository, IMapper mapper, ILogger logger)
+        public AddPatientIllnessFormCommandHandler(IOfficeRepository officeRepository, IValidator<PatientIllnessFormDTO> validator, IPatientIllnessFormRepository patientillnessformrepository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _validator = validator;
-            _repository = repository;
+            _patientillnessformrepository = patientillnessformrepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -38,19 +40,47 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Comm
 
         public async Task<BaseResponse> Handle(AddPatientIllnessFormCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
-            Log log = new();
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var validationCommitmentName = await _patientillnessformrepository.CheckExistPatientIllnessFormForm(request.DTO.IllnessReason, request.DTO.DateSolar);
+
+            if (validationCommitmentName)
+            {
+                var error = "Name Must be Unique";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                log.Type = LogType.Error;
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             else
             {
@@ -58,33 +88,27 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Comm
                 {
                     var patientillnessform = _mapper.Map<PatientIllnessForm>(request.DTO);
 
-                    patientillnessform = await _repository.Add(patientillnessform);
+                    patientillnessform = await _patientillnessformrepository.Add(patientillnessform);
 
-                    response.Success = true;
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data = (new { Id = patientillnessform.Id });
-
-                    log.Type = LogType.Success;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Success,
+                        Header = $"{_requestTitle} succeded",
+                        AdditionalData = patientillnessform.Id
+                    });
+                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", patientillnessform.Id);
                 }
                 catch (Exception error)
                 {
-                    response.Success = false;
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error.Message
+                    });
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
             }
-
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
-
 }

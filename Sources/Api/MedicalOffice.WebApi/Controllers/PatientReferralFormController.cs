@@ -21,39 +21,39 @@ public class PatientReferralFormController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("illnessReasons")]
     public async Task<ActionResult<List<illnessNamesListDTO>>> GetPatientIllnessReasons()
     {
         var response = await _mediator.Send(new GetAlliillnessReasonsForReferalFormQuery());
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] PatientReferralFormDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddPatientReferralFormCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<PatientReferralFormListDTO>>> GetAll([FromQuery] ListDto dto, Guid patientid)
+    public async Task<ActionResult<List<PatientReferralFormListDTO>>> GetAll([FromQuery] ListDto dto, Guid patientid, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllPatientReferralFormQuery() { DTO = dto, PatientId = patientid });
+        var response = await _mediator.Send(new GetAllPatientReferralFormQuery() { DTO = dto, PatientId = patientid, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete]
     public async Task<IActionResult> RemoveAsync(Guid id)
     {
         var response = await _mediator.Send(new DeletePatientReferralFormCommand() { PatientReferralFormId = id });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

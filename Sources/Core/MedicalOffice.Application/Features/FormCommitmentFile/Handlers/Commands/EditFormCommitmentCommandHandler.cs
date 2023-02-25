@@ -20,17 +20,15 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
 {
     public class EditFormCommitmentCommandHandler : IRequestHandler<EditFormCommitmentCommand, BaseResponse>
     {
-        private readonly IValidator<UpdateFormCommitmentDTO> _validator;
         private readonly IFormCommitmentRepository _formcommitmentrepository;
         private readonly IOfficeRepository _officeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditFormCommitmentCommandHandler(IOfficeRepository officeRepository, IValidator<UpdateFormCommitmentDTO> validator, IFormCommitmentRepository formcommitmentrepository, IMapper mapper, ILogger logger)
+        public EditFormCommitmentCommandHandler(IOfficeRepository officeRepository, IFormCommitmentRepository formcommitmentrepository, IMapper mapper, ILogger logger)
         {
             _officeRepository = officeRepository;
-            _validator = validator;
             _formcommitmentrepository = formcommitmentrepository;
             _mapper = mapper;
             _logger = logger;
@@ -59,20 +57,6 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
             if (!validationFormCommitmentId)
             {
                 var error = "ID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
-            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
-
-            if (!validationResult.IsValid)
-            {
-                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

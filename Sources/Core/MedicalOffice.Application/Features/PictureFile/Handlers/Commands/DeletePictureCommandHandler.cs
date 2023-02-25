@@ -16,53 +16,52 @@ namespace MedicalOffice.Application.Features.PictureFile.Handlers.Commands;
 public class DeletePictureCommandHandler : IRequestHandler<DeletePictureCommand, BaseResponse>
 {
     private readonly IOfficeRepository _officeRepository;
-    private readonly IPictureRepository _repository;
+    private readonly IPictureRepository _picturerepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeletePictureCommandHandler(IOfficeRepository officeRepository, IPictureRepository repository, ILogger logger)
+    public DeletePictureCommandHandler(IOfficeRepository officeRepository, IPictureRepository picturerepository, ILogger logger)
     {
         _officeRepository = officeRepository;
-        _repository = repository;
+        _picturerepository = picturerepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(DeletePictureCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
-        var validationPictureId = await _repository.CheckExistPictureId(request.OfficeId, request.PictureId);
+        var validationPictureId = await _picturerepository.CheckExistPictureId(request.OfficeId, request.PictureId);
 
         if (!validationPictureId)
         {
-            var error = $"ID isn't exist";
+            var error = "ID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         try
         {
-            await _repository.SoftDelete(request.PictureId);
+            await _picturerepository.SoftDelete(request.PictureId);
 
             await _logger.Log(new Log
             {

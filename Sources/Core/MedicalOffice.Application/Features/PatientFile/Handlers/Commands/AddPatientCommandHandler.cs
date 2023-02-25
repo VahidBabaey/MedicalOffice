@@ -18,16 +18,16 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
 {
     private readonly IOfficeRepository _officeRepository;
     private readonly IValidator<PatientDTO> _validator;
-    private readonly IPatientRepository _repository;
+    private readonly IPatientRepository _patientrepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddPatientCommandHandler(IOfficeRepository officeRepository, IValidator<PatientDTO> validator, IPatientRepository repository, IMapper mapper, ILogger logger)
+    public AddPatientCommandHandler(IOfficeRepository officeRepository, IValidator<PatientDTO> validator, IPatientRepository patientrepository, IMapper mapper, ILogger logger)
     {
         _officeRepository = officeRepository;
         _validator = validator;
-        _repository = repository;
+        _patientrepository = patientrepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -36,18 +36,16 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
     public async Task<BaseResponse> Handle(AddPatientCommand request, CancellationToken cancellationToken)
     {
 
-        BaseResponse response = new();
-
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -61,7 +59,7 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -72,19 +70,19 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
                 var patient = _mapper.Map<Patient>(request.DTO);
                 patient.OfficeId = request.OfficeId;
 
-                patient = await _repository.Add(patient);
+                patient = await _patientrepository.Add(patient);
 
                 foreach (var mobile in request.DTO.PhoneNumber)
                 {
-                    await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
+                    await _patientrepository.InsertContactValueofPatientAsync(patient.Id, mobile);
                 }
                 foreach (var address in request.DTO.Address)
                 {
-                    await _repository.InsertAddressofPatientAsync(patient.Id, address);
+                    await _patientrepository.InsertAddressofPatientAsync(patient.Id, address);
                 }
                 foreach (var tag in request.DTO.Tag)
                 {
-                    await _repository.InsertTagofPatientAsync(patient.Id, tag);
+                    await _patientrepository.InsertTagofPatientAsync(patient.Id, tag);
                 }
 
                 await _logger.Log(new Log

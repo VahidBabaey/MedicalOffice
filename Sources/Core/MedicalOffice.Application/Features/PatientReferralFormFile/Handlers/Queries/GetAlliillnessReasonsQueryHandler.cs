@@ -6,49 +6,55 @@ using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Request.Query;
 using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Responses;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.PatientReferralFormFile.Handler.Query;
 
-public class GetAlliillnessReasonsQueryHandler : IRequestHandler<GetAlliillnessReasonsForReferalFormQuery, List<illnessNamesListDTO>>
+public class GetAlliillnessReasonsQueryHandler : IRequestHandler<GetAlliillnessReasonsForReferalFormQuery, BaseResponse>
 {
-    private readonly IBasicInfoDetailRepository _repository;
+    private readonly IBasicInfoDetailRepository _basicinfodetailrepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetAlliillnessReasonsQueryHandler(IBasicInfoDetailRepository repository, IMapper mapper, ILogger logger)
+    public GetAlliillnessReasonsQueryHandler(IBasicInfoDetailRepository basicinfodetailrepository, IMapper mapper, ILogger logger)
     {
-        _repository = repository;
+        _basicinfodetailrepository = basicinfodetailrepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
-    public async Task<List<illnessNamesListDTO>> Handle(GetAlliillnessReasonsForReferalFormQuery request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(GetAlliillnessReasonsForReferalFormQuery request, CancellationToken cancellationToken)
     {
-        List<illnessNamesListDTO> result = new();
-
-        Log log = new();
 
         try
         {
-            var illnessreasons = await _repository.GetByBasicInfoIllnessId();
+            var illnessreasons = await _basicinfodetailrepository.GetByBasicInfoIllnessId();
 
-            result = _mapper.Map<List<illnessNamesListDTO>>(illnessreasons);
+            var result = _mapper.Map<List<illnessNamesListDTO>>(illnessreasons);
 
-            log.Header = $"{_requestTitle} succeded";
-            log.Type = LogType.Success;
+
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = new { total = illnessreasons.Count(), result = result }
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = illnessreasons.Count(), result = result });
         }
         catch (Exception error)
         {
-            log.Header = $"{_requestTitle} failed";
-            log.AdditionalData=(error.Message);
-            log.Type = LogType.Error;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
-
-        await _logger.Log(log);
-
-        return result;
     }
 }
+
 

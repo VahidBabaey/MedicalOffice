@@ -9,6 +9,7 @@ using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +22,14 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Quer
 
     public class GetAllPatientCommitmentFormQueryHandler : IRequestHandler<GetAllPatientCommitmentsFormQuery, BaseResponse>
     {
-        private readonly IPatientCommitmentFormRepository _repository;
+        private readonly IPatientCommitmentFormRepository _patientcommitmentformrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllPatientCommitmentFormQueryHandler(IPatientCommitmentFormRepository repository, IMapper mapper, ILogger logger)
+        public GetAllPatientCommitmentFormQueryHandler(IPatientCommitmentFormRepository patientcommitmentformrepository, IMapper mapper, ILogger logger)
         {
-            _repository = repository;
+            _patientcommitmentformrepository = patientcommitmentformrepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -36,31 +37,31 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Quer
 
         public async Task<BaseResponse> Handle(GetAllPatientCommitmentsFormQuery request, CancellationToken cancellationToken)
         {
-            Log log = new();
 
             try
             {
-                var patientCommitmentsForms = await _repository.GetByPatientId(request.PatientId);
-                var result = _mapper.Map<List<PatientCommitmentsFormListDTO>>(patientCommitmentsForms);
+                var patientCommitmentsForms = await _patientcommitmentformrepository.GetByPatientId(request.PatientId);
+                var result = _mapper.Map<List<PatientCommitmentsFormListDTO>>(patientCommitmentsForms.Skip(request.DTO.Skip).Take(request.DTO.Take));
 
-                log.Header = $"{_requestTitle} succeded";
-                log.Type = LogType.Success;
-                log.AdditionalData = result;
-                await _logger.Log(log);
-
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = patientCommitmentsForms.Count(), result = result }
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = patientCommitmentsForms.Count(), result = result });
             }
 
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData = error.Message;
-                log.Type = LogType.Error;
-                await _logger.Log(log);
-
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
     }
-
 }

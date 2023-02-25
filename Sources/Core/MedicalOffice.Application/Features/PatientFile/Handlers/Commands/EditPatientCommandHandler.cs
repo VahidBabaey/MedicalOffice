@@ -16,22 +16,22 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
 {
     private readonly IOfficeRepository _officeRepository;
     private readonly IValidator<UpdatePatientDTO> _validator;
-    private readonly IPatientRepository _repository;
-    private readonly IPatientContactRepository _repositorycontact;
-    private readonly IPatientAddressRepository _repositoryaddress;
-    private readonly IPatientTagRepository _repositorytag;
+    private readonly IPatientRepository _patientrepository;
+    private readonly IPatientContactRepository _contactrepository;
+    private readonly IPatientAddressRepository _addressrepository;
+    private readonly IPatientTagRepository _tagrepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public EditPatientCommandHandler(IOfficeRepository officeRepository, IValidator<UpdatePatientDTO> validator, IPatientContactRepository repositorycontact, IPatientAddressRepository repositoryaddress, IPatientTagRepository repositorytag, IPatientRepository repository, IMapper mapper, ILogger logger)
+    public EditPatientCommandHandler(IOfficeRepository officeRepository, IValidator<UpdatePatientDTO> validator, IPatientContactRepository contactrepository, IPatientAddressRepository addressrepository, IPatientTagRepository tagrepository, IPatientRepository patientrepository, IMapper mapper, ILogger logger)
     {
         _officeRepository = officeRepository;
         _validator = validator;
-        _repository = repository;
-        _repositorycontact = repositorycontact;
-        _repositoryaddress = repositoryaddress;
-        _repositorytag = repositorytag;
+        _patientrepository = patientrepository;
+        _contactrepository = contactrepository;
+        _addressrepository = addressrepository;
+        _tagrepository = tagrepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -39,32 +39,31 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
 
     public async Task<BaseResponse> Handle(EditPatientCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
-        var validationPatientId = await _repository.CheckExistPatientId(request.OfficeId, request.DTO.Id);
+        var validationPatientId = await _patientrepository.CheckExistPatientId(request.OfficeId, request.DTO.Id);
 
         if (!validationPatientId)
         {
-            var error = $"ID isn't exist";
+            var error = "ID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -78,7 +77,7 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -89,22 +88,22 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
                 var patient = _mapper.Map<Patient>(request.DTO);
                 patient.OfficeId = request.OfficeId;
 
-                await _repository.Update(patient);
-                await _repositorycontact.RemovePatientContact(patient.Id);
-                await _repositoryaddress.RemovePatientAddress(patient.Id);
-                await _repositorytag.RemovePatientTag(patient.Id);
+                await _patientrepository.Update(patient);
+                await _contactrepository.RemovePatientContact(patient.Id);
+                await _addressrepository.RemovePatientAddress(patient.Id);
+                await _tagrepository.RemovePatientTag(patient.Id);
 
                 foreach (var mobile in request.DTO.PhoneNumber)
                 {
-                    await _repository.InsertContactValueofPatientAsync(patient.Id, mobile);
+                    await _patientrepository.InsertContactValueofPatientAsync(patient.Id, mobile);
                 }
                 foreach (var address in request.DTO.Address)
                 {
-                    await _repository.InsertAddressofPatientAsync(patient.Id, address);
+                    await _patientrepository.InsertAddressofPatientAsync(patient.Id, address);
                 }
                 foreach (var tag in request.DTO.Tag)
                 {
-                    await _repository.InsertTagofPatientAsync(patient.Id, tag);
+                    await _patientrepository.InsertTagofPatientAsync(patient.Id, tag);
                 }
                 await _logger.Log(new Log
                 {

@@ -5,6 +5,7 @@ using MedicalOffice.Application.Dtos.PatientIllnessFormDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormListDTO;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Command;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
+using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,39 +22,39 @@ public class PatientIllnessFormController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("illnessReasons")]
     public async Task<ActionResult<List<illnessNamesListDTO>>> GetPatientIllnessReasons()
     {
         var response = await _mediator.Send(new GetAlliillnessReasonsForillnessFormQuery());
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] PatientIllnessFormDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddPatientIllnessFormCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<PatientIllnessFormListDTO>>> GetAll([FromQuery] ListDto dto, Guid patientid)
+    public async Task<ActionResult<List<PatientIllnessFormListDTO>>> GetAll([FromQuery] ListDto dto, Guid patientid, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllPatientIllnessFormQuery() { DTO = dto, PatientId = patientid });
+        var response = await _mediator.Send(new GetAllPatientIllnessFormQuery() { DTO = dto, PatientId = patientid, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id)
     {
         var response = await _mediator.Send(new DeletePatientIllnessFormCommand() { PatientIllnessFormId = id });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

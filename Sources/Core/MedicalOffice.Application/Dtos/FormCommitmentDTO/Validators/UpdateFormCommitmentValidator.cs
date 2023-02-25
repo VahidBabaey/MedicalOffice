@@ -20,7 +20,6 @@ namespace MedicalOffice.Application.Dtos.FormCommitmentDTO.Validators
             _officeResolver = officeResolver;
 
             RuleFor(x => x.Name).NotEmpty();
-            Include(new PatientIdValidator(_patientRepository, _officeResolver));
         }
     }
 }

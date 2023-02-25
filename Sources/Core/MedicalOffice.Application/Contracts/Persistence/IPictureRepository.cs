@@ -7,6 +7,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
     {
         Task<bool> CheckExistPictureId(Guid officeId, Guid pictureId);
         Task<List<PatientPicturesDTO>> GetByPatientId(Guid patientId);
-        Task<AddPictureDTO> RegisterPictureAsync(PictureUploadDTO pictureUploadDTO);
+        Task<Picture> RegisterPictureAsync(PictureUploadDTO pictureUploadDTO, Guid officeId);
     }
 }

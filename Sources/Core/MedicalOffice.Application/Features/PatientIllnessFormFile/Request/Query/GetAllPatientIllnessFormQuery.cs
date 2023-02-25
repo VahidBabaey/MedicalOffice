@@ -15,5 +15,6 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Quer
     {
         public ListDto DTO { get; set; } = new ListDto();
         public Guid PatientId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

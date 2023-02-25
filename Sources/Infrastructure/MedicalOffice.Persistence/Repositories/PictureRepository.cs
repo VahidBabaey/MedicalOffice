@@ -18,17 +18,14 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
         _pictureRepository = pictureRepository;
         PatientPicturesDTO = new List<PatientPicturesDTO>();
     }
-    public async Task<AddPictureDTO> RegisterPictureAsync(PictureUploadDTO pictureUploadDTO)
+    public async Task<Picture> RegisterPictureAsync(PictureUploadDTO pictureUploadDTO, Guid officeId)
     {
         try
         {
             var picture = new Picture();
             picture.PictureName = pictureUploadDTO.Picturename;
-            //picture.OfficeId = pictureUploadDTO.OfficeId;
+            picture.OfficeId = officeId;
             picture.PatientId = pictureUploadDTO.PatientId;
-
-            
-
             var fileName = "" + picture.PictureName;
             byte[] pictureBinary = null;
             using (var fileStream = pictureUploadDTO.File.OpenReadStream())
@@ -46,7 +43,6 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
             picture.VirtualPath = filePath;
 
             await _pictureRepository.Add(picture);
-            //_pictureRepository.Update(picture);
 
             AddPictureDTO pictureDTO = new AddPictureDTO()
             {
@@ -54,7 +50,7 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
                 Picturename = picture.PictureName
             };
 
-            return pictureDTO;
+            return picture;
         }
         catch (Exception)
         {
@@ -64,7 +60,7 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
     }
     public async Task<List<PatientPicturesDTO>> GetByPatientId(Guid patientId)
     {
-        var patientpicture = await _dbContext.Pictures.Where(srv => srv.PatientId == patientId).ToListAsync();
+        var patientpicture = await _dbContext.Pictures.Where(p => p.PatientId == patientId && p.IsDeleted == false).ToListAsync();
         foreach (var item in patientpicture)
         {
             var q = new PatientPicturesDTO()

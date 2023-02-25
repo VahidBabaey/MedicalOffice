@@ -21,16 +21,18 @@ namespace MedicalOffice.Application.Features.PatientReferralFormFile.Handlers.Co
 
     public class AddPatientReferralFormCommandHandler : IRequestHandler<AddPatientReferralFormCommand, BaseResponse>
     {
+        private readonly IOfficeRepository _officeRepository;
         private readonly IValidator<PatientReferralFormDTO> _validator;
-        private readonly IPatientReferralFormRepository _repository;
+        private readonly IPatientReferralFormRepository _patientreferralformrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddPatientReferralFormCommandHandler(IValidator<PatientReferralFormDTO> validator, IPatientReferralFormRepository repository, IMapper mapper, ILogger logger)
+        public AddPatientReferralFormCommandHandler(IOfficeRepository officeRepository, IValidator<PatientReferralFormDTO> validator, IPatientReferralFormRepository patientreferralformrepository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _validator = validator;
-            _repository = repository;
+            _patientreferralformrepository = patientreferralformrepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -38,19 +40,47 @@ namespace MedicalOffice.Application.Features.PatientReferralFormFile.Handlers.Co
 
         public async Task<BaseResponse> Handle(AddPatientReferralFormCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
-            Log log = new();
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var validationCommitmentName = await _patientreferralformrepository.CheckExistPatientReferralFormForm(request.DTO.ReferralReason, request.DTO.DateSolar);
+
+            if (validationCommitmentName)
+            {
+                var error = "Name Must be Unique";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                log.Type = LogType.Error;
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             else
             {
@@ -58,33 +88,27 @@ namespace MedicalOffice.Application.Features.PatientReferralFormFile.Handlers.Co
                 {
                     var patientreferralform = _mapper.Map<PatientReferralForm>(request.DTO);
 
-                    patientreferralform = await _repository.Add(patientreferralform);
+                    patientreferralform = await _patientreferralformrepository.Add(patientreferralform);
 
-                    response.Success = true;
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data = (new { Id = patientreferralform.Id });
-
-                    log.Type = LogType.Success;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Success,
+                        Header = $"{_requestTitle} succeded",
+                        AdditionalData = patientreferralform.Id
+                    });
+                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", patientreferralform.Id);
                 }
                 catch (Exception error)
                 {
-                    response.Success = false;
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error.Message
+                    });
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
             }
-
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
-
 }

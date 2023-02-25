@@ -19,7 +19,7 @@ public class PatientController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] PatientDTO dto, [FromQuery] string officeId)
     {
@@ -28,16 +28,16 @@ public class PatientController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete]
-    public async Task<ActionResult<Guid>> Delete(Guid patientId, [FromQuery] string officeId)
+    public async Task<ActionResult<Guid>> Remove(Guid patientId, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new DeletePatientCommand() { PatientId = patientId, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdatePatientDTO dto, [FromQuery] string officeId)
     {
@@ -46,7 +46,7 @@ public class PatientController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
     public async Task<ActionResult<List<PatientListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
@@ -55,7 +55,7 @@ public class PatientController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("SearchByRequestedFeilds")]
     public async Task<ActionResult<List<PatientListDTO>>> GetBySearch([FromQuery] SearchFields searchFields, [FromQuery] ListDto dto)
     {

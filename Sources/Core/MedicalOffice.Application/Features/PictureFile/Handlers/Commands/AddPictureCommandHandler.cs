@@ -23,17 +23,17 @@ namespace MedicalOffice.Application.Features.PictureFile.Handlers.Commands;
 public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseResponse>
 {
     private readonly IOfficeRepository _officeRepository;
-    private readonly IPictureRepository _repository;
+    private readonly IPictureRepository _picturerepository;
     private readonly IValidator<PictureUploadDTO> _validator;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddPictureCommandHandler(IValidator<PictureUploadDTO> validator, IOfficeRepository officeRepository, IPictureRepository repository, IMapper mapper, ILogger logger)
+    public AddPictureCommandHandler(IValidator<PictureUploadDTO> validator, IOfficeRepository officeRepository, IPictureRepository picturerepository, IMapper mapper, ILogger logger)
     {
         _validator = validator;
         _officeRepository = officeRepository;
-        _repository = repository;
+        _picturerepository = picturerepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -41,18 +41,17 @@ public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseR
 
     public async Task<BaseResponse> Handle(AddPictureCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = $"OfficeID isn't exist";
+            var error = "OfficeID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -66,7 +65,7 @@ public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseR
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = response.Errors
+                AdditionalData = error
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
@@ -74,9 +73,8 @@ public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseR
         {
             try
             {
-                
-                var picture = _mapper.Map<Picture>(await _repository.RegisterPictureAsync(request.DTO));
-                picture.OfficeId = request.OfficeId;
+                var picture = await _picturerepository.RegisterPictureAsync(request.DTO, request.OfficeId);
+                var result = _mapper.Map<Picture>(picture);
 
                 await _logger.Log(new Log
                 {
