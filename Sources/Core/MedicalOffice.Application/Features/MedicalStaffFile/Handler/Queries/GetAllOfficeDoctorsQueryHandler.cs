@@ -2,6 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Models;
@@ -33,14 +34,23 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
         {
             var staffs = await _medicalStaffRepository.GetAllDoctorsAndExperts(request.OfficeId);
             var staffNamse = _mapper.Map<List<MedicalStaffNameListDTO>>(staffs);
+            var result = new List<NameDTO>();
 
+            foreach (var item in staffNamse)
+            {
+                result.Add(new NameDTO
+                {
+                    Id = item.Id,
+                    Name = item.FirstName + " " + item.LastName
+                });
+            }
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeded",
-                AdditionalData = staffNamse
+                AdditionalData = result
             });
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", staffNamse);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
         }
     }
 }

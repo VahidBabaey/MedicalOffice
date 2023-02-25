@@ -235,7 +235,6 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Queries
                             {
                                 MedicalStaffId = service.MedicalStaffId,
                                 StaffName = service.StaffName,
-                                StaffLastName = service.StaffLastName,
                                 StartTime = item.StartTime.ToString(),
                                 EndTime = item.EndTime.ToString(),
                                 ServiceName = service.ServiceName

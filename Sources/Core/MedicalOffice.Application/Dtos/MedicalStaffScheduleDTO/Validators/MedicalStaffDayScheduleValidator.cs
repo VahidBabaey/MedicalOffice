@@ -10,7 +10,6 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators
         {
             #region MorningStartValidation
             RuleFor(x => x.MorningStart)
-                .NotEmpty()
                 .Must(x => TimeOnly.TryParse(x, out TimeOnly result))
                 .WithMessage(ValidationMessage.NotValid.For("MorningStart"));
 
@@ -21,7 +20,6 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators
 
             #region MorningEndValidation
             RuleFor(x => x.MorningEnd)
-                .NotEmpty()
                 .Must(x => TimeOnly.TryParse(x, out TimeOnly result))
                 .WithMessage(ValidationMessage.NotValid.For("MorningEnd"));
 
@@ -34,7 +32,6 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators
 
             #region EveningStartValidation
             RuleFor(x => x.EveningStart)
-                .NotEmpty()
                 .Must(x => TimeOnly.TryParse(x, out TimeOnly result))
                 .WithMessage(ValidationMessage.NotValid.For("EveningStart"));
 
@@ -47,7 +44,6 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators
 
             #region EveningEndValidation
             RuleFor(x => x.EveningEnd)
-                .NotEmpty()
                 .Must(x => TimeOnly.TryParse(x, out TimeOnly result))
                 .WithMessage(ValidationMessage.NotValid.For("EveningEnd"));
 

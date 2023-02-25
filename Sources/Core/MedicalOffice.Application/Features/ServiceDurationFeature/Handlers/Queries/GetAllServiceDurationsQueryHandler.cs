@@ -35,8 +35,8 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 
         public async Task<BaseResponse> Handle(GetAllServiceDurationQuery request, CancellationToken cancellationToken)
         {
-            var services = _ServiceDurationRepository.GetAll().Result.Where(x => x.OfficeId == request.OfficeId).ToList();
-            var result = _mappper.Map<List<ServiceDurationListDTO>>(services.Skip(request.DTO.Skip).Take(request.DTO.Take));
+            var services = await _ServiceDurationRepository.GetAllServiceDurations(request.OfficeId);
+            var result = services.Skip(request.DTO.Skip).Take(request.DTO.Take);
 
             await _logger.Log(new Log
             {
@@ -48,7 +48,6 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
             return ResponseBuilder.Success(HttpStatusCode.OK,
                 $"{_requestTitle} succeeded",
                 new { total = services.Count, result = result });
-
         }
     }
 }

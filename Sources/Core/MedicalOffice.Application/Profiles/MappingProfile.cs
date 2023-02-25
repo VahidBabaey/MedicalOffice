@@ -123,7 +123,6 @@ public class MappingProfile : Profile
         CreateMap<Office, UserOfficeDTO>().ReverseMap();
         CreateMap<MedicalStaffSchedule, MedicalStaffDaySchedule>().ReverseMap();
         CreateMap<ServiceDuration, ServiceDurationDTO>().ReverseMap();
-        CreateMap<ServiceDuration, ServiceDurationListDTO>().ReverseMap();
         CreateMap<AppointmentDetailsDTO, Appointment>().ReverseMap();
         CreateMap<Appointment, TransferAppointmentDTO>().ReverseMap()
             .ForAllMembers(x => x.Condition((src, dest, srcMember) => srcMember != null));

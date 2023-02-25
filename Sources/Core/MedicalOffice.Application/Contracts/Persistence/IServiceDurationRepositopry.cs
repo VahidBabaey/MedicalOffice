@@ -13,5 +13,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<ServiceDurationDetailsDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId);
 
         Task DeleteRange(Guid[] ids);
+
+        Task<List<ServiceDurationDetailsDTO>> GetAllServiceDurations(Guid officeId);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
+using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -33,7 +34,7 @@ namespace MedicalOffice.Persistence.Repositories
 
             foreach (var item in _list)
             {
-                item.IsDeleted=true;
+                item.IsDeleted = true;
             }
 
             _dbContext.UpdateRange(_list);
@@ -47,6 +48,21 @@ namespace MedicalOffice.Persistence.Repositories
             return serviceDuration;
         }
 
+        public async Task<List<ServiceDurationDetailsDTO>> GetAllServiceDurations(Guid officeId)
+        {
+            var _list = await _dbContext.ServiceDurations.Include(x => x.MedicalStaff).Include(x => x.Service).Where(x => x.OfficeId == officeId)
+                .Select(x => new ServiceDurationDetailsDTO
+                {
+                    Id = x.Id,
+                    MedicalStaffId = x.MedicalStaff.Id,
+                    StaffName = x.MedicalStaff.FirstName + " " + x.MedicalStaff.LastName,
+                    ServiceId = x.ServiceId,
+                    ServiceName = x.Service.Name
+                }).ToListAsync();
+
+            return _list;
+        }
+
         public async Task<ServiceDurationDetailsDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId)
         {
             var service = await _dbContext.ServiceDurations.Include(x => x.Service).Include(x => x.MedicalStaff).SingleOrDefaultAsync(x => x.MedicalStaffId == medicalStaffId && x.ServiceId == serviceId);
@@ -56,8 +72,7 @@ namespace MedicalOffice.Persistence.Repositories
             {
                 result.MedicalStaffId = service.MedicalStaffId;
                 result.ServiceName = service.Service.Name;
-                result.StaffName = service.MedicalStaff.FirstName;
-                result.StaffLastName = service.MedicalStaff.LastName;
+                result.StaffName = service.MedicalStaff.FirstName + " " + service.MedicalStaff.LastName;
             }
 
             return result;

@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.ServiceDurationDTO
 {
-    public class ServiceDurationListDTO : BaseDto<Guid>
+    public class ServiceDurationDetailsDTO : BaseDto<Guid>
     {
         public Guid MedicalStaffId { get; set; }
+        public string StaffName { get; set; }
+        public Guid ServiceId{ get; set; }
+        public string ServiceName { get; set; }
+        public int Duration { get; set; }
 
-        public Guid ServiceId { get; set; }
 
-        public int Duration{ get; set; }
     }
 }

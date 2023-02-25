@@ -45,7 +45,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceDurationListDTO>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
+        public async Task<ActionResult<List<ServiceDurationDetailsDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new GetAllServiceDurationQuery() { DTO = dto , OfficeId = Guid.Parse(officeId)});
 
