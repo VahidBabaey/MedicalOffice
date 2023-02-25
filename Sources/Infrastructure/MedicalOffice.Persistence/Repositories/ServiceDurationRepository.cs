@@ -27,6 +27,19 @@ namespace MedicalOffice.Persistence.Repositories
             return Task.FromResult(_dbContext.ServiceDurations.Any(x => x.ServiceId == serviceId && x.MedicalStaffId == medicalStaffId));
         }
 
+        public async Task DeleteRange(Guid[] ids)
+        {
+            var _list = await _dbContext.ServiceDurations.Where(x => ids.Contains(x.Id)).ToListAsync();
+
+            foreach (var item in _list)
+            {
+                item.IsDeleted=true;
+            }
+
+            _dbContext.UpdateRange(_list);
+            _dbContext.SaveChanges();
+        }
+
         public async Task<List<ServiceDuration>> GetAllByServiceId(Guid serviceId)
         {
             var serviceDuration = await _dbContext.ServiceDurations.Where(x => x.ServiceId == serviceId).ToListAsync();

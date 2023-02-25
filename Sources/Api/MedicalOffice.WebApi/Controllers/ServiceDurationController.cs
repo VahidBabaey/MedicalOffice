@@ -1,8 +1,11 @@
 ﻿using MediatR;
+using MedicalOffice.Application;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.Identity;
+using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
+using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.ServiceDurationFeature.Requests.Commands;
 using MedicalOffice.Application.Features.ServiceDurationScheduling.Requests.Commands;
 using MedicalOffice.Application.Responses;
@@ -45,6 +48,15 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         public async Task<ActionResult<ServiceDurationListDTO>> GetAll([FromQuery] ListDto dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new GetAllServiceDurationQuery() { DTO = dto , OfficeId = Guid.Parse(officeId)});
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
+        [Authorize]
+        [HttpDelete("list")]
+        public async Task<IActionResult> RemoveList([FromBody] ServiceDurationIdListDTO dto, [FromQuery] string officeId)
+        {
+            var response = await _mediator.Send(new DeleteServiceDurationListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
