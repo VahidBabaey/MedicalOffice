@@ -35,7 +35,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
         public async Task<BaseResponse> Handle(GetPermissionsQuery request, CancellationToken cancellationToken)
         {
             var permissions = _PermissionRepository.GetAll().Result.ToList();
-            var result = GetMenu(permissions);
+            var result = GetPermissions(permissions);
 
             await _logger.Log(new Log
             {
@@ -47,7 +47,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
             return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
         }
 
-        private List<PermissionListDto> GetMenu(List<Permission> Permissions)
+        private List<PermissionListDto> GetPermissions(List<Permission> Permissions)
         {
             var groupedMenu = Permissions.GroupBy(p => p.ParentId, (key, grpup) => new { ParentId = key, Permissions = grpup.ToList() });
 

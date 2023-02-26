@@ -32,7 +32,7 @@ public class PermissionController : Controller
 
     [Authorize]
     [HttpGet("staff")]
-    public async Task<ActionResult<List<PermissionListDto>>> GetStaffPermissions([FromQuery] string staffId, [FromQuery] string officeId)
+    public async Task<ActionResult<List<Guid>>> GetStaffPermissions([FromQuery] string staffId, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new GetStaffPermissionsQuery() { OfficeId = Guid.Parse(officeId), StaffId = Guid.Parse(staffId) });
 

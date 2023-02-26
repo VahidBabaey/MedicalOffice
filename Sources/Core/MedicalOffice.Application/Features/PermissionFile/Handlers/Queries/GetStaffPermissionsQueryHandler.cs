@@ -60,46 +60,46 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
 
             var permissions = await _userOfficePermissionRepository.GetPermissionsByStaffId(request.StaffId, request.OfficeId);
 
-            var parentIds = permissions.Select(x => x.ParentId).Distinct().ToList();
+            //var parentIds = permissions.Select(x => x.ParentId).Distinct().ToList();
 
-            var parentPermissions = await _permissionRepository.GetByParentIds(parentIds);
+            //var parentPermissions = await _permissionRepository.GetByParentIds(parentIds);
 
-            permissions.AddRange(parentPermissions);
+            //permissions.AddRange(parentPermissions);
 
-            var result = GetMenu(permissions);
+            //var result = GetPermissions(permissions);
 
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeded",
-                AdditionalData = result
+                AdditionalData = permissions.Select(x=>x.Id)
             });
 
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", permissions.Select(x => x.Id));
         }
 
-        private List<PermissionListDto> GetMenu(List<Permission> Permissions)
-        {
-            var groupedMenu = Permissions.GroupBy(p => p.ParentId, (key, grpup) => new { ParentId = key, Permissions = grpup.ToList() });
+        //private List<PermissionListDto> GetPermissions(List<Permission> Permissions)
+        //{
+        //    var groupedMenu = Permissions.GroupBy(p => p.ParentId, (key, grpup) => new { ParentId = key, Permissions = grpup.ToList() });
 
-            var parents = new List<PermissionListDto>();
-            parents.AddRange(groupedMenu.Where(x => x.ParentId == null).SelectMany(x => x.Permissions).Select(x => _mapper.Map<PermissionListDto>(x)));
+        //    var parents = new List<PermissionListDto>();
+        //    parents.AddRange(groupedMenu.Where(x => x.ParentId == null).SelectMany(x => x.Permissions).Select(x => _mapper.Map<PermissionListDto>(x)));
 
-            foreach (var item in parents)
-            {
-                if (groupedMenu.Any(x => x.ParentId != null && (Guid)x.ParentId == item.Id))
-                {
-                    var children = groupedMenu.Where(x => x.ParentId != null && (Guid)x.ParentId == item.Id)
-                        .SelectMany(x => x.Permissions)
-                        .Select(x => _mapper.Map<PermissionListDto>(x)).ToList();
+        //    foreach (var item in parents)
+        //    {
+        //        if (groupedMenu.Any(x => x.ParentId != null && (Guid)x.ParentId == item.Id))
+        //        {
+        //            var children = groupedMenu.Where(x => x.ParentId != null && (Guid)x.ParentId == item.Id)
+        //                .SelectMany(x => x.Permissions)
+        //                .Select(x => _mapper.Map<PermissionListDto>(x)).ToList();
 
-                    if (children != null)
-                    {
-                        item.Children = children;
-                    }
-                }
-            }
-            return parents;
-        }
+        //            if (children != null)
+        //            {
+        //                item.Children = children;
+        //            }
+        //        }
+        //    }
+        //    return parents;
+        //}
     }
 }
