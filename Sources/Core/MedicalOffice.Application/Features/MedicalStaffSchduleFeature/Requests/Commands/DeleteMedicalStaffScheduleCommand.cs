@@ -11,5 +11,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Request
     public class DeleteMedicalStaffScheduleCommand : IRequest<BaseResponse>
     {
         public Guid MedicalStaffId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

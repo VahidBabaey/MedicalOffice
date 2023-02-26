@@ -84,11 +84,13 @@ public static class ServicesRegistration
         #endregion Office
 
         #region ServiceDuration
-        services.AddScoped<IValidator<ServiceDurationDTO>, ServiceDurationValidator>();
+        services.AddScoped<IValidator<ServiceDurationDTO>, AddServiceDurationValidator>();
+        services.AddScoped<IValidator<EditServiceDurationDTO>, EditServiceDurationValidator>();
         #endregion
 
         #region MedicalStaffSchedule
-        services.AddScoped<IValidator<MedicalStaffScheduleDTO>, MedicalStaffScheduleValidator>();
+        services.AddScoped<IValidator<MedicalStaffScheduleDTO>, AddMedicalStaffScheduleValidator>();
+        services.AddScoped<IValidator<MedicalStaffScheduleDTO>, EditMedicalStaffScheduleValidator>();
         services.AddScoped<IValidator<MedicalStaffDaySchedule>, MedicalStaffDayScheduleValidator>();
         #endregion
 

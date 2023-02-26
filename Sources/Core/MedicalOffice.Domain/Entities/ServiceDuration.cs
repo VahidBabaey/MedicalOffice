@@ -9,6 +9,10 @@ namespace MedicalOffice.Domain.Entities
 {
     public class ServiceDuration : BaseDomainEntity<Guid>
     {
+        public Guid OfficeId { get; set; }
+
+        public Office Office{ get; set; }
+
         public Guid MedicalStaffId { get; set; }
 
         public MedicalStaff MedicalStaff { get; set; }

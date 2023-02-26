@@ -7,6 +7,16 @@ namespace MedicalOffice.Domain.Entities
     public class MedicalStaffSchedule : BaseDomainEntity<Guid>
     {
         /// <summary>
+        /// شناسه مطب
+        /// </summary>
+        public Guid OfficeId{ get; set; }
+
+        /// <summary>
+        /// مطب
+        /// </summary>
+        public Office Office{ get; set; }
+
+        /// <summary>
         /// کادر درمان
         /// </summary>
         public MedicalStaff MedicalStaff { get; set; }

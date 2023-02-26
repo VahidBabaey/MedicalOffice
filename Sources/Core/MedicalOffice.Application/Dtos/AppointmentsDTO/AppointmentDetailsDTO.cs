@@ -10,8 +10,6 @@ namespace MedicalOffice.Application.Dtos
 
         public string StaffName { get; set; }
 
-        public string StaffLastName { get; set; }
-
         public string? CreatorName { get; set; }
 
         public string? CreatorLastName { get; set; }

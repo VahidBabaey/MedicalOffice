@@ -82,7 +82,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             if (isMedicalStaffExist)
             {
                 var error = $"There is a medical staff with this phoneNumber in this office";
-
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
