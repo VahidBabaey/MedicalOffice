@@ -27,6 +27,15 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
         return entity;
     }
 
+    public async Task<List<T1>> AddRange(List<T1> entities)
+    {
+        await _dbContext.AddRangeAsync(entities);
+
+        await _dbContext.SaveChangesAsync();
+
+        return entities;
+    }
+
     public async Task Delete(T1 entity)
     {
         _dbContext.Set<T1>().Remove(entity);

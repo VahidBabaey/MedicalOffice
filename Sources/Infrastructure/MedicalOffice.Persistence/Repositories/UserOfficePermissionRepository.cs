@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Persistence.Repositories
 {
-    public class UserOfficePermissionRepository : GenericRelationalEntitiesRepository<UserOfficePermission>, IUserOfficePermissionRepository
+    public class UserOfficePermissionRepository : GenericRepository<UserOfficePermission,Guid>, IUserOfficePermissionRepository
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -29,12 +29,25 @@ namespace MedicalOffice.Persistence.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task SoftDeleteRange(Guid officeId, Guid userId)
+        {
+            var userOfficePermissions = await _dbContext.UserOfficePermissions.Where(u => u.UserId == userId && u.OfficeId == officeId && u.IsDeleted == false).ToListAsync();
+
+            foreach (var permission in userOfficePermissions)
+            {
+                permission.IsDeleted = true;
+            }
+            _dbContext.UserOfficePermissions.UpdateRange(userOfficePermissions);
+
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<List<Permission>> GetPermissionsByStaffId(Guid staffId, Guid officeId)
         {
             var userId = _dbContext.MedicalStaffs.Where(x => x.Id == staffId && x.OfficeId == officeId).FirstAsync().Result.UserId;
-            
-            var permissions = await _dbContext.UserOfficePermissions.Include(c => c.Permission).Where(c => c.OfficeId == officeId && c.UserId == userId).Select(x => x.Permission).ToListAsync();
-            
+
+            var permissions = await _dbContext.UserOfficePermissions.Include(c => c.Permission).Where(c => c.OfficeId == officeId && c.UserId == userId && c.IsDeleted == false).Select(x => x.Permission).ToListAsync();
+
             return permissions;
         }
     }

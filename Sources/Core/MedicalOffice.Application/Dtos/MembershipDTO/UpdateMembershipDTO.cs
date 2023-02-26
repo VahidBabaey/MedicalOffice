@@ -8,10 +8,12 @@ public class UpdateMembershipDTO : BaseDto<Guid>
     /// نام عضویت
     /// </summary>
     public string Name { get; set; } = string.Empty;
+
     /// <summary>
     /// فعال یا غیرفعال
     /// </summary>
-    public bool IsActive { get; set; }
+    public bool? IsActive { get; set; }
+
     /// <summary>
     /// تخفیف
     /// </summary>

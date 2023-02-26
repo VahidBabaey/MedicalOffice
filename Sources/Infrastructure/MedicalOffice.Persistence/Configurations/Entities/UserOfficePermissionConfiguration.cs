@@ -13,8 +13,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
     {
         public void Configure(EntityTypeBuilder<UserOfficePermission> builder)
         {
-            builder
-                .HasKey(uop => new { uop.PermissionId, uop.UserId, uop.OfficeId });
+            //builder
+            //    .HasKey(uop => new { uop.PermissionId, uop.UserId, uop.OfficeId });
             builder
                 .HasOne(uop => uop.User)
                 .WithMany(u => u.UserOfficePermissions)

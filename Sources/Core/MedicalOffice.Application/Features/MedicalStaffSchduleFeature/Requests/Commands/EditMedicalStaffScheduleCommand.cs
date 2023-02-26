@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Request
     public class EditMedicalStaffScheduleCommand : IRequest<BaseResponse>
     {
         public MedicalStaffScheduleDTO DTO { get; set; } = new MedicalStaffScheduleDTO();
+        public Guid OfficeId { get; set; }
     }
 }

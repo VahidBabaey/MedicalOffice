@@ -6,10 +6,14 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IServiceDurationRepositopry : IGenericRepository<ServiceDuration, Guid>
     {
-        public Task<bool> CheckStaffHasService(Guid? medicalStaffId, Guid serviceId);
+        Task<bool> CheckStaffHasServiceDuration(Guid? medicalStaffId, Guid serviceId);
 
-        public Task<List<ServiceDuration>> GetAllByServiceId(Guid serviceId);
+        Task<List<ServiceDuration>> GetAllByServiceId(Guid serviceId);
 
-        public Task<ServiceDurationDetailsDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId);
+        Task<ServiceDurationDetailsDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId);
+
+        Task DeleteRange(Guid[] ids);
+
+        Task<List<ServiceDurationDetailsDTO>> GetAllServiceDurations(Guid officeId);
     }
 }

@@ -104,4 +104,6 @@ public class Office : BaseDomainEntity<Guid>
     /// جزئیات
     /// </summary>
     public ICollection<BasicInfo>? BasicInfos { get; set; }
+
+    public ICollection<ServiceDuration> ServiceDuration { get; set; }
 }
