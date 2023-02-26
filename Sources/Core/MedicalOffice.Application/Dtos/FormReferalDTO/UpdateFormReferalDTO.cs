@@ -1,20 +1,21 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO
+namespace MedicalOffice.Application.Dtos.FormReferalDTO
 {
-    public class CommitmentNamesListDTO : BaseDto<Guid>
+    public class UpdateFormReferalDTO : BaseDto<Guid>
     {
         /// <summary>
-        /// نام فرم تعهدنامه
+        /// نام فرم ارجاع
         /// </summary>
         public string Name { get; set; } = string.Empty;
         /// <summary>
-        /// توضیحات
+        /// نام فرم ارجاع
         /// </summary>
         public string Description { get; set; } = string.Empty;
     }

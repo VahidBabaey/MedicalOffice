@@ -104,4 +104,16 @@ public class Office : BaseDomainEntity<Guid>
     /// جزئیات
     /// </summary>
     public ICollection<BasicInfo>? BasicInfos { get; set; }
+    /// <summary>
+    /// فرم استعلاجی
+    /// </summary>
+    public ICollection<FormIllness>? FormIllnesses { get; set; }
+    /// <summary>
+    /// فرم ارجاع
+    /// </summary>
+    public ICollection<FormReferal>? FormReferals { get; set; }
+    /// <summary>
+    /// فرم تعهد
+    /// </summary>
+    public ICollection<FormCommitment>? FormCommitments { get; set; }
 }

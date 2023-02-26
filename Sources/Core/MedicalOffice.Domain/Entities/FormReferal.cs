@@ -1,14 +1,22 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO
+namespace MedicalOffice.Domain.Entities
 {
-    public class CommitmentNamesListDTO : BaseDto<Guid>
+    public class FormReferal : BaseDomainEntity<Guid>
     {
+        /// <summary>
+        /// مطب
+        /// </summary>
+        public Office? Office { get; set; }
+        /// <summary>
+        /// آیدی مطب
+        /// </summary>
+        public Guid OfficeId { get; set; }
         /// <summary>
         /// نام فرم تعهدنامه
         /// </summary>

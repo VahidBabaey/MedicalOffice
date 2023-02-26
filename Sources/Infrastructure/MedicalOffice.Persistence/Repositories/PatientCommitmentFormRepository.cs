@@ -30,4 +30,8 @@ public class PatientCommitmentFormRepository : GenericRepository<PatientCommitme
         bool isExist = await _dbContext.PatientCommitmentForms.AnyAsync(p => p.CommitmentName == name && p.DateSolar == date && p.IsDeleted == false);
         return isExist;
     }
+    public async Task<IReadOnlyList<FormCommitment>> GetFormCommitments(Guid officeId)
+    {
+        return await _dbContext.FormCommitments.Where(p => p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
+    }
 }

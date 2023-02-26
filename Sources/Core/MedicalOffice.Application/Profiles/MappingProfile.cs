@@ -33,6 +33,8 @@ using MediatR;
 using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Dtos.MenuDTO;
 using MedicalOffice.Application.Dtos.PermissionDTO;
+using MedicalOffice.Application.Dtos.FormIllnessDTO;
+using MedicalOffice.Application.Dtos.FormReferalDTO;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -92,9 +94,6 @@ public class MappingProfile : Profile
         CreateMap<BasicInfoDetail, illnessNamesListDTO>()
             .ForMember(dest => dest.illnessName, opt => opt.MapFrom(src => src.InfoDetailName))
             .ReverseMap();
-        CreateMap<BasicInfoDetail, CommitmentNamesListDTO>()
-            .ForMember(dest => dest.CommitmentName, opt => opt.MapFrom(src => src.InfoDetailName))
-            .ReverseMap();
         CreateMap<BasicInfoDetail, UpdateBasicInfoDetailDTO>().ReverseMap();
         CreateMap<BasicInfoDetail, BasicInfoDetailListDTO>().ReverseMap();
         CreateMap<PatientIllnessForm, PatientIllnessFormListDTO>().ReverseMap();
@@ -103,9 +102,16 @@ public class MappingProfile : Profile
         CreateMap<PatientReferralForm, PatientReferralFormListDTO>().ReverseMap();
         CreateMap<PatientCommitmentForm, AddPatientCommitmentsFormDTO>().ReverseMap();
         CreateMap<PatientCommitmentForm, PatientCommitmentsFormListDTO>().ReverseMap();
+        CreateMap<FormCommitment, CommitmentNamesListDTO>().ReverseMap();
         CreateMap<FormCommitment, AddFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, UpdateFormCommitmentDTO>().ReverseMap();
         CreateMap<FormCommitment, FormCommitmentListDTO>().ReverseMap();
+        CreateMap<FormIllness, AddFormIllnessDTO>().ReverseMap();
+        CreateMap<FormIllness, UpdateFormIllnessDTO>().ReverseMap();
+        CreateMap<FormIllness, FormIllnessListDTO>().ReverseMap();
+        CreateMap<FormReferal, AddFormReferalDTO>().ReverseMap();
+        CreateMap<FormReferal, UpdateFormReferalDTO>().ReverseMap();
+        CreateMap<FormReferal, FormReferalListDTO>().ReverseMap();
         CreateMap<Picture, PictureUploadDTO>().ReverseMap();
         CreateMap<Picture, AddPictureDTO>().ReverseMap();
         CreateMap<Picture, PatientPicturesDTO>().ReverseMap();

@@ -28,6 +28,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Diagnose> Diagnoses => Set<Diagnose>();
     public DbSet<DiscountType> DiscountTypes => Set<DiscountType>();
     public DbSet<FormCommitment> FormCommitments => Set<FormCommitment>();
+    public DbSet<FormIllness> FormIllnesses => Set<FormIllness>();
+    public DbSet<FormReferal> FormReferals => Set<FormReferal>();
     public DbSet<Drug> Drugs => Set<Drug>();
     public DbSet<DrugIntraction> DrugIntractions => Set<DrugIntraction>();
     public DbSet<DrugConsumption> DrugConsumptions => Set<DrugConsumption>();

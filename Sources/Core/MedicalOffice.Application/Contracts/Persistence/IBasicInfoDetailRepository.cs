@@ -7,7 +7,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> CheckExistBasicInfoDetailId(Guid basicInfoDetailId);
         Task<bool> CheckExistBasicInfoDetailName(string basicinfodetailName, Guid BasicInfoId);
         Task<bool> CheckExistBasicInfoId(Guid officeId, Guid basicInfoId);
-        Task<IReadOnlyList<BasicInfoDetail>> GetByBasicInfoCommitmentId();
+        Task<IReadOnlyList<FormCommitment>> GetFormCommitments(Guid officeId);
         Task<IReadOnlyList<BasicInfoDetail>> GetByBasicInfoId(Guid basicInfoId);
         Task<IReadOnlyList<BasicInfoDetail>> GetByBasicInfoIllnessId();
     }

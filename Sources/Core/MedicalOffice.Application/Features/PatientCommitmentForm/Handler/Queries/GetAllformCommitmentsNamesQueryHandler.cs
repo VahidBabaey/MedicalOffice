@@ -13,14 +13,16 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Quer
 
 public class GetAllCommitmentsNamesQueryHandler : IRequestHandler<GetAllCommitmentsNamesFormQuery, BaseResponse>
 {
-    private readonly IBasicInfoDetailRepository _basicInfodetailrepository;
+    private readonly IOfficeRepository _officeRepository;
+    private readonly IPatientCommitmentFormRepository _patientcommitmentformrepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetAllCommitmentsNamesQueryHandler(IBasicInfoDetailRepository basicInfodetailrepository, IMapper mapper, ILogger logger)
+    public GetAllCommitmentsNamesQueryHandler(IOfficeRepository officeRepository, IPatientCommitmentFormRepository patientcommitmentformrepository, IMapper mapper, ILogger logger)
     {
-        _basicInfodetailrepository = basicInfodetailrepository;
+        _officeRepository = officeRepository;
+        _patientcommitmentformrepository = patientcommitmentformrepository;
         _mapper = mapper;
         _logger = logger;             
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -28,19 +30,32 @@ public class GetAllCommitmentsNamesQueryHandler : IRequestHandler<GetAllCommitme
 
     public async Task<BaseResponse> Handle(GetAllCommitmentsNamesFormQuery request, CancellationToken cancellationToken)
     {
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            var error = "OfficeID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
         try
         {
-            var commitments = await _basicInfodetailrepository.GetByBasicInfoCommitmentId();
+            var commitmentForms = await _patientcommitmentformrepository.GetFormCommitments(request.OfficeId);
 
-            var result = _mapper.Map<List<CommitmentNamesListDTO>>(commitments);
+            var result = _mapper.Map<List<CommitmentNamesListDTO>>(commitmentForms);
 
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeded",
-                AdditionalData = new { total = commitments.Count(), result = result }
+                AdditionalData = new { total = commitmentForms.Count(), result = result }
             });
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = commitments.Count(), result = result });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = commitmentForms.Count(), result = result });
         }
         catch (Exception error)
         {

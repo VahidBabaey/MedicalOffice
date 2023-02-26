@@ -22,10 +22,10 @@ public class PatientCommitmentForms : Controller
     }
 
     //[Authorize]
-    [HttpGet("Commitments")]
-    public async Task<ActionResult<List<CommitmentNamesListDTO>>> GetAllCommitments()
+    [HttpGet("commitmentforms")]
+    public async Task<ActionResult<List<CommitmentNamesListDTO>>> GetAllCommitmentForms([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllCommitmentsNamesFormQuery());
+        var response = await _mediator.Send(new GetAllCommitmentsNamesFormQuery() { OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

@@ -187,4 +187,8 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         bool isExist = await _dbContext.Patients.AnyAsync(p => p.Id == patientId && p.OfficeId == officeId);
         return isExist;
     }
+    public async Task<Patient> GetByPatientId(Guid offoceId, Guid patientId)
+    {
+        return await _dbContext.Patients.Where(p => p.OfficeId == offoceId && p.Id == patientId && p.IsDeleted == false).FirstOrDefaultAsync();
+    }
 }
