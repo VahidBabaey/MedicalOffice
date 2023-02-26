@@ -116,4 +116,5 @@ public class Office : BaseDomainEntity<Guid>
     /// فرم تعهد
     /// </summary>
     public ICollection<FormCommitment>? FormCommitments { get; set; }
+    public ICollection<ServiceDuration> ServiceDuration { get; set; }
 }
