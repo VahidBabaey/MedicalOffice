@@ -154,6 +154,8 @@ public static class ServiceRegistration
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IMenuRepository, MenuRepository>();
         services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IServiceRoomRepository, ServiceRoomRepository>();
 
         return services;
     }

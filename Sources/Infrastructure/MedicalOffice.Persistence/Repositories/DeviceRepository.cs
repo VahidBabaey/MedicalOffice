@@ -20,7 +20,7 @@ namespace MedicalOffice.Persistence.Repositories
 
         public async Task<List<Device>> GetDevicesByRoomId(Guid roomId)
         {
-            var devices =await _dbContext.Devices.Where(x=>x.RoomId==roomId).ToListAsync();
+            var devices =await _dbContext.Devices.Where(x=>x.ServiceRoomId==roomId).ToListAsync();
 
             return devices;
         }

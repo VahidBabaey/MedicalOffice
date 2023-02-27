@@ -7,14 +7,16 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Domain.Entities
 {
-    public class Room:BaseDomainEntity<Guid>
+    public class Room : BaseDomainEntity<Guid>
     {
-        public string Name{ get; set; }
+        public Guid OfficeId { get; set; }
 
-        public Guid DeviceId{ get; set; }
+        public Office Office { get; set; }
 
-        public ICollection<Device> Device{ get; set; }
+        public string Name { get; set; }
 
-        public ICollection<Appointment> Appointments{ get; set; }
+        public ICollection<Service> Services { get; set; }
+
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }

@@ -71,8 +71,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<ReceptionDetailService> ReceptionDetailServices => Set<ReceptionDetailService>();
     public DbSet<RoutineMedication> RoutineMedications => Set<RoutineMedication>();
     public DbSet<RVU3> RVU3 => Set<RVU3>();
+    public DbSet<Room> Rooms => Set<Room>();
     public DbSet<Section> Sections => Set<Section>();
     public DbSet<Service> Services => Set<Service>();
+    public DbSet<ServiceRoom> ServiceRooms => Set<ServiceRoom>();
     public DbSet<Shift> Shifts => Set<Shift>();
     public DbSet<SNOMED> SNOMED => Set<SNOMED>();
     public DbSet<SocialHistory> SocialHistories => Set<SocialHistory>();
@@ -81,12 +83,11 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
     public DbSet<UserOfficePermission> UserOfficePermissions => Set<UserOfficePermission>();
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
-    public DbSet<ServiceDuration> ServiceDurations=> Set<ServiceDuration>();
-    public DbSet<Room> Rooms=> Set<Room>();
-    public DbSet<Device> Devices=> Set<Device>();
-    public DbSet<MenuPermission> MenuPermissions=> Set<MenuPermission>();
+    public DbSet<ServiceDuration> ServiceDurations => Set<ServiceDuration>();
+    public DbSet<Device> Devices => Set<Device>();
+    public DbSet<MenuPermission> MenuPermissions => Set<MenuPermission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
-    public DbSet<Menu> Menu=> Set<Menu>();
+    public DbSet<Menu> Menu => Set<Menu>();
 
     private readonly IUserResolverService _userResolver;
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolverService userResolver) : base(options)
@@ -106,7 +107,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<User>().ToTable("Users");
         modelBuilder.Entity<Role>().ToTable("Roles");
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRole");
-        modelBuilder.Entity<MedicalStaffSchedule>().HasKey(entity=>entity.Id);
+        modelBuilder.Entity<MedicalStaffSchedule>().HasKey(entity => entity.Id);
         //modelBuilder.Seed();
     }
 

@@ -119,7 +119,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             var deviceExistingAppointments = _appointmentRepository.GetByDateAndDevice(
                 request.DTO.Date,
                 deviceId: newAppointment.DeviceId,
-                roomId: newAppointment.RoomId).Result;
+                roomId: newAppointment.ServiceRoomId).Result;
 
             invalidAppointment = deviceExistingAppointments.FirstOrDefault(x => !TimeHelper.isTimeValid(x, newAppointment.StartTime, newAppointment.EndTime));
 

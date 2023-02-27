@@ -24,7 +24,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
             builder
                 .HasOne(e => e.Room)
                 .WithMany(e => e.Appointments)
-                .HasForeignKey(e => e.RoomId)
+                .HasForeignKey(e => e.ServiceRoomId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
