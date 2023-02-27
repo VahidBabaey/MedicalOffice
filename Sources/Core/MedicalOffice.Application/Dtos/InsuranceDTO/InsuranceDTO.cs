@@ -36,5 +36,6 @@ public class InsuranceDTO
     /// <summary>
     /// نوع تعرفه
     /// </summary>
-    public TariffType? TariffType { get; set; }
+    public TariffType TariffType { get; set; }
+
 }

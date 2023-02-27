@@ -47,7 +47,7 @@ public class Insurance : BaseDomainEntity<Guid>
     /// <summary>
     /// نوع تعرفه
     /// </summary>
-    public TariffType? TariffType { get; set; }
+    public TariffType TariffType { get; set; }
     /// <summary>
     /// جزئیات پذیرش - بیمه/بیمه تکمیلی
     /// </summary>

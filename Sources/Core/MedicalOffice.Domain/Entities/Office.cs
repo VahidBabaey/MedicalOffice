@@ -23,7 +23,7 @@ public class Office : BaseDomainEntity<Guid>
     /// <summary>
     /// نوع تعرفه
     /// </summary>
-    public TariffType? TariffType { get; set; }
+    public TariffType TariffType { get; set; }
     /// <summary>
     /// نوع تخفیف ها
     /// </summary>

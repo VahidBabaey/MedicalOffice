@@ -8,17 +8,17 @@ public enum TariffType
     /// <summary>
     /// خصوصی
     /// </summary>
-    Personal = 1,
+    Private = 1,
     /// <summary>
     /// دولتی
     /// </summary>
-    Governmental = 2,
+    Govermental = 2,
     /// <summary>
     /// نیمه دولتی
     /// </summary>
-    SemiGovernmental = 3,
+    SemiGovermental = 3,
     /// <summary>
     /// خیریه
     /// </summary>
-    Charity = 4,
+    Charity = 3,
 }
