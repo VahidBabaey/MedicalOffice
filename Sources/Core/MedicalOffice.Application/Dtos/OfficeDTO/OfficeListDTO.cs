@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.OfficeDTO;
 
@@ -16,4 +17,8 @@ public class OfficeListDTO : BaseDto<Guid> , ITelePhoneNumberDTO
     /// شماره ثابت
     /// </summary>
     public string TelePhoneNumber { get; set; } = string.Empty;
+    /// <summary>
+    /// نوع تعرفه
+    /// </summary>
+    public TariffType TariffType { get; set; }
 }

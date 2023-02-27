@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Common;
+using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Domain.Entities;
 
@@ -19,6 +20,10 @@ public class Office : BaseDomainEntity<Guid>
     /// شماره ثابت
     /// </summary>
     public string TelePhoneNumber { get; set; } = string.Empty;
+    /// <summary>
+    /// نوع تعرفه
+    /// </summary>
+    public TariffType TariffType { get; set; }
     /// <summary>
     /// نوع تخفیف ها
     /// </summary>

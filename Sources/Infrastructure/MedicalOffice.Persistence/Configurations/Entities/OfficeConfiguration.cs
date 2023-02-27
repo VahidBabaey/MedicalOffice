@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using MedicalOffice.Persistence.Configurations.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -73,20 +74,23 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                         Name = "officeA",
                         TelePhoneNumber = "02112345678",
                         Address="officeA",
+                        TariffType = TariffType.Private,
                     },
                     new Office
                     {
                         Id=Guid.Parse("300649ef-fbc7-42d0-b13d-539e0597eebe"),
                         Name = "officeB",
                         TelePhoneNumber = "02123456789",
-                        Address="officeB"
+                        Address="officeB",
+                        TariffType = TariffType.Private,
                     },
                     new Office
                     {
                         Id=Guid.Parse("1abfa749-a9b0-413d-8fda-e3674fc942c0"),
                         Name = "officeC",
                         TelePhoneNumber = "02134567891",
-                        Address="officeC"
+                        Address="officeC",
+                        TariffType = TariffType.Private,
                     },
                 });
 
