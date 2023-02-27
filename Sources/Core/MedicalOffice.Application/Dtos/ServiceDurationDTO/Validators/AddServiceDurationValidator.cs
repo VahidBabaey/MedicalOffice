@@ -1,5 +1,8 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Constants;
+using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.Common.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +11,25 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.ServiceDurationDTO.Validators
 {
-    public class ServiceDurationValidator : AbstractValidator<ServiceDurationDTO>
+    public class AddServiceDurationValidator : AbstractValidator<ServiceDurationDTO>
     {
+        private readonly IMedicalStaffRepository _medicalStaffRepository;
+        private readonly IServiceRepository _serviceRepository;
+        private readonly IOfficeResolver _officeResolver;
         private static readonly int minDuration = 1;
-        public ServiceDurationValidator()
+        public AddServiceDurationValidator(
+            IMedicalStaffRepository medicalStaffRepository,
+            IServiceRepository serviceRepository,
+            IOfficeResolver officeResolver
+            )
         {
+            _medicalStaffRepository = medicalStaffRepository;
+            _officeResolver = officeResolver;
+            _serviceRepository = serviceRepository;
+
+            Include(new MedicalStaffValidator(_medicalStaffRepository, _officeResolver));
+            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+
             RuleFor(x => x.MedicalStaffId)
                 .NotEmpty()
                 .WithMessage(ValidationMessage.Required.For("MedicalStaffId"));

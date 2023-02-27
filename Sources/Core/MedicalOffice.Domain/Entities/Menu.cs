@@ -34,6 +34,11 @@ namespace MedicalOffice.Domain.Entities
         /// </summary>
         public bool IsActive { get; set; } = true;
 
+        /// <summary>
+        /// ترتیب
+        /// </summary>
+        public byte? Order{ get; set; }
+
         public ICollection<MenuPermission> MenuPermissions { get; set; }
     }
 }

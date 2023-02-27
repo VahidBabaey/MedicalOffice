@@ -8,52 +8,77 @@ using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.PictureFile.Handlers.Commands;
 public class DeletePictureCommandHandler : IRequestHandler<DeletePictureCommand, BaseResponse>
 {
-    private readonly IPictureRepository _repository;
+    private readonly IOfficeRepository _officeRepository;
+    private readonly IPictureRepository _picturerepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeletePictureCommandHandler(IPictureRepository repository, ILogger logger)
+    public DeletePictureCommandHandler(IOfficeRepository officeRepository, IPictureRepository picturerepository, ILogger logger)
     {
-        _repository = repository;
+        _officeRepository = officeRepository;
+        _picturerepository = picturerepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(DeletePictureCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
-        Log log = new();
+
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            var error = "OfficeID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
+
+        var validationPictureId = await _picturerepository.CheckExistPictureId(request.OfficeId, request.PictureId);
+
+        if (!validationPictureId)
+        {
+            var error = "ID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
 
         try
         {
-            await _repository.Delete(request.PictureId);
+            await _picturerepository.SoftDelete(request.PictureId);
 
-            response.Success = true;
-            response.StatusDescription = $"{_requestTitle} succeded";
-            response.Data = (new { Id = request.PictureId });
-
-            log.Type = LogType.Success;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
         }
         catch (Exception error)
         {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add(error.Message);
-
-            log.Type = LogType.Error;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
     }
 }

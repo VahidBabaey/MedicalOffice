@@ -12,6 +12,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Requests.Query
 {
     public class GetShiftBySearchQuery : IRequest<BaseResponse>
     {
+        public ListDto Dto { get; set; } = new ListDto();
         public Guid OfficeId { get; set; }
         public string Name { get; set; }
     }

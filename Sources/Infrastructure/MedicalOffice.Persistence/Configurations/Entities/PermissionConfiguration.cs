@@ -91,10 +91,19 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     PermissionCreator("b9868f8e-1f05-4c89-a3f3-83c440961705","23bc31a3-6542-43d7-a4e8-6a953415e0d0","AppointmentRegistrationforSelectedDoctors","دسترسی به ثبت وقت برای پزشکان انتخاب شده"),
 
                     PermissionCreator("529e3ed5-51ea-4411-8fbb-ab62e99f7691",null,"BasicInfoPermission","دسترسی اطلاعات پایه"),
+                    PermissionCreator("a23e6968-b82a-404c-92ec-16e8ddb7651f","529e3ed5-51ea-4411-8fbb-ab62e99f7691","BasicInfoPermission","دسترسی اطلاعات پایه", false),
+
                     PermissionCreator("9301e02e-c11d-4c8f-bc72-c40c6322eebb",null,"DashboardPermission","دسترسی به داشبورد"),
+                    PermissionCreator("7dbb0a47-6aa3-442e-959a-e4d5fffeeac4","9301e02e-c11d-4c8f-bc72-c40c6322eebb","DashboardPermission","دسترسی به داشبورد", false),
+
                     PermissionCreator("3f75033b-be8a-47e7-b86a-fa67c48785dc",null,"PreparedPatternsPermission","دسترسی به الگوهای آماده"),
+                    PermissionCreator("ef25d083-6049-4d97-a0b6-b9f34c37b6af","3f75033b-be8a-47e7-b86a-fa67c48785dc","PreparedPatternsPermission","دسترسی به الگوهای آماده", false),
+
                     PermissionCreator("202eafde-1b56-428b-9b0b-60a8d5efe812",null,"SupportPermission","دسترسی پشتیبانی",false),
+                    PermissionCreator("74d411ab-8667-4801-b412-7c015d556466","202eafde-1b56-428b-9b0b-60a8d5efe812","SupportPermission","دسترسی پشتیبانی",false),
+
                     PermissionCreator("0f8e8881-c090-4d01-9ba7-c2fdb42549b3",null,"TodayPatientPermission","دسترسی بیماران امروز"),
+                    PermissionCreator("931f674f-c2a5-434b-97b1-438a9131e55d","0f8e8881-c090-4d01-9ba7-c2fdb42549b3","TodayPatientPermission","دسترسی بیماران امروز",false),
                 });
         }
     }

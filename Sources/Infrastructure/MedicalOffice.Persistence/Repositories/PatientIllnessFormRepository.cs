@@ -14,15 +14,20 @@ public class PatientIllnessFormRepository : GenericRepository<PatientIllnessForm
     }
     public async Task<IReadOnlyList<BasicInfoDetail>> GetByBasicInfoId()
     {
-        return await _dbContext.BasicInfoDetail.Where(srv => srv.basicInfoId == Guid.Parse("451a9dda-5efe-45cb-8754-3c51e01f9cf0")).ToListAsync();
+        return await _dbContext.BasicInfoDetail.Where(p => p.basicInfoId == Guid.Parse("451a9dda-5efe-45cb-8754-3c51e01f9cf0")).ToListAsync();
     }
     public async Task<IReadOnlyList<PatientIllnessForm>> GetByPatientId(Guid patientId)
     {
-        return await _dbContext.PatientIllnessForms.Where(srv => srv.PatientId == patientId).ToListAsync();
+        return await _dbContext.PatientIllnessForms.Where(p => p.PatientId == patientId && p.IsDeleted == false).ToListAsync();
     }
     public async Task<bool> CheckExistPatientIllnessFormId(Guid patientIllnessFormId)
     {
         bool isExist = await _dbContext.PatientIllnessForms.AnyAsync(p => p.Id == patientIllnessFormId);
+        return isExist;
+    }
+    public async Task<bool> CheckExistPatientIllnessFormForm(string name, string date)
+    {
+        bool isExist = await _dbContext.PatientIllnessForms.AnyAsync(p => p.IllnessReason == name && p.DateSolar == date && p.IsDeleted == false);
         return isExist;
     }
 }

@@ -56,21 +56,19 @@ public class ServiceController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //TODO: return true status code not only OK!
     [HttpGet("section-services")]
-    public async Task<ActionResult<List<ServiceListDTO>>> GetAllBySectionId(Guid sectionId, [FromQuery] string officeId)
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAllBySectionId(Guid sectionId, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllServicesBySectionIDQuery() { SectionId = sectionId, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllServicesBySectionIDQuery() { Dto = dto, SectionId = sectionId, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //TODO: return true status code not only OK!
-    [HttpGet("Search")]
-    public async Task<ActionResult<List<ServiceListDTO>>> GetSectionBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] string sectionId)
+    [HttpGet("search")]
+    public async Task<ActionResult<List<ServiceListDTO>>> GetServicenBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] string sectionId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetServiceBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId), SectionId = Guid.Parse(sectionId) });
+        var response = await _mediator.Send(new GetServiceBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId), SectionId = Guid.Parse(sectionId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

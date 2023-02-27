@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.ServiceDurationDTO;
+using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,9 +23,22 @@ namespace MedicalOffice.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<bool> CheckStaffHasService(Guid? medicalStaffId, Guid serviceId)
+        public Task<bool> CheckStaffHasServiceDuration(Guid? medicalStaffId, Guid serviceId)
         {
             return Task.FromResult(_dbContext.ServiceDurations.Any(x => x.ServiceId == serviceId && x.MedicalStaffId == medicalStaffId));
+        }
+
+        public async Task DeleteRange(Guid[] ids)
+        {
+            var _list = await _dbContext.ServiceDurations.Where(x => ids.Contains(x.Id)).ToListAsync();
+
+            foreach (var item in _list)
+            {
+                item.IsDeleted = true;
+            }
+
+            _dbContext.UpdateRange(_list);
+            _dbContext.SaveChanges();
         }
 
         public async Task<List<ServiceDuration>> GetAllByServiceId(Guid serviceId)
@@ -32,6 +46,21 @@ namespace MedicalOffice.Persistence.Repositories
             var serviceDuration = await _dbContext.ServiceDurations.Where(x => x.ServiceId == serviceId).ToListAsync();
 
             return serviceDuration;
+        }
+
+        public async Task<List<ServiceDurationDetailsDTO>> GetAllServiceDurations(Guid officeId)
+        {
+            var _list = await _dbContext.ServiceDurations.Include(x => x.MedicalStaff).Include(x => x.Service).Where(x => x.OfficeId == officeId)
+                .Select(x => new ServiceDurationDetailsDTO
+                {
+                    Id = x.Id,
+                    MedicalStaffId = x.MedicalStaff.Id,
+                    StaffName = x.MedicalStaff.FirstName + " " + x.MedicalStaff.LastName,
+                    ServiceId = x.ServiceId,
+                    ServiceName = x.Service.Name
+                }).ToListAsync();
+
+            return _list;
         }
 
         public async Task<ServiceDurationDetailsDTO> GetByServiceAndStaffId(Guid? medicalStaffId, Guid? serviceId)
@@ -43,8 +72,7 @@ namespace MedicalOffice.Persistence.Repositories
             {
                 result.MedicalStaffId = service.MedicalStaffId;
                 result.ServiceName = service.Service.Name;
-                result.StaffName = service.MedicalStaff.FirstName;
-                result.StaffLastName = service.MedicalStaff.LastName;
+                result.StaffName = service.MedicalStaff.FirstName + " " + service.MedicalStaff.LastName;
             }
 
             return result;

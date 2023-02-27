@@ -15,7 +15,7 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
     }
     public async Task<IEnumerable<DrugListDTO>> GetAllDrugs(Guid officeId)
     {
-        var _list = await _dbContext.Drugs.Where(p => p.OfficeId == officeId).Select(p => new DrugListDTO
+        var _list = await _dbContext.Drugs.Where(p => p.OfficeId == officeId && p.IsDeleted == false).Select(p => new DrugListDTO
         {
             Id = p.Id,
             Name = p.Name,
@@ -62,10 +62,28 @@ public class DrugRepository : GenericRepository<Drug, Guid>, IDrugRepository
         bool isExist = await _dbContext.Drugs.AnyAsync(p => p.Id == drugId && p.OfficeId == officeId);
         return isExist;
     }
-    public async Task<List<Drug>> GetDrugBySearch(string name)
+    public async Task<IEnumerable<DrugListDTO>> GetDrugBySearch(string name)
     {
-        var drugs = await _dbContext.Drugs.Where(p => p.Name.Contains(name)).ToListAsync();
+        var _list = await _dbContext.Drugs.Where(p => p.IsDeleted == false).Select(p => new DrugListDTO
+        {
+            Id = p.Id,
+            Name = p.Name,
+            GenericCode = p.GenericCode,
+            BrandName = p.BrandName,
+            DrugSectionId = p.DrugSectionId,
+            DrugSectionName = _dbContext.DrugSections.Select(q => new { q.Id, q.SectionDrug }).Where(q => q.Id == p.DrugSectionId).FirstOrDefault().SectionDrug,
+            DrugShapeId = p.DrugShapeId,
+            DrugShapeName = _dbContext.DrugShapes.Select(q => new { q.Id, q.ShapeDrug }).Where(q => q.Id == p.DrugShapeId).FirstOrDefault().ShapeDrug,
+            DrugConsumptionId = p.DrugConsumptionId,
+            DrugConsumptionName = _dbContext.DrugConsumptions.Select(q => new { q.Id, q.ConsumptionDrug }).Where(q => q.Id == p.DrugConsumptionId).FirstOrDefault().ConsumptionDrug,
+            DrugUsageId = p.DrugUsageId,
+            DrugUsageName = _dbContext.DrugUsages.Select(q => new { q.Id, q.UsageDrug }).Where(q => q.Id == p.DrugUsageId).FirstOrDefault().UsageDrug,
+            Consumption = p.Consumption,
+            Number = p.Number,
+            IsShow = p.IsShow,
+            IsHybrid = p.IsHybrid
+        }).ToListAsync();
 
-        return drugs;
+        return (IEnumerable<DrugListDTO>)_list;
     }
 }

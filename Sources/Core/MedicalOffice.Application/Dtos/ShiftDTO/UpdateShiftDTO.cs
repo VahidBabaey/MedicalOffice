@@ -22,8 +22,8 @@ namespace MedicalOffice.Application.Dtos.ShiftDTO
         /// </summary>
         public string EndTime { get; set; } = string.Empty;
         /// <summary>
-        /// روز بعد
+        /// آیا شیفت روز بعد هست؟
         /// </summary>
-        public bool IsNextDay { get; set; }
+        public bool NextDay { get; set; }
     }
 }

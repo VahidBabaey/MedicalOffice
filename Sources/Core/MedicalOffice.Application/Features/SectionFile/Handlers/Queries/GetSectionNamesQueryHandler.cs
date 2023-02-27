@@ -5,48 +5,67 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Common;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Queries;
 
-public class GetSectionNamesQueryHandler : IRequestHandler<GetSectionNamesQuery, List<SectionNamesListDTO>>
+public class GetSectionNamesQueryHandler : IRequestHandler<GetSectionNamesQuery, BaseResponse>
 {
-    private readonly ISectionRepository _repository;
-    private readonly IMapper _mapper;
+    private readonly IOfficeRepository _officeRepository;
+    private readonly ISectionRepository _sectionrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetSectionNamesQueryHandler(ISectionRepository repository, IMapper mapper, ILogger logger)
+    public GetSectionNamesQueryHandler(IOfficeRepository officeRepository, ISectionRepository sectionrepository, ILogger logger)
     {
-        _repository = repository;
-        _mapper = mapper;
+        _officeRepository = officeRepository;
+        _sectionrepository = sectionrepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
 
-    public async Task<List<SectionNamesListDTO>> Handle(GetSectionNamesQuery request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(GetSectionNamesQuery request, CancellationToken cancellationToken)
     {
-        List<SectionNamesListDTO> result = new();
 
-        Log log = new();
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            var error = "OfficeID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
 
         try
         {
-            result = await _repository.GetSectionNames(request.OfficeId);
+            var result = await _sectionrepository.GetSectionNames(request.OfficeId);
 
-            log.Header = $"{_requestTitle} succeded";
-            log.Type = LogType.Success;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = new { total = result.Count(), result = result }
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = result.Count(), result = result });
         }
+
         catch (Exception error)
         {
-            log.Header = $"{_requestTitle} failed";
-            log.AdditionalData=error.Message;
-            log.Type = LogType.Error;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
-
-        await _logger.Log(log);
-
-        return result;
     }
 
 }

@@ -12,6 +12,8 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Requests.Queries
 {
     public class GetAllInsuranceQuery : IRequest<BaseResponse>
     {
+        public ListDto Dto { get; set; } = new ListDto();
+
         public Guid OfficeId { get; set; }
     }
 }

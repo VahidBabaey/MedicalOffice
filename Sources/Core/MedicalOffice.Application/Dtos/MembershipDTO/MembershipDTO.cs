@@ -12,10 +12,10 @@ public class MembershipDTO
     /// <summary>
     /// فعال یا غیرفعال
     /// </summary>
-    public bool IsActive { get; set; }
+    public bool? IsActive { get; set; }
     /// <summary>
     /// تخفیف
     /// </summary>
-    public string Discount { get; set; } = string.Empty;
+    public long Discount { get; set; }
 
 }

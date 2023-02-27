@@ -14,6 +14,7 @@ using NLog.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,19 +23,17 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
     public class AddServicetoMembershipCommandHandler : IRequestHandler<AddServicetoMembershipCommand, BaseResponse>
     {
         private readonly IValidator<MemberShipServiceDTO> _validator;
-        private readonly IMemberShipServiceRepository _repository;
+        private readonly IMemberShipServiceRepository _membershipservicerepository;
         private readonly IOfficeRepository _officeRepository;
-        private readonly IServiceRepository _serviceRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public AddServicetoMembershipCommandHandler(IValidator<MemberShipServiceDTO> validator, IServiceRepository serviceRepository, IOfficeRepository officeRepository,  IMemberShipServiceRepository repository, IMapper mapper, ILogger logger)
+        public AddServicetoMembershipCommandHandler(IValidator<MemberShipServiceDTO> validator, IOfficeRepository officeRepository, IMemberShipServiceRepository membershipservicerepository, IMapper mapper, ILogger logger)
         {
-            _serviceRepository = serviceRepository;
-           _officeRepository = officeRepository;
+            _officeRepository = officeRepository;
             _validator = validator;
-            _repository = repository;
+            _membershipservicerepository = membershipservicerepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -44,73 +43,72 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Comm
         public async Task<BaseResponse> Handle(AddServicetoMembershipCommand request, CancellationToken cancellationToken)
         {
 
-            BaseResponse response = new();
-
-            Log log = new();
-
             var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
             if (!validationOfficeId)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("OfficeID isn't exist");
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
-                log.Type = LogType.Error;
-                return response;
+            var validationServiceIdofMembership = await _membershipservicerepository.CheckExistServiceIdofMembership(request.OfficeId, request.DTO.ServiceId);
+
+            if (validationServiceIdofMembership)
+            {
+                var error = "ServiceId is Exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                log.Type = LogType.Error;
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             else
             {
                 try
                 {
+                    var membershipservice = await _membershipservicerepository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount.ToString(), request.DTO.ServiceId, request.DTO.MembershipId);
 
-                    foreach (var srvid in request.DTO.ServiceId)
+                    await _logger.Log(new Log
                     {
-                        if (await _serviceRepository.CheckExistServiceId(request.OfficeId, srvid) == false)
-                        {
-                            response.Success = false;
-                            response.StatusDescription = $"{_requestTitle} failed";
-                            response.Errors.Add("ServiceID isn't exist");
-
-                            log.Type = LogType.Error;
-                            return response;
-                        }
-
-                        await _repository.InsertServiceToMemberShipAsync(request.OfficeId, request.DTO.Discount, srvid, request.DTO.MembershipId);
-                    }
-
-                    response.Success = true;
-                    response.StatusDescription = $"{_requestTitle} succeded";
-
-                    log.Type = LogType.Success;
+                        Type = LogType.Success,
+                        Header = $"{_requestTitle} succeded",
+                        AdditionalData = membershipservice
+                    });
+                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", membershipservice);
                 }
                 catch (Exception error)
                 {
-                    response.Success = false;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error.Message
+                    });
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
             }
-
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
 }

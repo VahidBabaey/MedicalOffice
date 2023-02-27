@@ -22,14 +22,8 @@ namespace MedicalOffice.Domain.Entities
         /// </summary>
         public string Name { get; set; } = string.Empty;
         /// <summary>
-        /// آیدی بیمار
+        /// توضیحات
         /// </summary>
-        public Patient? Patient { get; set; }
-        /// <summary>
-        /// آیدی بیمار
-        /// </summary>
-        public Guid PatientId { get; set; }
-
-
+        public string Description { get; set; } = string.Empty;
     }
 }

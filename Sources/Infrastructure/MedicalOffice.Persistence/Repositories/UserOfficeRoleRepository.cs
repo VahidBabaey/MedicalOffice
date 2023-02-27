@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
 
-public class UserOfficeRoleRepository : GenericJointEntitiesRepository<UserOfficeRole>, IUserOfficeRoleRepository
+public class UserOfficeRoleRepository : GenericRepository<UserOfficeRole,Guid>, IUserOfficeRoleRepository
 {
     private readonly IGenericRepository<UserOfficeRole, Guid> _repositoryUserOfficeRole;
 
@@ -35,15 +35,24 @@ public class UserOfficeRoleRepository : GenericJointEntitiesRepository<UserOffic
 
     public async Task<List<UserOfficeRole>> GetByUserId(Guid userId)
     {
-        var userOfficeRole = await _dbContext.UserOfficeRoles.Include(x=>x.Role).Where(urf => urf.UserId == userId).ToListAsync();
+        var userOfficeRole = await _dbContext.UserOfficeRoles.Include(x => x.Role).Where(urf => urf.UserId == userId).ToListAsync();
 
         return userOfficeRole;
     }
 
-    public async Task<List<UserOfficeRole>> GetByUserAndOfficeId(Guid userId, Guid officeId)
+    public async Task<UserOfficeRole> GetByUserAndOfficeId(Guid userId, Guid officeId)
     {
-        var userOfficeRole = await _dbContext.UserOfficeRoles.Where(urf => urf.UserId == userId && urf.OfficeId == officeId).ToListAsync();
+        var userOfficeRole = await _dbContext.UserOfficeRoles.FirstAsync(urf => urf.UserId == userId && urf.OfficeId == officeId);
 
         return userOfficeRole;
+    }
+
+    public async Task DeleteUserOfficeRoleAsync(Guid userId, Guid OfficeId)
+    {
+        var medicalStaffs = await _dbContext.UserOfficeRoles.Where(ur => ur.UserId == userId && ur.OfficeId == OfficeId).ToListAsync();
+
+        _dbContext.UserOfficeRoles.RemoveRange(medicalStaffs);
+
+        _dbContext.SaveChanges();
     }
 }

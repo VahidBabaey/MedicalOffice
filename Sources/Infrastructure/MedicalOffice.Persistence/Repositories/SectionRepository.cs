@@ -21,15 +21,15 @@ public class SectionRepository : GenericRepository<Section, Guid>, ISectionRepos
         bool isExist = await _dbContext.Sections.AnyAsync(p => p.Id == sectionId && p.OfficeId == officeId);
         return isExist;
     }
-    public async Task<List<Section>> GetSectionBySearch(string name)
+    public async Task<List<Section>> GetSectionBySearch(string name, Guid officeId)
     {
-        var sections = await _dbContext.Sections.Where(p => p.Name.Contains(name)).ToListAsync();
+        var sections = await _dbContext.Sections.Where(p => p.Name.Contains(name) && p.IsDeleted == false && p.OfficeId == officeId).ToListAsync();
         return sections;
     }
     public async Task<List<SectionNamesListDTO>> GetSectionNames(Guid officeId)
     {
         List<SectionNamesListDTO> sectionNamesListDTOs = new List<SectionNamesListDTO>();
-        var sections = await _dbContext.Sections.Where(p => p.Status == true && p.OfficeId == officeId).ToListAsync();
+        var sections = await _dbContext.Sections.Where(p => p.Status == true && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
         foreach (var item in sections)
         {
             SectionNamesListDTO sectionNamesListDTO = new()
@@ -40,5 +40,10 @@ public class SectionRepository : GenericRepository<Section, Guid>, ISectionRepos
             sectionNamesListDTOs.Add(sectionNamesListDTO);
         }
         return sectionNamesListDTOs;  
+    }
+    public async Task<bool> CheckExistSectionName(Guid officeId, string sectionName)
+    {
+        bool isExist = await _dbContext.Sections.AnyAsync(p => p.OfficeId == officeId && p.Name == sectionName);
+        return isExist;
     }
 }

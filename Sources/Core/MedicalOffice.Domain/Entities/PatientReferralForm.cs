@@ -29,5 +29,9 @@ namespace MedicalOffice.Domain.Entities
         /// آی دی بیمار
         /// </summary>
         public Guid? PatientId { get; set; }
+        /// <summary>
+        /// توضیحات
+        /// </summary>
+        public string Description { get; set; } = string.Empty;
     }
 }

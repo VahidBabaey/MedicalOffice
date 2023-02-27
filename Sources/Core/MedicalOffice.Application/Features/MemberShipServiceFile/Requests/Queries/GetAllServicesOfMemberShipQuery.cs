@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Responses;
@@ -12,6 +13,7 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Quer
 {
     public class GetAllServicesOfMemberShipQuery : IRequest<BaseResponse>
     {
+        public ListDto Dto { get; set; } = new ListDto();
         public Guid MemberShipId { get; set; }
         public Guid OfficeId { get; set; }
     }

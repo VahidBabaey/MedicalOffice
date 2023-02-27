@@ -8,5 +8,6 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Querie
     {
         public ListDto DTO { get; set; } = new ListDto();
         public Guid BasicInfoId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

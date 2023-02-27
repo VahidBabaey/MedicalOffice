@@ -3,9 +3,11 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.DrugIntractionDTO;
+using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.DrugIntractionFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,14 +40,14 @@ namespace MedicalOffice.Application.Features.DrugIntractionFile.Handlers.Queries
             try
             {
                 var drugintraction = await _repository.GetAllDrugIntractions();
-                var result = _mapper.Map<List<DrugIntractionListDTO>>(drugintraction);
+                var result = drugintraction.Skip(request.DTO.Skip).Take(request.DTO.Take).Select(x => _mapper.Map<DrugIntractionListDTO>(x));
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;
                 log.AdditionalData = result;
                 await _logger.Log(log);
 
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = drugintraction.Count(), result = result });
             }
             catch (Exception error)
             {

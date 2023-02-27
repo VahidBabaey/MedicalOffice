@@ -16,14 +16,16 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Queries;
 
 public class GetMembershipBySearchQueryHandler : IRequestHandler<GetMembershipBySearchQuery, BaseResponse>
 {
-    private readonly IMembershipRepository _repository;
+    private readonly IOfficeRepository _officeRepository;
+    private readonly IMembershipRepository _membershiprepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public GetMembershipBySearchQueryHandler(IMembershipRepository repository, IMapper mapper, ILogger logger)
+    public GetMembershipBySearchQueryHandler(IOfficeRepository officeRepository, IMembershipRepository membershiprepository, IMapper mapper, ILogger logger)
     {
-        _repository = repository;
+        _officeRepository = officeRepository;
+        _membershiprepository = membershiprepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -31,29 +33,43 @@ public class GetMembershipBySearchQueryHandler : IRequestHandler<GetMembershipBy
 
     public async Task<BaseResponse> Handle(GetMembershipBySearchQuery request, CancellationToken cancellationToken)
     {
-        Log log = new();
+
+        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+        if (!validationOfficeId)
+        {
+            var error = "OfficeID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
 
         try
         {
-            var memberShip = await _repository.GetMembershipBySearch(request.Name);
+            var memberShip = _membershiprepository.GetMembershipBySearch(request.Name).Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+            var result = _mapper.Map<List<MembershipListDTO>>(memberShip.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
-            var result = _mapper.Map<List<InsuranceListDTO>>(memberShip.Where(p => p.OfficeId == request.OfficeId));
-
-            log.Header = $"{_requestTitle} succeded";
-            log.Type = LogType.Success;
-            log.AdditionalData = result;
-            await _logger.Log(log);
-
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = new { total = memberShip.Count(), result = result }
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = memberShip.Count(), result = result });
         }
 
         catch (Exception error)
         {
-            log.Header = $"{_requestTitle} failed";
-            log.AdditionalData = error.Message;
-            log.Type = LogType.Error;
-            await _logger.Log(log);
-
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
     }

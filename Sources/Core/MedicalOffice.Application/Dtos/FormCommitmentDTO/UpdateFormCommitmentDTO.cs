@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.FormCommitmentDTO
 {
-    public class UpdateFormCommitmentDTO : BaseDto<Guid>, IPatientIdDTO
+    public class UpdateFormCommitmentDTO : BaseDto<Guid>
     {
         /// <summary>
         /// نام فرم تعهدنامه
         /// </summary>
         public string Name { get; set; } = string.Empty;
         /// <summary>
-        /// آیدی بیمار
+        /// نام فرم تعهدنامه
         /// </summary>
-        public Guid PatientId { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Requests.Commands;
 using MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Requests.Queries;
@@ -20,37 +21,37 @@ public class MedicalStaffScheduleController : Controller
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffScheduleDTO dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] MedicalStaffScheduleDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddMedicalStaffScheduleCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddMedicalStaffScheduleCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpPatch]
-    public async Task<ActionResult<Guid>> UpdateMedicalStaffSchedule([FromBody] MedicalStaffScheduleDTO dto)
+    public async Task<ActionResult<Guid>> Update([FromBody] MedicalStaffScheduleDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditMedicalStaffScheduleCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditMedicalStaffScheduleCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid medicalStaffId)
+    public async Task<IActionResult> RemoveAsync([FromQuery] string medicalStaffId, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteMedicalStaffScheduleCommand() { MedicalStaffId = medicalStaffId });
+        var response = await _mediator.Send(new DeleteMedicalStaffScheduleCommand() { MedicalStaffId = Guid.Parse(medicalStaffId), OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffScheduleListDTO>>> GetAll(Guid medicalStaffId)
+    public async Task<ActionResult<List<MedicalStaffScheduleListDTO>>> GetByMedicalStaffId([FromQuery] string medicalStaffId, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllMedicalStaffScheduleQuery() { MedicalStaffId = medicalStaffId });
+        var response = await _mediator.Send(new GetAllMedicalStaffScheduleQuery() { DTO = dto, MedicalStaffId = Guid.Parse(medicalStaffId), OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

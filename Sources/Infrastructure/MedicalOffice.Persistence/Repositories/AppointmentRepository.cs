@@ -62,8 +62,7 @@ namespace MedicalOffice.Persistence.Repositories
             foreach (var item in appointments)
             {
                 var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
-                appointmentDetails.StaffName = item.MedicalStaff.FirstName;
-                appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
+                appointmentDetails.StaffName = item.MedicalStaff.FirstName + " " + item.MedicalStaff.LastName;
                 appointmentDetails.ServiceName = item.Service.Name;
                 if (item.CreatedById != default)
                 {
@@ -113,8 +112,7 @@ namespace MedicalOffice.Persistence.Repositories
             foreach (var item in appointments)
             {
                 var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
-                appointmentDetails.StaffName = item.MedicalStaff.FirstName;
-                appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
+                appointmentDetails.StaffName = item.MedicalStaff.FirstName+ " "+ item.MedicalStaff.LastName;
                 appointmentDetails.CreatorName = item.CreatedBy.FirstName;
                 appointmentDetails.CreatorName = item.CreatedBy.LastName;
                 appointmentDetails.RoomName = item.Room.Name;
@@ -157,8 +155,7 @@ namespace MedicalOffice.Persistence.Repositories
             foreach (var item in appointments)
             {
                 var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
-                appointmentDetails.StaffName = item.MedicalStaff.FirstName;
-                appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
+                appointmentDetails.StaffName = item.MedicalStaff.FirstName + " " + item.MedicalStaff.LastName;
                 appointmentDetails.CreatorName = item.CreatedBy.FirstName;
                 appointmentDetails.CreatorName = item.CreatedBy.LastName;
                 appointmentDetails.RoomName = item.Room.Name;
@@ -202,8 +199,7 @@ namespace MedicalOffice.Persistence.Repositories
             foreach (var item in appointments)
             {
                 var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
-                appointmentDetails.StaffName = item.MedicalStaff.FirstName;
-                appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
+                appointmentDetails.StaffName = item.MedicalStaff.FirstName + " " + item.MedicalStaff.LastName;
                 appointmentDetails.CreatorName = item.CreatedBy.FirstName;
                 appointmentDetails.CreatorName = item.CreatedBy.LastName;
                 appointmentDetails.RoomName = item.Room.Name;
@@ -237,8 +233,7 @@ namespace MedicalOffice.Persistence.Repositories
             foreach (var item in appointments)
             {
                 var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
-                appointmentDetails.StaffName = item.MedicalStaff.FirstName;
-                appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
+                appointmentDetails.StaffName = item.MedicalStaff.FirstName + " " + item.MedicalStaff.LastName;
                 appointmentDetails.CreatorName = item.CreatedBy.FirstName;
                 appointmentDetails.CreatorName = item.CreatedBy.LastName;
 
@@ -272,8 +267,7 @@ namespace MedicalOffice.Persistence.Repositories
             foreach (var item in appointments)
             {
                 var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
-                appointmentDetails.StaffName = item.MedicalStaff.FirstName;
-                appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
+                appointmentDetails.StaffName = item.MedicalStaff.FirstName + " " + item.MedicalStaff.LastName;
                 appointmentDetails.CreatorName = item.CreatedBy.FirstName;
                 appointmentDetails.CreatorName = item.CreatedBy.LastName;
 
@@ -312,8 +306,7 @@ namespace MedicalOffice.Persistence.Repositories
             foreach (var item in appointments)
             {
                 var appointmentDetails = _mapper.Map<AppointmentDetailsDTO>(item);
-                appointmentDetails.StaffName = item.MedicalStaff.FirstName;
-                appointmentDetails.StaffLastName = item.MedicalStaff.LastName;
+                appointmentDetails.StaffName = item.MedicalStaff.FirstName + " " + item.MedicalStaff.LastName;
                 appointmentDetails.CreatorName = item.CreatedBy.FirstName;
                 appointmentDetails.CreatorName = item.CreatedBy.LastName;
                 appointmentDetails.RoomName = item.Room.Name;

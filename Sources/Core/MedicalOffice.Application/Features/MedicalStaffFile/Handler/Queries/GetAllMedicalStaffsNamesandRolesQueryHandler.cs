@@ -36,7 +36,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
 
             try
             {
-                var MedicalStaffs = await _repository.GetAllMedicalStaffsNamesandRoles();
+                var MedicalStaffs = await _repository.GetAllMedicalStaffsNamesandRoles(request.OfficeId);
 
                 result = _mapper.Map<List<MedicalStaffNamesDTO>>(MedicalStaffs);
 

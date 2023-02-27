@@ -5,9 +5,11 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,13 +18,15 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
     public class DeleteMembershipCommandHandler : IRequestHandler<DeleteMembershipCommand, BaseResponse>
     {
+        private readonly IOfficeRepository _officeRepository;
         private readonly IMembershipRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public DeleteMembershipCommandHandler(IMembershipRepository repository, IMapper mapper, ILogger logger)
+        public DeleteMembershipCommandHandler(IOfficeRepository officeRepository, IMembershipRepository repository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
@@ -31,49 +35,55 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(DeleteMembershipCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
-            Log log = new();
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             var validationMembershipId = await _repository.CheckExistMembershipId(request.OfficeId, request.MembershipId);
 
             if (!validationMembershipId)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("ID isn't exist");
-
-                log.Type = LogType.Error;
-                return response;
+                var error = "ID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
-
             try
             {
-                await _repository.DeleteMembershipIdofServiceAsync(request.MembershipId);
-                await _repository.Delete(request.MembershipId);
+                await _repository.SoftDelete(request.MembershipId);
 
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = request.MembershipId });
-
-                log.Type = LogType.Success;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
             }
             catch (Exception error)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
-
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
-
 }

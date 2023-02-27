@@ -3,23 +3,20 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
-using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MedicalOffice.Application.Responses;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
 {
 
-    public class GetMedicalStaffBySearchQueryHandler : IRequestHandler<GetMedicalStaffBySearch, List<MedicalStaffListDTO>>
+    public class GetMedicalStaffBySearchQueryHandler : IRequestHandler<GetMedicalStaffBySearchQuery, BaseResponse>
     {
         private readonly IMedicalStaffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+
         private readonly string _requestTitle;
 
         public GetMedicalStaffBySearchQueryHandler(IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
@@ -27,35 +24,36 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<MedicalStaffListDTO>> Handle(GetMedicalStaffBySearch request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetMedicalStaffBySearchQuery request, CancellationToken cancellationToken)
         {
-            List<MedicalStaffListDTO> result = new();
-
-            Log log = new();
-
             try
             {
-                var medicalStaff = await _repository.GetMedicalStaffBySearch(request.Name);
+                var medicalStaffs = await _repository.GetMedicalStaffBySearch(request.Name, request.OfficeId);
+                var result = _mapper.Map<List<MedicalStaffListDTO>>(medicalStaffs.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
-                result = _mapper.Map<List<MedicalStaffListDTO>>(medicalStaff.Where(p => p.OfficeId == request.OfficeId));
-
-                log.Header = $"{_requestTitle} succeded";
-                log.Type = LogType.Success;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = medicalStaffs.Count(), result = result }
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = medicalStaffs.Count(), result = result });
             }
+
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData = error.Message;
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
-
-            await _logger.Log(log);
-
-            return result;
         }
     }
-
 }

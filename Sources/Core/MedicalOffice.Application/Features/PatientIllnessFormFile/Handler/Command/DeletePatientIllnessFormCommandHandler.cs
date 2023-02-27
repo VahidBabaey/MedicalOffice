@@ -8,6 +8,7 @@ using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,62 +17,55 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Comm
 
     public class DeletePatientIllnessFormCommandHandler : IRequestHandler<DeletePatientIllnessFormCommand, BaseResponse>
     {
-        private readonly IPatientIllnessFormRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly IPatientIllnessFormRepository _patientillnessformrepository;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public DeletePatientIllnessFormCommandHandler(IPatientIllnessFormRepository repository, IMapper mapper, ILogger logger)
+        public DeletePatientIllnessFormCommandHandler(IPatientIllnessFormRepository patientillnessformrepository, ILogger logger)
         {
-            _repository = repository;
-            _mapper = mapper;
+            _patientillnessformrepository = patientillnessformrepository;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
 
         public async Task<BaseResponse> Handle(DeletePatientIllnessFormCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
-            Log log = new();
 
-            var validationPatientIllnessFormId = await _repository.CheckExistPatientIllnessFormId(request.PatientIllnessFormId);
+            var validationPatientIllnessFormId = await _patientillnessformrepository.CheckExistPatientIllnessFormId(request.PatientIllnessFormId);
 
             if (!validationPatientIllnessFormId)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("ID isn't exist");
-
-                log.Type = LogType.Error;
-                return response;
+                var error = "ID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             try
             {
-                await _repository.Delete(request.PatientIllnessFormId);
+                await _patientillnessformrepository.SoftDelete(request.PatientIllnessFormId);
 
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = request.PatientIllnessFormId });
-
-                log.Type = LogType.Success;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
             }
             catch (Exception error)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
-
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
-
 }

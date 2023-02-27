@@ -31,15 +31,15 @@ public class ShiftController : Controller
     {
         var response = await _mediator.Send(new AddShiftCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
+    [HttpDelete("list-shift")]
+    public async Task<IActionResult> RemoveList([FromBody] ShiftListIDDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteShiftCommand() { ShiftID = id, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new DeleteShiftListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [HttpPatch]
@@ -47,22 +47,22 @@ public class ShiftController : Controller
     {
         var response = await _mediator.Send(new EditShiftCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] string officeId)
+    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllShiftsQuery() {OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllShiftsQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [HttpGet("Search")]
-    public async Task<ActionResult<List<ShiftListDTO>>> GetShiftBySearch([FromQuery] string name, [FromQuery] string officeId)
+    [HttpGet("search")]
+    public async Task<ActionResult<List<ShiftListDTO>>> GetShiftBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetShiftBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetShiftBySearchQuery() {Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

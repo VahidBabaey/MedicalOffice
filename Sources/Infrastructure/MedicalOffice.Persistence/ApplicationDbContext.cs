@@ -28,6 +28,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Diagnose> Diagnoses => Set<Diagnose>();
     public DbSet<DiscountType> DiscountTypes => Set<DiscountType>();
     public DbSet<FormCommitment> FormCommitments => Set<FormCommitment>();
+    public DbSet<FormIllness> FormIllnesses => Set<FormIllness>();
+    public DbSet<FormReferal> FormReferals => Set<FormReferal>();
     public DbSet<Drug> Drugs => Set<Drug>();
     public DbSet<DrugIntraction> DrugIntractions => Set<DrugIntraction>();
     public DbSet<DrugConsumption> DrugConsumptions => Set<DrugConsumption>();
@@ -76,7 +78,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<SocialHistory> SocialHistories => Set<SocialHistory>();
     public DbSet<Specialization> Specializations => Set<Specialization>();
     public DbSet<Tariff> Tariffs => Set<Tariff>();
-    public DbSet<MedicalStaffRole> MedicalStaffRoles => Set<MedicalStaffRole>();
     public DbSet<UserOfficeRole> UserOfficeRoles => Set<UserOfficeRole>();
     public DbSet<UserOfficePermission> UserOfficePermissions => Set<UserOfficePermission>();
     public DbSet<MedicalStaffServiceSharePercent> MedicalStaffServiceSharePercents => Set<MedicalStaffServiceSharePercent>();
@@ -105,9 +106,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<User>().ToTable("Users");
         modelBuilder.Entity<Role>().ToTable("Roles");
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRole");
-
         modelBuilder.Entity<MedicalStaffSchedule>().HasKey(entity=>entity.Id);
-
         //modelBuilder.Seed();
     }
 

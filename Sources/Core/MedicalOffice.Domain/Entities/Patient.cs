@@ -13,10 +13,6 @@ public class Patient : BaseDomainEntity<Guid>
     /// </summary>
     public string FileNumber { get; set; }
     /// <summary>
-    /// شماره تلفن
-    /// </summary>
-    public string Mobile { get; set; } = string.Empty;
-    /// <summary>
     /// اثر انگشت
     /// </summary>
     public byte[]? FingerPrint { get; set; } 
@@ -100,10 +96,6 @@ public class Patient : BaseDomainEntity<Guid>
     /// آدرس ها
     /// </summary>
     public ICollection<PatientAddress> PatientAddresses { get; set; } = new List<PatientAddress>();
-    /// <summary>
-    /// فرم تعهدنامه ها
-    /// </summary>
-    public ICollection<FormCommitment> FormCommitments { get; set; } = new List<FormCommitment>();
     /// <summary>
     /// اطلاعات تماس
     /// </summary>

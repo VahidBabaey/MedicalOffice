@@ -8,6 +8,7 @@ using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,6 +53,7 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
                 await _repository.Delete(request.DrugId);
 
                 response.Success = true;
+                response.StatusCode = HttpStatusCode.OK;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = request.DrugId });
 
@@ -60,6 +62,7 @@ namespace MedicalOffice.Application.Features.DrugFile.Handlers.Commands
             catch (Exception error)
             {
                 response.Success = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
                 response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 

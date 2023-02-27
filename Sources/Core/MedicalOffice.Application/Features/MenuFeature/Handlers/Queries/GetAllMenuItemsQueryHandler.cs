@@ -51,7 +51,7 @@ namespace MedicalOffice.Application.Features.MenuFeature.Handlers.Queries
 
         private List<MenuDto> GetMenu(List<Menu> Menu)
         {
-            var groupedMenu = Menu.GroupBy(p => p.ParentId, (key, grpup) => new { ParentId = key, Menus = grpup.ToList() });
+            var groupedMenu = Menu.OrderBy(x=>x.Order).GroupBy(p => p.ParentId, (key, grpup) => new { ParentId = key, Menus = grpup.ToList() });
 
             var parents = new List<MenuDto>();
             parents.AddRange(groupedMenu.Where(x => x.ParentId == null).SelectMany(x => x.Menus).Select(x => _mapper.Map<MenuDto>(x)));

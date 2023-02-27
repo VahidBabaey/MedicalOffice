@@ -120,7 +120,6 @@ public static class ServiceRegistration
         services.AddScoped<IDrugIntractionRepository, DrugIntractionRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IMedicalStaffRepository, MedicalStaffRepository>();
-        services.AddScoped<IMedicalStaffRoleRepository, MedicalStaffRoleRepository>();
         services.AddScoped<IUserOfficeRoleRepository, UserOfficeRoleRepository>();
         services.AddScoped<ICryptoServiceProvider, CryptoServiceProvider>();
         services.AddScoped<IMedicalStaffScheduleRepository, MedicalStaffScheduleRepository>();
@@ -131,6 +130,8 @@ public static class ServiceRegistration
         services.AddScoped<IPatientCommitmentFormRepository, PatientCommitmentFormRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IFormCommitmentRepository, FormCommitmentRepository>();
+        services.AddScoped<IFormIllnessRepository, FormIllnessRepository>();
+        services.AddScoped<IFormReferalRepository, FormReferalRepository>();
         services.AddScoped<IPictureRepository, PictureRepository>();
         services.AddScoped<IUserOfficePermissionRepository, UserOfficePermissionRepository>();
         services.AddScoped<IMemberShipServiceRepository, MemberShipServiceRepository>();
@@ -152,50 +153,7 @@ public static class ServiceRegistration
         services.AddScoped<ICashCheckRepository, CashCheckRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IMenuRepository, MenuRepository>();
-
-
-        services.AddScoped<IValidator<SpecializationDTO>, AddSpecializationValidator>();
-        services.AddScoped<IValidator<BasicInfoDetailDTO>, AddBasicInfoDetailValidator>();
-        services.AddScoped<IValidator<UpdateBasicInfoDetailDTO>, UpdateBasicInfoDetailValidator>();
-        services.AddScoped<IValidator<AddSectionDTO>, AddSectionValidator>();
-        services.AddScoped<IValidator<UpdateSectionDTO>, UpdateSectionValidator>();
-        services.AddScoped<IValidator<ServiceDTO>, AddServiceValidator>();
-        services.AddScoped<IValidator<UpdateServiceDTO>, UpdateServiceValidator>();
-        services.AddScoped<IValidator<TariffDTO>, AddTariffValidator>();
-        services.AddScoped<IValidator<InsuranceDTO>, AddInsuranceValidator>();
-        services.AddScoped<IValidator<UpdateInsuranceDTO>, UpdateInsuranceValidator>();
-        services.AddScoped<IValidator<UpdateShiftDTO>, UpdateShiftValidator>();
-        services.AddScoped<IValidator<ShiftDTO>, AddShiftValidator>();
-        services.AddScoped<IValidator<UpdateShiftDTO>, UpdateShiftValidator>();
-        services.AddScoped<IValidator<MembershipDTO>, AddMembershipValidator>();
-        services.AddScoped<IValidator<UpdateMembershipDTO>, UpdateMembershipValidator>();
-        services.AddScoped<IValidator<DrugDTO>, AddDrugValidator>();
-        services.AddScoped<IValidator<UpdateDrugDTO>, UpdateDrugValidator>();
-        services.AddScoped<IValidator<DrugIntractionDTO>, AddDrugIntractionValidator>();
-        services.AddScoped<IValidator<UpdateDrugIntractionDTO>, UpdateDrugIntractionValidator>();
-        services.AddScoped<IValidator<ExperimentDTO>, AddExperimentValidator>();
-        services.AddScoped<IValidator<UpdateExperimentDTO>, UpdateExperimentValidator>();
-        services.AddScoped<IValidator<PatientDTO>, AddPatientValidator>();
-        services.AddScoped<IValidator<UpdatePatientDTO>, UpdatePatientValidator>();
-        services.AddScoped<IValidator<PatientReferralFormDTO>, AddPatientReferralFormValidator>();
-        services.AddScoped<IValidator<PatientIllnessFormDTO>, AddPatientIllnessFormValidator>();
-        services.AddScoped<IValidator<AddPatientCommitmentsFormDTO>, AddPatientCommitmentsFormValidator>();
-        services.AddScoped<IValidator<CashCartDTO>, AddCashCartValidator>();
-        services.AddScoped<IValidator<UpdateCashCartDTO>, UpdateCashCartValidator>();
-        services.AddScoped<IValidator<CashCheckDTO>, AddCashCheckValidator>();
-        services.AddScoped<IValidator<UpdateCashCheckDTO>, UpdateCashCheckValidator>();
-        services.AddScoped<IValidator<CashPosDTO>, AddCashPosValidator>();
-        services.AddScoped<IValidator<UpdateCashPosDTO>, UpdateCashPosValidator>();
-        services.AddScoped<IValidator<CashesDTO>, AddCashValidator>();
-        services.AddScoped<IValidator<MemberShipServiceDTO>, AddMemberShipServiceValidator>();
-        services.AddScoped<IValidator<UpdateMemberShipServiceDTO>, UpdateMemberShipServiceValidator>();
-        services.AddScoped<IValidator<ReceptionDetailDTO>, AddReceptionDetailValidator>();
-        services.AddScoped<IValidator<UpdateReceptionDetailDTO>, UpdateReceptionDetailValidator>();
-        services.AddScoped<IValidator<AddFormCommitmentDTO>, AddFormCommitmentValidator>();
-        services.AddScoped<IValidator<ReceptionsDTO>, AddReceptionValidator>();
-        services.AddScoped<IValidator<AddFormCommitmentDTO>, AddFormCommitmentValidator>();
-        services.AddScoped<IValidator<UpdateFormCommitmentDTO>, UpdateFormCommitmentValidator>();
-        services.AddScoped<IValidator<MedicalStaffDTO>,AddMedicalStaffValidator>();
+        services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
 
         return services;
     }

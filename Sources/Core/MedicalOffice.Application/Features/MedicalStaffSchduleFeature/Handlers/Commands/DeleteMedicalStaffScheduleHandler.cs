@@ -8,22 +8,28 @@ using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handlers.Commands
 {
-
     public class DeleteMedicalStaffScheduleHandler : IRequestHandler<DeleteMedicalStaffScheduleCommand, BaseResponse>
     {
-        private readonly IMedicalStaffScheduleRepository _repository;
+        private readonly IMedicalStaffScheduleRepository _scheduleRepository;
+        private readonly IMedicalStaffRepository _medicalStaffRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public DeleteMedicalStaffScheduleHandler(IMedicalStaffScheduleRepository repository, IMapper mapper, ILogger logger)
+        public DeleteMedicalStaffScheduleHandler(
+            IMedicalStaffScheduleRepository staffScheduleRepository,
+            IMedicalStaffRepository medicalStaffRepository,
+            IMapper mapper,
+            ILogger logger)
         {
-            _repository = repository;
+            _medicalStaffRepository = medicalStaffRepository;
+            _scheduleRepository = staffScheduleRepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -31,35 +37,52 @@ namespace MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Handler
 
         public async Task<BaseResponse> Handle(DeleteMedicalStaffScheduleCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
-            Log log = new();
-
-            try
+            #region CheckStaffExist
+            var isStaffExist = await _medicalStaffRepository.CheckMedicalStaffExist(request.MedicalStaffId, request.OfficeId);
+            if (!isStaffExist)
             {
-                await _repository.DeleteMedicalStaffSchedule(request.MedicalStaffId);
+                var error = "The Staff isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
 
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data=(new { Id = request.MedicalStaffId });
-
-                log.Type = LogType.Success;
+                return ResponseBuilder.Success(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
-            catch (Exception error)
+            #endregion
+
+            #region CheckScheduleExist
+            var existingSchedule = _scheduleRepository.GetMedicalStaffScheduleByStaffId(request.MedicalStaffId, request.OfficeId).Result.ToList();
+
+            if (existingSchedule.Count == 0)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
+                var error = "This staff schedule isn't exist";
 
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} faild",
+                    AdditionalData = error
+                });
+
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
+            #endregion
 
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
+            #region
+            await _scheduleRepository.DeleteMedicalStaffSchedule(request.MedicalStaffId);
 
-            await _logger.Log(log);
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeeded",
+                AdditionalData = new { Id = request.MedicalStaffId }
+            });
 
-            return response;
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", new { Id = request.MedicalStaffId });
+            #endregion
         }
     }
-
 }

@@ -7,6 +7,7 @@ using MedicalOffice.Application.Dtos.PatientReferralFormDTO;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +20,16 @@ namespace MedicalOffice.Application.Features.PatientReferralFormFile.Handlers.Qu
 
     public class GetAllPatientReferralFormQueryHandler : IRequestHandler<GetAllPatientReferralFormQuery, BaseResponse>
     {
-        private readonly IPatientReferralFormRepository _repository;
+        private readonly IPatientRepository _patientrepository;
+        private readonly IPatientReferralFormRepository _patientreferralformrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllPatientReferralFormQueryHandler(IPatientReferralFormRepository repository, IMapper mapper, ILogger logger)
+        public GetAllPatientReferralFormQueryHandler(IPatientRepository patientrepository, IPatientReferralFormRepository patientreferralformrepository, IMapper mapper, ILogger logger)
         {
-            _repository = repository;
+            _patientrepository = patientrepository;
+            _patientreferralformrepository = patientreferralformrepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -34,29 +37,42 @@ namespace MedicalOffice.Application.Features.PatientReferralFormFile.Handlers.Qu
 
         public async Task<BaseResponse> Handle(GetAllPatientReferralFormQuery request, CancellationToken cancellationToken)
         {
-            Log log = new();
+            var validationPatientId = await _patientrepository.CheckExistPatientId(request.OfficeId, request.PatientId);
+
+            if (!validationPatientId)
+            {
+                var error = "PatientID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             try
             {
-                var patientreferralforms = await _repository.GetByPatientId(request.PatientId);
+                var patientreferralforms = await _patientreferralformrepository.GetByPatientId(request.PatientId);
+                var result = _mapper.Map<List<PatientReferralFormListDTO>>(patientreferralforms.Skip(request.DTO.Skip).Take(request.DTO.Take));
 
-                var result = _mapper.Map<List<PatientReferralFormListDTO>>(patientreferralforms);
-
-                log.Header = $"{_requestTitle} succeded";
-                log.Type = LogType.Success;
-                log.AdditionalData = result;
-                await _logger.Log(log);
-
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = patientreferralforms.Count(), result = result }
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = patientreferralforms.Count(), result = result });
             }
 
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData = error.Message;
-                log.Type = LogType.Error;
-                await _logger.Log(log);
-
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }

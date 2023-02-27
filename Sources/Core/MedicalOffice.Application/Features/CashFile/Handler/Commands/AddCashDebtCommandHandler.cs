@@ -10,6 +10,7 @@ using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
@@ -66,6 +67,7 @@ public class AddCashDebtCommandHandler : IRequestHandler<AddCashDebtCommand, Bas
                 await _repositoryReceptionDebt.AddReceptionDebt(request.DTO.ReceptionId, receptionDetailDebt.Id, request.OfficeId, request.DTO.Recieved);
 
                 response.Success = true;
+                response.StatusCode = HttpStatusCode.OK;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = cashDebt.Id });
 
@@ -74,6 +76,7 @@ public class AddCashDebtCommandHandler : IRequestHandler<AddCashDebtCommand, Bas
             catch (Exception error)
             {
                 response.Success = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
                 response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 

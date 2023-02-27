@@ -5,9 +5,12 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IMemberShipServiceRepository : IGenericRepository<MemberShipService, Guid>
     {
-        Task<bool> CheckExistMemberShipServiceId(Guid Id);
+        Task<bool> CheckExistMemberShipServiceId(Guid officeId, Guid Id);
+        Task<bool> CheckExistServiceIdofMembership(Guid officeId, Guid serviceId);
         Task<List<ServicesOfMemeberShipListDTO>> GetAllServicesOfMemberShip(Guid officeId, Guid memberShipId);
-        Task<MemberShipService> InsertServiceToMemberShipAsync(Guid officeId, string discount, Guid serviceId, Guid memberShipId);
-        Task<MemberShipService> UpdateServiceOfMemberShipAsync(string discount, Guid OfficeId, Guid id, Guid serviceId, Guid memberShipId);
+        Task<List<ServicesOfMemeberShipListDTO>> GetAllServicesOfMemberShipBySearch(Guid officeId, Guid memberShipId, string name);
+        Task<Guid> GetMembershipServiceId(Guid serviceId, Guid membershipId);
+        Task<Guid> InsertServiceToMemberShipAsync(Guid officeId, string discount, Guid serviceId, Guid memberShipId);
+        Task<Guid> UpdateServiceOfMemberShipAsync(string discount, Guid OfficeId, Guid id, Guid serviceId, Guid memberShipId);
     }
 }

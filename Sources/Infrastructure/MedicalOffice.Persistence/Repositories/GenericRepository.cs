@@ -27,6 +27,15 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
         return entity;
     }
 
+    public async Task<List<T1>> AddRange(List<T1> entities)
+    {
+        await _dbContext.AddRangeAsync(entities);
+
+        await _dbContext.SaveChangesAsync();
+
+        return entities;
+    }
+
     public async Task Delete(T1 entity)
     {
         _dbContext.Set<T1>().Remove(entity);
@@ -61,11 +70,11 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
         return await _dbContext.Set<T1>().ToListAsync();
     }
 
-    public async Task<IReadOnlyList<T1>> GetAllWithPaggination(int skip, int take)
+    public async Task<IReadOnlyList<T1>> GetAllWithPagination(int skip, int take)
     {
         return await _dbContext.Set<T1>().Skip(skip).Take(take).ToListAsync();
     }
-    
+
     public async Task Update(T1 entity)
     {
         _dbContext.Entry(entity).State = EntityState.Modified;
@@ -81,7 +90,7 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
         foreach (var property in properties)
         {
-            var fetchResult =  _dbContext.Set<T1>()
+            var fetchResult = _dbContext.Set<T1>()
                 .Where(delegate (T1 t)
                 {
                     var propertyValue = property.GetValue(t);
@@ -136,11 +145,41 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
         if (property == null)
             throw new ArgumentException("entity is not recognized!");
-
+        _dbContext.Update(entity);
         property.SetValue(entity, true);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<T1> Patch(T1 entity, T1 newEntity, bool replaceIfNull)
+    {
+        var properties = typeof(T1).GetProperties();
+        if (replaceIfNull)
+        {
+            foreach (var property in properties)
+            {
+                var newValue = property.GetValue(newEntity);
+                property.SetValue(entity, newValue);
+            }
+        }
+        else
+        {
+            foreach (var property in properties)
+            {
+                var newValue = property.GetValue(newEntity);
+                if (newValue != null)
+                    property.SetValue(entity, newValue);
+            }
+        }
 
         _dbContext.Update(entity);
         await _dbContext.SaveChangesAsync();
+
+        return entity;
+    }
+
+    Task<IReadOnlyList<T1>> IGenericRepository<T1, T2>.GetByIds(params object[] ids)
+    {
+        throw new NotImplementedException();
     }
 
     public IQueryable<T1> TableNoTracking => this._dbContext.Set<T1>().AsNoTracking();

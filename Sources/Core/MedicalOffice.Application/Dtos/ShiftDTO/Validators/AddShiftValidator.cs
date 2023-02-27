@@ -9,13 +9,10 @@ public class AddShiftValidator : AbstractValidator<ShiftDTO>
 {
     public AddShiftValidator()
     {
-
         RuleFor(x => x.Name).NotEmpty().Length(1, 100);
-        RuleFor(x => x.StartTime).NotEmpty();
-        RuleFor(x => x.EndTime).NotEmpty();
-        RuleFor(x => x.IsNextDay).NotEmpty();
-        RuleFor(x => x.StartTime)
-            .NotEmpty();
+        RuleFor(x => x.StartTime).NotEmpty()
+        .WithMessage(ValidationMessage.Required.For("StartTime"));
+
         When(x => TimeOnly.TryParse(x.StartTime, out TimeOnly result), () =>
         {
             RuleFor(x => TimeOnly.Parse(x.StartTime))
@@ -29,8 +26,12 @@ public class AddShiftValidator : AbstractValidator<ShiftDTO>
                 .Must(x => TimeOnly.TryParse(x, out TimeOnly result))
                 .WithMessage(ValidationMessage.NotValid.For("StartTime"));
         });
+
         RuleFor(x => x.EndTime)
-            .NotEmpty();
+            .NotEmpty()
+                .WithMessage(ValidationMessage.Required.For("EndTime"));
+            
+
         When(x => TimeOnly.TryParse(x.EndTime, out TimeOnly result), () =>
         {
             RuleFor(x => TimeOnly.Parse(x.EndTime))

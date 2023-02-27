@@ -1,8 +1,11 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Commands;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Queries;
+using MedicalOffice.Application.Features.ServiceFile.Requests.Commands;
+using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,16 +28,23 @@ public class MemberShipServiceController : Controller
     {
         var response = await _mediator.Send(new AddServicetoMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-
     [Authorize]
-    [HttpGet("Services")]
-    public async Task<ActionResult<List<ServiceListDTO>>> GetAll()
+    [HttpDelete]
+    public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllServicesQuery());
+        var response = await _mediator.Send(new DeleteMembershipServiceCommand() { OfficeId = Guid.Parse(officeId), MembershipServiceId = id });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+    [Authorize]
+    [HttpGet("services")]
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAll([FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetAllServicesQuery() { OfficeId = Guid.Parse(officeId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -43,15 +53,23 @@ public class MemberShipServiceController : Controller
     {
         var response = await _mediator.Send(new EditServicetoMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShip(Guid memberShipId, [FromQuery] string officeId)
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShip(Guid memberShipId, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllServicesOfMemberShipQuery() { MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllServicesOfMemberShipQuery() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+    [Authorize]
+    [HttpGet("servicesbysearch")]
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShipBySearch(Guid memberShipId, [FromQuery] string officeId, [FromQuery] ListDto dto, string name)
+    {
+        var response = await _mediator.Send(new GetAllServicesOfMemberShipQueryBySearch() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId), Name = name});
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

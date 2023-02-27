@@ -11,6 +11,7 @@ using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,16 +20,18 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
 
     public class EditBasicInfoDetailCommandHandler : IRequestHandler<EditBasicInfoDetailCommand, BaseResponse>
     {
+        private readonly IOfficeRepository _officeRepository;
         private readonly IValidator<UpdateBasicInfoDetailDTO> _validator;
-        private readonly IBasicInfoDetailRepository _repository;
+        private readonly IBasicInfoDetailRepository _basicinfodetailrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public EditBasicInfoDetailCommandHandler(IValidator<UpdateBasicInfoDetailDTO> validator, IBasicInfoDetailRepository repository, IMapper mapper, ILogger logger)
+        public EditBasicInfoDetailCommandHandler(IOfficeRepository officeRepository, IValidator<UpdateBasicInfoDetailDTO> validator, IBasicInfoDetailRepository basicinfodetailrepository, IMapper mapper, ILogger logger)
         {
+            _officeRepository = officeRepository;
             _validator = validator;
-            _repository = repository;
+            _basicinfodetailrepository = basicinfodetailrepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -36,31 +39,47 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
 
         public async Task<BaseResponse> Handle(EditBasicInfoDetailCommand request, CancellationToken cancellationToken)
         {
-            BaseResponse response = new();
 
-            Log log = new();
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
-            var validationBasicInfoDetailId = await _repository.CheckExistBasicInfoDetailId(request.DTO.Id);
+            if (!validationOfficeId)
+            {
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var validationBasicInfoDetailId = await _basicinfodetailrepository.CheckExistBasicInfoDetailId(request.DTO.Id);
 
             if (!validationBasicInfoDetailId)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add("ID isn't exist");
-
-                log.Type = LogType.Error;
-                return response;
+                var error = "ID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-                log.Type = LogType.Error;
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             else
             {
@@ -69,31 +88,28 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Comman
                 {
                     var basicinfodetail = _mapper.Map<BasicInfoDetail>(request.DTO);
 
-                    await _repository.Update(basicinfodetail);
+                    await _basicinfodetailrepository.Update(basicinfodetail);
 
-                    response.Success = true;
-                    response.StatusDescription = $"{_requestTitle} succeded";
-                    response.Data = (new { Id = basicinfodetail.Id });
-
-                    log.Type = LogType.Success;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Success,
+                        Header = $"{_requestTitle} succeded",
+                        AdditionalData = basicinfodetail.Id
+                    });
+                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", basicinfodetail.Id);
                 }
                 catch (Exception error)
                 {
-                    response.Success = false;
-                    response.StatusDescription = $"{_requestTitle} failed";
-                    response.Errors.Add(error.Message);
-
-                    log.Type = LogType.Error;
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = error.Message
+                    });
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
                 }
 
             }
-            log.Header = response.StatusDescription;
-            log.AdditionalData = response.Errors;
-
-            await _logger.Log(log);
-
-            return response;
         }
     }
-
 }

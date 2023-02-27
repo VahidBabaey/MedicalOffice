@@ -9,11 +9,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
     {
         public override void ConfigureEntity(EntityTypeBuilder<FormCommitment> builder)
         {
-            builder
-                .HasOne(e => e.Patient)
-                .WithMany(e => e.FormCommitments)
-                .HasForeignKey(e => e.PatientId)
-                .OnDelete(DeleteBehavior.NoAction);
 
         }
     }

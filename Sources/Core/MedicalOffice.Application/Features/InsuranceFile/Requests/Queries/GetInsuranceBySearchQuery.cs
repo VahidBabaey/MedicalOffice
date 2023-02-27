@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.InsuranceDTO;
-using MedicalOffice.Application.Dtos.MembershipDTO;
+using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -9,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.InsuranceFile.Requests.Queries
+namespace MedicalOffice.Application.Features.SectionFile.Requests.Queries;
+
+public class GetInsuranceBySearchQuery : IRequest<BaseResponse>
 {
-    public class GetInsuranceBySearchQuery : IRequest<BaseResponse>
-    {
-        public Guid OfficeId { get; set; }
-        public string Name { get; set; }
-    }
+    public ListDto Dto { get; set; } = new ListDto();
+    public string Name { get; set; }
+    public Guid OfficeId { get; set; }
 }

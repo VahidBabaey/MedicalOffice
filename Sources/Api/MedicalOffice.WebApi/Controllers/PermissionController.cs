@@ -1,10 +1,12 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.DrugDTO;
 using MedicalOffice.Application.Dtos.PermissionDTO;
-using MedicalOffice.Application.Dtos.MedicalStaffDTO;
+using MedicalOffice.Application.Features.DrugFile.Requests.Queries;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Commands;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Queries;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
@@ -20,38 +22,29 @@ public class PermissionController : Controller
     }
 
     [Authorize]
-    [HttpPost]
-    public async Task<ActionResult<Guid>> Create(string id, [FromBody] PermissionDTO dto)
+    [HttpGet]
+    public async Task<ActionResult<List<PermissionListDto>>> GetAll()
     {
-        var response = await _mediator.Send(new AddPermissionCommand() { MedicalStaffid = id, DTO = dto });
+        var response = await _mediator.Send(new GetPermissionsQuery() { });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+
+    [Authorize]
+    [HttpGet("staff")]
+    public async Task<ActionResult<List<Guid>>> GetStaffPermissions([FromQuery] string staffId, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetStaffPermissionsQuery() { OfficeId = Guid.Parse(officeId), StaffId = Guid.Parse(staffId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdatePermissionDTO dto)
+    public async Task<ActionResult<Guid>> ChangeStaffPermission([FromBody] UpdateStaffPermissionDto dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditPermissionCommand() { DTOUp = dto });
+        var response = await _mediator.Send(new UpdateStaffPermissionsCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
-    }
-
-    [Authorize]
-    [HttpGet("medicalStaffs")]
-    public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetAll()
-    {
-        var response = await _mediator.Send(new GetAllMedicalStaffsName());
-
-        return Ok(response);
-    }
-
-    [Authorize]
-    [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffNameListDTO>>> GetPermissionDetails(Guid id)
-    {
-        var response = await _mediator.Send(new GetPermissionDetailsofMedicalStaff() { UserOfficeRoleId = id});
-
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

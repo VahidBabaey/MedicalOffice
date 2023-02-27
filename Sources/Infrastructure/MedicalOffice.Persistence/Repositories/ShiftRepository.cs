@@ -24,29 +24,48 @@ namespace MedicalOffice.Persistence.Repositories
             bool isExist = await _dbContext.Shifts.AnyAsync(p => p.OfficeId == officeId && p.Id == shiftId);
             return isExist;
         }
-        public async Task<List<Shift>> GetShiftBySearch(string name)
+        public async Task<List<Shift>> GetShiftBySearch(string name, Guid officeId)
         {
-            var shifts = await _dbContext.Shifts.Where(p => p.Name.Contains(name)).ToListAsync();
+            var shifts = await _dbContext.Shifts.Where(p => p.Name.Contains(name) && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
 
             return shifts;
         }
-        public async Task<bool> CheckShiftConflict(Guid officeId, TimeOnly startTime, TimeOnly endTime)
+        public async Task<bool> CheckTimeConflict(string startTime, string endTime, bool nextday)
         {
             bool isConflict = false;
-            var shifts = await _dbContext.Shifts.Where(p => p.OfficeId == officeId).ToListAsync();
-            //foreach (var item in shifts)
-            //{
+            var shifts = await _dbContext.Shifts.ToListAsync();
 
-            //    if (/*startTime <= item.EndTime && item.StartTime <= endTime*/)
-            //    {
-            //        isConflict = true;
-            //    }
-            //    else
-            //    {
-            //        isConflict = false;
-            //    }
-            //}
+            foreach (var item in shifts)
+            {
+                if (item.Nextday == false)
+                {
+                    if (TimeOnly.Parse(item.StartTime) < TimeOnly.Parse(startTime) && TimeOnly.Parse(item.EndTime) > TimeOnly.Parse(startTime))
+                    {
+                        isConflict = true;
+                    }
+                    else if (TimeOnly.Parse(item.StartTime) < TimeOnly.Parse(endTime) && TimeOnly.Parse(item.EndTime) > TimeOnly.Parse(endTime))
+                    {
+                        isConflict = true;
+                    }
+                }
+                if (item.Nextday == true && nextday == false)
+                {
+                    if (TimeOnly.Parse(item.StartTime) < TimeOnly.Parse(startTime) || TimeOnly.Parse(item.EndTime) > TimeOnly.Parse(startTime))
+                    {
+                        isConflict = true;
+                    }
+                    else if (TimeOnly.Parse(item.StartTime) < TimeOnly.Parse(endTime) || TimeOnly.Parse(item.EndTime) > TimeOnly.Parse(endTime))
+                    {
+                        isConflict = true;
+                    }
+                }
+            }
             return isConflict;
+        }
+        public async Task<bool> CheckExistShiftName(Guid officeId, string shiftName)
+        {
+            bool isExist = await _dbContext.Shifts.AnyAsync(p => p.OfficeId == officeId && p.Name == shiftName);
+            return isExist;
         }
     }
 }

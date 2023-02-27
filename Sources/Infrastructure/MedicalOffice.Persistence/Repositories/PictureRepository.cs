@@ -18,15 +18,14 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
         _pictureRepository = pictureRepository;
         PatientPicturesDTO = new List<PatientPicturesDTO>();
     }
-    public async Task<AddPictureDTO> RegisterPictureAsync(PictureUploadDTO pictureUploadDTO)
+    public async Task<Picture> RegisterPictureAsync(PictureUploadDTO pictureUploadDTO, Guid officeId)
     {
         try
         {
             var picture = new Picture();
             picture.PictureName = pictureUploadDTO.Picturename;
-            picture.OfficeId = pictureUploadDTO.OfficeId;
+            picture.OfficeId = officeId;
             picture.PatientId = pictureUploadDTO.PatientId;
-
             var fileName = "" + picture.PictureName;
             byte[] pictureBinary = null;
             using (var fileStream = pictureUploadDTO.File.OpenReadStream())
@@ -51,7 +50,7 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
                 Picturename = picture.PictureName
             };
 
-            return pictureDTO;
+            return picture;
         }
         catch (Exception)
         {
@@ -61,7 +60,7 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
     }
     public async Task<List<PatientPicturesDTO>> GetByPatientId(Guid patientId)
     {
-        var patientpicture = await _dbContext.Pictures.Where(srv => srv.PatientId == patientId).ToListAsync();
+        var patientpicture = await _dbContext.Pictures.Where(p => p.PatientId == patientId && p.IsDeleted == false).ToListAsync();
         foreach (var item in patientpicture)
         {
             var q = new PatientPicturesDTO()
@@ -78,5 +77,10 @@ public class PictureRepository : GenericRepository<Picture, Guid>, IPictureRepos
         }
 
         return PatientPicturesDTO;
+    }
+    public async Task<bool> CheckExistPictureId(Guid officeId, Guid pictureId)
+    {
+        bool isExist = await _dbContext.Pictures.AnyAsync(p => p.OfficeId == officeId && p.Id == pictureId);
+        return isExist;
     }
 }

@@ -6,10 +6,6 @@ namespace MedicalOffice.Application.Dtos.PatientDTO;
 public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationalIdDTO
 {
     /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
-    /// <summary>
     /// شماره پرونده
     /// </summary>
     public string FileNumber { get; set; } = string.Empty;

@@ -23,25 +23,25 @@ public class BasicInfoDetailController : Controller
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] BasicInfoDetailDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddBasicInfoDetailCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddBasicInfoDetailCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string basicinfoId)
+    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string basicinfoId, [FromQuery] string officerId)
     {
-        var response = await _mediator.Send(new GetAllBasicInfoDetailQuery() { DTO = dto, BasicInfoId = Guid.Parse(basicinfoId) });
+        var response = await _mediator.Send(new GetAllBasicInfoDetailQuery() { DTO = dto, BasicInfoId = Guid.Parse(basicinfoId), OfficeId = Guid.Parse(officerId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpDelete]
-    public async Task<IActionResult> Remove(Guid Id)
+    public async Task<IActionResult> Remove(Guid Id, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new DeleteBasicInfoDetailCommand() { BasicInfoDetailId = Id });
+        var response = await _mediator.Send(new DeleteBasicInfoDetailCommand() { BasicInfoDetailId = Id , OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -50,7 +50,7 @@ public class BasicInfoDetailController : Controller
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateBasicInfoDetailDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new EditBasicInfoDetailCommand() { DTO = dto });
+        var response = await _mediator.Send(new EditBasicInfoDetailCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

@@ -9,6 +9,7 @@ using MedicalOffice.Application.Features.CashFile.Request.Commands;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
@@ -69,6 +70,7 @@ public class EditCashCartCommandHandler : IRequestHandler<EditCashCartCommand, B
                 await _repository.Update(cashcart);
 
                 response.Success = true;
+                response.StatusCode = HttpStatusCode.OK;
                 response.StatusDescription = $"{_requestTitle} succeded";
                 response.Data = (new { Id = cashcart.Id });
 
@@ -77,6 +79,7 @@ public class EditCashCartCommandHandler : IRequestHandler<EditCashCartCommand, B
             catch (Exception error)
             {
                 response.Success = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
                 response.StatusDescription = $"{_requestTitle} failed";
                 response.Errors.Add(error.Message);
 

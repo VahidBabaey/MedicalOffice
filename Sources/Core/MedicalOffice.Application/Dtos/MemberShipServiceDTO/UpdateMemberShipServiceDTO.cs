@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO
 {
-    public class UpdateMemberShipServiceDTO : BaseDto<Guid> , IMembershipIdDTO, IServiceListIdDTO
+    public class UpdateMemberShipServiceDTO : BaseDto<Guid> , IMembershipIdDTO, IServiceIdDTO
     {
         /// <summary>
         /// آیدی عضویت
@@ -19,10 +19,10 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO
         /// <summary>
         /// آیدی سرویس
         /// </summary>
-        public Guid[] ServiceId { get; set; }
+        public Guid ServiceId { get; set; }
         /// <summary>
         /// تخفیف
         /// </summary>
-        public string Discount { get; set; } = string.Empty;
+        public long Discount { get; set; }
     }
 }

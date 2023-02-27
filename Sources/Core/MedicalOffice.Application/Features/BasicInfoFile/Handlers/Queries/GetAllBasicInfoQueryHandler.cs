@@ -6,20 +6,24 @@ using MedicalOffice.Application.Dtos.BasicInfoListDTO;
 using MedicalOffice.Application.Features.BasicInfoFile.Requests.Queries;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.BasicInfoFile.Handlers.Queries
 {
 
     public class GetAllBasicInfoQueryHandler : IRequestHandler<GetAllBasicInfoQuery, BaseResponse>
     {
-        private readonly IBasicInfoRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
+        private readonly IBasicInfoRepository _basicinforepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllBasicInfoQueryHandler(IBasicInfoRepository repository, IMapper mapper, ILogger logger)
+        public GetAllBasicInfoQueryHandler(IOfficeRepository officeRepository, IBasicInfoRepository basicinforepository, IMapper mapper, ILogger logger)
         {
-            _repository = repository;
+            _officeRepository = officeRepository;
+            _basicinforepository = basicinforepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -27,28 +31,43 @@ namespace MedicalOffice.Application.Features.BasicInfoFile.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetAllBasicInfoQuery request, CancellationToken cancellationToken)
         {
-            Log log = new();
+
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             try
             {
-                var basicInfos = await _repository.GetAll();
-                var result = _mapper.Map<List<BasicInfoListDTO>>(basicInfos.Where(p => p.OfficeId == request.OfficeId));
+                var basicInfos =  _basicinforepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+                var result = _mapper.Map<List<BasicInfoListDTO>>(basicInfos);
 
-                log.Header = $"{_requestTitle} succeded";
-                log.AdditionalData = result;
-                log.Type = LogType.Success;
-                await _logger.Log(log);
-
-                return ResponseBuilder.Success(System.Net.HttpStatusCode.OK, $"{_requestTitle} succeeded", result);
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = basicInfos.Count(), result = result }
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = basicInfos.Count(), result = result });
             }
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData = error.Message;
-                log.Type = LogType.Error;
-                await _logger.Log(log);
-
-                return ResponseBuilder.Success(System.Net.HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
     }

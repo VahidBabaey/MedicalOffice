@@ -21,39 +21,39 @@ public class PatientCommitmentForms : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
-    [HttpGet("Commitments")]
-    public async Task<ActionResult<List<CommitmentNamesListDTO>>> GetAllCommitments()
+    //[Authorize]
+    [HttpGet("commitmentforms")]
+    public async Task<ActionResult<List<CommitmentNamesListDTO>>> GetAllCommitmentForms([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllCommitmentsNamesFormQuery());
+        var response = await _mediator.Send(new GetAllCommitmentsNamesFormQuery() { OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] AddPatientCommitmentsFormDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddPatientCommitmentFormCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<PatientCommitmentsFormListDTO>>> GetAll([FromQuery] ListDto dto, Guid patientid)
+    public async Task<ActionResult<List<PatientCommitmentsFormListDTO>>> GetAll([FromQuery] ListDto dto, Guid patientid, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllPatientCommitmentsFormQuery() { DTO = dto, PatientId = patientid });
+        var response = await _mediator.Send(new GetAllPatientCommitmentsFormQuery() { DTO = dto, PatientId = patientid, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete]
-    public async Task<IActionResult> RemoveAsync(Guid id)
+    public async Task<IActionResult> Remove(Guid id)
     {
         var response = await _mediator.Send(new DeletePatientCommitmentFormCommand() { PatientCommitmentFormId = id });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }

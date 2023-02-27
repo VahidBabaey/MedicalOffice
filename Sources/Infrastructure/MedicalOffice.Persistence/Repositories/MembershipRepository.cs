@@ -90,4 +90,9 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
 
         return memberships;
     }
+    public async Task<bool> CheckExistMembershipName(Guid officeId, string membershipName)
+    {
+        bool isExist = await _dbContext.Memberships.AnyAsync(p => p.OfficeId == officeId && p.Name == membershipName);
+        return isExist;
+    }
 }

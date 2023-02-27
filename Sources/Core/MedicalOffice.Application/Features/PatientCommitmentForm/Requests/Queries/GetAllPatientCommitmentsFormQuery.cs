@@ -17,5 +17,6 @@ namespace MedicalOffice.Application.Features.PatientReferralFormFile.Requests.Qu
     {
         public ListDto DTO { get; set; } = new ListDto();
         public Guid PatientId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

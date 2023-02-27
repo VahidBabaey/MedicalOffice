@@ -5,20 +5,18 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MedicalOffice.Application.Responses;
+using System.Net;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
 {
 
-    public class GetAllMedicalStaffQueryHandler : IRequestHandler<GetAllMedicalStaffs, List<MedicalStaffListDTO>>
+    public class GetAllMedicalStaffQueryHandler : IRequestHandler<GetAllMedicalStaffsQuery, BaseResponse>
     {
         private readonly IMedicalStaffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+
         private readonly string _requestTitle;
 
         public GetAllMedicalStaffQueryHandler(IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
@@ -26,34 +24,36 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<MedicalStaffListDTO>> Handle(GetAllMedicalStaffs request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetAllMedicalStaffsQuery request, CancellationToken cancellationToken)
         {
-            List<MedicalStaffListDTO> result = new();
-            Log log = new();
-
             try
             {
-                var MedicalStaffs = await _repository.GetAllMedicalStaffs(request.OfficeId);
+                var medicalStaffs = await _repository.GetAllMedicalStaffs(request.OfficeId);
+                var result = _mapper.Map<List<MedicalStaffListDTO>>(medicalStaffs.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
-                result = _mapper.Map<List<MedicalStaffListDTO>>(MedicalStaffs);
-
-                log.Header = $"{_requestTitle} succeded";
-                log.Type = LogType.Success;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = medicalStaffs.Count(), result = result }
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = medicalStaffs.Count(), result = result });
             }
+
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData=error.Message;
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
-
-            await _logger.Log(log);
-
-            return result;
         }
     }
-
 }

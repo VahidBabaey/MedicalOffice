@@ -1,9 +1,10 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 
-public class MedicalStaffScheduleDTO
+public class MedicalStaffScheduleDTO : IMedicalStaffDTO
 {
     public Guid MedicalStaffId { get; set; }
 
@@ -11,17 +12,3 @@ public class MedicalStaffScheduleDTO
 
     public List<MedicalStaffDaySchedule> MedicalStaffSchedule { get; set; } = new();
 }
-
-public class MedicalStaffDaySchedule
-{
-    public DayOfWeek WeekDay { get; set; }
-
-    public string MorningStart { get; set; }
-
-    public string MorningEnd { get; set; }
-
-    public string EveningStart { get; set; }
-
-    public string EveningEnd { get; set; }
-}
-

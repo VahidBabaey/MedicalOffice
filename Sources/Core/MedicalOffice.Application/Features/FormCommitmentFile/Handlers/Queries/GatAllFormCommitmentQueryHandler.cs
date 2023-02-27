@@ -19,14 +19,16 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Queries
 {
     public class GatAllFormCommitmentQueryHandler : IRequestHandler<GatAllFormCommitmentQuery, BaseResponse>
     {
-        private readonly IFormCommitmentRepository _repository;
+        private readonly IOfficeRepository _officeRepository;
+        private readonly IFormCommitmentRepository _formcommitmentrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GatAllFormCommitmentQueryHandler(IFormCommitmentRepository repository, IMapper mapper, ILogger logger)
+        public GatAllFormCommitmentQueryHandler(IOfficeRepository officeRepository, IFormCommitmentRepository formcommitmentrepository, IMapper mapper, ILogger logger)
         {
-            _repository = repository;
+            _officeRepository = officeRepository;
+            _formcommitmentrepository = formcommitmentrepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -34,26 +36,42 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GatAllFormCommitmentQuery request, CancellationToken cancellationToken)
         {
-            Log log = new();
+
+            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             try
             {
-                var formCommitments = await _repository.GetAll();
-                var result = _mapper.Map<List<FormCommitmentListDTO>>(formCommitments.Where(p => p.OfficeId == request.OfficeId));
+                var formCommitments = _formcommitmentrepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+                var result = _mapper.Map<List<FormCommitmentListDTO>>(formCommitments.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
-                log.Header = $"{_requestTitle} succeded";
-                log.Type = LogType.Success;
-                await _logger.Log(log);
-
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = formCommitments.Count(), result = result }
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = formCommitments.Count(), result = result });
             }
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData = error.Message;
-                log.Type = LogType.Error;
-                await _logger.Log(log);
-
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }

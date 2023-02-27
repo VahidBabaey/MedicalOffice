@@ -27,16 +27,16 @@ public class PatientController : Controller
     {
         var response = await _mediator.Send(new AddPatientCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     //[Authorize]
     [HttpDelete]
-    public async Task<ActionResult<Guid>> Delete(Guid patientId, [FromQuery] string officeId)
+    public async Task<ActionResult<Guid>> Remove(Guid patientId, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new DeletePatientCommand() { PatientId = patientId, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     //[Authorize]
@@ -45,25 +45,25 @@ public class PatientController : Controller
     {
         var response = await _mediator.Send(new EditPatientCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     //[Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<PatientListDTO>>> GetAll([FromQuery] string officeId)
+    public async Task<ActionResult<List<PatientListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllPatientsQuery() {OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllPatientsQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     //[Authorize]
     [HttpGet("SearchByRequestedFeilds")]
-    public async Task<ActionResult<List<PatientListDTO>>> GetBySearch([FromQuery] SearchFields searchFields)
+    public async Task<ActionResult<List<PatientListDTO>>> GetBySearch([FromQuery] SearchFields searchFields, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetPatientBySearchQuery() {searchFields = searchFields });
+        var response = await _mediator.Send(new GetPatientBySearchQuery() {Dto = dto, searchFields = searchFields });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
     //[Authorize]
     [HttpGet("searchreceptionslist")]

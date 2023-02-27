@@ -10,8 +10,12 @@ namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO
     public class CommitmentNamesListDTO : BaseDto<Guid>
     {
         /// <summary>
-        /// نام تعهد
+        /// نام فرم تعهدنامه
         /// </summary>
-        public string CommitmentName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        /// <summary>
+        /// توضیحات
+        /// </summary>
+        public string Description { get; set; } = string.Empty;
     }
 }

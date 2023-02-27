@@ -12,7 +12,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         {
             builder
                 .HasQueryFilter(m => m.IsDeleted == false);
-
             builder
                 .HasData(new MedicalStaff[]
                 {
@@ -27,7 +26,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           NationalID= "0113048998",
                           Title= Title.MrDoctor,
                           SpecializationId= Guid.Parse("3BA9DDBE-0D1E-47CC-807F-3EA8D9A04EF3"),
-                          RoleId= Guid.Parse("70508B44-EAE8-4D40-9318-651AE5B38F40")
+                          UserId = Guid.Parse("28b4f560-5a36-4816-8646-b94486bb7464"),
+                          RoleId = Guid.Parse("70508b44-eae8-4d40-9318-651ae5b38f40")
                     },
                     new MedicalStaff
                     {
@@ -40,7 +40,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           NationalID= "0112857469",
                           Title= Title.MrDoctor,
                           SpecializationId= Guid.Parse("3BA9DDBE-0D1E-47CC-807F-3EA8D9A04EF3"),
-                          RoleId= Guid.Parse("70508B44-EAE8-4D40-9318-651AE5B38F40")
+                          UserId= Guid.Parse("d53c3b49-47ed-4647-aef5-01397ea68cea"),
+                          RoleId = Guid.Parse("779c69ef-6857-4e19-b24e-1c4c4b2635d7")
                     }
                 });
         }

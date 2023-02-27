@@ -12,6 +12,6 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Quer
 {
     public class GetAllCommitmentsNamesFormQuery : IRequest<BaseResponse>
     {
-
+        public Guid OfficeId { get; set; }
     }
 }
