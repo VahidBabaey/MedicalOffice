@@ -74,4 +74,4 @@ public class GetInsuranceBySearchQueryHandler : IRequestHandler<GetInsuranceBySe
         }
     }
 }
-}
+

@@ -87,7 +87,7 @@ public class Patient : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی معرف
     /// </summary>
-    public Guid IntroducerId { get; set; }
+    public Guid? IntroducerId { get; set; }
     /// <summary>
     /// اتباع خارجی
     /// </summary>

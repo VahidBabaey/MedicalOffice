@@ -49,4 +49,5 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
         bool isExist = await _dbContext.Tariffs.AnyAsync(p => p.Id == tariffId && p.OfficeId == officeId);
         return isExist;
     }
+}
 

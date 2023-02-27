@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Common;
+using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Domain.Entities;
 
@@ -43,6 +44,10 @@ public class Insurance : BaseDomainEntity<Guid>
     /// عضویت پذیر
     /// </summary>
     public bool Joinable { get; set; }
+    /// <summary>
+    /// نوع تعرفه
+    /// </summary>
+    public TariffType? TariffType { get; set; }
     /// <summary>
     /// جزئیات پذیرش - بیمه/بیمه تکمیلی
     /// </summary>

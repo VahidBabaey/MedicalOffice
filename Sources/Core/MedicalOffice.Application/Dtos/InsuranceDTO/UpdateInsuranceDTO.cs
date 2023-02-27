@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.InsuranceDTO;
 
@@ -32,5 +33,8 @@ public class UpdateInsuranceDTO : BaseDto<Guid>
     /// عضویت پذیر
     /// </summary>
     public bool Joinable { get; set; }
-
+    /// <summary>
+    /// نوع تعرفه
+    /// </summary>
+    public TariffType? TariffType { get; set; }
 }
