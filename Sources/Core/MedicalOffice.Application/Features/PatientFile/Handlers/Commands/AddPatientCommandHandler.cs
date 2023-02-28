@@ -69,13 +69,17 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
             {
                 var patient = _mapper.Map<Patient>(request.DTO);
                 patient.OfficeId = request.OfficeId;
-                //patient.FileNumber = _patientrepository.GenerateFileNumber().ToString();
+                patient.FileNumber = await _patientrepository.GenerateFileNumber();
 
                 patient = await _patientrepository.Add(patient);
 
                 foreach (var mobile in request.DTO.PhoneNumber)
                 {
                     await _patientrepository.InsertContactValueofPatientAsync(patient.Id, mobile);
+                }
+                foreach (var tel in request.DTO.TelePhoneNumber)
+                {
+                    await _patientrepository.InsertContactValueofPatientAsync(patient.Id, tel);
                 }
                 foreach (var address in request.DTO.Address)
                 {

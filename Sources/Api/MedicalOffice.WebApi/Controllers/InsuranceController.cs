@@ -53,7 +53,7 @@ public class InsuranceController : Controller
     [HttpGet]
     public async Task<ActionResult<List<InsuranceListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllInsuranceQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllInsuranceQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -64,13 +64,5 @@ public class InsuranceController : Controller
         var response = await _mediator.Send(new GetInsuranceBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
-    }
-    //[Authorize]
-    [HttpGet("search")]
-    public async Task<ActionResult<List<InsuranceListDTO>>> GetInsuranceBySearch([FromQuery] string name, [FromQuery] string officeId)
-    {
-        var response = await _mediator.Send(new GetInsuranceBySearchQuery() { Name = name, OfficeId = Guid.Parse(officeId) });
-
-        return Ok(response);
     }
 }

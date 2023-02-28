@@ -4,12 +4,8 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.PatientDTO;
 
-public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationalIdDTO
+public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationalIdDTO, IInsuranceIdDTO
 {
-    /// <summary>
-    /// شماره پرونده
-    /// </summary>
-    public string FileNumber { get; set; } = string.Empty;
     /// <summary>
     /// نام
     /// </summary>
@@ -43,10 +39,6 @@ public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationa
     /// </summary>
     public MaritalStatus? MaritalStatus { get; set; }
     /// <summary>
-    /// تاریخ ازدواج
-    /// </summary>
-    public string MarriageDate { get; set; } = string.Empty;
-    /// <summary>
     /// وضعیت تحصیلی
     /// </summary>
     public EducationStatuses? EducationStatus { get; set; }
@@ -77,7 +69,7 @@ public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationa
     /// <summary>
     /// آیدی بیمه
     /// </summary>
-    public Guid? InsuranceId { get; set; }
+    public Guid InsuranceId { get; set; }
     /// <summary>
     /// نوع معرف
     /// </summary>
@@ -86,4 +78,8 @@ public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationa
     /// توضیحات پرونده
     /// </summary>
     public string FileDescription { get; set; } = string.Empty;
+    /// <summary>
+    /// سن
+    /// </summary>
+    public int Age { get; set; }
 }

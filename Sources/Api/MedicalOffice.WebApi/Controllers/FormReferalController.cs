@@ -56,7 +56,7 @@ public class FormReferalController : Controller
     [HttpGet]
     public async Task<ActionResult<List<FormReferalListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GatAllFormReferalQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GatAllFormReferalQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

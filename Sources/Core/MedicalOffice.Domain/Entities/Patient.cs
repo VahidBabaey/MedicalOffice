@@ -11,11 +11,7 @@ public class Patient : BaseDomainEntity<Guid>
     /// <summary>
     /// شماره پرونده 
     /// </summary>
-    public string FileNumber { get; set; }
-    /// <summary>
-    /// اثر انگشت
-    /// </summary>
-    public byte[]? FingerPrint { get; set; } 
+    public int FileNumber { get; set; }
     /// <summary>
     /// مطب
     /// </summary>
@@ -57,10 +53,6 @@ public class Patient : BaseDomainEntity<Guid>
     /// </summary>
     public MaritalStatus? MaritalStatus { get; set; }
     /// <summary>
-    /// تاریخ ازدواج
-    /// </summary>
-    public string MarriageDate { get; set; } = string.Empty;
-    /// <summary>
     /// وضعیت تحصیلی
     /// </summary>
     public EducationStatuses? EducationStatus { get; set; }
@@ -89,9 +81,9 @@ public class Patient : BaseDomainEntity<Guid>
     /// </summary>
     public Guid? IntroducerId { get; set; }
     /// <summary>
-    /// اتباع خارجی
+    /// سن
     /// </summary>
-    public bool IsForeign { get; set; }
+    public int Age { get; set; }
     /// <summary>
     /// آدرس ها
     /// </summary>

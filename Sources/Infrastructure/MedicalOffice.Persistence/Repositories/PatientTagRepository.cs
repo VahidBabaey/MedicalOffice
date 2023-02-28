@@ -14,13 +14,13 @@ public class PatientTagRepository : GenericRepository<PatientTag, Guid>, IPatien
     }
     public async Task<bool> RemovePatientTag(Guid patientId)
     {
-
-        var patientTag = await GetByIDNoTrackingAsync(patientId);
+        var patientTag = await _dbContext.PatientTags.Where(p => p.PatientId == patientId).ToListAsync();
         if (patientTag == null)
             return false;
-        await Delete(patientId);
+        foreach (var item in patientTag)
+        {
+            await Delete(item);
+        }
         return true;
-
     }
-
 }

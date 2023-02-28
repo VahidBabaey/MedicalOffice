@@ -14,13 +14,13 @@ public class PatientAddressRepository : GenericRepository<PatientAddress, Guid>,
     }
     public async Task<bool> RemovePatientAddress(Guid patientId)
     {
-
-        var patientAddress = await GetByIDNoTrackingAsync(patientId);
+        var patientAddress = await _dbContext.PatientAddresses.Where(p => p.PatientId == patientId).ToListAsync();
         if (patientAddress == null)
             return false;
-        await Delete(patientId);
+        foreach (var item in patientAddress)
+        {
+            await Delete(item);
+        }
         return true;
-
     }
-
 }

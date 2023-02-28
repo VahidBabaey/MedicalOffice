@@ -68,7 +68,7 @@ public class MemberShipServiceController : Controller
     [HttpGet("servicesbysearch")]
     public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShipBySearch(Guid memberShipId, [FromQuery] string officeId, [FromQuery] ListDto dto, string name)
     {
-        var response = await _mediator.Send(new GetAllServicesOfMemberShipQueryBySearch() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId), Name = name});
+        var response = await _mediator.Send(new GetAllServicesOfMemberShipQueryBySearch() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId), Name = name });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
