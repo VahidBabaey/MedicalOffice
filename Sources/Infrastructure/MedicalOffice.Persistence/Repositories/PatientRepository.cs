@@ -77,6 +77,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
     {
         try
         {
+
             List<PatientListDTO> patientList = new();
 
             var list = await _dbContext.Patients
