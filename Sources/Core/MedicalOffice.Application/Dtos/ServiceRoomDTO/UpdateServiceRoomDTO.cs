@@ -3,7 +3,7 @@ using MedicalOffice.Application.Dtos.Common;
 
 namespace MedicalOffice.Application.Dtos.ServiceRoomDTO
 {
-    public class UpdateServiceRoomDTO : BaseDto<Guid>, IServiceIdsDTO, IRoomNameDTO
+    public class UpdateServiceRoomDTO : BaseDto<Guid>, IServiceIdsDTO, INameDTO
     {
         public string Name { get; set; }
 

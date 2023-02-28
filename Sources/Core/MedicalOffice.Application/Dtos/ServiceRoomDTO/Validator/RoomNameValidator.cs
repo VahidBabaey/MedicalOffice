@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.Common;
 
 namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
 {
-    public class RoomNameValidator : AbstractValidator<IRoomNameDTO>
+    public class RoomNameValidator : AbstractValidator<INameDTO>
     {
         private readonly IRoomRepository _serviceRoomRepository;
         private readonly IOfficeResolver _officeResolver;

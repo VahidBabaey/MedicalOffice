@@ -38,7 +38,7 @@ public class GetAllServicesOfMemberShipQueryHandler : IRequestHandler<GetAllServ
     public async Task<BaseResponse> Handle(GetAllServicesOfMemberShipQuery request, CancellationToken cancellationToken)
     {
 
-        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {

@@ -42,7 +42,7 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
         public async Task<BaseResponse> Handle(AddMembershipCommand request, CancellationToken cancellationToken)
         {
 
-            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
             if (!validationOfficeId)
             {

@@ -58,6 +58,7 @@ using MedicalOffice.Application.Dtos.PictureDTO.Validator;
 using MedicalOffice.Application.Dtos.PictureDTO;
 using MedicalOffice.Application.Dtos.ServiceRoomDTO;
 using MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator;
+using MedicalOffice.Domain;
 
 namespace MedicalOffice.Application;
 
@@ -81,8 +82,9 @@ public static class ServicesRegistration
         #endregion Identity
 
         #region Office
-        services.AddScoped<IValidator<OfficeDTO>, OfficeValidator>();
+        services.AddScoped<IValidator<AddOfficeDto>, AddOfficeDtoValidator>();
         services.AddScoped<IValidator<UserOfficeDTO>, UserOfficeValidator>();
+        services.AddScoped<IValidator<UpdateOfficeDTO>, UpdateOfficeValidator>();
         #endregion Office
 
         #region ServiceDuration

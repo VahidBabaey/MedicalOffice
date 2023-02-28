@@ -31,7 +31,7 @@ public class DeletePictureCommandHandler : IRequestHandler<DeletePictureCommand,
     public async Task<BaseResponse> Handle(DeletePictureCommand request, CancellationToken cancellationToken)
     {
 
-        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {

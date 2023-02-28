@@ -20,7 +20,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 {
     public class AddOfficeCommandHandler : IRequestHandler<AddOfficeCommand, BaseResponse>
     {
-        private readonly IValidator<OfficeDTO> _validator;
+        private readonly IValidator<AddOfficeDto> _validator;
         private readonly IUserResolverService _userResolverService;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly IOfficeRepository _officeRepository;
@@ -29,7 +29,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
         private readonly string _requestTitle;
 
         public AddOfficeCommandHandler(
-            IValidator<OfficeDTO> validator,
+            IValidator<AddOfficeDto> validator,
             IUserResolverService userResolverService,
             IUserOfficeRoleRepository userOfficeRoleRepository,
             IOfficeRepository officeRepository,
@@ -63,22 +63,6 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 
             var userId = await _userResolverService.GetUserId();
             var roles = await _userResolverService.GetOfficeRoles();
-            var existingOffice = _officeRepository.GetAll().Result.Any(x => x.TelePhoneNumber == request.DTO.TelePhoneNumber);
-
-            if (existingOffice)
-            {
-                var error = "An office with this phone number exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-
-                return ResponseBuilder.Success(HttpStatusCode.Conflict,
-                    $"{_requestTitle} succeeded",
-                    error);
-            }
 
             try
             {

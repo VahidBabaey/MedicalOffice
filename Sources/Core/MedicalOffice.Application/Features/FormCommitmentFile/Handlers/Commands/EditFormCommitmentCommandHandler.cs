@@ -38,7 +38,7 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Command
         public async Task<BaseResponse> Handle(EditFormCommitmentCommand request, CancellationToken cancellationToken)
         {
 
-            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
             if (!validationOfficeId)
             {

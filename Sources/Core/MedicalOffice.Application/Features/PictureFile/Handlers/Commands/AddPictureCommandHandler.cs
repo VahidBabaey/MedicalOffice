@@ -42,7 +42,7 @@ public class AddPictureCommandHandler : IRequestHandler<AddPictureCommand, BaseR
     public async Task<BaseResponse> Handle(AddPictureCommand request, CancellationToken cancellationToken)
     {
 
-        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {

@@ -1,20 +1,10 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Domain.Enums;
 
-namespace MedicalOffice.Application.Dtos.OfficeDTO
+namespace MedicalOffice.Domain
 {
-    public class UserOfficeDTO : ITelePhoneNumberDTO
+    public class UpdateOfficeDTO : BaseDto<Guid>, ITelePhoneNumberDTO
     {
-        /// <summary>
-        /// آیدی یوزر آفیس مربوطه
-        /// </summary>
-        public Guid UserId { get; set; }
-
-        /// <summary>
-        /// نقش یوزر
-        /// </summary>
-        public Guid UserRole{ get; set; }
-
         /// <summary>
         /// نام
         /// </summary>

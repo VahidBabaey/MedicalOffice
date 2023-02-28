@@ -19,16 +19,23 @@ public class OfficeRepository : GenericRepository<Office, Guid>, IOfficeReposito
 
         return offices;
     }
-    public async Task<bool> CheckExistOfficeId(Guid officeId)
-    {
-        bool isExist = await _dbcontext.Offices.AnyAsync(p => p.Id == officeId);
-        return isExist;
-    }
 
     public async Task<bool> GetByTelePhoneNumber(string telePhoneNumber)
     {
         var isExist = await _dbcontext.Offices.AnyAsync(x => x.TelePhoneNumber == telePhoneNumber);
 
+        return isExist;
+    }
+
+    public async Task<bool> IsOfficeExist(Guid officeId)
+    {
+        bool isExist = await _dbcontext.Offices.AnyAsync(p => p.Id == officeId);
+        return isExist;
+    }
+
+    public async Task<bool> isTelePhoneNumberExist(string phone)
+    {
+        bool isExist = await _dbcontext.Offices.AnyAsync(p => p.TelePhoneNumber == phone);
         return isExist;
     }
 }

@@ -38,7 +38,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
         public async Task<BaseResponse> Handle(GetAllShiftsQuery request, CancellationToken cancellationToken)
         {
 
-            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
             if (!validationOfficeId)
             {
