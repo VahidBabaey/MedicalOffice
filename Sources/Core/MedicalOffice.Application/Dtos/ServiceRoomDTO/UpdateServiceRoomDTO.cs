@@ -5,7 +5,7 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO
 {
     public class UpdateServiceRoomDTO : BaseDto<Guid>, IServiceIdsDTO, IRoomNameDTO
     {
-        public string RoomName { get; set; }
+        public string Name { get; set; }
 
         public List<Guid> ServiceIds { get; set; }
     }

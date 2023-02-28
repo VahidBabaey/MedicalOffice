@@ -32,7 +32,7 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
                     foreach (var item in serviceIds)
                     {
                         var isServiceExist = await _serviceRepository.CheckExistServiceId(officeId, item);
-                        if (isServiceExist)
+                        if (!isServiceExist)
                         {
                             return false;
                         }

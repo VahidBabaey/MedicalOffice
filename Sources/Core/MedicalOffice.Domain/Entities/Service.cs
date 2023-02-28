@@ -11,7 +11,7 @@ public class Service : BaseDomainEntity<Guid>
     /// <summary>
     /// اتاق خدمت
     /// </summary>
-    public ICollection<Room> Rooms { get; set; }
+    public ICollection<ServiceRoom> ServiceRooms { get; set; }
 
     /// <summary>
     /// مطب

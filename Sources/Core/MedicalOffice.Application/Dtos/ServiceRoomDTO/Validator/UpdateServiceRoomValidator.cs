@@ -29,9 +29,9 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
 
             RuleFor(x => x.Id)
                 .NotEmpty()
-                .MustAsync(async (serviceRoomId, Token) =>
+                .MustAsync(async (Id, Token) =>
                 {
-                    return await _serviceRoomRepository.isServiceRoomExist(officeId, serviceRoomId);
+                    return await _serviceRoomRepository.isServiceRoomExist(officeId, Id);
                 });
         }
     }

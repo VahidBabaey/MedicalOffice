@@ -15,7 +15,7 @@ namespace MedicalOffice.Domain.Entities
 
         public string Name { get; set; }
 
-        public ICollection<Service> Services { get; set; }
+        public ICollection<ServiceRoom> ServiceRooms { get; set; }
 
         public ICollection<Appointment> Appointments { get; set; }
     }

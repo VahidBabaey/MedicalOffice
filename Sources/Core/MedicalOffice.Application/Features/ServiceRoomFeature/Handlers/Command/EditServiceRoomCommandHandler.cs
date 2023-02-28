@@ -81,15 +81,15 @@ namespace MedicalOffice.Application.Features.ServiceRoomFeature.Handlers.Command
             #endregion
 
             #region UpdateRoomAndService
-            var result = _roomRepository.UpdateRoomAndRoomServices(room, serviceRooms);
+            var result = await _roomRepository.UpdateRoomAndRoomServices(room, serviceRooms);
 
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeded",
-                AdditionalData = result.Id
+                AdditionalData = result
             });
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result.Id);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
             #endregion
         }
     }

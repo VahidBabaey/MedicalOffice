@@ -29,7 +29,7 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
 
             var officeId = _officeResolver.GetOfficeId().Result;
 
-            RuleFor(x => x.ServiceRoomIds)
+            RuleFor(x => x.RoomIds)
                 .NotEmpty()
                 .MustAsync(async (serviceRoomIds, Token) =>
                 {

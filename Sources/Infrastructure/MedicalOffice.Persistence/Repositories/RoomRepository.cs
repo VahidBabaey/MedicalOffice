@@ -24,19 +24,19 @@ namespace MedicalOffice.Persistence.Repositories
 
         public async Task<List<ServiceRoomListDTO>> GetServiceRooms(Guid officeId)
         {
-            var rooms = await _dbcontext.Rooms.Include(sr => sr.Services)
+            var rooms = await _dbcontext.Rooms.Include(sr => sr.ServiceRooms).ThenInclude(x=>x.Service)
                 .Where(sr => sr.OfficeId == officeId && sr.IsDeleted == false).ToListAsync();
 
             var roomServiceNames = new List<ServiceRoomListDTO>();
             foreach (var item in rooms)
             {
                 var services = new List<ServiceIdNameDTO>();
-                foreach (var index in item.Services)
+                foreach (var index in item.ServiceRooms.Select(x=>x.Service))
                 {
                     services.Add(new ServiceIdNameDTO
                     {
                         Id = index.Id,
-                        Name = item.Name,
+                        Name = index.Name,
                     });
                 }
                 roomServiceNames.Add(new ServiceRoomListDTO
@@ -51,17 +51,19 @@ namespace MedicalOffice.Persistence.Repositories
 
         public async Task<bool> isNameUniqe(string roomName, Guid officeId)
         {
-            return await _dbcontext.Rooms.AnyAsync(x => x.Name == roomName && x.OfficeId == officeId && x.IsDeleted == false);
+            var isNameExist = await _dbcontext.Rooms.AnyAsync(x => x.Name == roomName && x.OfficeId == officeId && x.IsDeleted == false);
+            return !isNameExist;
         }
 
-        public async Task<bool> isServiceRoomExist(Guid officeId, Guid serviceRoomId)
+        public async Task<bool> isServiceRoomExist(Guid officeId, Guid id)
         {
-            return await _dbcontext.Rooms.AllAsync(x => x.Id == serviceRoomId && x.OfficeId == officeId && x.IsDeleted == false);
+            var isExist = await _dbcontext.Rooms.AnyAsync(x => x.Id == id && x.OfficeId == officeId && x.IsDeleted == false);
+            return isExist;
         }
 
-        public async Task<List<Guid>> SoftDeleteRange(List<Guid> serviceRoomIds)
+        public async Task<List<Guid>> SoftDeleteRange(List<Guid> roomIds)
         {
-            var roomlist = await _dbcontext.Rooms.Include(x => x.Services).Where(x => serviceRoomIds.Contains(x.Id)).ToListAsync();
+            var roomlist = await _dbcontext.Rooms.Include(x => x.ServiceRooms).Where(x => roomIds.Contains(x.Id)).ToListAsync();
 
             var serviceRoomList = await _dbcontext.ServiceRooms.Where(x => roomlist.Select(rl => rl.Id).ToList().Contains(x.RoomId)).ToListAsync();
 

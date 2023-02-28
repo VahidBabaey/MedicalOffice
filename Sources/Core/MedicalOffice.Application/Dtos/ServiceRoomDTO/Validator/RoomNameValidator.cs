@@ -16,7 +16,7 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
 
             var officeId = _officeResolver.GetOfficeId().Result;
 
-            RuleFor(x => x.RoomName)
+            RuleFor(x => x.Name)
             .NotEmpty()
             .MustAsync(async (roomName, token) =>
             {

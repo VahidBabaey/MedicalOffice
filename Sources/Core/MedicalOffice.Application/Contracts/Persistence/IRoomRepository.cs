@@ -8,7 +8,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<List<ServiceRoomListDTO>> GetServiceRooms(Guid officeId);
         Task<bool> isNameUniqe(string roomName, Guid officeId);
         Task<bool> isServiceRoomExist(Guid officeId, Guid serviceRoomId);
-        Task<List<Guid>> SoftDeleteRange(List<Guid> serviceRoomIds);
+        Task<List<Guid>> SoftDeleteRange(List<Guid> roomIds);
         Task<Guid> UpdateRoomAndRoomServices(Room room, List<ServiceRoom> serviceRooms);
     }
 }

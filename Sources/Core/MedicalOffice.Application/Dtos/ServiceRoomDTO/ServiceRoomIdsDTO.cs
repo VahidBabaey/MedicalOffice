@@ -4,6 +4,6 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO
 {
     public class ServiceRoomIdsDTO
     {
-        public List<Guid> ServiceRoomIds { get; set; }
+        public List<Guid> RoomIds { get; set; }
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IRoomNameDTO
     {
-        public string RoomName{ get; set; }
+        public string Name{ get; set; }
     }
 }

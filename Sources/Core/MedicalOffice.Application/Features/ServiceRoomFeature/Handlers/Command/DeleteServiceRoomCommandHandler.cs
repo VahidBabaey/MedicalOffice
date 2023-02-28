@@ -62,7 +62,7 @@ namespace MedicalOffice.Application.Features.ServiceRoomFeature.Handlers.Command
 
             #region UpdateServiceRoom
 
-            var rooms = await _serviceRoomRepository.SoftDeleteRange(request.DTO.ServiceRoomIds);
+            var rooms = await _serviceRoomRepository.SoftDeleteRange(request.DTO.RoomIds);
 
             await _logger.Log(new Log
             {

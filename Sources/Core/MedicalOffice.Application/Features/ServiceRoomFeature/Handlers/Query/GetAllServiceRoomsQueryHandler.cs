@@ -5,6 +5,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.ServiceRoomDTO;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
+using MedicalOffice.Application.Features.ServiceRoomFeature.Requests.Query;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.WebApi.WebApi.Controllers;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.ServiceRoomFeature.Handlers.Query
 {
-    public class GetAllServiceRoomsQueryHandler : IRequestHandler<GetAllServiceDurationQuery, BaseResponse>
+    public class GetAllServiceRoomsQueryHandler : IRequestHandler<GetAllServiceRoomsQuery, BaseResponse>
     {
         private readonly IRoomRepository _serviceRoomRepository;
         private readonly ILogger _logger;
@@ -36,7 +37,7 @@ namespace MedicalOffice.Application.Features.ServiceRoomFeature.Handlers.Query
 
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
-        public async Task<BaseResponse> Handle(GetAllServiceDurationQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetAllServiceRoomsQuery request, CancellationToken cancellationToken)
         {
             var serviceRooms = await _serviceRoomRepository.GetServiceRooms(request.OfficeId);
 
