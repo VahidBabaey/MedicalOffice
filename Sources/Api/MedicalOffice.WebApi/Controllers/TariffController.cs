@@ -3,6 +3,7 @@ using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
+using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
@@ -13,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
-[Authorize]
+//[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class TariffController : Controller
@@ -35,7 +36,7 @@ public class TariffController : Controller
     [HttpGet("search")]
     public async Task<ActionResult<List<TariffListDTO>>> GetTariffsofService([FromQuery] string officeId, [FromQuery] string serviceId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllTariffByServiceIDQuery() {Dto = dto, OfficeId = Guid.Parse(officeId), ServiceId = Guid.Parse(serviceId) });
+        var response = await _mediator.Send(new GetAllTariffByServiceIDQuery() { Dto = dto, OfficeId = Guid.Parse(officeId), ServiceId = Guid.Parse(serviceId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

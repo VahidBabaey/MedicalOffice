@@ -50,15 +50,13 @@ public class AddCashCommandHandler : IRequestHandler<AddCashCommand, BaseRespons
         {
             try
             {
-                var cash = _mapper.Map<Cash>(request.DTO);
-                cash.OfficeId = request.OfficeId;
+                await _repository.AddCashForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Recieved);
 
-                cash = await _repository.Add(cash);
 
                 response.Success = true;
                 response.StatusCode = HttpStatusCode.OK;
                 response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = cash.Id });
+                //response.Data = (new { Id = cash.Id });
 
                 log.Type = LogType.Success;
             }

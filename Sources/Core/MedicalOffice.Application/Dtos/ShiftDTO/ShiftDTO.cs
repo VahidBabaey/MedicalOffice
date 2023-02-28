@@ -1,6 +1,7 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +17,11 @@ namespace MedicalOffice.Application.Dtos.ShiftDTO
         /// <summary>
         /// تایم شروع
         /// </summary>
-        public string StartTime { get; set; } = string.Empty;
+        public string StartTime { get; set; }
         /// <summary>
         /// تایم پایان
         /// </summary>
-        public string EndTime { get; set; } = string.Empty;
+        public string EndTime { get; set; }
         /// <summary>
         /// آیا شیفت روز بعد هست؟
         /// </summary>

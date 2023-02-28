@@ -20,6 +20,10 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     private readonly IGenericRepository<Reception, Guid> _receptionReception;
     private readonly ApplicationDbContext _dbContext;
     string medicalStaffNames = "";
+    string servicesNames = "";
+    string DoctorsNames = "";
+    string ExpertsNames = "";
+    Guid receptionID;
     public ReceptionRepository(IGenericRepository<Reception, Guid> receptionReception, IGenericRepository<ReceptionDetailService, Guid> receptionDetailServiceRepository, IGenericRepository<ReceptionMedicalStaff, Guid> receptionDetailMedicalStaffRepository, IGenericRepository<ReceptionDetail, Guid> receptionDetailRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
@@ -29,34 +33,44 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         _receptionReception = receptionReception;
     }
 
-    public async Task<ReceptionDetail> AddReceptionService(Guid receptionId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, Guid discountTypeId, Guid[] MedicalStaffs)
+    public async Task<ReceptionDetail> AddReceptionService(Guid medicalStaffId, Guid shiftId, Guid officeId, ReceptionType receptionType, Guid patientid, Guid? receptionId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, Guid discountTypeId, Guid[] MedicalStaffs)
     {
-        var reception = await _dbContext.Receptions.SingleAsync(r => r.Id == receptionId);
+        var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Date == DateTime.Now.Date);
+        if (receptionpatient == null)
+        {
+            var recid = await CreateNewReception(medicalStaffId, shiftId, officeId, patientid, receptionType);
+            receptionID = _dbContext.Receptions.Where(r => r.Id == recid).FirstOrDefault().Id;
+        }
+        else if (receptionpatient != null)
+        {
+            receptionID = _dbContext.Receptions.Where(r => r.Id == receptionId).FirstOrDefault().Id;
+        }
         var service = await _dbContext.Services.SingleAsync(s => s.Id == serviceId);
         var insurance = await _dbContext.Insurances.SingleAsync(i => i.Id == insuranceId);
         var additionalInsurance = await _dbContext.Insurances.SingleAsync(i => i.Id == additionalInsuranceId);
-        var discountValue = await _dbContext.ReceptionDiscounts.SingleAsync(dt =>  dt.MembershipId == discountTypeId);
-        var MedicalStaffsCheck = MedicalStaffs.All(id => _dbContext.MedicalStaffs.Any(u => u.Id == id));
-        if (!MedicalStaffsCheck)
-            throw new NullReferenceException();
+        var discountValue = await _dbContext.ReceptionDiscounts.SingleAsync(dt => dt.MembershipId == discountTypeId);
+        //var MedicalStaffsCheck = MedicalStaffs.All(id => _dbContext.MedicalStaffs.Any(u => u.Id == id));
+        //if (!MedicalStaffsCheck)
+        //    throw new NullReferenceException();
 
         var cost = await GetReceptionServiceCost(serviceId, serviceCount, insuranceId) - discountValue.Discount;
-        var finalRecieved = received;
-        var debt = cost > finalRecieved ? cost - finalRecieved : 0;
-        var deposit = finalRecieved > cost ? finalRecieved - cost : 0;
+        var recieved = 0;
+        var debt = cost;
+        var discount = discountValue.Discount;
+        var deposit = 0;
 
         ReceptionDetail detail = new()
         {
             AdditionalInsuranceId = additionalInsuranceId,
             Cost = cost,
-            Received = finalRecieved,
+            Received = recieved,
             Deposit = deposit,
             Debt = debt,
             InsuranceId = insuranceId,
             IsDeleted = false,
             IsDebt = false,
             OfficeId = service.OfficeId,
-            ReceptionId = reception.Id,
+            ReceptionId = receptionID,
             ServiceCount = serviceCount,
             ReceptionDiscountId = discountValue.Id
         };
@@ -69,6 +83,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             {
                 IsDeleted = false,
                 ReceptionDetailId = addedDetail.Id,
+                MedicalStaffId = MedicalStaffId
             };
             await _receptionDetailMedicalStaffRepository.Add(receptionMedicalStaff);
         }
@@ -81,6 +96,100 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         await _receptionDetailServiceRepository.Add(receptionDetailService);
 
         return addedDetail;
+    }
+    public async Task UpdateReceptionService(Guid receptionDetailId, Guid medicalStaffId, Guid shiftId, Guid officeId, ReceptionType receptionType, Guid patientid, Guid? receptionId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, Guid discountTypeId, Guid[] MedicalStaffs)
+    {
+        var receptionDetailService = await _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == receptionDetailId).FirstOrDefaultAsync();
+        if (receptionDetailService != null)
+            await _receptionDetailServiceRepository.Delete(receptionDetailService);
+
+        var receptionDetailMedicalStaff = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == receptionDetailId).ToListAsync();
+        foreach (var item in receptionDetailMedicalStaff)
+        {
+            await _receptionDetailMedicalStaffRepository.Delete(item);
+        }
+
+        var receptionDetailList = await _dbContext.ReceptionDetails.Where(p => p.Id == receptionDetailId).FirstOrDefaultAsync();
+        if (receptionDetailList != null)
+            await _receptionDetailRepository.Delete(receptionDetailList);
+
+        //var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Date == DateTime.Now.Date);
+        //if (receptionpatient == null)
+        //{
+        //    var recid = await CreateNewReception(medicalStaffId, shiftId, officeId, patientid, receptionType);
+        //    receptionID = _dbContext.Receptions.Where(r => r.Id == recid).FirstOrDefault().Id;
+        //}
+        //else if (receptionpatient != null)
+        //{
+        //    receptionID = _dbContext.Receptions.Where(r => r.Id == receptionId).FirstOrDefault().Id;
+        //}
+        var receptionID = _dbContext.Receptions.Where(r => r.Id == receptionId).FirstOrDefault().Id;
+        var service = await _dbContext.Services.SingleAsync(s => s.Id == serviceId);
+        var insurance = await _dbContext.Insurances.SingleAsync(i => i.Id == insuranceId);
+        var additionalInsurance = await _dbContext.Insurances.SingleAsync(i => i.Id == additionalInsuranceId);
+        var discountValue = await _dbContext.ReceptionDiscounts.SingleAsync(dt => dt.MembershipId == discountTypeId);
+        //var MedicalStaffsCheck = MedicalStaffs.All(id => _dbContext.MedicalStaffs.Any(u => u.Id == id));
+        //if (!MedicalStaffsCheck)
+        //    throw new NullReferenceException();
+
+        var cost = await GetReceptionServiceCost(serviceId, serviceCount, insuranceId) - discountValue.Discount;
+        var recieved = 0;
+        var debt = cost;
+        var discount = discountValue.Discount;
+        var deposit = 0;
+
+        ReceptionDetail detail = new()
+        {
+            Id = receptionDetailId,
+            AdditionalInsuranceId = additionalInsuranceId,
+            Cost = cost,
+            Received = recieved,
+            Deposit = deposit,
+            Debt = debt,
+            InsuranceId = insuranceId,
+            IsDeleted = false,
+            IsDebt = false,
+            OfficeId = service.OfficeId,
+            ReceptionId = receptionID,
+            ServiceCount = serviceCount,
+            ReceptionDiscountId = discountValue.Id
+        };
+
+        var addedDetail = await _receptionDetailRepository.Add(detail);
+
+        foreach (var MedicalStaffId in MedicalStaffs)
+        {
+            var receptionMedicalStaff = new ReceptionMedicalStaff()
+            {
+                IsDeleted = false,
+                ReceptionDetailId = addedDetail.Id,
+                MedicalStaffId = MedicalStaffId
+            };
+            await _receptionDetailMedicalStaffRepository.Add(receptionMedicalStaff);
+        }
+
+        var receptionDetailServices = new ReceptionDetailService()
+        {
+            ReceptionDetailId = addedDetail.Id,
+            ServiceId = service.Id
+        };
+        await _receptionDetailServiceRepository.Add(receptionDetailServices);
+    }
+    public async Task DeleteReceptionService(Guid receptionDetailId, Guid officeId)
+    {
+        var receptionDetailService = await _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == receptionDetailId).FirstOrDefaultAsync();
+        if (receptionDetailService != null)
+            await _receptionDetailServiceRepository.Delete(receptionDetailService);
+
+        var receptionDetailMedicalStaff = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == receptionDetailId).ToListAsync();
+        foreach (var item in receptionDetailMedicalStaff)
+        {
+            await _receptionDetailMedicalStaffRepository.Delete(item);
+        }
+
+        var receptionDetailList = await _dbContext.ReceptionDetails.Where(p => p.Id == receptionDetailId && p.OfficeId == officeId).FirstOrDefaultAsync();
+        if (receptionDetailList != null)
+            await _receptionDetailRepository.Delete(receptionDetailList);
     }
 
     public async Task<Guid> CreateNewReception(Guid MedicalStaffId, Guid shiftId, Guid officeId, Guid patientId, ReceptionType receptionType)
@@ -109,14 +218,12 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             TotalReceptionCost = default
         };
 
-        var addedReception = await _dbContext.Receptions.AddAsync(reception);
+        await _receptionReception.Add(reception);
 
-        await _dbContext.SaveChangesAsync();
-
-        return addedReception.Entity.Id;
+        return reception.Id;
     }
 
-    public async Task<Reception> CreateNewReceptionDebt(long Debt,Guid officeId, Guid receptionId)
+    public async Task<Reception> CreateNewReceptionDebt(long Debt, Guid officeId, Guid receptionId)
     {
         var factorNo = await GetFactorNo();
         var factorNoToday = await GetFactorNoToday();
@@ -176,28 +283,15 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         return receptionDetail;
     }
 
-    public async Task DeleteReceptionService(Guid receptionDetailId)
-    {
-        var detail = await _dbContext.ReceptionDetails
-            .SingleOrDefaultAsync(rd => rd.Id == receptionDetailId);
-
-        if (detail != null)
-        {
-            _dbContext.ReceptionDetails.Remove(detail);
-
-            await _dbContext.SaveChangesAsync();
-        }
-    }
-
     public async Task<int> GetFactorNo()
     {
         if (_dbContext.Receptions.Any() == false)
         {
-            return  1;
+            return 1;
         }
         else
         {
-        var lastNo = await _dbContext.Receptions.Select(p => p.FactorNo).MaxAsync();
+            var lastNo = await _dbContext.Receptions.Select(p => p.FactorNo).MaxAsync();
             return lastNo + 1;
         }
     }
@@ -223,16 +317,16 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         return nextNo;
     }
 
-    public async Task<long> GetReceptionServiceCost(Guid serviceId, int serviceCount, Guid insuranceId)
+    public async Task<long> GetReceptionServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
     {
         var service = await _dbContext.Tariffs.Where(p => (p.ServiceId == serviceId) && (p.InsuranceId == insuranceId)).FirstOrDefaultAsync();
-        return (long)Convert.ToDouble(service.TariffValue * serviceCount); 
+        return (long)Convert.ToDouble(service.TariffValue * serviceCount);
     }
 
-    public async Task <DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId)
+    public async Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId)
     {
         var facNo = await _dbContext.Receptions.Where(p => p.PatientId == patientId).FirstOrDefaultAsync();
-        var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId).ToListAsync();
+        var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId && p.Reception.Id == receptionId).ToListAsync();
         DetailsofAllReceptionsDTO detailsofAllReceptions = new DetailsofAllReceptionsDTO();
         foreach (var item in _list)
         {
@@ -243,13 +337,9 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             detailsofAllReceptions.Recieved += item.Received;
         }
         detailsofAllReceptions.FactorNo = facNo.FactorNo;
-        if (detailsofAllReceptions.Recieved == detailsofAllReceptions.Cost)
-        {
-            detailsofAllReceptions.Debt = 0;
-        }
+
         var reception = await _dbContext.Receptions.Where(p => p.Id == detailsofAllReceptions.ReceptionId).FirstOrDefaultAsync();
 
-        reception.TotalReceptionCost = detailsofAllReceptions.Cost;
         reception.TotalDebt = detailsofAllReceptions.Debt;
         reception.TotalDeposit = detailsofAllReceptions.Deposit;
         reception.TotalReceived += detailsofAllReceptions.Recieved;
@@ -265,7 +355,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         var _list = await _dbContext.ReceptionDetails.Where(x => x.ServiceCount > 0).Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId).ToListAsync();
         foreach (var item in _list)
         {
-            var serviceId =  _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == item.Id).FirstOrDefault().ServiceId;
+            var serviceId = _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == item.Id).FirstOrDefault().ServiceId;
             var serviceName = _dbContext.Services.Where(p => p.Id == serviceId).FirstOrDefault().Name;
             var medicalStaffIds = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == item.Id).ToListAsync();
             var discount = _dbContext.ReceptionDiscounts.Where(p => p.Id == item.ReceptionDiscountId).FirstOrDefault();
@@ -277,20 +367,115 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             {
                 Id = item.Id,
                 ServiceName = serviceName,
+                Cost = item.Cost,
                 ServiceCount = item.ServiceCount,
                 MedicalStaffs = medicalStaffNames,
-                Cost = item.Cost,
+                Recieved = item.Received,
                 Discount = discount.Discount,
                 Deposit = item.Deposit,
                 Debt = item.Debt,
-                Total = item.Received
             };
             receptionDetailListDTO.Add(receptiondetaillistDTO);
             medicalStaffNames = "";
         }
         return receptionDetailListDTO;
     }
+    public async Task<List<ReceptionDetailListForReceptionDTO>> GetReceptionDetailListForReception(Guid patientId, Guid receptionId)
+    {
+        List<ReceptionDetailListForReceptionDTO> receptionDetailListForReceptionDTO = new();
+        var _list = await _dbContext.ReceptionDetails.Where(x => x.ServiceCount > 0).Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId && p.Reception.Id == receptionId).ToListAsync();
+        foreach (var item in _list)
+        {
+            var serviceId = _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == item.Id).FirstOrDefault().ServiceId;
+            var serviceName = _dbContext.Services.Where(p => p.Id == serviceId).FirstOrDefault().Name;
+            var medicalStaffIds = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == item.Id).ToListAsync();
+            var discount = _dbContext.ReceptionDiscounts.Where(p => p.Id == item.ReceptionDiscountId).FirstOrDefault();
+            foreach (var medicalStaffitem in medicalStaffIds)
+            {
+                //var medicalStaff = await _dbContext.MedicalStaffRoles.Where(p => p.MedicalStaffId == medicalStaffitem.MedicalStaffId).FirstOrDefaultAsync();
+                //var roleId = await _dbContext.Roles.Where(p => p.Id == medicalStaff.RoleId).FirstOrDefaultAsync();
 
+                //if (roleId.PersianName == "کارشناس")
+                //{
+                //    ExpertsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString() + "، ";
+                //}
+                //else
+                //{
+                //    DoctorsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString() + "، ";
+                //}
+            }
+            medicalStaffIds = null;
+            ReceptionDetailListForReceptionDTO receptiondetaillistForReceptionDTO = new()
+            {
+                Id = item.Id,
+                ServiceName = serviceName,
+                ServiceCount = item.ServiceCount,
+                MedicalStaffs = medicalStaffNames,
+                Cost = item.Cost,
+                Discount = discount.Discount,
+                Deposit = item.Deposit,
+                Debt = item.Debt,
+                Total = item.Received,
+                DoctorsNames = DoctorsNames,
+                ExpertsNames = ExpertsNames,
+            };
+            receptionDetailListForReceptionDTO.Add(receptiondetaillistForReceptionDTO);
+            medicalStaffNames = "";
+        }
+        return receptionDetailListForReceptionDTO;
+    }
+    public async Task<List<ReceptionListDTO>> GetReceptionList(Guid patientId)
+    {
+        List<ReceptionListDTO> receptionListDTOs = new();
+        var receptionList = await _dbContext.Receptions.Where(p => p.PatientId == patientId).ToListAsync();
+        foreach (var receptionItem in receptionList)
+        {
+            var receptionDetailList = await _dbContext.ReceptionDetails.Where(p => p.ReceptionId == receptionItem.Id).ToListAsync();
+            foreach (var receptionDetails in receptionDetailList)
+            {
+                var serviceIds = await _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == receptionDetails.Id).FirstOrDefaultAsync();
+                servicesNames += _dbContext.Services.Select(p => new { p.Name, p.Id }).Where(p => p.Id == serviceIds.ServiceId).FirstOrDefault().Name.ToString() + "، ";
+                var medicalStaffIds = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == receptionDetails.Id).ToListAsync();
+                foreach (var medicalStaffitem in medicalStaffIds)
+                {
+                    //var medicalStaff = await _dbContext.MedicalStaffRoles.Where(p => p.MedicalStaffId == medicalStaffitem.MedicalStaffId).FirstOrDefaultAsync();
+                    //var roleId = await _dbContext.Roles.Where(p => p.Id == medicalStaff.RoleId).FirstOrDefaultAsync();
+
+                    //if (roleId.PersianName == "کارشناس")
+                    //{
+                    //    ExpertsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString() + "، ";
+                    //}
+                    //else
+                    //{
+                    //    DoctorsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString() + "، ";
+                    //}
+                }
+                medicalStaffIds = null;
+            }
+            ReceptionListDTO receptionListDTO = new()
+            {
+                Id = receptionItem.Id,
+                ReceptionDate = receptionItem.ReceptionDate,
+                ServicesNames = servicesNames,
+                ServiceCount = GetServiceCountsOfPatient(receptionItem.Id),
+                Cost = Convert.ToInt64(receptionItem.TotalReceived),
+                Deposit = (float)receptionItem.TotalDeposit,
+                Debt = Convert.ToInt64(receptionItem.TotalDebt),
+                TotalReception = Convert.ToInt64(receptionItem.TotalReceptionCost),
+                DoctorsNames = DoctorsNames,
+                ExpertsNames = ExpertsNames,
+            };
+            receptionListDTOs.Add(receptionListDTO);
+            ExpertsNames = "";
+            DoctorsNames = "";
+        }
+        return receptionListDTOs;
+    }
+    public int GetServiceCountsOfPatient(Guid receptionId)
+    {
+        int serviceCount = _dbContext.ReceptionDetails.Where(p => p.ReceptionId == receptionId).Sum(p => p.ServiceCount);
+        return serviceCount;
+    }
     public async Task<ReceptionSummaryDto> GetReceptionSummary(Guid receptionId)
     {
         var reception = await SummarizeReception(receptionId);

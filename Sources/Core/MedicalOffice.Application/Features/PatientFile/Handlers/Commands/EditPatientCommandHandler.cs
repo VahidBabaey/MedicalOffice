@@ -97,6 +97,10 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
                 {
                     await _patientrepository.InsertContactValueofPatientAsync(patient.Id, mobile);
                 }
+                foreach (var tel in request.DTO.TelePhoneNumber)
+                {
+                    await _patientrepository.InsertContactValueofPatientAsync(patient.Id, tel);
+                }
                 foreach (var address in request.DTO.Address)
                 {
                     await _patientrepository.InsertAddressofPatientAsync(patient.Id, address);

@@ -52,7 +52,7 @@ public class ExperimentController : Controller
     [HttpGet]
     public async Task<ActionResult<List<ExperimentListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllExperimentQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllExperimentQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -61,7 +61,7 @@ public class ExperimentController : Controller
     [HttpGet("Search")]
     public async Task<ActionResult<List<ExperimentListDTO>>> GetExperimentBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetExperimentBySearchQuery() {Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetExperimentBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

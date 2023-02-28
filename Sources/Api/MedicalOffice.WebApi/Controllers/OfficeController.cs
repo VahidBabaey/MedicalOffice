@@ -24,7 +24,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<OfficeListDTO>>> GetByUserId()
         {
-            var response = await _mediator.Send(new GetByUserIdQuery {});
+            var response = await _mediator.Send(new GetByUserIdQuery { });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
@@ -32,8 +32,8 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<ActionResult<Guid>> AddOffice([FromBody] OfficeDTO dto)
-        { 
-            var response = await _mediator.Send(new AddOfficeCommand { DTO = dto});
+        {
+            var response = await _mediator.Send(new AddOfficeCommand { DTO = dto });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

@@ -8,6 +8,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> CheckExistInsuranceId(Guid officeId, Guid insuranceId);
         Task<bool> CheckExistIntroducerId(Guid officeId, Guid introducerId);
         Task<bool> CheckExistPatientId(Guid officeId, Guid patientId);
+        Task<int> GenerateFileNumber();
         Task<List<PatientListDTO>> GetAllPateint(Guid officeId);
         Task<PatientAddress> InsertAddressofPatientAsync(Guid patientid, string address);
         Task<PatientContact> InsertContactValueofPatientAsync(Guid patientid, string contactnumber);
@@ -15,6 +16,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> RemovePatientAddress(Guid patientId);
         Task<bool> RemovePatientContact(Guid patientId);
         Task<bool> RemovePatientTag(Guid patientId);
-        Task<List<PatientListDTO>> SearchPateint(string firstName, string lastName, string nationalCode, string phoneNumber, string fileNumber);
+        Task<List<PatientListDTO>> SearchPateint(Guid officeId, string firstName, string lastName, string nationalCode, string phoneNumber, int fileNumber);
     }
 }

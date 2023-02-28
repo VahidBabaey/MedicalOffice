@@ -83,6 +83,7 @@ public class GetAllPicturesofPatientQueryHandler : IRequestHandler<GetAllPicture
             });
             return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = pictures.Count(), result = result });
         }
+
         catch (Exception error)
         {
             await _logger.Log(new Log

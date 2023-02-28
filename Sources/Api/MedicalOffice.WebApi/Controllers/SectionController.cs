@@ -23,7 +23,7 @@ public class SectionController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] AddSectionDTO dto, [FromQuery] string officeId)
     {
@@ -32,7 +32,7 @@ public class SectionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
@@ -41,7 +41,7 @@ public class SectionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateSectionDTO dto, [FromQuery] string officeId)
     {
@@ -50,11 +50,11 @@ public class SectionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
     public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllSectionQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllSectionQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -63,7 +63,7 @@ public class SectionController : Controller
     [HttpGet("search")]
     public async Task<ActionResult<List<SectionListDTO>>> GetSectionBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetSectionBySearchQuery() {Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetSectionBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

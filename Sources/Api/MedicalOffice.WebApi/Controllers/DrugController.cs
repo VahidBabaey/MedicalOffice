@@ -35,7 +35,7 @@ public class DrugController : Controller
     [HttpGet("drug-shape")]
     public async Task<ActionResult<List<DrugShapeListDTO>>> GetDrugsShape()
     {
-        var response = await _mediator.Send(new GetDrugShapeQuery() {});
+        var response = await _mediator.Send(new GetDrugShapeQuery() { });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -44,7 +44,7 @@ public class DrugController : Controller
     [HttpGet("drug-consumption")]
     public async Task<ActionResult<List<DrugConsumptionListDTO>>> GetDrugsConsumption()
     {
-        var response = await _mediator.Send(new GetDrugConsumptionQuery() {});
+        var response = await _mediator.Send(new GetDrugConsumptionQuery() { });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -53,7 +53,7 @@ public class DrugController : Controller
     [HttpGet("drug-usage")]
     public async Task<ActionResult<List<DrugUsageListDTO>>> GetDrugsUsage()
     {
-        var response = await _mediator.Send(new GetDrugUsageQuery() {});
+        var response = await _mediator.Send(new GetDrugUsageQuery() { });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -62,7 +62,7 @@ public class DrugController : Controller
     [HttpGet("drug-section")]
     public async Task<ActionResult<List<DrugSectionListDTO>>> GetDrugsSection()
     {
-        var response = await _mediator.Send(new GetDrugSectionQuery() {});
+        var response = await _mediator.Send(new GetDrugSectionQuery() { });
 
         return Ok(response);
     }
@@ -99,7 +99,7 @@ public class DrugController : Controller
     [HttpGet("Search")]
     public async Task<ActionResult<List<DrugListDTO>>> GetDrugBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetDrugBySearchQuery() { Dto = dto , Name = name, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetDrugBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

@@ -1,9 +1,10 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Commons;
 using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.PatientDTO;
 
-public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationalIdDTO
+public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationalIdDTO, IInsuranceIdDTO
 {
     /// <summary>
     /// شماره پرونده
@@ -42,10 +43,6 @@ public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNu
     /// </summary>
     public MaritalStatus? MaritalStatus { get; set; }
     /// <summary>
-    /// تاریخ ازدواج
-    /// </summary>
-    public string MarriageDate { get; set; } = string.Empty;
-    /// <summary>
     /// وضعیت تحصیلی
     /// </summary>
     public EducationStatuses? EducationStatus { get; set; }
@@ -60,7 +57,7 @@ public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNu
     /// <summary>
     /// شماره ثابت
     /// </summary>
-    public string[]? TelePhoneNumber { get; set; } 
+    public string[]? TelePhoneNumber { get; set; }
     /// <summary>
     /// شماره همراه
     /// </summary>
@@ -70,13 +67,13 @@ public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNu
     /// </summary>
     public string[]? Tag { get; set; }
     /// <summary>
+    /// آیدی معرف
+    /// </summary>
+    public Guid? IntroducerId { get; set; }
+    /// <summary>
     /// آیدی بیمه
     /// </summary>
     public Guid InsuranceId { get; set; }
-    /// <summary>
-    /// آیدی معرف
-    /// </summary>
-    public Guid IntroducerId { get; set; }
     /// <summary>
     /// نوع معرف
     /// </summary>
@@ -85,4 +82,8 @@ public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNu
     /// توضیحات پرونده
     /// </summary>
     public string FileDescription { get; set; } = string.Empty;
+    /// <summary>
+    /// سن
+    /// </summary>
+    public int Age { get; set; }
 }

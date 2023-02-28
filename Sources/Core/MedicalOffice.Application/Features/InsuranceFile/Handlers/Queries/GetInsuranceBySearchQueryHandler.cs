@@ -9,6 +9,8 @@ using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Common;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Queries;
 
@@ -31,6 +33,7 @@ public class GetInsuranceBySearchQueryHandler : IRequestHandler<GetInsuranceBySe
 
     public async Task<BaseResponse> Handle(GetInsuranceBySearchQuery request, CancellationToken cancellationToken)
     {
+            Log log = new();
 
         var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
 
@@ -71,3 +74,4 @@ public class GetInsuranceBySearchQueryHandler : IRequestHandler<GetInsuranceBySe
         }
     }
 }
+

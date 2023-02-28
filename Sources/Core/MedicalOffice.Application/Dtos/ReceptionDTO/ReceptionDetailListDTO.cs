@@ -22,7 +22,7 @@ public class ReceptionDetailListDTO : BaseDto<Guid>
     /// <summary>
     /// هزینه دریافتی
     /// </summary>
-    public long Cost { get; set; }
+    public long Recieved { get; set; }
     /// <summary>
     /// تخفیف
     /// </summary>
@@ -36,8 +36,8 @@ public class ReceptionDetailListDTO : BaseDto<Guid>
     /// </summary>
     public float Debt { get; set; }
     /// <summary>
-    /// جمع کل
+    /// تعرفه
     /// </summary>
-    public float Total { get; set; } 
+    public long Cost { get; set; }
 
 }

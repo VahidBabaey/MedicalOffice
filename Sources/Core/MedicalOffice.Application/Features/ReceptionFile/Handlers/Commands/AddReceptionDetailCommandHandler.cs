@@ -60,9 +60,9 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
         {
             try
             {
-                var receptionDetail = await _repository.AddReceptionService(request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.Cost, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
+                var receptionDetail = await _repository.AddReceptionService(request.DTO.MedicalStaffId, request.DTO.ShiftId, request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
 
-                await _repositoryCash.AddCashForAnyReceptionDetail(receptionDetail.OfficeId, receptionDetail.ReceptionId, receptionDetail.Cost);
+                //await _repositoryCash.AddCashForAnyReceptionDetail(receptionDetail.OfficeId, receptionDetail.ReceptionId, receptionDetail.Cost);
 
                 if (receptionDetail.Debt > 0)
                 {
