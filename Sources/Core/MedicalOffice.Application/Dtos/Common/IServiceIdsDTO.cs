@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Commons
 {
-    public interface IServiceListIdDTO
+    public interface IServiceIdsDTO
     {
-        public Guid ServiceId { get; set; }
+        public List<Guid> ServiceIds { get; set; }
     }
 }
-

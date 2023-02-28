@@ -13,6 +13,4 @@ public class AddSectionDTO
     /// فعال یا غیرفعال
     /// </summary>
     public bool IsActive { get; set; }
-
-
 }
