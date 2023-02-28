@@ -29,7 +29,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<MenuDto>>> GetAllMenu()
         {
-            var response = await _mediator.Send(new GetMenuQuery() {});
+            var response = await _mediator.Send(new GetMenuQuery() { });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

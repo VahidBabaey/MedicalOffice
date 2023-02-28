@@ -12,18 +12,18 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// جزئیات پذیرش
         /// </summary>
-        public ReceptionDetail? ReceptionDetail { get; set; }
+        public ReceptionDetail ReceptionDetail { get; set; }
         /// <summary>
         /// آیدی جزئیات پذیرش
         /// </summary>
-        public Guid? ReceptionDetailId { get; set; }
+        public Guid ReceptionDetailId { get; set; }
         /// <summary>
         /// سرویس
         /// </summary>
-        public Service? Service { get; set; }
+        public Service Service { get; set; }
         /// <summary>
         /// آیدی سرویس
         /// </summary>
-        public Guid? ServiceId { get; set; }
+        public Guid ServiceId { get; set; }
     }
 }

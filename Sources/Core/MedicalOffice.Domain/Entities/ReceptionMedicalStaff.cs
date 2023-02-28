@@ -10,7 +10,7 @@ public class ReceptionMedicalStaff : BaseDomainEntity<Guid>
     /// <summary>
     /// جزئیات پذیرش
     /// </summary>
-    public ReceptionDetail? ReceptionDetail { get; set; }
+    public ReceptionDetail ReceptionDetail { get; set; }
     /// <summary>
     /// آیدی جزئیات پذیرش
     /// </summary>

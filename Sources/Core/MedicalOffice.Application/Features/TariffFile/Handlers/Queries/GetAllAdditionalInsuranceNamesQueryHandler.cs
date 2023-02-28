@@ -62,6 +62,7 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
                 });
                 return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = insuranceNames.Count(), result = insuranceNames });
             }
+
             catch (Exception error)
             {
                 await _logger.Log(new Log

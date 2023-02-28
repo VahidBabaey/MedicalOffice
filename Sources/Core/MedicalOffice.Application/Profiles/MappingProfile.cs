@@ -158,7 +158,7 @@ public class MappingProfile : Profile
                 Id = source.Id,
                 BirthDate = source.BirthDate,
                 FileNumber = source.FileNumber,
-                Mobile = source.PatientContacts.Single(p => p.IsDefault).ContactValue,
+                //Mobile = source.PatientContacts.Single(p => p.IsDefault).ContactValue,
                 FatherName = source.FatherName,
                 InsuranceName = source.Insurance.Name,
                 FirstName = source.FirstName,

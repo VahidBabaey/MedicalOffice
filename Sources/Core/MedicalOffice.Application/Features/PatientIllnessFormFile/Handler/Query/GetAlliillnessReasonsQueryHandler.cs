@@ -3,6 +3,7 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
+using MedicalOffice.Application.Dtos.PatientIllnessFormListDTO;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Request.Query;
 using MedicalOffice.Application.Models;
@@ -44,6 +45,7 @@ public class GetAlliillnessReasonsQueryHandler : IRequestHandler<GetAlliillnessR
             });
             return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = illnessreasons.Count(), result = result });
         }
+
         catch (Exception error)
         {
             await _logger.Log(new Log

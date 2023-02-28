@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.PatientDTO;
+using MedicalOffice.Application.Features.FormReferalFile.Requests.Queries;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -72,37 +73,55 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
 
         return patientTag;
     }
-    public async Task<List<PatientListDTO>> SearchPateint(string firstName, string lastName, string nationalCode, string phoneNumber, string fileNumber)
+    public async Task<List<PatientListDTO>> SearchPateint(Guid officeId, string firstName, string lastName, string nationalCode, string phoneNumber, int fileNumber)
     {
         try
         {
-            List<PatientListDTO> patientList = new();
 
+            List<PatientListDTO> patientList = new();
 
             var list = await _dbContext.Patients
                 .Where(
                         p =>
+                        p.IsDeleted == false &&
                         p.FirstName.Contains(firstName) &&
                         p.LastName.Contains(lastName) &&
                         p.NationalID.StartsWith(nationalCode) &&
-                        p.FileNumber.StartsWith(fileNumber)
+                        p.FileNumber == fileNumber
                       )
                 .Include(p => p.PatientContacts)
                 .Where(x => phoneNumber != "" ? x.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber) : true)
+                .Include(p => p.PatientAddresses).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
+                .Include(p => p.PatientTags).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
                 .ToListAsync();
 
             foreach (var item in list)
             {
+
                 PatientListDTO patientListDto = new()
                 {
                     Id = item.Id,
-                    BirthDate = item.BirthDate,
-                    FileNumber = item.FileNumber,
-                    Mobile = item.PatientContacts.FirstOrDefault()?.ContactValue ?? "",
-                    FatherName = item.FatherName,
-                    InsuranceName = item.Insurance?.Name ?? "",
                     FirstName = item.FirstName,
-                    LastName = item.LastName
+                    LastName = item.LastName,
+                    NationalID = item.NationalID,
+                    FatherName = item.FatherName,
+                    InsuranceId = item.InsuranceId,
+                    InsuranceName = item.Insurance?.Name ?? "",
+                    BirthDate = item.BirthDate,
+                    PhoneNumber = item.PatientContacts.Where(p => Convert.ToInt16(p.ContactType) == 1).Select(p => p.ContactValue).ToArray(),
+                    FileNumber = item.FileNumber,
+                    TelePhoneNumber = item.PatientContacts.Where(p => Convert.ToInt16(p.ContactType) == 2).Select(p => p.ContactValue).ToArray(),
+                    Address = item.PatientAddresses.Select(p => p.AddressValue).ToArray(),
+                    Tag = item.PatientTags.Select(p => p.Tag).ToArray(),
+                    IntroducerId = item.IntroducerId,
+                    FileDescription = item.FileDescription,
+                    Gender = item.Gender,
+                    AcquaintedWay = item.AcquaintedWay,
+                    Age = item.Age,
+                    MaritalStatus = item.MaritalStatus,
+                    EducationStatus = item.EducationStatus,
+                    Occupation = item.Occupation,
+                    IntroducerType = item.IntroducerType
                 };
                 patientList.Add(patientListDto);
             }
@@ -120,23 +139,39 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         {
             List<PatientListDTO> patientList = new();
 
-
-            var list = await _dbContext.Patients.Include(p => p.Insurance)
+            var list = await _dbContext.Patients.Where(p => p.IsDeleted == false).Include(p => p.Insurance)
                 .Include(p => p.PatientContacts).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
+                .Include(p => p.PatientAddresses).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
+                .Include(p => p.PatientTags).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
                 .ToListAsync();
 
             foreach (var item in list)
             {
+
                 PatientListDTO patientListDto = new()
                 {
                     Id = item.Id,
-                    BirthDate = item.BirthDate,
-                    FileNumber = item.FileNumber,
-                    Mobile = item.PatientContacts.FirstOrDefault()?.ContactValue ?? "",
-                    FatherName = item.FatherName,
-                    InsuranceName = item.Insurance?.Name ?? "",
                     FirstName = item.FirstName,
-                    LastName = item.LastName
+                    LastName = item.LastName,
+                    NationalID = item.NationalID,
+                    FatherName = item.FatherName,
+                    InsuranceId = item.InsuranceId,
+                    InsuranceName = item.Insurance?.Name ?? "",
+                    BirthDate = item.BirthDate,
+                    PhoneNumber = item.PatientContacts.Where(p => Convert.ToInt16(p.ContactType) == 1).Select(p => p.ContactValue).ToArray(),
+                    FileNumber = item.FileNumber,
+                    TelePhoneNumber = item.PatientContacts.Where(p => Convert.ToInt16(p.ContactType) == 2).Select(p => p.ContactValue).ToArray(),
+                    Address = item.PatientAddresses.Select(p => p.AddressValue).ToArray(),
+                    Tag = item.PatientTags.Select(p => p.Tag).ToArray(),
+                    IntroducerId = item.IntroducerId,
+                    FileDescription = item.FileDescription,
+                    Gender = item.Gender,
+                    AcquaintedWay = item.AcquaintedWay,
+                    Age = item.Age,
+                    MaritalStatus = item.MaritalStatus,
+                    EducationStatus = item.EducationStatus,
+                    Occupation = item.Occupation,
+                    IntroducerType = item.IntroducerType
                 };
                 patientList.Add(patientListDto);
             }
@@ -190,5 +225,17 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
     public async Task<Patient> GetByPatientId(Guid offoceId, Guid patientId)
     {
         return await _dbContext.Patients.Where(p => p.OfficeId == offoceId && p.Id == patientId && p.IsDeleted == false).FirstOrDefaultAsync();
+    }
+    public async Task<int> GenerateFileNumber()
+    {
+        if (_dbContext.Patients.Any() == false)
+        {
+            return 1;
+        }
+        else
+        {
+            var lastNo = await _dbContext.Patients.Select(p => p.FileNumber).MaxAsync();
+            return Convert.ToInt32((lastNo + 1));
+        }
     }
 }

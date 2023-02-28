@@ -8,7 +8,6 @@ public class UpdateShiftValidator : AbstractValidator<UpdateShiftDTO>
 {
     public UpdateShiftValidator()
     {
-
         RuleFor(x => x.Name).NotEmpty().Length(1, 100);
         RuleFor(x => x.StartTime).NotEmpty()
         .WithMessage(ValidationMessage.Required.For("StartTime"));

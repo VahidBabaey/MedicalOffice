@@ -35,6 +35,7 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetAllTariffByServiceIDQuery request, CancellationToken cancellationToken)
         {
+            Log log = new();
 
             var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 

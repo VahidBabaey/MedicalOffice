@@ -15,14 +15,6 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// </summary>
     public Guid InsuranceId { get; set; }
     /// <summary>
-    /// از ضرایب کا استفاده شود یا خیر
-    /// </summary>
-    public bool UseKMultiplier { get; set; }
-    /// <summary>
-    /// آیدی ضرایب کا
-    /// </summary>
-    public Guid KMultiplierId { get; set; }
-    /// <summary>
     /// مبلغ تعرفه
     /// </summary>
     public float TariffValue { get; set; }

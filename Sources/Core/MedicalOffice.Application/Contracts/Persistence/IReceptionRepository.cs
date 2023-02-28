@@ -20,43 +20,26 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
         (
         Guid serviceId,
         int serviceCount,
-        Guid insuranceId
+        Guid? insuranceId
         );
-    Task<ReceptionDetail> AddReceptionService
-        (
-        Guid receptionId,
-        Guid serviceId,
-        int serviceCount,
-        Guid insuranceId,
-        Guid additionalInsuranceId,
-        long received,
-        Guid discountTypeId,
-        Guid[] MedicalStaffs
-        );
-    Task<Guid> UpdateReceptionService
-        (
-        Guid receptionDetailId,
-        Guid serviceId,
-        int serviceCount,
-        Guid insuranceId,
-        Guid additionalInsuranceId,
-        long received,
-        long discount,
-        Guid discountTypeId,
-        Guid[] MedicalStaffs
-        );
+
     //Task<ReceptionServiceDto> GetReceptionServiceInfo(Guid receptionDetailId);
     Task<Reception> SummarizeReception(Guid receptionId);
     Task<ReceptionSummaryDto> GetReceptionSummary(Guid receptionId);
-    Task DeleteReceptionService(Guid receptionDetailId);
+    Task DeleteReceptionService(Guid receptionDetailId, Guid officeId);
     Task<int> GetFactorNo();
     Task<int> GetFactorNoToday();
 
     Task<decimal> GetReceptionTotal(Guid id);
     Task<IEnumerable<MembershipNamesDTO>> GetAllMembershipNames();
-    Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId);
+    Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId);
     Task<List<ReceptionDetailListDTO>> GetReceptionDetailList(Guid patientId);
     Task<Reception> CreateNewReceptionDebt(long Debt, Guid officeId, Guid receptionId);
     Task<ReceptionDetail> CreateNewReceptionDetailDebt(long Debt, Guid officeId, Guid receptionId);
     Task<bool> CheckExistReceptionId(Guid officeId, Guid receptionId);
+    Task<List<ReceptionListDTO>> GetReceptionList(Guid patientId);
+    int GetServiceCountsOfPatient(Guid receptionId);
+    Task<List<ReceptionDetailListForReceptionDTO>> GetReceptionDetailListForReception(Guid patientId, Guid receptionId);
+    Task<ReceptionDetail> AddReceptionService(Guid medicalStaffId, Guid shiftId, Guid officeId, ReceptionType receptionType, Guid patientid, Guid? receptionId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, Guid discountTypeId, Guid[] MedicalStaffs);
+    Task UpdateReceptionService(Guid receptionDetailId, Guid medicalStaffId, Guid shiftId, Guid officeId, ReceptionType receptionType, Guid patientid, Guid? receptionId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, Guid discountTypeId, Guid[] MedicalStaffs);
 }

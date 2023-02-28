@@ -2,6 +2,7 @@
 using MedicalOffice.Application.Dtos.CashDTO;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.SectionDTO;
+using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,8 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.CashFile.Request.Queries
 {
-    public class GetPatientCashesQuery : IRequest<List<CashListDTO>>
+    public class GetPatientCashesQuery : IRequest<BaseResponse>
     {
-        //public ListDto Dto { get; set; } = new ListDto();
         public Guid ReceptionId { get; set; }
     }
 }

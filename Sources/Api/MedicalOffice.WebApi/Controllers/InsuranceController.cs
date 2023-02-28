@@ -22,7 +22,7 @@ public class InsuranceController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] InsuranceDTO dto, [FromQuery] string officeId)
     {
@@ -40,7 +40,7 @@ public class InsuranceController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateInsuranceDTO dto, [FromQuery] string officeId)
     {
@@ -49,11 +49,11 @@ public class InsuranceController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
     public async Task<ActionResult<List<InsuranceListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllInsuranceQuery() {Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllInsuranceQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
