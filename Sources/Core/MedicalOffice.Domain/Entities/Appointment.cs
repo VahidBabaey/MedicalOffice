@@ -41,7 +41,7 @@ public class Appointment : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی اتاق
     /// </summary>
-    public Guid? RoomId { get; set; }
+    public Guid? ServiceRoomId { get; set; }
 
     /// <summary>
     /// اتاق

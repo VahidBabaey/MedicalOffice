@@ -56,6 +56,8 @@ using MedicalOffice.Application.Dtos.Tariff.Validators;
 using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Dtos.PictureDTO.Validator;
 using MedicalOffice.Application.Dtos.PictureDTO;
+using MedicalOffice.Application.Dtos.ServiceRoomDTO;
+using MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator;
 
 namespace MedicalOffice.Application;
 
@@ -192,6 +194,11 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<ReceptionsDTO>, AddReceptionValidator>();
         #endregion
 
+        #region ServiceRoom
+        services.AddScoped<IValidator<AddServiceRoomDTO>, AddServiceRoomValidator>();
+        services.AddScoped<IValidator<UpdateServiceRoomDTO>, UpdateServiceRoomValidator>();
+        services.AddScoped<IValidator<ServiceRoomIdsDTO>, ServiceRoomIdsValidator>();
+        #endregion
         return services;
     }
     public static IServiceCollection AddApplication(this IServiceCollection services)

@@ -95,7 +95,7 @@ namespace MedicalOffice.Persistence.Repositories
                 appointments = await _dbcontext.Appointments
                     .Include(x => x.MedicalStaff)
                     .Include(x => x.CreatedBy)
-                    .Where(x => x.Date == date && x.RoomId == roomId).ToListAsync();
+                    .Where(x => x.Date == date && x.ServiceRoomId == roomId).ToListAsync();
 
             if ((deviceId != null || deviceId != default) &&
                 (roomId != null || roomId != default))
@@ -104,7 +104,7 @@ namespace MedicalOffice.Persistence.Repositories
                     .Include(x => x.CreatedBy)
                     .Include(x => x.Room)
                     .Include(x => x.Device)
-                    .Where(x => x.Date == date && x.DeviceId == deviceId && x.RoomId == roomId)
+                    .Where(x => x.Date == date && x.DeviceId == deviceId && x.ServiceRoomId == roomId)
                     .ToListAsync();
 
             var result = new List<AppointmentDetailsDTO>();

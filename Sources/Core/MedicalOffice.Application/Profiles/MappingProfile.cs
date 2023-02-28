@@ -35,6 +35,7 @@ using MedicalOffice.Application.Dtos.MenuDTO;
 using MedicalOffice.Application.Dtos.PermissionDTO;
 using MedicalOffice.Application.Dtos.FormIllnessDTO;
 using MedicalOffice.Application.Dtos.FormReferalDTO;
+using MedicalOffice.Application.Dtos.ServiceRoomDTO;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -142,7 +143,8 @@ public class MappingProfile : Profile
         CreateMap<RoleListDTO, Role>().ReverseMap();
         CreateMap<Menu, MenuDto>().ReverseMap();
         CreateMap<ServiceIdNameDTO, Service>().ReverseMap();
-        CreateMap<PermissionListDto, Permission>().ReverseMap();
+        CreateMap<AddServiceRoomDTO, Room>().ReverseMap();
+        CreateMap<UpdateServiceRoomDTO, Room>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDTO>

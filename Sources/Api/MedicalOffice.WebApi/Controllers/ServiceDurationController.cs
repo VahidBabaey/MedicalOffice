@@ -54,7 +54,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
         [Authorize]
         [HttpDelete("list")]
-        public async Task<IActionResult> RemoveList([FromBody] ServiceDurationIdListDTO dto, [FromQuery] string officeId)
+        public async Task<IActionResult> RemoveList([FromBody] ServiceDurationIdsDTO dto, [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new DeleteServiceDurationListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
