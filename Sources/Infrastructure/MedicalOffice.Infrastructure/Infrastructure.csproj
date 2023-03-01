@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Configurations\**" />
+    <EmbeddedResource Remove="Configurations\**" />
+    <None Remove="Configurations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Ghasedak.Core" Version="1.1.4" />
     <PackageReference Include="Otp.NET" Version="1.2.2" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
@@ -17,11 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\MedicalOffice.Application\Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Configurations\Entities\" />
-    <Folder Include="FetchData\" />
   </ItemGroup>
 
 </Project>

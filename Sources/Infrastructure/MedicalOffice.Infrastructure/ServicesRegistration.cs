@@ -2,6 +2,7 @@
 using MedicalOffice.Application.Models.EmailSetting;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Models.Sms;
+using MedicalOffice.Infrastructure.FetchData;
 using MedicalOffice.Infrastructure.Sms;
 using MedicalOffice.WebApi.Crypto;
 using MedicalOffice.WebApi.Log;
@@ -30,10 +31,11 @@ public static class ServiceRegistration
 
         services.AddTokenGenerator(configuration);
         services.AddCryptography(configuration);
+        services.AddFetchData(configuration);
 
         services.AddTransient<IUserResolverService, UserResolverService>();
         services.AddTransient<IOfficeResolver, OfficeResolverService>();
-
+        
         services.AddHttpContextAccessor();
 
         return services;
