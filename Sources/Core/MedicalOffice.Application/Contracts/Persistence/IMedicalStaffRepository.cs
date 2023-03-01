@@ -13,7 +13,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         Task UpdateUserOfficeRoleAsync(Guid roleId, Guid UserId);
 
-        Task<IEnumerable<MedicalStaffNameListDTO>> GetAllMedicalStaffsName();
+        Task<IEnumerable<MedicalStaffNameReferrerListDTO>> GetAllReferrerMedicalStaffsName(Guid officeId);
 
         Task<List<MedicalStaffNamesDTO>> GetAllMedicalStaffsNamesandRoles(Guid officeId);
 
@@ -21,5 +21,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         Task<List<MedicalStaff>> GetMedicalStaffBySearch(string name, Guid officeId);
         Task<List<MedicalStaff>> GetAllDoctorsAndExperts(Guid officeId);
+        Task<bool> CheckMedicalStaffReferrerExist(Guid? MedicalStaffId, Guid officeId);
     }
 }

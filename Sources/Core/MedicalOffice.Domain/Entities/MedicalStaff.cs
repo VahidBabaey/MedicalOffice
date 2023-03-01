@@ -11,115 +11,109 @@ namespace MedicalOffice.Domain.Entities
 {
     public class MedicalStaff : BaseDomainEntity<Guid>
     {
-
         /// <summary>
         /// عکس کادر درمان
         /// </summary>
         //public byte[]? ProfilePicture { get; set; }
-
         /// <summary>
         /// نام
         /// </summary>
         public string FirstName { get; set; } = string.Empty;
-
         /// <summary>
         /// نام خانوادگی
         /// </summary>
         public string LastName { get; set; } = string.Empty;
-
         /// <summary>
         /// شماره نظام پزشکی
         /// </summary>
         public string MedicalNumber { get; set; } = string.Empty;
-
         /// <summary>
         /// کد ملی
         /// </summary>
         public string NationalID { get; set; } = string.Empty;
-
         /// <summary>
         /// عنوان
         /// </summary>
         public Title? Title { get; set; }
-
         /// <summary>
         /// شماره تلفن
         /// </summary>
         public string PhoneNumber { get; set; } = string.Empty;
-
         /// <summary>
         /// شناسه کاربر سیستم
         /// </summary>
         public Guid UserId { get; set; }
-
         /// <summary>
         /// (ارتباط یک به چند کاربر مطب با کاربر سیستم (هر کاربر سیستم میتواند در هر مطب کاربر متفاوتی باشد
         /// </summary>
         public User User { get; set; }
-
         /// <summary>
         /// آیدی مطب
         /// </summary>
         public Guid OfficeId { get; set; }
-
         /// <summary>
         /// ارتباط یک به چند کاربر مطب با مطب
         /// </summary>
         public Office Office { get; set; }
-
         /// <summary>
         /// شناسه نقش کاربر مطب 
         /// </summary>
         public Guid RoleId { get; set; }
-
         /// <summary>
         /// برای ارتباط یک به چند یک نقش با کاربران مطب
         /// </summary>
         public Role Role { get; set; }
-
         /// <summary>
         /// مسئول  فنی
         /// </summary>
         public bool IsTechnicalAssistant { get; set; }
-
         /// <summary>
         /// آیدی تخصص
         /// </summary>
         public Guid? SpecializationId { get; set; }
-
         /// <summary>
         /// تخصص
         /// </summary>
         public Specialization? Specialization { get; set; }
-
         /// <summary>
         /// نام کاربری بیمه سلامت
         /// </summary>
         public string IHIOUserName { get; set; } = string.Empty;
-
         /// <summary>
         /// رمز عبور بیمه سلامت
         /// </summary>
         public string IHIOPassword { get; set; } = string.Empty;
-
+        /// <summary>
+        /// معرف
+        /// </summary>
+        public bool IsReferrer { get; set; }
+        /// <summary>
+        /// متخصص
+        /// </summary>
+        public bool IsSpecialist { get; set; }
+        /// <summary>
+        /// معرف ها
+        /// </summary>
+        public ICollection<Introducer> Introduceres { get; set; } = new List<Introducer>();
         /// <summary>
         /// برنامه کادر درمان
         /// </summary>
-        public ICollection<MedicalStaffSchedule> MedicalStaffSchedules { get; set; } = new List<MedicalStaffSchedule>();  
-        
+        public ICollection<MedicalStaffSchedule> MedicalStaffSchedules { get; set; } = new List<MedicalStaffSchedule>();        
         /// <summary>
         /// پذیرش ها
         /// </summary>
         public ICollection<Reception>? Receptions { get; set; }
-
         /// <summary>
         /// کاربران پذیرش
         /// </summary>
-        public ICollection<ReceptionMedicalStaff>? ReceptionMedicalStaffs { get; set; }  
-        
+        public ICollection<ReceptionMedicalStaff>? ReceptionMedicalStaffs { get; set; }        
         /// <summary>
         /// وقت دهی ها
         /// </summary>
         public ICollection<Appointment>? Appointments { get; set; }
+        /// <summary>
+        /// بیماران
+        /// </summary>
+        public ICollection<Patient> Patients { get; set; } = new List<Patient>();
     }
 }

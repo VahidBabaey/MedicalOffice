@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Common;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,30 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// نام
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public string Firstname { get; set; } = string.Empty;
         /// <summary>
-        /// بیماران
+        /// نام خانوادگی
         /// </summary>
-        public ICollection<Patient>? Patients { get; set; }
+        public string Lastname { get; set; } = string.Empty;
+        /// <summary>
+        /// نوع معرف
+        /// </summary>
+        public IntroducerType? IntroducerType { get; set; }
+        /// <summary>
+        /// بیمار
+        /// </summary>
+        public Patient? Patient { get; set; }
+        /// <summary>
+        /// آیدی بیمار
+        /// </summary>
+        public Guid? PatientId { get; set; }
+        /// <summary>
+        /// کادر درمان
+        /// </summary>
+        public MedicalStaff? MedicalStaff { get; set; }
+        /// <summary>
+        /// آیدی مادر درمان
+        /// </summary>
+        public Guid? MedicalStaffId { get; set; }
     }
 }

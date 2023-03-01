@@ -91,9 +91,9 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         return medicalStaffListDTOs;
     }
 
-    public async Task<IEnumerable<MedicalStaffNameListDTO>> GetAllMedicalStaffsName()
+    public async Task<IEnumerable<MedicalStaffNameReferrerListDTO>> GetAllReferrerMedicalStaffsName(Guid officeId)
     {
-        var _list = await _dbContext.MedicalStaffs.Select(p => new MedicalStaffNameListDTO
+        var _list = await _dbContext.MedicalStaffs.Where(p => p.OfficeId == officeId && p.IsReferrer == true && p.IsDeleted == false).Select(p => new MedicalStaffNameReferrerListDTO
         {
             Id = p.Id,
             FirstName = p.FirstName,
@@ -151,6 +151,11 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
     public async Task<bool> CheckMedicalStaffExist(Guid MedicalStaffId, Guid officeId)
     {
         bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.Id == MedicalStaffId);
+        return isExist;
+    }
+    public async Task<bool> CheckMedicalStaffReferrerExist(Guid? MedicalStaffId, Guid officeId)
+    {
+        bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.Id == MedicalStaffId && p.IsReferrer == true);
         return isExist;
     }
     public async Task<List<MedicalStaff>> GetMedicalStaffBySearch(string name, Guid officeId)

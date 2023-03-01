@@ -74,5 +74,13 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// مسئول  فنی
         /// </summary>
         public bool IsTechnicalAssistant { get; set; }
+        /// <summary>
+        /// معرف
+        /// </summary>
+        public bool IsReferrer { get; set; }
+        /// <summary>
+        /// متخصص
+        /// </summary>
+        public bool IsSpecialist { get; set; }
     }
 }

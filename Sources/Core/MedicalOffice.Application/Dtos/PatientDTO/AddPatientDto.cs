@@ -1,10 +1,11 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.Commons;
 using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.PatientDTO;
 
-public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationalIdDTO, IInsuranceIdDTO
+public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationalIdDTO, IInsuranceIdDTO, IReferrerMedicalStaffIdDTO
 {
     /// <summary>
     /// نام
@@ -14,6 +15,10 @@ public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationa
     /// نام خانوادگی
     /// </summary>
     public string LastName { get; set; } = string.Empty;
+    /// <summary>
+    /// آیدی کادر درمان
+    /// </summary>
+    public Guid? ReferrerMedicalStaffId { get; set; }
     /// <summary>
     /// جنسیت
     /// </summary>
@@ -62,10 +67,6 @@ public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationa
     /// برچسب
     /// </summary>
     public string[]? Tag { get; set; }
-    /// <summary>
-    /// آیدی معرف
-    /// </summary>
-    public Guid? IntroducerId { get; set; }
     /// <summary>
     /// آیدی بیمه
     /// </summary>

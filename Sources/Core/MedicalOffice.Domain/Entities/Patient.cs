@@ -21,6 +21,14 @@ public class Patient : BaseDomainEntity<Guid>
     /// </summary>
     public Guid OfficeId { get; set; }
     /// <summary>
+    /// کادر درمان
+    /// </summary>
+    public MedicalStaff? ReferrerMedicalStaff { get; set; }
+    /// <summary>
+    /// آیدی کادر درمان
+    /// </summary>
+    public Guid? ReferrerMedicalStaffId { get; set; }
+    /// <summary>
     /// نام
     /// </summary>
     public string FirstName { get; set; } = string.Empty;
@@ -73,17 +81,13 @@ public class Patient : BaseDomainEntity<Guid>
     /// </summary>
     public Guid InsuranceId { get; set; }
     /// <summary>
-    /// معرف
-    /// </summary>
-    public Introducer? Introducer { get; set; }
-    /// <summary>
-    /// آیدی معرف
-    /// </summary>
-    public Guid? IntroducerId { get; set; }
-    /// <summary>
     /// سن
     /// </summary>
     public int Age { get; set; }
+    /// <summary>
+    /// معرف ها
+    /// </summary>
+    public ICollection<Introducer> Introduceres { get; set; } = new List<Introducer>();
     /// <summary>
     /// آدرس ها
     /// </summary>

@@ -27,6 +27,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                    RoleCreator("59671245-f477-4163-95e6-4b0fba717c51", "TechnicalAssistant", "TECHNICALASSISTANT", "مسئول فنی"),
                    RoleCreator("779c69ef-6857-4e19-b24e-1c4c4b2635d7", "Secretary", "SECRETARY", "منشی"),
                    RoleCreator("aca86b1a-8e36-4467-9e3c-2f826822df10", "SuperAdmin", "SUPERADMIN", "سوپر ادمین"),
+                   RoleCreator("60EEAF14-A2E6-40DF-ABDC-31DFB55D0488", "ExternalReferrer", "EXTERNALREFERRER", "معرف خارجی"),
                });
         }
     }
