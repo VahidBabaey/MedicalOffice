@@ -24,14 +24,14 @@ namespace MedicalOffice.Persistence.Repositories
 
         public async Task<List<ServiceRoomListDTO>> GetServiceRooms(Guid officeId)
         {
-            var rooms = await _dbcontext.Rooms.Include(sr => sr.ServiceRooms).ThenInclude(x=>x.Service)
+            var rooms = await _dbcontext.Rooms.Include(sr => sr.ServiceRooms).ThenInclude(x => x.Service)
                 .Where(sr => sr.OfficeId == officeId && sr.IsDeleted == false).ToListAsync();
 
             var roomServiceNames = new List<ServiceRoomListDTO>();
             foreach (var item in rooms)
             {
                 var services = new List<ServiceIdNameDTO>();
-                foreach (var index in item.ServiceRooms.Select(x=>x.Service))
+                foreach (var index in item.ServiceRooms.Select(x => x.Service))
                 {
                     services.Add(new ServiceIdNameDTO
                     {
@@ -52,6 +52,12 @@ namespace MedicalOffice.Persistence.Repositories
         public async Task<bool> isNameUniqe(string roomName, Guid officeId)
         {
             var isNameExist = await _dbcontext.Rooms.AnyAsync(x => x.Name == roomName && x.OfficeId == officeId && x.IsDeleted == false);
+            return !isNameExist;
+        }
+
+        public async Task<bool> isNameUniqeDuringUpdate(UpdateServiceRoomDTO roomService, Guid officeId)
+        {
+            var isNameExist = await _dbcontext.Rooms.AnyAsync(x => x.Name == roomService.Name && x.Id != roomService.Id && x.OfficeId == officeId && x.IsDeleted == false);
             return !isNameExist;
         }
 
