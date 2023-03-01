@@ -4,7 +4,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.RoleDTO;
 using MedicalOffice.Application.Features.RoleFile.Requests.Queries;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,7 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.EmailSetting;
+using MedicalOffice.Application.Models.Logger;
+using MedicalOffice.Application.Models.Sms;
 using MedicalOffice.Infrastructure.Sms;
 using MedicalOffice.WebApi.Crypto;
 using MedicalOffice.WebApi.Log;

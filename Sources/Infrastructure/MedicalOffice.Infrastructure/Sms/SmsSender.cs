@@ -1,6 +1,7 @@
 ﻿using Ghasedak.Core;
 using MedicalOffice.Application.Contracts.Infrastructure;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Sms;
+using MedicalOffice.Application.Models.Totp;
 using Microsoft.Extensions.Options;
 
 namespace MedicalOffice.Infrastructure.Sms

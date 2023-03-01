@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using Microsoft.Extensions.Options;
 
 namespace MedicalOffice.WebApi.Log;
@@ -14,7 +14,7 @@ public class Logger : ILogger
        // _settings = settings.Value;
     }
 
-    public async Task Log(Application.Models.Log log)
+    public async Task Log(Application.Models.Logger.Log log)
     {
         //var logFormat = $"{string.Format("{0:yyyy/MM/dd HH:mm}", DateTime.Now)}-{log.Type}-{log.Header}\n{new string('-', 20)}\n{string.Join("\n", log.AdditionalData)}\n{new string('-', 20)}";
 

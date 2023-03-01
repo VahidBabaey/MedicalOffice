@@ -7,7 +7,7 @@ using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;

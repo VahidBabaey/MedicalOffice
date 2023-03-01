@@ -4,7 +4,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Dtos.IdentityDTO;
 using MedicalOffice.Application.Features.IdentityFeature.Requsets.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;

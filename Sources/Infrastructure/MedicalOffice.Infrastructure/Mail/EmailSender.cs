@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.EmailSetting;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
