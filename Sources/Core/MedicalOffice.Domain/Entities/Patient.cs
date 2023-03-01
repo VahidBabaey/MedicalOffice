@@ -43,15 +43,15 @@ public class Patient : BaseDomainEntity<Guid>
     /// <summary>
     /// کد ملی
     /// </summary>
-    public string NationalID { get; set; } = string.Empty;
+    public string? NationalID { get; set; } = string.Empty;
     /// <summary>
     /// تاریخ تولد
     /// </summary>
-    public string BirthDate { get; set; } = string.Empty;
+    public string? BirthDate { get; set; } = string.Empty;
     /// <summary>
     /// نام پدر
     /// </summary>
-    public string FatherName { get; set; } = string.Empty;
+    public string? FatherName { get; set; } = string.Empty;
     /// <summary>
     /// نحوه آشنایی
     /// </summary>
@@ -67,11 +67,11 @@ public class Patient : BaseDomainEntity<Guid>
     /// <summary>
     /// شغل
     /// </summary>
-    public string Occupation { get; set; } = string.Empty;
+    public string? Occupation { get; set; } = string.Empty;
     /// <summary>
     /// توضیحات پرونده
     /// </summary>
-    public string FileDescription { get; set; } = string.Empty;
+    public string? FileDescription { get; set; } = string.Empty;
     /// <summary>
     /// بیمه
     /// </summary>
@@ -79,11 +79,11 @@ public class Patient : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی بیمه
     /// </summary>
-    public Guid InsuranceId { get; set; }
+    public Guid? InsuranceId { get; set; }
     /// <summary>
     /// سن
     /// </summary>
-    public int Age { get; set; }
+    public int? Age { get; set; }
     /// <summary>
     /// معرف ها
     /// </summary>

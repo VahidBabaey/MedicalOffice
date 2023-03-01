@@ -26,15 +26,15 @@ public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationa
     /// <summary>
     /// کد ملی
     /// </summary>
-    public string NationalID { get; set; } = string.Empty;
+    public string? NationalID { get; set; } = string.Empty;
     /// <summary>
     /// تاریخ تولد
     /// </summary>
-    public string BirthDate { get; set; } = string.Empty;
+    public string? BirthDate { get; set; } = string.Empty;
     /// <summary>
     /// نام پدر
     /// </summary>
-    public string FatherName { get; set; } = string.Empty;
+    public string? FatherName { get; set; } = string.Empty;
     /// <summary>
     /// نحوه آشنایی
     /// </summary>
@@ -50,7 +50,7 @@ public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationa
     /// <summary>
     /// شغل
     /// </summary>
-    public string Occupation { get; set; } = string.Empty;
+    public string? Occupation { get; set; } = string.Empty;
     /// <summary>
     /// آدرس
     /// </summary>
@@ -70,7 +70,7 @@ public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationa
     /// <summary>
     /// آیدی بیمه
     /// </summary>
-    public Guid InsuranceId { get; set; }
+    public Guid? InsuranceId { get; set; }
     /// <summary>
     /// نوع معرف
     /// </summary>
@@ -78,9 +78,9 @@ public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationa
     /// <summary>
     /// توضیحات پرونده
     /// </summary>
-    public string FileDescription { get; set; } = string.Empty;
+    public string? FileDescription { get; set; } = string.Empty;
     /// <summary>
     /// سن
     /// </summary>
-    public int Age { get; set; }
+    public int? Age { get; set; }
 }

@@ -22,7 +22,7 @@ namespace MedicalOffice.Persistence.Repositories
         {
             return await _dbContext.Insurances.Where(p => p.IsAdditionalInsurance == true && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
         }
-        public async Task<bool> CheckExistInsuranceId(Guid officeId, Guid insuranceId)
+        public async Task<bool> CheckExistInsuranceId(Guid officeId, Guid? insuranceId)
         {
             bool isExist = await _dbContext.Insurances.AnyAsync(p => p.OfficeId == officeId && p.Id == insuranceId);
             return isExist;
