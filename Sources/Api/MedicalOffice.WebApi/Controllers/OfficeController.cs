@@ -4,6 +4,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Commands;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Queries;
+using MedicalOffice.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,9 +32,18 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
         [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
-        public async Task<ActionResult<Guid>> AddOffice([FromBody] OfficeDTO dto)
+        public async Task<ActionResult<Guid>> create([FromBody] AddOfficeDto dto)
         {
             var response = await _mediator.Send(new AddOfficeCommand { DTO = dto });
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
+        //[Authorize(Roles = "SuperAdmin,Admin")]
+        [HttpPatch]
+        public async Task<ActionResult<Guid>> Update([FromBody] UpdateOfficeDTO dto)
+        {
+            var response = await _mediator.Send(new EditOfficeCommand { DTO = dto});
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

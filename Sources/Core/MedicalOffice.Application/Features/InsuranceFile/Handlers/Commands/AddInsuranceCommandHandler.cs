@@ -41,7 +41,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
         {
             
 
-            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
             if (!validationOfficeId)
             {

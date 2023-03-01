@@ -34,7 +34,7 @@ public class GetMembershipBySearchQueryHandler : IRequestHandler<GetMembershipBy
     public async Task<BaseResponse> Handle(GetMembershipBySearchQuery request, CancellationToken cancellationToken)
     {
 
-        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {

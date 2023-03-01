@@ -36,7 +36,7 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
         public async Task<BaseResponse> Handle(GetAllInsuranceNamesQuery request, CancellationToken cancellationToken)
         {
 
-            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
             if (!validationOfficeId)
             {

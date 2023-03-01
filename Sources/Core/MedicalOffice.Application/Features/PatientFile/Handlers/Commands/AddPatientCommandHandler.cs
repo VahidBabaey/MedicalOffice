@@ -36,7 +36,7 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
     public async Task<BaseResponse> Handle(AddPatientCommand request, CancellationToken cancellationToken)
     {
 
-        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {

@@ -42,7 +42,7 @@ public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, B
 
         Log log = new();
 
-        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {

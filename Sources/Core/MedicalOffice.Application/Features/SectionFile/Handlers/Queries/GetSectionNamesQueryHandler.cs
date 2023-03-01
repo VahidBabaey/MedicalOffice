@@ -29,7 +29,7 @@ public class GetSectionNamesQueryHandler : IRequestHandler<GetSectionNamesQuery,
     public async Task<BaseResponse> Handle(GetSectionNamesQuery request, CancellationToken cancellationToken)
     {
 
-        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {

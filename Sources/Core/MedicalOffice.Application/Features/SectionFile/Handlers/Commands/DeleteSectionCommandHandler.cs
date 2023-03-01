@@ -28,7 +28,7 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
     public async Task<BaseResponse> Handle(DeleteSectionCommand request, CancellationToken cancellationToken)
     {
 
-        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {

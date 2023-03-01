@@ -31,7 +31,7 @@ public class GetAllPatientsQueryHandler : IRequestHandler<GetAllPatientsQuery, B
     public async Task<BaseResponse> Handle(GetAllPatientsQuery request, CancellationToken cancellationToken)
     {
 
-        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {

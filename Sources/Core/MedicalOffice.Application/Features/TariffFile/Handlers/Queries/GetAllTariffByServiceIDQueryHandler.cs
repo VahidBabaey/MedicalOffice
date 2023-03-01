@@ -37,7 +37,7 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
         {
             Log log = new();
 
-            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
             if (!validationOfficeId)
             {

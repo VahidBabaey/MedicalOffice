@@ -40,7 +40,7 @@ namespace MedicalOffice.Application.Features.PatientIllnessFormFile.Handler.Comm
         public async Task<BaseResponse> Handle(AddPatientCommitmentFormCommand request, CancellationToken cancellationToken)
         {
 
-            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
             if (!validationOfficeId)
             {

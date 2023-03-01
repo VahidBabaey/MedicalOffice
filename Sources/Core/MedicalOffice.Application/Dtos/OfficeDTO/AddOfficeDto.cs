@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.OfficeDTO
 {
-    public class OfficeDTO: ITelePhoneNumberDTO
+    public class AddOfficeDto: ITelePhoneNumberDTO
     {
         /// <summary>
         /// نام
@@ -24,6 +24,7 @@ namespace MedicalOffice.Application.Dtos.OfficeDTO
         /// شماره ثابت
         /// </summary>
         public string TelePhoneNumber { get; set; } = string.Empty;
+
         /// <summary>
         /// نوع تعرفه
         /// </summary>

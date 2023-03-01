@@ -33,7 +33,7 @@ public class GetAllSectionsQueryHandler : IRequestHandler<GetAllSectionQuery, Ba
     public async Task<BaseResponse> Handle(GetAllSectionQuery request, CancellationToken cancellationToken)
     {
 
-        var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {

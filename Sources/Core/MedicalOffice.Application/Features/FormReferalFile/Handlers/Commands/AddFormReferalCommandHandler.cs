@@ -42,7 +42,7 @@ namespace MedicalOffice.Application.Features.FormReferalFile.Handlers.Commands
         public async Task<BaseResponse> Handle(AddFormReferalCommand request, CancellationToken cancellationToken)
         {
 
-            var validationOfficeId = await _officeRepository.CheckExistOfficeId(request.OfficeId);
+            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
             if (!validationOfficeId)
             {
