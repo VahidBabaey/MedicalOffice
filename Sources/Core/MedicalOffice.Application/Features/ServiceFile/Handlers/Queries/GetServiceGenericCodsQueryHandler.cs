@@ -1,32 +1,44 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
+using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Queries;
 using MedicalOffice.Application.Models.ConsumableUrlsOutputs;
 using MedicalOffice.Application.Responses;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
+using System.Net;
+#nullable disable
 
 namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries
 {
     public class GetServiceGenericCodsQueryHandler : IRequestHandler<GetServiceGenericCodsQuery, BaseResponse>
     {
         private readonly IFetchData _fetchData;
+        private readonly string _requestTitle;
 
         public GetServiceGenericCodsQueryHandler(IFetchData fetchData)
         {
             _fetchData = fetchData;
+            _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
-        public Task<BaseResponse> Handle(GetServiceGenericCodsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetServiceGenericCodsQuery request, CancellationToken cancellationToken)
         {
-            var input = new List<QueryStringInput>();
-            input.Add(new QueryStringInput
+            var result = new List<ServiceGenericCodeDTO>();
+
+            var response = await _fetchData.GetResponse("/Service/generic-code");
+
+            if (!response.IsSuccessStatusCode)
             {
-                Key = "Name",
-                Value = request.Name
-            });
-            var response = _fetchData.GetResponse(input);
+                return ResponseBuilder.Faild(HttpStatusCode.BadGateway, $"{_requestTitle} failed", response.ErrorMessage);
+            }
 
-            Console.WriteLine(response);
+            if (response.Content != null)
+            {
+                result = JsonConvert.DeserializeObject<List<ServiceGenericCodeDTO>>(response.Content);
+            }
 
-            return Task.FromResult(ResponseBuilder.Success(System.Net.HttpStatusCode.OK, "", response));
+            return ResponseBuilder.Success(response.StatusCode, $"{_requestTitle} succeeded", result);
         }
     }
 }

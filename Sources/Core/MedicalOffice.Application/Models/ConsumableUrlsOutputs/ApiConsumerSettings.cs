@@ -3,13 +3,8 @@ using System.Collections;
 
 namespace MedicalOffice.Application.Models.ConsumableUrlsOutputs
 {
-    public class FetchDataSettings
+    public class ApiConsumerSettings
     {
-        public FetchDataSettings()
-        {
-            
-        }
-
         public string BaseDomain { get; set; }
     }
 }
