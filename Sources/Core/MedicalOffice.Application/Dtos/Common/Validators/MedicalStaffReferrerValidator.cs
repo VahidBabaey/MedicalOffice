@@ -22,10 +22,17 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
             var officeId = _officeResolver.GetOfficeId().Result;
 
             RuleFor(x => x.ReferrerMedicalStaffId)
-               .NotEmpty()
+               
                .MustAsync(async (ReferrerMedicalStaffId, token) =>
                {
-                   return await _medicalStaffRepository.CheckMedicalStaffReferrerExist(ReferrerMedicalStaffId, officeId);
+                   if (ReferrerMedicalStaffId == null)
+                   {
+                       return true;
+                   }
+                   else
+                   {
+                       return await _medicalStaffRepository.CheckMedicalStaffReferrerExist(ReferrerMedicalStaffId, officeId);
+                   }
                })
                .WithMessage("{PropertyName} isn't exist");
         }

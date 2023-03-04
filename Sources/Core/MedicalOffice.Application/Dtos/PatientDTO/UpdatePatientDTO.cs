@@ -30,15 +30,15 @@ public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNu
     /// <summary>
     /// کد ملی
     /// </summary>
-    public string NationalID { get; set; } = string.Empty;
+    public string? NationalID { get; set; } = string.Empty;
     /// <summary>
     /// تاریخ تولد
     /// </summary>
-    public string BirthDate { get; set; } = string.Empty;
+    public string? BirthDate { get; set; } = string.Empty;
     /// <summary>
     /// نام پدر
     /// </summary>
-    public string FatherName { get; set; } = string.Empty;
+    public string? FatherName { get; set; } = string.Empty;
     /// <summary>
     /// نحوه آشنایی
     /// </summary>
@@ -54,7 +54,7 @@ public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNu
     /// <summary>
     /// شغل
     /// </summary>
-    public string Occupation { get; set; } = string.Empty;
+    public string? Occupation { get; set; } = string.Empty;
     /// <summary>
     /// آدرس
     /// </summary>
@@ -86,9 +86,9 @@ public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNu
     /// <summary>
     /// توضیحات پرونده
     /// </summary>
-    public string FileDescription { get; set; } = string.Empty;
+    public string? FileDescription { get; set; } = string.Empty;
     /// <summary>
     /// سن
     /// </summary>
-    public int Age { get; set; }
+    public int? Age { get; set; }
 }

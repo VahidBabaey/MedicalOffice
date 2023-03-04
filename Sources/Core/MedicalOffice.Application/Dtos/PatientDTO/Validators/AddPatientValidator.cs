@@ -35,14 +35,28 @@ public class AddPatientValidator : AbstractValidator<PatientDTO>
         RuleFor(x => x.InsuranceId)
             .MustAsync(async (insuranceId, token) =>
             {
-                return await _insuranceRepository.CheckExistInsuranceId(officeId, insuranceId);
+                if (insuranceId == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return await _insuranceRepository.CheckExistInsuranceId(officeId, insuranceId);
+                }
 
             }).WithMessage("{PropertyName} isn't exist");
 
         RuleFor(x => x.ReferrerMedicalStaffId)
             .MustAsync(async (ReferrerMedicalStaffId, token) =>
             {
-                return await _medicalStaffrepository.CheckMedicalStaffReferrerExist(ReferrerMedicalStaffId, officeId);
+                if (ReferrerMedicalStaffId == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return await _medicalStaffrepository.CheckMedicalStaffReferrerExist(ReferrerMedicalStaffId, officeId);
+                }
             })
             .WithMessage("{PropertyName} isn't exist");
     }

@@ -23,13 +23,18 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
             var officeId = _officeResolver.GetOfficeId().Result;
 
             RuleFor(x => x.InsuranceId)
-                .NotEmpty()
                 .MustAsync(async (insuranceId, token) =>
+                {
+                    if (insuranceId == null)
                     {
-                        return await _insuranceRepository.CheckExistInsuranceId(officeId, insuranceId);
+                        return true;
+                    }
+                    else
+                    {
+                    return await _insuranceRepository.CheckExistInsuranceId(officeId, insuranceId);
+                    }
 
-                    })
-                .WithMessage("{PropertyName} isn't exist");
+                }).WithMessage("{PropertyName} isn't exist");
         }
     }
 }
