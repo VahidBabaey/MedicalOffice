@@ -25,7 +25,16 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
             var officeId = _officeResolver.GetOfficeId().Result;
 
             Include(new ServiceIdsValidator(_officeResolver, _serviceRepository));
-            Include(new RoomNameValidator(_serviceRoomRepository, _officeResolver));
+
+            RuleFor(x => x.Name)
+                .NotEmpty();
+
+            RuleFor(x => x)
+                .MustAsync(async (roomName, token) =>
+                {
+                    return await _serviceRoomRepository.isNameUniqeDuringUpdate(roomName, officeId);
+                })
+                .WithMessage("{PropertyName} is not uniqe");
 
             RuleFor(x => x.Id)
                 .NotEmpty()

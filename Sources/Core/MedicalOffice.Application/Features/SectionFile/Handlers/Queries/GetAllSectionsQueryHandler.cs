@@ -9,6 +9,7 @@ using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Common;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using System.Net;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Queries;
@@ -49,7 +50,12 @@ public class GetAllSectionsQueryHandler : IRequestHandler<GetAllSectionQuery, Ba
 
         try
         {
-            var section =  _sectionrepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+            var section = _sectionrepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).OrderByDescending(x => x.CreatedDate);
+
+            if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+            {
+                section = request.Order == Order.NewRecords ? section : section.OrderBy(x => x.CreatedDate);
+            }
             var result = _mapper.Map<List<SectionListDTO>>(section.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             await _logger.Log(new Log
@@ -60,7 +66,6 @@ public class GetAllSectionsQueryHandler : IRequestHandler<GetAllSectionQuery, Ba
             });
             return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = section.Count(), result = result });
         }
-
         catch (Exception error)
         {
             await _logger.Log(new Log

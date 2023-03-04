@@ -23,7 +23,7 @@ public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO
     /// <summary>
     /// آیدی بیمه
     /// </summary>
-    public Guid InsuranceId { get; set; }
+    public Guid? InsuranceId { get; set; }
     /// <summary>
     /// آیدی بیمه تکمیلی
     /// </summary>

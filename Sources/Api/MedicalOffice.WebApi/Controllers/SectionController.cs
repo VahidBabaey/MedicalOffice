@@ -7,6 +7,7 @@ using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Features.ShiftFile.Requests.Query;
+using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,7 @@ public class SectionController : Controller
         _mediator = mediator;
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] AddSectionDTO dto, [FromQuery] string officeId)
     {
@@ -32,7 +33,7 @@ public class SectionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
     {
@@ -41,7 +42,7 @@ public class SectionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateSectionDTO dto, [FromQuery] string officeId)
     {
@@ -50,11 +51,11 @@ public class SectionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
+    public async Task<ActionResult<List<ShiftListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order? order)
     {
-        var response = await _mediator.Send(new GetAllSectionQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllSectionQuery() { Dto = dto, OfficeId = Guid.Parse(officeId), Order = order });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

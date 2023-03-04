@@ -10,10 +10,12 @@ public class UpdatePatientValidator : AbstractValidator<UpdatePatientDTO>
 {
     private readonly IInsuranceRepository _insuranceRepository;
     private readonly IQueryStringResolver _officeResolver;
-    public UpdatePatientValidator(IInsuranceRepository insuranceRepository, IQueryStringResolver officeResolver)
+    private readonly IMedicalStaffRepository _medicalstaffrepository;
+    public UpdatePatientValidator(IMedicalStaffRepository medicalstaffrepository, IInsuranceRepository insuranceRepository, IQueryStringResolver officeResolver)
     {
         _insuranceRepository = insuranceRepository;
         _officeResolver = officeResolver;
+        _medicalstaffrepository = medicalstaffrepository;
 
         RuleFor(x => x.FirstName).NotEmpty().Length(1, 100);
         RuleFor(x => x.LastName).NotEmpty().Length(1, 100);
@@ -21,5 +23,6 @@ public class UpdatePatientValidator : AbstractValidator<UpdatePatientDTO>
         Include(new ITelePhoneNumberListValidator());
         Include(new NationalIdValidator());
         Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
+        Include(new MedicalStaffReferrerValidator(_medicalstaffrepository, _officeResolver));
     }
 }

@@ -8,6 +8,6 @@ namespace MedicalOffice.Application.Dtos.Commons
 {
     public interface IInsuranceIdDTO
     {
-        public Guid InsuranceId { get; set; }
+        public Guid? InsuranceId { get; set; }
     }
 }

@@ -13,7 +13,6 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
         public ITelePhoneNumberListValidator()
         {
             RuleFor(p => p.TelePhoneNumber)
-           .NotEmpty().WithMessage("{PropertyName} is required")
            .Must(p => IsValidTelePhoneNumberList(p)).WithMessage("{PropertyName} is not valid");
         }
         bool IsValidTelePhoneNumberList(string[] telePhoneNumbers)
