@@ -14,11 +14,11 @@ namespace MedicalOffice.Application.Dtos.OfficeDTO.Validators
 {
     public class UpdateOfficeValidator : AbstractValidator<UpdateOfficeDTO>
     {
-        private readonly IOfficeResolver _officeResolver;
+        private readonly IQueryStringResolver _officeResolver;
         private readonly IOfficeRepository _officeRepository;
 
         public UpdateOfficeValidator(
-            IOfficeResolver officeResolver,
+            IQueryStringResolver officeResolver,
             IOfficeRepository officeRepository)
         {
             _officeResolver = officeResolver;

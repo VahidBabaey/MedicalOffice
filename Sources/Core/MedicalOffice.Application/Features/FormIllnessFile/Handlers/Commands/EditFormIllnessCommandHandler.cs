@@ -7,7 +7,7 @@ using MedicalOffice.Application.Dtos.FormCommitmentDTO;
 using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Commands;
 using MedicalOffice.Application.Features.FormIllnessFile.Requests.Commands;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using System;

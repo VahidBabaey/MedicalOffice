@@ -10,8 +10,8 @@ public class UpdateServiceValidator : AbstractValidator<UpdateServiceDTO>
 {
     private readonly ISectionRepository _sectionRepository;
     private readonly IServiceRepository _serviceRepository;
-    private readonly IOfficeResolver _officeResolver;
-    public UpdateServiceValidator(IServiceRepository serviceRepository, ISectionRepository sectionRepository, IOfficeResolver officeResolver)
+    private readonly IQueryStringResolver _officeResolver;
+    public UpdateServiceValidator(IServiceRepository serviceRepository, ISectionRepository sectionRepository, IQueryStringResolver officeResolver)
     {
         _serviceRepository = serviceRepository;
         _officeResolver = officeResolver;

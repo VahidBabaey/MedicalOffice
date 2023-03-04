@@ -6,7 +6,7 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.CashDTO;
 using MedicalOffice.Application.Dtos.CashDTO.Validators;
 using MedicalOffice.Application.Features.CashFile.Request.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;

@@ -7,7 +7,6 @@ using MedicalOffice.Application.Dtos.PictureDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.PictureFile.Requests.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
-using MedicalOffice.Application.Models;
 using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -17,6 +16,7 @@ using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using System.Net;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Application.Models.Logger;
 
 namespace MedicalOffice.Application.Features.PictureFile.Handlers.Queries;
 public class GetAllPicturesofPatientQueryHandler : IRequestHandler<GetAllPicturesofPatientQuery, BaseResponse>

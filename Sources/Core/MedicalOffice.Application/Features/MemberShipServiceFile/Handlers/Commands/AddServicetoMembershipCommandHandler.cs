@@ -7,7 +7,7 @@ using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Commands;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using NLog.Config;

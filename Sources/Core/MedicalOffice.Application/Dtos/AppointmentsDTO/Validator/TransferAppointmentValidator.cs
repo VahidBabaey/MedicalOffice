@@ -18,10 +18,10 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
         private readonly IServiceRepository _serviceRepository;
         private readonly IMedicalStaffRepository _medicalStaffRepository;
         private IAppointmentRepository _appointmentRepository;
-        private IOfficeResolver _officeResolver;
+        private IQueryStringResolver _officeResolver;
         public TransferAppointmentValidator(
              IAppointmentRepository appointmentRepository,
-             IOfficeResolver officeResolver,
+             IQueryStringResolver officeResolver,
              IMedicalStaffRepository medicalStaffRepository,
              IServiceRepository serviceRepository
              )

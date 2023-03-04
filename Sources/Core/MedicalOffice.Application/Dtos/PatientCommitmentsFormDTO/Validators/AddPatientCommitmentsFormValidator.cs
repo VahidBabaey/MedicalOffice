@@ -9,8 +9,8 @@ namespace MedicalOffice.Application.Dtos.PatientDTO.Validators;
 public class AddPatientCommitmentsFormValidator : AbstractValidator<AddPatientCommitmentsFormDTO>
 {
     private readonly IPatientRepository _patientRepository;
-    private readonly IOfficeResolver _officeResolver;
-    public AddPatientCommitmentsFormValidator(IPatientRepository patientRepository, IOfficeResolver officeResolver)
+    private readonly IQueryStringResolver _officeResolver;
+    public AddPatientCommitmentsFormValidator(IPatientRepository patientRepository, IQueryStringResolver officeResolver)
     {
         _patientRepository = patientRepository;
         _officeResolver = officeResolver;

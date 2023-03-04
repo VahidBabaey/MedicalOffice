@@ -8,7 +8,7 @@ using MedicalOffice.Application.Dtos.AppointmentsDTO;
 using MedicalOffice.Application.Dtos.Identity;
 using MedicalOffice.Application.Features.AppointmentFeature.Helper;
 using MedicalOffice.Application.Features.AppointmentFeature.Requests.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;

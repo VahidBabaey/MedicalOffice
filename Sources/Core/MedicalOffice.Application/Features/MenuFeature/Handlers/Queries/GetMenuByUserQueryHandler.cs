@@ -5,7 +5,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MenuDTO;
 using MedicalOffice.Application.Features.MenuFeature.Requests.Queries;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using System.Net;

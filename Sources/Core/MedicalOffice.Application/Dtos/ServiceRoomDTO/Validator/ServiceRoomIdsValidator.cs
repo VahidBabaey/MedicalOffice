@@ -14,11 +14,11 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
     public class ServiceRoomIdsValidator : AbstractValidator<ServiceRoomIdsDTO>
     {
         private readonly IServiceRepository _serviceRepository;
-        private readonly IOfficeResolver _officeResolver;
+        private readonly IQueryStringResolver _officeResolver;
         private readonly IRoomRepository _serviceRoomRepository;
 
         public ServiceRoomIdsValidator(
-            IOfficeResolver officeResolver,
+            IQueryStringResolver officeResolver,
             IServiceRepository serviceRepository,
             IRoomRepository serviceRoomRepository
             )
