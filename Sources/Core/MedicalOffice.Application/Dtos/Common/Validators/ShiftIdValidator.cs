@@ -14,9 +14,9 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
     public class ShiftIdValidator : AbstractValidator<IShiftIdDTO>
     {
         private readonly IShiftRepository _shiftRepository;
-        private readonly IOfficeResolver _officeResolver;
+        private readonly IQueryStringResolver _officeResolver;
 
-        public ShiftIdValidator(IShiftRepository shiftRepository, IOfficeResolver officeResolver)
+        public ShiftIdValidator(IShiftRepository shiftRepository, IQueryStringResolver officeResolver)
         {
             _officeResolver = officeResolver;
             _shiftRepository = shiftRepository;

@@ -14,9 +14,9 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
     public class SectionIdValidator : AbstractValidator<ISectionIdDTO>
     {
         private readonly ISectionRepository _sectionRepository;
-        private readonly IOfficeResolver _officeResolver;
+        private readonly IQueryStringResolver _officeResolver;
 
-        public SectionIdValidator(ISectionRepository sectionRepository, IOfficeResolver officeResolver)
+        public SectionIdValidator(ISectionRepository sectionRepository, IQueryStringResolver officeResolver)
         {
             _officeResolver = officeResolver;
             _sectionRepository = sectionRepository;

@@ -4,10 +4,8 @@ using RestSharp;
 
 namespace MedicalOffice.Application.Contracts.Infrastructure
 {
-    public interface IFetchData
+    public interface IApiConsumer
     {
-        Task<RestResponse> GetResponse(string path
-            //, List<QueryStringInput> input
-            );
+        Task<RestResponse> GetResponse(string path, List<ExternalApiInput> input);
     }
 }

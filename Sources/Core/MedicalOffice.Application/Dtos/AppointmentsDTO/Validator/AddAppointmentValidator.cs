@@ -22,12 +22,12 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 {
     public class AddAppointmentValidator : AbstractValidator<AddAppointmentDto>
     {
-        private readonly IOfficeResolver _officeResolver;
+        private readonly IQueryStringResolver _officeResolver;
         private readonly IServiceRepository _serviceRepository;
         private readonly IMedicalStaffRepository _medicalStaffRepository;
         private static readonly int minimumLength = 3;
         public AddAppointmentValidator(
-            IOfficeResolver officeResolver,
+            IQueryStringResolver officeResolver,
             IServiceRepository serviceRepository,
             IMedicalStaffRepository medicalStaffRepository)
         {

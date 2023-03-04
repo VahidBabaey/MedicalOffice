@@ -14,8 +14,8 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
     public class InsuranceIdValidator : AbstractValidator<IInsuranceIdDTO>
     {
         private readonly IInsuranceRepository _insuranceRepository;
-        private readonly IOfficeResolver _officeResolver;
-        public InsuranceIdValidator(IInsuranceRepository insuranceRepository, IOfficeResolver officeResolver)
+        private readonly IQueryStringResolver _officeResolver;
+        public InsuranceIdValidator(IInsuranceRepository insuranceRepository, IQueryStringResolver officeResolver)
         {
             _officeResolver = officeResolver;
             _insuranceRepository = insuranceRepository;

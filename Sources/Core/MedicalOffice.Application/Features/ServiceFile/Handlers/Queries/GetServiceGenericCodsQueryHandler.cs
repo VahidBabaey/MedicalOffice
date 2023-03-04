@@ -14,19 +14,32 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries
 {
     public class GetServiceGenericCodsQueryHandler : IRequestHandler<GetServiceGenericCodsQuery, BaseResponse>
     {
-        private readonly IFetchData _fetchData;
+        private readonly IQueryStringResolver _officeResolver;
+        private readonly IApiConsumer _fetchData;
         private readonly string _requestTitle;
 
-        public GetServiceGenericCodsQueryHandler(IFetchData fetchData)
+        public GetServiceGenericCodsQueryHandler(IApiConsumer fetchData, IQueryStringResolver officeResolver)
         {
             _fetchData = fetchData;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
+            _officeResolver = officeResolver;
         }
         public async Task<BaseResponse> Handle(GetServiceGenericCodsQuery request, CancellationToken cancellationToken)
         {
+            var queryStrings = await _officeResolver.GetAllQueryStrings();
+
+            var input = new List<ExternalApiInput>();
+            foreach (var item in queryStrings)
+            {
+                input.Add(new ExternalApiInput
+                {
+                    Key = item.Key,
+                    Value = item.Value
+                });
+            }
             var result = new List<ServiceGenericCodeDTO>();
 
-            var response = await _fetchData.GetResponse("/Service/generic-code");
+            var response = await _fetchData.GetResponse("/Service/generic-code", input);
 
             if (!response.IsSuccessStatusCode)
             {

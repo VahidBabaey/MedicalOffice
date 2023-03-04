@@ -15,12 +15,12 @@ namespace MedicalOffice.Application.Dtos.ServiceDurationDTO.Validators
     {
         private readonly IMedicalStaffRepository _medicalStaffRepository;
         private readonly IServiceRepository _serviceRepository;
-        private readonly IOfficeResolver _officeResolver;
+        private readonly IQueryStringResolver _officeResolver;
         private static readonly int minDuration = 1;
         public AddServiceDurationValidator(
             IMedicalStaffRepository medicalStaffRepository,
             IServiceRepository serviceRepository,
-            IOfficeResolver officeResolver
+            IQueryStringResolver officeResolver
             )
         {
             _medicalStaffRepository = medicalStaffRepository;

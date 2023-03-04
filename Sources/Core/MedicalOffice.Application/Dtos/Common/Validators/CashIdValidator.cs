@@ -15,9 +15,9 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
     public class CashIdValidator : AbstractValidator<ICashIdDTO>
     {
         private readonly ICashRepository _cashRepository;
-        private readonly IOfficeResolver _officeResolver;
+        private readonly IQueryStringResolver _officeResolver;
 
-        public CashIdValidator(ICashRepository cashRepository, IOfficeResolver officeResolver)
+        public CashIdValidator(ICashRepository cashRepository, IQueryStringResolver officeResolver)
         {
             _officeResolver = officeResolver;
             _cashRepository = cashRepository;
