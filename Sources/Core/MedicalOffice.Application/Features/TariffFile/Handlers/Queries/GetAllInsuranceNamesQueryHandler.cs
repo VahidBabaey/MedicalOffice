@@ -6,7 +6,7 @@ using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.SpecializationDTO;
 using MedicalOffice.Application.Features.SpecializationFile.Requests.Queries;
 using MedicalOffice.Application.Features.TariffFile.Requests.Queries;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;

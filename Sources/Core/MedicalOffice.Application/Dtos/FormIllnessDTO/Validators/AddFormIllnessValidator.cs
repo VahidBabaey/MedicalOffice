@@ -13,8 +13,8 @@ namespace MedicalOffice.Application.Dtos.FormIllnessDTO.Validators
     public class AddFormIllnessValidator : AbstractValidator<AddFormIllnessDTO>
     {
         private readonly IPatientRepository _patientRepository;
-        private readonly IOfficeResolver _officeResolver;
-        public AddFormIllnessValidator(IPatientRepository patientRepository, IOfficeResolver officeResolver)
+        private readonly IQueryStringResolver _officeResolver;
+        public AddFormIllnessValidator(IPatientRepository patientRepository, IQueryStringResolver officeResolver)
         {
             _patientRepository = patientRepository;
             _officeResolver = officeResolver;

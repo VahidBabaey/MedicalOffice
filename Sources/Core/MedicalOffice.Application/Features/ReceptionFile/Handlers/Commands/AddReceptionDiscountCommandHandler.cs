@@ -7,7 +7,7 @@ using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using System;

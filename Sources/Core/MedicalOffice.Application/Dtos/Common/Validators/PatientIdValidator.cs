@@ -14,9 +14,9 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
     public class PatientIdValidator : AbstractValidator<IPatientIdDTO>
     {
         private readonly IPatientRepository _patientRepository;
-        private readonly IOfficeResolver _officeResolver;
+        private readonly IQueryStringResolver _officeResolver;
 
-        public PatientIdValidator(IPatientRepository patientRepository, IOfficeResolver officeResolver)
+        public PatientIdValidator(IPatientRepository patientRepository, IQueryStringResolver officeResolver)
         {
             _officeResolver = officeResolver;
             _patientRepository = patientRepository;

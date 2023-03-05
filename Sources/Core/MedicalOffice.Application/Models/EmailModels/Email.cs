@@ -1,4 +1,4 @@
-﻿namespace MedicalOffice.Application.Models;
+﻿namespace MedicalOffice.Application.Models.EmailSetting;
 
 public class Email
 {

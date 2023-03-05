@@ -15,8 +15,8 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
     {
         private readonly IInsuranceRepository _insuranceRepository;
         private readonly IServiceRepository _serviceRepository;
-        private readonly IOfficeResolver _officeResolver;
-        public AddTariffValidator(IOfficeResolver officeResolver, IServiceRepository serviceRepository, IInsuranceRepository insuranceRepository)
+        private readonly IQueryStringResolver _officeResolver;
+        public AddTariffValidator(IQueryStringResolver officeResolver, IServiceRepository serviceRepository, IInsuranceRepository insuranceRepository)
         {
             _officeResolver = officeResolver;
             _serviceRepository = serviceRepository;

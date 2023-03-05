@@ -7,8 +7,7 @@ using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Dtos.PictureDTO;
 using MedicalOffice.Application.Dtos.PictureDTO.Validator;
 using MedicalOffice.Application.Features.PictureFile.Requests.Commands;
-
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using System;

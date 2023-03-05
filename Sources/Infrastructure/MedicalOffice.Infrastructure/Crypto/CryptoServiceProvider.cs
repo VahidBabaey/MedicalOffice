@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.CryptoSetting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
