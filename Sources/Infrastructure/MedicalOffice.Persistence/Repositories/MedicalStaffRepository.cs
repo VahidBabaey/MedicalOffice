@@ -84,6 +84,8 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
                 RoleName = _dbContext.Roles.SingleOrDefault(x => x.Id == item.RoleId).Name,
                 RoleId = item.RoleId,
                 IsTechnicalAssistant = item.IsTechnicalAssistant,
+                IsReferrer = item.IsReferrer,
+                IsSpecialist = item.IsSpecialist,
             };
 
             medicalStaffListDTOs.Add(medicalStaffListDTO);

@@ -14,7 +14,6 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators
     public class AddMemberShipServiceValidator : AbstractValidator<MemberShipServiceDTO>
     {
         private readonly IMembershipRepository _memberRepository;
-        private readonly IOfficeResolver _officeResolver;
         private readonly IServiceRepository _serviceRepository;
         private readonly IQueryStringResolver _officeResolver;
         public AddMemberShipServiceValidator(IServiceRepository serviceRepository, IMembershipRepository memberRepository, IQueryStringResolver officeResolver)
