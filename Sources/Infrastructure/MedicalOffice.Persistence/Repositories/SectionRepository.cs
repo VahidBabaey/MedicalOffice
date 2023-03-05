@@ -29,7 +29,7 @@ public class SectionRepository : GenericRepository<Section, Guid>, ISectionRepos
     public async Task<List<SectionNamesListDTO>> GetSectionNames(Guid officeId)
     {
         List<SectionNamesListDTO> sectionNamesListDTOs = new List<SectionNamesListDTO>();
-        var sections = await _dbContext.Sections.Where(p => p.Status == true && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
+        var sections = await _dbContext.Sections.Where(p => p.isActive == true && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
         foreach (var item in sections)
         {
             SectionNamesListDTO sectionNamesListDTO = new()

@@ -1,14 +1,10 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.ServiceDTO;
 
 public class ServiceListDTO : BaseDto<Guid>
 {
-    /// <summary>
-    /// آیدی مطب
-    /// </summary>
-    public Guid OfficeId { get; set; }
-
     /// <summary>
     /// آیدی بخش
     /// </summary>
@@ -23,4 +19,19 @@ public class ServiceListDTO : BaseDto<Guid>
     /// کد ژنریک
     /// </summary>
     public string GenericCode { get; set; } = string.Empty;
+
+    /// <summary>
+    /// نحوه محاسبه
+    /// </summary>
+    public CalculationMethod CalculationMethod { get; set; }
+
+    /// <summary>
+    /// عملی هست یا نه
+    /// </summary>
+    public bool? IsPractical { get; set; }
+
+    /// <summary>
+    /// هزینه مواد مصرفی
+    /// </summary>
+    public bool? IsConsumingMaterials { get; set; }
 }

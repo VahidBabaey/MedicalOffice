@@ -55,7 +55,6 @@ public class MappingProfile : Profile
         CreateMap<Service, ServiceDTO>().ReverseMap();
         CreateMap<Service, UpdateServiceDTO>().ReverseMap();
         CreateMap<Service, ServiceListDTO>().ReverseMap();
-        CreateMap<Service, ServiceListNameDTO>().ReverseMap();
         CreateMap<Tariff, ServiceTariffDTO>().ReverseMap();
         CreateMap<Insurance, InsuranceDTO>().ReverseMap();
         CreateMap<Insurance, UpdateInsuranceDTO>().ReverseMap();

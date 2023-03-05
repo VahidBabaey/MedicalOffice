@@ -40,7 +40,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
 
             Include(new PhoneNumberValidator());
             Include(new NationalIdValidator());
-            //Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+            //Include(new ServiceIdValidator(_serviceRepository, _QueryStringResolver));
             Include(new MedicalStaffValidator(_medicalStaffRepository,_officeResolver));
 
             RuleFor(x => x.AppointmentType)

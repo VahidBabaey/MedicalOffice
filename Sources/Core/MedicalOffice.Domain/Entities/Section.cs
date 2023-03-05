@@ -12,10 +12,11 @@ public class Section : BaseDomainEntity<Guid>
     /// نام بخش
     /// </summary>
     public string Name { get; set; } = string.Empty;
+
     /// <summary>
     /// فعال یا غیرفعال
     /// </summary>
-    public bool Status { get; set; }
+    public bool isActive { get; set; }
     
     /// <summary>
     /// خدمات زیرمجموعه

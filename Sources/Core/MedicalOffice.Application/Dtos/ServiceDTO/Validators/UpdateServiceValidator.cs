@@ -16,8 +16,20 @@ public class UpdateServiceValidator : AbstractValidator<UpdateServiceDTO>
         _serviceRepository = serviceRepository;
         _officeResolver = officeResolver;
         _sectionRepository = sectionRepository;
-        RuleFor(x => x.Name).NotEmpty().Length(1, 200);
-        RuleFor(x => x.GenericCode).NotEmpty();
+        
+        var officeId = _officeResolver.GetOfficeId().Result;
+        
         Include(new SectionIdValidator(_sectionRepository, _officeResolver));
+        
+        RuleFor(x => x.Name).NotEmpty().Length(1, 200);
+        RuleFor(x => x.CalculationMethod).NotEmpty();
+        RuleFor(x => x.Id)
+            .NotEmpty()
+            .MustAsync(async (serviceId, token) =>
+            {
+                return await _serviceRepository.CheckExistServiceId(officeId, serviceId);
+
+            })
+            .WithMessage("{PropertyName} isn't exist");
     }
 }

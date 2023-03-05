@@ -41,29 +41,12 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
-
         public async Task<BaseResponse> Handle(AddServiceCommand request, CancellationToken cancellationToken)
         {
-
-            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-            if (!validationOfficeId)
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            if (!validationResult.IsValid)
             {
-                var error = "OfficeID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
-            var validationSectionId = await _sectionrepository.CheckExistSectionId(request.OfficeId, request.DTO.SectionId);
-
-            if (!validationSectionId)
-            {
-                var error = "SectionID isn't exist";
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
@@ -74,7 +57,6 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
             }
 
             var validationServiceName = await _servicerepository.CheckExistServiceName(request.OfficeId, request.DTO.Name);
-
             if (validationServiceName)
             {
                 var error = "Name Must be Unique";
@@ -87,47 +69,18 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            var service = _mapper.Map<Service>(request.DTO);
+            service.OfficeId = request.OfficeId;
 
-            if (!validationResult.IsValid)
+            service = await _servicerepository.Add(service);
+
+            await _logger.Log(new Log
             {
-                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-            else
-            {
-                try
-                {
-                    var service = _mapper.Map<Service>(request.DTO);
-                    service.OfficeId = request.OfficeId;
-
-                    service = await _servicerepository.Add(service);
-
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Success,
-                        Header = $"{_requestTitle} succeded",
-                        AdditionalData = service.Id
-                    });
-                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", service.Id);
-                }
-                catch (Exception error)
-                {
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} failed",
-                        AdditionalData = error.Message
-                    });
-                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
-                }
-            }
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = service.Id
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", service.Id);
         }
     }
 }

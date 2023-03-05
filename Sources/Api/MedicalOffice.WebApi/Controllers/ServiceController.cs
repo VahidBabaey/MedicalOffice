@@ -74,9 +74,9 @@ public class ServiceController : Controller
     }
 
     [HttpGet("get-generic-codes")]
-    public async Task<ActionResult<List<ServiceGenericCodeDTO>>> GetServiceGenericCodes([FromQuery] ListDto dto, string name)
+    public async Task<ActionResult<List<ServiceGenericCodeDTO>>> GetServiceGenericCodes([FromQuery] string name)
     {
-        var response = await _mediator.Send(new GetServiceGenericCodsQuery() { Dto = dto, Name = name});
+        var response = await _mediator.Send(new GetServiceGenericCodsQuery() { Name = name });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
