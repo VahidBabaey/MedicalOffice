@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 {
-
     public class GetAllTariffByServiceIDQueryHandler : IRequestHandler<GetAllTariffByServiceIDQuery, BaseResponse>
     {
         private readonly IServiceRepository _serviceRepository;
@@ -32,25 +31,8 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
-
         public async Task<BaseResponse> Handle(GetAllTariffByServiceIDQuery request, CancellationToken cancellationToken)
         {
-            Log log = new();
-
-            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-            if (!validationOfficeId)
-            {
-                var error = "OfficeID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
             var validationServiceId = await _serviceRepository.CheckExistServiceId(request.OfficeId, request.ServiceId);
 
             if (!validationServiceId)
@@ -67,16 +49,16 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 
             try
             {
-                var tariffsofService = await _tariffrepository.GetTariffsofService(request.OfficeId, request.ServiceId);
-                var tariffsofServicePagination = tariffsofService.Skip(request.Dto.Skip).Take(request.Dto.Take);
+                var tariffsOfService = await _tariffrepository.GetTariffsofService(request.OfficeId, request.ServiceId);
+                var tariffsofServicePagination = tariffsOfService.Skip(request.Dto.Skip).Take(request.Dto.Take);
 
                 await _logger.Log(new Log
                 {
                     Type = LogType.Success,
                     Header = $"{_requestTitle} succeded",
-                    AdditionalData = new { total = tariffsofService.Count(), result = tariffsofServicePagination }
+                    AdditionalData = new { total = tariffsOfService.Count(), result = tariffsofServicePagination }
                 });
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = tariffsofService.Count(), result = tariffsofServicePagination });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = tariffsOfService.Count(), result = tariffsofServicePagination });
             }
 
             catch (Exception error)

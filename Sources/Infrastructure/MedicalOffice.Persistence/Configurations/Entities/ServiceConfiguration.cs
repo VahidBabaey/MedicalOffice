@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using MedicalOffice.Persistence.Configurations.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -40,7 +41,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           SectionId= Guid.Parse("5da2506e-6393-4490-9242-be7b12ed407e"),
                           Name= "اسکالپشور",
                           GenericCode= "3535434364",
-                          HasTariff= true,
+                          CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
                           IsConsumingMaterials= true},
 
@@ -51,7 +52,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           SectionId= Guid.Parse("5da2506e-6393-4490-9242-be7b12ed407e"),
                           Name= "پیکرتراشی",
                           GenericCode= "345464646",
-                          HasTariff= true,
+                          CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
                           IsConsumingMaterials= true},
 
@@ -62,7 +63,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           SectionId= Guid.Parse("0280a157-2c58-40f9-9345-f3cf0918eaee"),
                           Name= "تزریق ژل",
                           GenericCode= "46564456",
-                          HasTariff= true,
+                          CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
                           IsConsumingMaterials= true},
 
@@ -73,7 +74,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           SectionId= Guid.Parse("0280a157-2c58-40f9-9345-f3cf0918eaee"),
                           Name= "هایفو",
                           GenericCode= "545646464",
-                          HasTariff= true,
+                          CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
                           IsConsumingMaterials= true},
 
@@ -84,7 +85,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           SectionId= Guid.Parse("50a389f9-e6ed-437e-a503-2aa96d0a4f94"),
                           Name= "لیزر مو",
                           GenericCode= "554564466464",
-                          HasTariff= true,
+                          CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
                           IsConsumingMaterials= true},
 
@@ -95,7 +96,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           SectionId= Guid.Parse("50a389f9-e6ed-437e-a503-2aa96d0a4f94"),
                           Name= "لیزر پوست",
                           GenericCode= "465415651",
-                          HasTariff= true,
+                          CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
                           IsConsumingMaterials= true},
                 });

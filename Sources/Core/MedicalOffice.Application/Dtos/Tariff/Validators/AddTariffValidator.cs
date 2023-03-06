@@ -22,8 +22,16 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
             _serviceRepository = serviceRepository;
             _insuranceRepository = insuranceRepository;
 
-            RuleFor(x => x.TariffValue).NotEmpty();
-            RuleFor(x => x.InternalTariffValue).NotEmpty();
+            RuleFor(x => x.Difference)
+                .Equal(x => Math.Abs(x.InternalTariffValue - x.TariffValue))
+                .When(x => x.InternalTariffValue != default || x.TariffValue != default)
+                .WithMessage("{PropertyName} should be the subtraction of internalTariffValue and TariffValue");
+            RuleFor(x => x.Discount)
+                .GreaterThanOrEqualTo(0)
+                .LessThanOrEqualTo(100);
+            RuleFor(x => x.InsurancePercent)
+                .GreaterThanOrEqualTo(0)
+                .LessThanOrEqualTo(100);
             Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
             Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
         }

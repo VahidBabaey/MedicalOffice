@@ -31,7 +31,6 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
             _mapper = mapper;
             _requestTitle = GetType().Name.Replace("QueryHandler","");
         }
-
         public async Task<BaseResponse> Handle(GetPermissionsQuery request, CancellationToken cancellationToken)
         {
             var permissions = _PermissionRepository.GetAll().Result.ToList();

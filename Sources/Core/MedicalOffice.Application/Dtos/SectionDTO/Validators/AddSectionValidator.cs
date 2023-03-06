@@ -10,6 +10,5 @@ public class AddSectionValidator : AbstractValidator<AddSectionDTO>
     public AddSectionValidator()
     {
         RuleFor(x => x.Name).NotEmpty().Length(1, 50);
-        RuleFor(x => x.IsActive).NotEmpty();
     }
 }

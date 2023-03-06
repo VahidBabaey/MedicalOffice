@@ -74,5 +74,7 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// متخصص
         /// </summary>
         public bool IsSpecialist { get; set; }
+
+        public DateTime CreatedDate { get; set; }
     }
 }

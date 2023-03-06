@@ -26,20 +26,25 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
     public async Task<List<TariffListDTO>> GetTariffsofService(Guid officeId, Guid serviceId)
     {
         List<TariffListDTO> tariffListDTOs = new();
-        var tariffs = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
+        var tariffs = await _dbContext.Tariffs.Include(x=>x.Insurance).Where(p => p.ServiceId == serviceId && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
         foreach (var item in tariffs)
         {
             TariffListDTO tariffListDTO = new();
             tariffListDTO.Id = item.Id;
             tariffListDTO.ServiceId = item.ServiceId;
+<<<<<<< HEAD
             tariffListDTO.InsuranceId = item.InsuranceId ?? default;
+=======
+            tariffListDTO.InsuranceId = item.InsuranceId;
+            tariffListDTO.InsuranceCode = item.Insurance.InsuranceCode;
+>>>>>>> 927ee59f6cb75b6d45c3e9d32e8d43c09f767975
             tariffListDTO.TariffValue = item.TariffValue;
             tariffListDTO.InternalTariffValue = item.InternalTariffValue;
             tariffListDTO.Difference = item.Difference;
             tariffListDTO.InsurancePercent = item.InsurancePercent;
             tariffListDTO.Discount = item.Discount;
-            tariffListDTO.AdjunctPrice = item.AdjunctPrice;
-            tariffListDTO.InsuranceName = _dbContext.Insurances.Select(p => new { p.Id, p.Name }).Where(p => p.Id == item.InsuranceId).FirstOrDefault().Name;
+            tariffListDTO.InsuranceName = item.Insurance.Name;
+
             tariffListDTOs.Add(tariffListDTO);
         }
         return tariffListDTOs;

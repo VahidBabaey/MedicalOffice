@@ -6,6 +6,7 @@ using MedicalOffice.Application.Models.ConsumableUrlsOutputs;
 using MedicalOffice.Application.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net;
 #nullable disable
@@ -14,19 +15,24 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries
 {
     public class GetServiceGenericCodsQueryHandler : IRequestHandler<GetServiceGenericCodsQuery, BaseResponse>
     {
-        private readonly IQueryStringResolver _officeResolver;
-        private readonly IApiConsumer _fetchData;
+        private readonly ApiConsumerSettings _apiConsumersetting;
+        private readonly IQueryStringResolver _QueryStringResolver;
+        private readonly IApiConsumer _apiConsumer;
         private readonly string _requestTitle;
 
-        public GetServiceGenericCodsQueryHandler(IApiConsumer fetchData, IQueryStringResolver officeResolver)
+        public GetServiceGenericCodsQueryHandler(
+            IApiConsumer apiConsumer, 
+            IQueryStringResolver officeResolver,
+            IOptions<ApiConsumerSettings> apiConsumersetting)
         {
-            _fetchData = fetchData;
+            _apiConsumersetting = apiConsumersetting.Value;
+            _apiConsumer = apiConsumer;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
-            _officeResolver = officeResolver;
+            _QueryStringResolver = officeResolver;
         }
         public async Task<BaseResponse> Handle(GetServiceGenericCodsQuery request, CancellationToken cancellationToken)
         {
-            var queryStrings = await _officeResolver.GetAllQueryStrings();
+            var queryStrings = await _QueryStringResolver.GetAllQueryStrings();
 
             var input = new List<ExternalApiInput>();
             foreach (var item in queryStrings)
@@ -39,7 +45,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries
             }
             var result = new List<ServiceGenericCodeDTO>();
 
-            var response = await _fetchData.GetResponse("/Service/generic-code", input);
+            var response = await _apiConsumer.GetResponse(_apiConsumersetting.ServiceGenericCodsPath, input);
 
             if (!response.IsSuccessStatusCode)
             {

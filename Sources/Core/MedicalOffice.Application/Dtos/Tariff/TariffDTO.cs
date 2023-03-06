@@ -10,33 +10,34 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// آیدی خدمت
     /// </summary>
     public Guid ServiceId { get; set; }
+
     /// <summary>
     /// آیدی بیمه
     /// </summary>
     public Guid? InsuranceId { get; set; }
+
     /// <summary>
     /// مبلغ تعرفه
     /// </summary>
-    public float TariffValue { get; set; }
+    public float TariffValue { get; set; }=default(float);
+
     /// <summary>
     /// تعرفه داخلی
     /// </summary>
-    public float InternalTariffValue { get; set; }
+    public float InternalTariffValue { get; set; } = default(float);
+
     /// <summary>
     /// ما به التفاوت
     /// </summary>
-    public float Difference { get; set; }
+    public float Difference { get; set; } = default(float);
+
     /// <summary>
     /// تخفیف
     /// </summary>
-    public float Discount { get; set; }
+    public int Discount { get; set; }
+
     /// <summary>
     /// درصد بیمه
     /// </summary>
-    public float InsurancePercent { get; set; }
-    /// <summary>
-    /// مبلغ اضافه به بیمه
-    /// </summary>
-    public float AdjunctPrice { get; set; }
-
+    public int InsurancePercent { get; set; }
 }

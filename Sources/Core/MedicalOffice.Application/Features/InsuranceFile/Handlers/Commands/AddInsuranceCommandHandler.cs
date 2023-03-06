@@ -39,8 +39,6 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(AddInsuranceCommand request, CancellationToken cancellationToken)
         {
-            
-
             var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
             if (!validationOfficeId)

@@ -41,23 +41,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(AddServiceTariffCommand request, CancellationToken cancellationToken)
         {
-
-            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-            if (!validationOfficeId)
-            {
-                var error = "OfficeID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
-
             if (!validationResult.IsValid)
             {
                 var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
@@ -69,35 +53,32 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
-            else
+
+            try
             {
-                try
-                {
-                    var tariff = _mapper.Map<Tariff>(request.DTO);
-                    tariff.OfficeId = request.OfficeId;
+                var tariff = _mapper.Map<Tariff>(request.DTO);
+                tariff.OfficeId = request.OfficeId;
 
-                    await _tariffrepository.Add(tariff);
+                await _tariffrepository.Add(tariff);
 
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Success,
-                        Header = $"{_requestTitle} succeded",
-                        AdditionalData = tariff.Id
-                    });
-                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", tariff.Id);
-                }
-                catch (Exception error)
+                await _logger.Log(new Log
                 {
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} failed",
-                        AdditionalData = error.Message
-                    });
-                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
-                }
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = tariff.Id
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", tariff.Id);
+            }
+            catch (Exception error)
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
     }
-
 }

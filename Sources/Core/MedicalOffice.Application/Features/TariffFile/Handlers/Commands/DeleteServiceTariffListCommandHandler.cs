@@ -27,21 +27,6 @@ public class DeleteServiceTariffListCommandHandler : IRequestHandler<DeleteTarif
 
     public async Task<BaseResponse> Handle(DeleteTariffListCommand request, CancellationToken cancellationToken)
     {
-        
-        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-        if (!validationOfficeId)
-        {
-            var error = "OfficeID isn't exist";
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = $"{_requestTitle} failed",
-                AdditionalData = error
-            });
-            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-        }
-
         foreach (var item in request.DTO.TariffId)
         {
             var validationSectionId = await _tariffrepository.CheckExistTariffId(request.OfficeId, item);

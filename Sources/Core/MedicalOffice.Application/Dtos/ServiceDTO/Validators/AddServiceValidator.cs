@@ -14,8 +14,10 @@ public class AddServiceValidator : AbstractValidator<ServiceDTO>
     {
         _officeResolver = officeResolver;
         _sectionRepository = sectionRepository;
-        RuleFor(x => x.Name).NotEmpty().Length(1, 200);
-        RuleFor(x => x.GenericCode).NotEmpty();
+
         Include(new SectionIdValidator(_sectionRepository, _officeResolver));
+        
+        RuleFor(x => x.Name).NotEmpty().Length(1, 200);
+        RuleFor(x => x.CalculationMethod).NotEmpty();
     }
 }

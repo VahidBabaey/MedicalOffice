@@ -1,11 +1,8 @@
 ﻿using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
-using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 #nullable disable
 
 namespace MedicalOffice.Persistence.Repositories;
@@ -35,19 +32,6 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         }
     }
 
-    public async Task DeleteUserOfficeRoleAsync(Guid MedicalStaffId)
-    {
-        var MedicalStaff = await _dbContext.UserOfficeRoles.Where(ur => ur.UserId == MedicalStaffId).ToListAsync();
-
-        if (MedicalStaff == null)
-            throw new Exception();
-
-        foreach (var item in MedicalStaff)
-        {
-            _dbContext.UserOfficeRoles.Remove(item);
-        }
-    }
-
     public async Task<List<MedicalStaffListDTO>> GetAllMedicalStaffs(Guid officeId)
     {
         List<MedicalStaffListDTO> medicalStaffListDTOs = new List<MedicalStaffListDTO>();
@@ -55,19 +39,6 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
         foreach (var item in _list)
         {
-            //var role= _dbContext.UserOfficeRoles.Where(p => p.UserId == item.UserId).Include(x => x.Role)
-            //    .SingleOrDefaultAsync(x => !(x.Role.PersianName.Contains("بیمار") || x.Role.PersianName.Contains("سوپر ادمین"))).Result.Role;
-
-            //Guid[] RoleIds = new Guid[_userOfficeRoleids.Count];
-            //int i = 0;
-            //foreach (var item2 in _userOfficeRoleids)
-            //{
-            //    RoleIds.SetValue(item2.RoleId, i);
-            //    i++;
-            //    roleName += _dbContext.Roles.Select(x => new { x.Id, x.PersianName }).Where(x => x.Id == item2.RoleId).FirstOrDefault().PersianName + "، ";
-            //};
-
-
             MedicalStaffListDTO medicalStaffListDTO = new()
             {
                 Id = item.Id,
@@ -87,7 +58,6 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
                 IsReferrer = item.IsReferrer,
                 IsSpecialist = item.IsSpecialist,
             };
-
             medicalStaffListDTOs.Add(medicalStaffListDTO);
         }
         return medicalStaffListDTOs;
@@ -118,6 +88,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
             foreach (var item in listmedi)
             {
+<<<<<<< HEAD
                 var medicalStaff = await _dbContext.MedicalStaffs.FirstOrDefaultAsync(x => x.UserId == item.UserId && x.OfficeId == officeId);
 
                 MedicalStaffNamesDTO medicalStaffNames = new()
@@ -152,6 +123,17 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
             throw;
         }
+=======
+                Id = medicalStaff.Id,
+                FirstName = medicalStaff.FirstName,
+                LastName = medicalStaff.LastName,
+                RoleId = item.Role.Id,
+                RoleName = item.Role.Name,
+            };
+            medicalStaffNamesDTO.Add(medicalStaffNames);
+        }
+        return Task.FromResult(medicalStaffNamesDTO);
+>>>>>>> 927ee59f6cb75b6d45c3e9d32e8d43c09f767975
     }
 
     public async Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber)
@@ -179,8 +161,15 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
     public async Task<List<MedicalStaff>> GetAllDoctorsAndExperts(Guid officeId)
     {
         var validRoles = new[] { ExpertRole.Id, DoctorRole.Id };
-        var staffs = await _dbContext.MedicalStaffs.Where(x => x.OfficeId == officeId && x.User.UserOfficeRoles.Any(u => validRoles.Contains(u.RoleId))).ToListAsync();
+        var staffs = await _dbContext.MedicalStaffs.Where(x => x.OfficeId == officeId && validRoles.Contains(x.RoleId)).ToListAsync();
 
         return staffs;
+    }
+
+    public async Task<MedicalStaff> GetExistingStaffById(Guid id, Guid officeId)
+    {
+        var medicalStaff = await _dbContext.MedicalStaffs.Include(x => x.User).Where(x => x.Id == id && x.OfficeId == officeId).FirstOrDefaultAsync();
+
+        return medicalStaff;
     }
 }

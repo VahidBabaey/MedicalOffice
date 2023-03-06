@@ -9,14 +9,9 @@ namespace MedicalOffice.Domain.Entities;
 public class Service : BaseDomainEntity<Guid>
 {
     /// <summary>
-    /// اتاق خدمت
-    /// </summary>
-    public ICollection<ServiceRoom> ServiceRooms { get; set; }
-
-    /// <summary>
     /// مطب
     /// </summary>
-    public Office? Office { get; set; }
+    public Office Office { get; set; }
 
     /// <summary>
     /// آیدی مطب
@@ -29,34 +24,14 @@ public class Service : BaseDomainEntity<Guid>
     public ICollection<Tariff>? Tariffs { get; set; }
 
     /// <summary>
-    /// آیدی تعرفه
-    /// </summary>
-    public Guid? TariffId { get; set; }
-
-    /// <summary>
-    /// بیمه
-    /// </summary>
-    public Insurance? Insurance { get; set; }
-
-    /// <summary>
-    /// آیدی بیمه
-    /// </summary>
-    public Guid? InsuranceId { get; set; }
-
-    /// <summary>
     /// بخش
     /// </summary>
-    public Section? Section { get; set; }
-
-    /// <summary>
-    /// نوع خدمت
-    /// </summary>
-    public ServiceType? ServiceType { get; set; }
-
+    public Section Section { get; set; }
+    
     /// <summary>
     /// آیدی بخش
     /// </summary>
-    public Guid? SectionId { get; set; }
+    public Guid SectionId { get; set; }
 
     /// <summary>
     /// نام خدمت
@@ -69,10 +44,10 @@ public class Service : BaseDomainEntity<Guid>
     public string GenericCode { get; set; } = string.Empty;
 
     /// <summary>
-    /// تعرفه توسط کاربر تعیین گردد یا خیر
+    /// نحوه محاسبه قیمت
     /// </summary>
-    public bool HasTariff { get; set; }
-
+    public CalculationMethod CalculationMethod { get; set; }
+    
     /// <summary>
     /// عملی هست یا نه
     /// </summary>
@@ -103,4 +78,8 @@ public class Service : BaseDomainEntity<Guid>
     /// </summary>
     public ICollection<MemberShipService>? MemberShipServices { get; set; }
 
+    /// <summary>
+    /// اتاق خدمت
+    /// </summary>
+    public ICollection<ServiceRoom> ServiceRooms { get; set; }
 }

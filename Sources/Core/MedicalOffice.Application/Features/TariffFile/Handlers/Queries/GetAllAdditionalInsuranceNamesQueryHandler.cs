@@ -32,24 +32,8 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
-
         public async Task<BaseResponse> Handle(GetAllAdditionalInsuranceNamesQuery request, CancellationToken cancellationToken)
         {
-
-            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-            if (!validationOfficeId)
-            {
-                var error = "OfficeID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
             try
             {
                 var insuranceNames = await _insurancerepository.GetAllAdditionalInsuranceNames(request.OfficeId);

@@ -9,18 +9,18 @@ public class UpdateReceptionDetailValidator : AbstractValidator<UpdateReceptionD
 {
     private readonly IReceptionRepository _receptionRepository;
     private readonly IInsuranceRepository _insuranceRepository;
-    private readonly IQueryStringResolver _officeResolver;
+    private readonly IQueryStringResolver _QueryStringResolver;
     private readonly IServiceRepository _serviceRepository;
-    public UpdateReceptionDetailValidator(IReceptionRepository receptionRepository, IServiceRepository serviceRepository, IQueryStringResolver officeResolver, IInsuranceRepository insuranceRepository)
+    public UpdateReceptionDetailValidator(IReceptionRepository receptionRepository, IServiceRepository serviceRepository, IQueryStringResolver QueryStringResolver, IInsuranceRepository insuranceRepository)
     {
         _receptionRepository = receptionRepository;
         _serviceRepository = serviceRepository;
-        _officeResolver = officeResolver;
+        _QueryStringResolver = QueryStringResolver;
         _insuranceRepository = insuranceRepository;
 
         RuleFor(x => x.ServiceCount).NotEmpty();
-        Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
-        Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
-        //Include(new ReceptionIdValidator(_receptionRepository, _officeResolver));
+        Include(new InsuranceIdValidator(_insuranceRepository, _QueryStringResolver));
+        Include(new ServiceIdValidator(_serviceRepository, _QueryStringResolver));
+        //Include(new ReceptionIdValidator(_receptionRepository, _QueryStringResolver));
     }
 }

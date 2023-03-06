@@ -17,39 +17,20 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 {
-
     public class GetAllInsuranceNamesQueryHandler : IRequestHandler<GetAllInsuranceNamesQuery, BaseResponse>
     {
-        private readonly IOfficeRepository _officeRepository;
         private readonly IInsuranceRepository _insurancerepository;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllInsuranceNamesQueryHandler(IOfficeRepository officeRepository, IInsuranceRepository insurancerepository, ILogger logger)
+        public GetAllInsuranceNamesQueryHandler(IInsuranceRepository insurancerepository, ILogger logger)
         {
-            _officeRepository = officeRepository;
             _insurancerepository = insurancerepository;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
-
         public async Task<BaseResponse> Handle(GetAllInsuranceNamesQuery request, CancellationToken cancellationToken)
         {
-
-            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-            if (!validationOfficeId)
-            {
-                var error = "OfficeID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
             try
             {
                 var insuranceNames = await _insurancerepository.GetInsuranceNames(request.OfficeId);

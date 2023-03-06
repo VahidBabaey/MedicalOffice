@@ -68,7 +68,7 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
 
     public async Task<List<Service>> GetAllByOfficeId(Guid officeId)
     {
-        var services = await _dbContext.Services.Where(x => x.OfficeId == officeId && x.IsDeleted == false).ToListAsync();
+        var services = await _dbContext.Services.Where(x => x.OfficeId == officeId && x.IsDeleted == false && x.Section.isActive == true).ToListAsync();
 
         return services;
     }
