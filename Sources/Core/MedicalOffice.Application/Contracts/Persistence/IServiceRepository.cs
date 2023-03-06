@@ -15,6 +15,9 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<List<Service>> GetServiceBySearch(string name, Guid sectionId, Guid officeId);
 
         Task<List<Service>> GetAllByOfficeId(Guid officeId);
+
         Task<bool> CheckExistServiceName(Guid officeId, string serviceName);
+
+        Task<bool> IsNameExistInOtherServices(string name, Guid id, Guid officeId);
     }
 }
