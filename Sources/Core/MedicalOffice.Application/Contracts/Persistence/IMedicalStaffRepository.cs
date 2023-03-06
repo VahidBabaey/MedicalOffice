@@ -5,8 +5,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IMedicalStaffRepository : IGenericRepository<MedicalStaff, Guid>
     {
-        Task DeleteUserOfficeRoleAsync(Guid UserId);
-
         Task<List<MedicalStaffListDTO>> GetAllMedicalStaffs(Guid officeID);
 
         Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber);
@@ -20,7 +18,11 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> CheckMedicalStaffExist(Guid MedicalStaffId, Guid officeId);
 
         Task<List<MedicalStaff>> GetMedicalStaffBySearch(string name, Guid officeId);
+
         Task<List<MedicalStaff>> GetAllDoctorsAndExperts(Guid officeId);
+
         Task<bool> CheckMedicalStaffReferrerExist(Guid? MedicalStaffId, Guid officeId);
+
+        Task<MedicalStaff> GetExistingStaffById(Guid id, Guid officeId);
     }
 }

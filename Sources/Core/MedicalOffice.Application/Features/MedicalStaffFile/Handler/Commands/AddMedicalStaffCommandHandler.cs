@@ -75,7 +75,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            //Check staff is exist`
+            //Check staff is exist
             var isMedicalStaffExist = await _medicalStaffrepository.CheckExistByOfficeIdAndPhoneNumber(
                 request.OfficeId, request.DTO.PhoneNumber);
 

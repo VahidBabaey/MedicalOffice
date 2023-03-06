@@ -35,19 +35,6 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         }
     }
 
-    public async Task DeleteUserOfficeRoleAsync(Guid MedicalStaffId)
-    {
-        var MedicalStaff = await _dbContext.UserOfficeRoles.Where(ur => ur.UserId == MedicalStaffId).ToListAsync();
-
-        if (MedicalStaff == null)
-            throw new Exception();
-
-        foreach (var item in MedicalStaff)
-        {
-            _dbContext.UserOfficeRoles.Remove(item);
-        }
-    }
-
     public async Task<List<MedicalStaffListDTO>> GetAllMedicalStaffs(Guid officeId)
     {
         List<MedicalStaffListDTO> medicalStaffListDTOs = new List<MedicalStaffListDTO>();
@@ -172,5 +159,12 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         var staffs = await _dbContext.MedicalStaffs.Where(x => x.OfficeId == officeId && x.User.UserOfficeRoles.Any(u => validRoles.Contains(u.RoleId))).ToListAsync();
 
         return staffs;
+    }
+
+    public async Task<MedicalStaff> GetExistingStaffById(Guid id, Guid officeId)
+    {
+        var medicalStaff = await _dbContext.MedicalStaffs.Include(x => x.User).Where(x => x.Id == id && x.OfficeId == officeId).FirstOrDefaultAsync();
+
+        return medicalStaff;
     }
 }
