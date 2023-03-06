@@ -30,7 +30,7 @@ public class Tariff : BaseDomainEntity<Guid>
     /// <summary>
     /// آیدی بیمه
     /// </summary>
-    public Guid InsuranceId { get; set; }
+    public Guid? InsuranceId { get; set; }
     /// <summary>
     /// مبلغ تعرفه
     /// </summary>

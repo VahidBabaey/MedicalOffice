@@ -21,7 +21,7 @@ public class MembershipController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] MembershipDTO dto, [FromQuery] string officeId)
     {

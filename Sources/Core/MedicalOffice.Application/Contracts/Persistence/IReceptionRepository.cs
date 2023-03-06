@@ -41,5 +41,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
     int GetServiceCountsOfPatient(Guid receptionId);
     Task<List<ReceptionDetailListForReceptionDTO>> GetReceptionDetailListForReception(Guid patientId, Guid receptionId);
     Task<ReceptionDetail> AddReceptionService(Guid medicalStaffId, Guid shiftId, Guid officeId, ReceptionType receptionType, Guid patientid, Guid? receptionId, Guid serviceId, int serviceCount, Guid? insuranceId, Guid additionalInsuranceId, Guid discountTypeId, Guid[] MedicalStaffs);
-    Task UpdateReceptionService(Guid receptionDetailId, Guid medicalStaffId, Guid shiftId, Guid officeId, ReceptionType receptionType, Guid patientid, Guid? receptionId, Guid serviceId, int serviceCount, Guid? insuranceId, Guid additionalInsuranceId, Guid discountTypeId, Guid[] MedicalStaffs);
+    Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid medicalStaffId, Guid shiftId, Guid officeId, ReceptionType receptionType, Guid patientid, Guid? receptionId, Guid serviceId, int serviceCount, Guid? insuranceId, Guid additionalInsuranceId, Guid discountTypeId, Guid[] MedicalStaffs);
+    Task<bool> CheckExistReceptionDetailId(Guid officeId, Guid receptiondetailId);
+    Task UpdatereceptionDescription(Guid receptionid, string description);
 }

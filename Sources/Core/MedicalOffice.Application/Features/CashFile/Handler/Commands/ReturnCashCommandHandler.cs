@@ -13,29 +13,27 @@ using System.Net;
 
 namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
-public class AddCashCommandHandler : IRequestHandler<AddCashCommand, BaseResponse>
+public class ReturnCashCommandHandler : IRequestHandler<ReturnCashCommand, BaseResponse>
 {
-    private readonly IValidator<CashesDTO> _validator;
     private readonly ICashRepository _cashrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddCashCommandHandler(IValidator<CashesDTO> validator, ICashRepository cashrepository, ILogger logger)
+    public ReturnCashCommandHandler(ICashRepository cashrepository, ILogger logger)
     {
-        _validator = validator;
         _cashrepository = cashrepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseResponse> Handle(AddCashCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(ReturnCashCommand request, CancellationToken cancellationToken)
     {
 
-        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+        var validationCashId = await _cashrepository.CheckExistCashId(request.OfficeId, request.CashId);
 
-        if (!validationResult.IsValid)
+        if (!validationCashId)
         {
-            var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+            var error = "ID isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
@@ -48,7 +46,7 @@ public class AddCashCommandHandler : IRequestHandler<AddCashCommand, BaseRespons
         {
             try
             {
-                var cash = await _cashrepository.AddCashForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Recieved);
+                var cash = await _cashrepository.ReturnCash(request.OfficeId, request.CashId);
 
                 await _logger.Log(new Log
                 {

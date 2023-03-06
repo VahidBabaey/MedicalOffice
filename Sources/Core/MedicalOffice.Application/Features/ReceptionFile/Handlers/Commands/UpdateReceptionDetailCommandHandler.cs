@@ -14,6 +14,7 @@ using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
@@ -21,17 +22,17 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
 public class UpdateReceptionDetailCommandHandler : IRequestHandler<UpdateReceptionDetailCommand, BaseResponse>
 {
     private readonly IValidator<UpdateReceptionDetailDTO> _validator;
-    private readonly IReceptionRepository _repository;
+    private readonly IReceptionRepository _receptionrepository;
     private readonly ICashRepository _repositoryCash;
     private readonly IReceptionDebtRepository _repositoryDebt;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public UpdateReceptionDetailCommandHandler(IValidator<UpdateReceptionDetailDTO> validator, IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository repository, IMapper mapper, ILogger logger)
+    public UpdateReceptionDetailCommandHandler(IValidator<UpdateReceptionDetailDTO> validator, IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository receptionrepository, IMapper mapper, ILogger logger)
     {
         _validator = validator;
-        _repository = repository;
+        _receptionrepository = receptionrepository;
         _mapper = mapper;
         _logger = logger;
         _repositoryCash = repositoryCash;
@@ -41,56 +42,58 @@ public class UpdateReceptionDetailCommandHandler : IRequestHandler<UpdateRecepti
 
     public async Task<BaseResponse> Handle(UpdateReceptionDetailCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
-        Log log = new();
+        var validationReceptionDetailId = await _receptionrepository.CheckExistReceptionDetailId(request.OfficeId, request.ReceptiodDetailId);
+
+        if (!validationReceptionDetailId)
+        {
+            var error = "ID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
 
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-            log.Type = LogType.Error;
+            var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
         else
         {
             try
             {
-                await _repository.UpdateReceptionService(request.ReceptiodDetailId, request.DTO.MedicalStaffId, request.DTO.ShiftId, request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
+                var reception = await _receptionrepository.UpdateReceptionService(request.ReceptiodDetailId, request.DTO.MedicalStaffId, request.DTO.ShiftId, request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
 
-                //await _repositoryCash.AddCashForAnyReceptionDetail(receptionDetail.OfficeId, receptionDetail.ReceptionId, receptionDetail.Cost);
-
-                //if (receptionDetail.Debt > 0)
-                //{
-
-                //    //await _repositoryDebt.AddReceptionDebt(receptionDetail.ReceptionId, receptionDetail.Id, receptionDetail.OfficeId, receptionDetail.Debt);
-
-                //}
-
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                //response.Data = (new { Id = receptionDetail });
-
-                log.Type = LogType.Success;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = reception
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", reception);
             }
             catch (Exception error)
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
     }
 }

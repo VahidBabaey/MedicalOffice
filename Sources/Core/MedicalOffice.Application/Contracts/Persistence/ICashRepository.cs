@@ -10,5 +10,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> CheckExistReceptionId(Guid officeId, Guid receptionId);
         Task<decimal> GetCashDifferenceWithRecieved(Guid receptionId);
         Task<List<CashListDTO>> GetPatientCashes(Guid receptionId);
+        Task<Guid> ReturnCash(Guid officeId, Guid cashId);
     }
 }

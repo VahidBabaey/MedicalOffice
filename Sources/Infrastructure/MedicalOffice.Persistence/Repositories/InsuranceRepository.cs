@@ -18,9 +18,20 @@ namespace MedicalOffice.Persistence.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<IReadOnlyList<Insurance>> GetAllAdditionalInsuranceNames(Guid officeId)
+        public async Task<List<InsuranceNamesDTO>> GetAllAdditionalInsuranceNames(Guid officeId)
         {
-            return await _dbContext.Insurances.Where(p => p.IsAdditionalInsurance == true && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
+            List<InsuranceNamesDTO> insuranceNamesListDTOs = new List<InsuranceNamesDTO>();
+            var insurances = await _dbContext.Insurances.Where(p => p.IsAdditionalInsurance == true && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
+            foreach (var item in insurances)
+            {
+                InsuranceNamesDTO insuranceNamesListDTO = new()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                };
+                insuranceNamesListDTOs.Add(insuranceNamesListDTO);
+            }
+            return insuranceNamesListDTOs;
         }
         public async Task<bool> CheckExistInsuranceId(Guid officeId, Guid? insuranceId)
         {

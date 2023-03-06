@@ -61,8 +61,13 @@ public class Reception : BaseDomainEntity<Guid>
     /// </summary>
     public int FactorNoToday { get; set; }
     /// <summary>
+    /// توضیحات
+    /// </summary>
+    public string? Description { get; set; } = string.Empty;
+    /// <summary>
     /// جزئیات پذیرش
     /// </summary>
+    /// 
     public ICollection<ReceptionDetail> ReceptionDetails { get; set; } = new List<ReceptionDetail>();
     /// <summary>
     /// پرداخت

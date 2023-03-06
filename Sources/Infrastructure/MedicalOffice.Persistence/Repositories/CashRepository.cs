@@ -32,7 +32,8 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         {
             OfficeId = OfficeId,
             ReceptionId = receptionId,
-            Recieved = recieved
+            Recieved = recieved,  
+            IsReturned = false
         };
         await _cashRepository.Add(cash);
 
@@ -44,9 +45,9 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
                 if (recieved > item.Debt)
                 {
                     item.Received += item.Debt;
+                    recieved = recieved - item.Debt;
                     item.Debt = 0;
                     await _receptionReceptionDetail.Update(item);
-                    recieved = recieved - item.Debt;
                 }
                 else if (recieved < item.Debt)
                 {
@@ -185,5 +186,13 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
     {
         bool isExist = await _dbContext.Cashes.AnyAsync(p => p.OfficeId == officeId && p.Id == cashId);
         return isExist;
+    }
+    public async Task<Guid> ReturnCash(Guid officeId, Guid cashId)
+    {
+        var cash = await _dbContext.Cashes.Where(p => p.OfficeId == officeId && p.Id == cashId).FirstOrDefaultAsync();
+        cash.IsReturned = true;
+        await _cashRepository.Update(cash);
+
+        return cash.Id;
     }
 }

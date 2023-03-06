@@ -32,7 +32,7 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
             TariffListDTO tariffListDTO = new();
             tariffListDTO.Id = item.Id;
             tariffListDTO.ServiceId = item.ServiceId;
-            tariffListDTO.InsuranceId = item.InsuranceId;
+            tariffListDTO.InsuranceId = item.InsuranceId ?? default;
             tariffListDTO.TariffValue = item.TariffValue;
             tariffListDTO.InternalTariffValue = item.InternalTariffValue;
             tariffListDTO.Difference = item.Difference;

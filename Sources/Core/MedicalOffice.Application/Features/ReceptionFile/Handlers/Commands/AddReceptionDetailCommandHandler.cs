@@ -22,17 +22,17 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
 public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDetailCommand, BaseResponse>
 {
     private readonly IValidator<ReceptionDetailDTO> _validator;
-    private readonly IReceptionRepository _repository;
+    private readonly IReceptionRepository _receptionrepository;
     private readonly ICashRepository _repositoryCash;
     private readonly IReceptionDebtRepository _repositoryDebt;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddReceptionDetailCommandHandler(IValidator<ReceptionDetailDTO> validator, IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository repository, IMapper mapper, ILogger logger)
+    public AddReceptionDetailCommandHandler(IValidator<ReceptionDetailDTO> validator, IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository receptionrepository, IMapper mapper, ILogger logger)
     {
         _validator = validator;
-        _repository = repository;
+        _receptionrepository = receptionrepository;
         _mapper = mapper;
         _logger = logger;
         _repositoryCash = repositoryCash;
@@ -42,58 +42,45 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
 
     public async Task<BaseResponse> Handle(AddReceptionDetailCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
-
-        Log log = new();
 
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-            log.Type = LogType.Error;
+            var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
         else
         {
             try
             {
-                var receptionDetail = await _repository.AddReceptionService(request.DTO.MedicalStaffId, request.DTO.ShiftId, request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
+                var receptionDetail = await _receptionrepository.AddReceptionService(request.DTO.MedicalStaffId, request.DTO.ShiftId, request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
+                await _receptionrepository.UpdatereceptionDescription((Guid)request.DTO.ReceptionId, request.Description);
 
-                //await _repositoryCash.AddCashForAnyReceptionDetail(receptionDetail.OfficeId, receptionDetail.ReceptionId, receptionDetail.Cost);
-
-                if (receptionDetail.Debt > 0)
+                await _logger.Log(new Log
                 {
-
-                    //await _repositoryDebt.AddReceptionDebt(receptionDetail.ReceptionId, receptionDetail.Id, receptionDetail.OfficeId, receptionDetail.Debt);
-
-                }
-
-                response.Success = true;
-                response.StatusCode = HttpStatusCode.OK;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = receptionDetail });
-
-                log.Type = LogType.Success;
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = receptionDetail.Id
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", receptionDetail.Id);
             }
             catch (Exception error)
             {
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
     }
 }

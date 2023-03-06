@@ -29,6 +29,10 @@ public class Cash : BaseDomainEntity<Guid>
     /// </summary>
     public long Recieved { get; set; }
     /// <summary>
+    /// برگشتی
+    /// </summary>
+    public bool IsReturned { get; set; }
+    /// <summary>
     /// جزئیات پرداخت
     /// </summary>
     public ICollection<CashPos> CashPoses { get; set; } = new List<CashPos>();

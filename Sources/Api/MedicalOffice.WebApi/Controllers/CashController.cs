@@ -113,7 +113,13 @@ public class CashController : Controller
 
         return Ok(response);
     }
+    [HttpPost("returncash")]
+    public async Task<ActionResult<Guid>> ReturnCash([FromQuery] string officeId, [FromQuery] string cashId)
+    {
+        var response = await _mediator.Send(new ReturnCashCommand() { OfficeId = Guid.Parse(officeId), CashId = Guid.Parse(cashId) });
 
+        return Ok(response);
+    }
     [HttpPost("CashDebt")]
     public async Task<ActionResult<Guid>> CreateCashDebt([FromBody] CashesDTO dto, [FromQuery] string officeId)
     {
