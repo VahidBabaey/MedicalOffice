@@ -16,11 +16,31 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
         private readonly IInsuranceRepository _insuranceRepository;
         private readonly IServiceRepository _serviceRepository;
         private readonly IQueryStringResolver _officeResolver;
-        public AddTariffValidator(IQueryStringResolver officeResolver, IServiceRepository serviceRepository, IInsuranceRepository insuranceRepository)
+        private readonly IServiceTariffRepository _serviceTariffRepository;
+
+        public AddTariffValidator(IQueryStringResolver officeResolver, IServiceRepository serviceRepository, IInsuranceRepository insuranceRepository, IServiceTariffRepository serviceTariffRepository)
         {
             _officeResolver = officeResolver;
             _serviceRepository = serviceRepository;
             _insuranceRepository = insuranceRepository;
+            _serviceTariffRepository = serviceTariffRepository;
+
+            var officeId = _officeResolver.GetOfficeId().Result;
+
+            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+            Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
+
+            RuleFor(x => x)
+                .MustAsync(async (x, token) =>
+                {
+                    if (x.InsuranceId != null)
+                    {
+                        return await _serviceTariffRepository.IsUniqInsuranceTariff(x.InsuranceId, x.ServiceId, officeId);
+
+                    }
+                    return true;
+                })
+                .WithMessage("There is already a tariff with this insuranceId");
 
             RuleFor(x => x.InternalTariffValue)
                 .NotEmpty();
@@ -35,9 +55,6 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
             RuleFor(x => x.InsurancePercent)
                 .GreaterThanOrEqualTo(0)
                 .LessThanOrEqualTo(100);
-
-            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
-            Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
         }
     }
 }

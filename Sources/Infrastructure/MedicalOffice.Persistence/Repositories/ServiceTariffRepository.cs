@@ -26,7 +26,7 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
     public async Task<List<TariffListDTO>> GetTariffsofService(Guid officeId, Guid serviceId)
     {
         List<TariffListDTO> tariffListDTOs = new();
-        var tariffs = await _dbContext.Tariffs.Include(x=>x.Insurance).Where(p => p.ServiceId == serviceId && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
+        var tariffs = await _dbContext.Tariffs.Include(x => x.Insurance).Where(p => p.ServiceId == serviceId && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
         foreach (var item in tariffs)
         {
             TariffListDTO tariffListDTO = new();
@@ -49,6 +49,13 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
     {
         bool isExist = await _dbContext.Tariffs.AnyAsync(p => p.Id == tariffId && p.OfficeId == officeId);
         return isExist;
+    }
+
+    public async Task<bool> IsUniqInsuranceTariff(Guid? insuranceId, Guid serviceId, Guid officeId)
+    {
+        var isUniqe = await _dbContext.Tariffs.AnyAsync(x => x.InsuranceId == insuranceId && x.ServiceId == serviceId && x.OfficeId == officeId);
+
+        return !isUniqe;
     }
 }
 
