@@ -19,17 +19,17 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// <summary>
     /// مبلغ تعرفه
     /// </summary>
-    public float TariffValue { get; set; }=default(float);
+    public float TariffValue { get; set; }
 
     /// <summary>
     /// تعرفه داخلی
     /// </summary>
-    public float InternalTariffValue { get; set; } = default(float);
+    public float InternalTariffValue { get; set; }
 
     /// <summary>
     /// ما به التفاوت
     /// </summary>
-    public float Difference { get; set; } = default(float);
+    public float? Difference { get; set; }
 
     /// <summary>
     /// تخفیف

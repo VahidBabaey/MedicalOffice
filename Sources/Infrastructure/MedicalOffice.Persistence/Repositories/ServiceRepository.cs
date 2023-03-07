@@ -77,4 +77,11 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
         bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Name == serviceName);
         return isExist;
     }
+
+    public async Task<bool> IsNameExistInOtherServices(string name, Guid id, Guid officeId)
+    {
+        var isExist = await _dbContext.Services.AnyAsync(x => x.Name == name && x.Id != id && x.OfficeId == officeId);
+
+        return isExist;
+    }
 }

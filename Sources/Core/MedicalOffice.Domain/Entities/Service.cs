@@ -27,7 +27,7 @@ public class Service : BaseDomainEntity<Guid>
     /// بخش
     /// </summary>
     public Section Section { get; set; }
-    
+
     /// <summary>
     /// آیدی بخش
     /// </summary>
@@ -47,16 +47,21 @@ public class Service : BaseDomainEntity<Guid>
     /// نحوه محاسبه قیمت
     /// </summary>
     public CalculationMethod CalculationMethod { get; set; }
-    
+
     /// <summary>
     /// عملی هست یا نه
     /// </summary>
-    public bool IsPractical { get; set; }
+    public bool IsPractical { get; set; } = false;
+
+    /// <summary>
+    /// تعیین تعرفه در زمان پذیرش
+    /// </summary>
+    public bool TariffInReceptionTime { get; set; } = false;
 
     /// <summary>
     /// هزینه مواد مصرفی
     /// </summary>
-    public bool IsConsumingMaterials { get; set; }
+    public bool IsConsumingMaterials { get; set; } = false;
 
     /// <summary>
     /// سهم و درصد کاربران

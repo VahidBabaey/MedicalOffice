@@ -29,10 +29,15 @@ public class ServiceDTO : ISectionIdDTO
     /// <summary>
     /// عملی هست یا نه
     /// </summary>
-    public bool IsPractical { get; set; }
+    public bool? IsPractical { get; set; } = false;
+
+    /// <summary>
+    /// تعیین تعرفه در زمان پذیرش
+    /// </summary>
+    public bool? TariffInReceptionTime { get; set; } = false;
 
     /// <summary>
     /// هزینه مواد مصرفی
     /// </summary>
-    public bool IsConsumingMaterials { get; set; }
+    public bool? IsConsumingMaterials { get; set; } = false;
 }

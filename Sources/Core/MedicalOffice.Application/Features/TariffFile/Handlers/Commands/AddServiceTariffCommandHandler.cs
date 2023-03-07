@@ -19,7 +19,6 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 {
-
     public class AddServiceTariffCommandHandler : IRequestHandler<AddServiceTariffCommand, BaseResponse>
     {
         private readonly IOfficeRepository _officeRepository;
@@ -28,7 +27,6 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
-
         public AddServiceTariffCommandHandler(IOfficeRepository officeRepository, IValidator<TariffDTO> validator, IServiceTariffRepository tariffrepository, IMapper mapper, ILogger logger)
         {
             _officeRepository = officeRepository;
@@ -54,31 +52,18 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            try
-            {
-                var tariff = _mapper.Map<Tariff>(request.DTO);
-                tariff.OfficeId = request.OfficeId;
+            var tariff = _mapper.Map<Tariff>(request.DTO);
+            tariff.OfficeId = request.OfficeId;
 
-                await _tariffrepository.Add(tariff);
+            await _tariffrepository.Add(tariff);
 
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Success,
-                    Header = $"{_requestTitle} succeded",
-                    AdditionalData = tariff.Id
-                });
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", tariff.Id);
-            }
-            catch (Exception error)
+            await _logger.Log(new Log
             {
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error.Message
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
-            }
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = tariff.Id
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", tariff.Id);
         }
     }
 }
