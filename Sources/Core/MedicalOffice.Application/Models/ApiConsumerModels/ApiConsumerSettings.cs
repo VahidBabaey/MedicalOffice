@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Collections;
 
-namespace MedicalOffice.Application.Models.ConsumableUrlsOutputs
+namespace MedicalOffice.Application.Models.ApiConsumerModels
 {
     public class ApiConsumerSettings
     {
@@ -10,5 +10,7 @@ namespace MedicalOffice.Application.Models.ConsumableUrlsOutputs
         public string ServiceGenericCodsPath { get; set; }
 
         public string AllServicesPath { get; set; }
+
+        public string ServiceTariffsPath { get; set; }
     }
 }

@@ -9,9 +9,9 @@ public enum ServiceType
     /// ویزیت
     /// </summary>
     visit = 1,
-    
+
     /// <summary>
-    ///  خدمات پزشکان
+    ///  خدمات سرپایی
     /// </summary>
-    DoctorsServices
+    OutpatientServices
 }

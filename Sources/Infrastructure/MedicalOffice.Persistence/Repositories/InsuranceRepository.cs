@@ -2,6 +2,7 @@
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -73,6 +74,13 @@ namespace MedicalOffice.Persistence.Repositories
         {
             bool isExist = await _dbContext.Insurances.AnyAsync(p => p.OfficeId == officeId && p.Name == insuranceName);
             return isExist;
+        }
+
+        public Task<TariffType> GetTariffTypeByInsuranceId(Guid insuranceId, Guid officeId)
+        {
+            var insurance = _dbContext.Insurances.Single(x => x.Id == insuranceId && x.OfficeId == officeId).TariffType;
+
+            return Task.FromResult(insurance);
         }
     }
 }
