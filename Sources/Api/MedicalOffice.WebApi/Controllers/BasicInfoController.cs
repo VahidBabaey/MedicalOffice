@@ -19,7 +19,7 @@ public class BasicInfoController : Controller
         _mediator = mediator;
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<BasicInfoListDTO>>> GetAll([FromQuery] string officeId , [FromQuery] Order? order)
     {

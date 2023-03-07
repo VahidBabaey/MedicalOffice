@@ -23,7 +23,7 @@ public class InsuranceController : Controller
         _mediator = mediator;
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] InsuranceDTO dto, [FromQuery] string officeId)
     {
@@ -32,7 +32,7 @@ public class InsuranceController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpDelete("list-insurance")]
     public async Task<IActionResult> RemoveList([FromBody] InsuranceListIDDTO dto, [FromQuery] string officeId)
     {
@@ -41,7 +41,7 @@ public class InsuranceController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateInsuranceDTO dto, [FromQuery] string officeId)
     {
@@ -50,7 +50,7 @@ public class InsuranceController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<InsuranceListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order? order)
     {
@@ -58,7 +58,7 @@ public class InsuranceController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    //[Authorize]
+    [Authorize]
     [HttpGet("search")]
     public async Task<ActionResult<List<InsuranceListDTO>>> GetInsuranceBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order? order)
     {
