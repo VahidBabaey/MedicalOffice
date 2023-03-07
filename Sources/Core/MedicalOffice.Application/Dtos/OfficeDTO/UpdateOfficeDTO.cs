@@ -3,7 +3,7 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Domain
 {
-    public class UpdateOfficeDTO : BaseDto<Guid>, ITelePhoneNumberDTO
+    public class UpdateOfficeDTO : ITelePhoneNumberDTO
     {
         /// <summary>
         /// نام

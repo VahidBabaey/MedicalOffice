@@ -26,20 +26,21 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
     public async Task<List<TariffListDTO>> GetTariffsofService(Guid officeId, Guid serviceId)
     {
         List<TariffListDTO> tariffListDTOs = new();
-        var tariffs = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
+        var tariffs = await _dbContext.Tariffs.Include(x => x.Insurance).Where(p => p.ServiceId == serviceId && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
         foreach (var item in tariffs)
         {
             TariffListDTO tariffListDTO = new();
             tariffListDTO.Id = item.Id;
             tariffListDTO.ServiceId = item.ServiceId;
             tariffListDTO.InsuranceId = item.InsuranceId;
+            tariffListDTO.InsuranceCode = item.Insurance.InsuranceCode;
             tariffListDTO.TariffValue = item.TariffValue;
             tariffListDTO.InternalTariffValue = item.InternalTariffValue;
             tariffListDTO.Difference = item.Difference;
             tariffListDTO.InsurancePercent = item.InsurancePercent;
             tariffListDTO.Discount = item.Discount;
-            tariffListDTO.AdjunctPrice = item.AdjunctPrice;
-            tariffListDTO.InsuranceName = _dbContext.Insurances.Select(p => new { p.Id, p.Name }).Where(p => p.Id == item.InsuranceId).FirstOrDefault().Name;
+            tariffListDTO.InsuranceName = item.Insurance.Name;
+
             tariffListDTOs.Add(tariffListDTO);
         }
         return tariffListDTOs;
@@ -48,6 +49,13 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
     {
         bool isExist = await _dbContext.Tariffs.AnyAsync(p => p.Id == tariffId && p.OfficeId == officeId);
         return isExist;
+    }
+
+    public async Task<bool> IsUniqInsuranceTariff(Guid? insuranceId, Guid serviceId, Guid officeId)
+    {
+        var isUniqe = await _dbContext.Tariffs.AnyAsync(x => x.InsuranceId == insuranceId && x.ServiceId == serviceId && x.OfficeId == officeId);
+
+        return !isUniqe;
     }
 }
 

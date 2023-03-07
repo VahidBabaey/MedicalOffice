@@ -1,4 +1,4 @@
-﻿using MedicalOffice.Application.Models;
+﻿using MedicalOffice.Application.Models.EmailSetting;
 
 namespace MedicalOffice.Application.Contracts.Infrastructure;
 

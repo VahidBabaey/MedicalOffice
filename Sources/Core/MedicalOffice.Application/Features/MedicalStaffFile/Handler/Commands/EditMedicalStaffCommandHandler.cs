@@ -5,7 +5,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -72,7 +72,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             #endregion
 
             #region CheckStaffExist
-            var existingMedicalStaff = await _medicalStaffrepository.GetById(request.DTO.Id);
+            var existingMedicalStaff = await _medicalStaffrepository.GetExistingStaffById(request.DTO.Id, request.OfficeId);
             if (existingMedicalStaff == null)
             {
                 var error = $"The medicalStaff isn't exist";
@@ -89,12 +89,13 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
             #region CreateBaseOfNewStaff
             var newMedicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
+            newMedicalStaff.User = existingMedicalStaff.User;
             newMedicalStaff.UserId = existingMedicalStaff.UserId;
             newMedicalStaff.OfficeId = request.OfficeId;
             #endregion
 
             #region CheckUerSituation
-            var user = new User();
+            var user = newMedicalStaff.User;    
             if (request.DTO.PhoneNumber != existingMedicalStaff.PhoneNumber ||
                 request.DTO.NationalID != existingMedicalStaff.NationalID)
             {

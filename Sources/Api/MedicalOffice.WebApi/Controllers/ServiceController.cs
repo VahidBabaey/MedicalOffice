@@ -4,6 +4,7 @@ using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
+using MedicalOffice.Application.Features.ServiceFile.Handlers.Queries;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Commands;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Queries;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
-//[Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ServiceController : Controller
@@ -68,6 +69,14 @@ public class ServiceController : Controller
     public async Task<ActionResult<List<ServiceListDTO>>> GetServicenBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] string sectionId, [FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetServiceBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId), SectionId = Guid.Parse(sectionId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+
+    [HttpGet("get-generic-codes")]
+    public async Task<ActionResult<List<ServiceGenericCodeDTO>>> GetServiceGenericCodes([FromQuery] string name)
+    {
+        var response = await _mediator.Send(new GetServiceGenericCodsQuery() { Name = name });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

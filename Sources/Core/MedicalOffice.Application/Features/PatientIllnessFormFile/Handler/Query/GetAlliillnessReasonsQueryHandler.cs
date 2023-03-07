@@ -6,7 +6,7 @@ using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
 using MedicalOffice.Application.Dtos.PatientIllnessFormListDTO;
 using MedicalOffice.Application.Features.PatientIllnessFormFile.Request.Query;
 using MedicalOffice.Application.Features.PatientReferralFormFile.Request.Query;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using System.Net;
 

@@ -14,8 +14,8 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
     public class ServiceIdValidator : AbstractValidator<IServiceIdDTO>
     {
         private readonly IServiceRepository _serviceRepository;
-        private readonly IOfficeResolver _officeResolver;
-        public ServiceIdValidator(IServiceRepository serviceRepository, IOfficeResolver officeResolver)
+        private readonly IQueryStringResolver _officeResolver;
+        public ServiceIdValidator(IServiceRepository serviceRepository, IQueryStringResolver officeResolver)
         {
             _officeResolver = officeResolver;
             _serviceRepository = serviceRepository;

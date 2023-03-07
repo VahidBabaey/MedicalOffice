@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Entities;
+using MedicalOffice.Persistence.Configurations.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -9,26 +10,24 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Persistence.Configurations.Entities
 {
-    public class UserOfficePermissionConfiguration : IEntityTypeConfiguration<UserOfficePermission>
+    public class UserOfficePermissionConfiguration : BaseEntityTypeConfiguration<UserOfficePermission,Guid>
     {
-        public void Configure(EntityTypeBuilder<UserOfficePermission> builder)
+        public override void ConfigureEntity(EntityTypeBuilder<UserOfficePermission> builder)
         {
-            //builder
-            //    .HasKey(uop => new { uop.PermissionId, uop.UserId, uop.OfficeId });
             builder
                 .HasOne(uop => uop.User)
                 .WithMany(u => u.UserOfficePermissions)
-                .HasForeignKey(uop => uop.UserId).IsRequired()
+                .HasForeignKey(uop => uop.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasOne(uop => uop.Permission)
                 .WithMany(p => p.UserOfficePermissions)
-                .HasForeignKey(uop => uop.PermissionId).IsRequired()
+                .HasForeignKey(uop => uop.PermissionId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasOne(uop => uop.Office)
                 .WithMany(o => o.UserOfficePermissions)
-                .HasForeignKey(uop => uop.OfficeId).IsRequired()
+                .HasForeignKey(uop => uop.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder
                 .HasQueryFilter(uop => uop.IsDeleted == false);

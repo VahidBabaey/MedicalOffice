@@ -68,13 +68,20 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
 
     public async Task<List<Service>> GetAllByOfficeId(Guid officeId)
     {
-        var services = await _dbContext.Services.Where(x => x.OfficeId == officeId && x.IsDeleted == false).ToListAsync();
+        var services = await _dbContext.Services.Where(x => x.OfficeId == officeId && x.IsDeleted == false && x.Section.isActive == true).ToListAsync();
 
         return services;
     }
     public async Task<bool> CheckExistServiceName(Guid officeId, string serviceName)
     {
         bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Name == serviceName);
+        return isExist;
+    }
+
+    public async Task<bool> IsNameExistInOtherServices(string name, Guid id, Guid officeId)
+    {
+        var isExist = await _dbContext.Services.AnyAsync(x => x.Name == name && x.Id != id && x.OfficeId == officeId);
+
         return isExist;
     }
 }

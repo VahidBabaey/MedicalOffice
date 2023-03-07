@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
-//[Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class TariffController : Controller
@@ -33,8 +33,9 @@ public class TariffController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    [HttpGet("search")]
-    public async Task<ActionResult<List<TariffListDTO>>> GetTariffsofService([FromQuery] string officeId, [FromQuery] string serviceId, [FromQuery] ListDto dto)
+
+    [HttpGet]
+    public async Task<ActionResult<List<TariffListDTO>>> GetTariffsOfService([FromQuery] string officeId, [FromQuery] string serviceId, [FromQuery] ListDto dto)
     {
         var response = await _mediator.Send(new GetAllTariffByServiceIDQuery() { Dto = dto, OfficeId = Guid.Parse(officeId), ServiceId = Guid.Parse(serviceId) });
 
@@ -48,7 +49,7 @@ public class TariffController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [HttpGet("insurancenames")]
+    [HttpGet("insurance-names")]
     public async Task<ActionResult<List<InsuranceNamesDTO>>> GetAllInsurances([FromQuery] string officeId)
     {
         var response = await _mediator.Send(new GetAllInsuranceNamesQuery() { OfficeId = Guid.Parse(officeId) });

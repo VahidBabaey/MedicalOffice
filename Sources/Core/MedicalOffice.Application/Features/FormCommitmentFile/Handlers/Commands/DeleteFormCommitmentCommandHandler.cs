@@ -3,7 +3,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Commands;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;

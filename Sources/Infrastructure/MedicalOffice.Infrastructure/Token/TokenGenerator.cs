@@ -1,6 +1,6 @@
 ﻿using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Models;
-using MedicalOffice.Application.Models.Identity;
+using MedicalOffice.Application.Models.JwtSetting;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.WebApi.Crypto;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

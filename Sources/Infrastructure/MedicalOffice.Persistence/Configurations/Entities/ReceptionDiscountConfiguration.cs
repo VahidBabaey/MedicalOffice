@@ -9,11 +9,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
     {
         public override void ConfigureEntity(EntityTypeBuilder<ReceptionDiscount> builder)
         {
-            builder
-                .HasOne(e => e.DiscountType)
-                .WithMany(e => e.ReceptionDiscounts)
-                .HasForeignKey(e => e.DiscountTypeId)
-                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -4,7 +4,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Application.Features.MedicalStaffScheduleFeature.Requests.Queries;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;

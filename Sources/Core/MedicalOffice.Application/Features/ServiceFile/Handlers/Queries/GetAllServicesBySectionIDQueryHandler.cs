@@ -5,7 +5,7 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Queries;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using System.Net;
 
@@ -32,21 +32,6 @@ public class GetAllServicesBySectionIDQueryHandler : IRequestHandler<GetAllServi
 
     public async Task<BaseResponse> Handle(GetAllServicesBySectionIDQuery request, CancellationToken cancellationToken)
     {
-
-        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-        if (!validationOfficeId)
-        {
-            var error = "OfficeID isn't exist";
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = $"{_requestTitle} failed",
-                AdditionalData = error
-            });
-            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-        }
-
         var validationSectionId = await _sectionrepository.CheckExistSectionId(request.OfficeId, request.SectionId);
 
         if (!validationSectionId)

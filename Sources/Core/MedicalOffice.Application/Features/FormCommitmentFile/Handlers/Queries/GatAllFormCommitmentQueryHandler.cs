@@ -6,7 +6,7 @@ using MedicalOffice.Application.Dtos.FormCommitmentDTO;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Queries;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;

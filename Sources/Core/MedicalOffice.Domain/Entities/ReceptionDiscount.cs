@@ -8,14 +8,6 @@ namespace MedicalOffice.Domain.Entities;
 public class ReceptionDiscount : BaseDomainEntity<Guid>
 {
     /// <summary>
-    /// نوع تخفیف
-    /// </summary>
-    public DiscountType? DiscountType { get; set; }
-    /// <summary>
-    /// آیدی نوع تخفیف
-    /// </summary>
-    public Guid? DiscountTypeId { get; set; }
-    /// <summary>
     /// نوع عضویت
     /// </summary>
     public Membership? Membership { get; set; }

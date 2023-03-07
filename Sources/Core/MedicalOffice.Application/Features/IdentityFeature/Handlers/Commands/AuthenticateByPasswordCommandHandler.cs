@@ -2,7 +2,6 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.IdentityDTO.Validators;
-using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.WebApi.WebApi.Controllers;
@@ -21,6 +20,7 @@ using FluentValidation;
 using MedicalOffice.Application.Contracts.Persistence;
 using NLog.LayoutRenderers.Wrappers;
 using MedicalOffice.Application.Constants;
+using MedicalOffice.Application.Models.Logger;
 
 namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {

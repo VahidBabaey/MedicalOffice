@@ -4,7 +4,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.RoleDTO;
 using MedicalOffice.Application.Features.RoleFile.Requests.Queries;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -20,12 +20,12 @@ namespace MedicalOffice.Application.Features.RoleFile.Handlers.Queries
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetRoleSituationQueryHandler(IRoleRepository roleRepository,ILogger logger)
+        public GetRoleSituationQueryHandler(IRoleRepository roleRepository, ILogger logger)
         {
             _roleRepository = roleRepository;
             _logger = logger;
 
-            _requestTitle = GetType().Name.Replace("QueryHandler",string.Empty);
+            _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
         public async Task<BaseResponse> Handle(GetRoleSituationQuery request, CancellationToken cancellationToken)
@@ -33,18 +33,23 @@ namespace MedicalOffice.Application.Features.RoleFile.Handlers.Queries
             var roleSituation = new RoleSituationDTO();
             var role = _roleRepository.GetById(request.RoleId).Result;
 
-            Guid[] validRolesForTehnicalAssistantActivation = { DoctorRole.Id, SpecialistRole.Id };
-            Guid[] validRolesForSpecializationActivation = { DoctorRole.Id, SpecialistRole.Id };
-
             if (role != null)
             {
-                if (validRolesForTehnicalAssistantActivation.Contains(role.Id))
+                if (role.Id == DoctorRole.Id)
                 {
-                    roleSituation.TechnicalAssistant = true;
+                    roleSituation.IsSpecialization = true;
+                    roleSituation.IsTechnicalAssistant = true;
+                    roleSituation.Specialty = true;
                 }
-                if (validRolesForSpecializationActivation.Contains(role.Id))
+
+                if (role.Id == ExpertRole.Id)
                 {
-                    roleSituation.Specialization = true;
+                    roleSituation.WorkingField = true;
+                }
+
+                if (role.Id == SecretaryRole.Id)
+                {
+                    roleSituation.IsActive = false;
                 }
             }
 

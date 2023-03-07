@@ -12,7 +12,9 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO.Validators
     {
         public AddMedicalStaffValidator()
         {
-            RuleFor(x => x.IsReferrer).NotNull().Must(x => x == false || x == true);
+            RuleFor(x => x.FirstName).NotEmpty();
+            RuleFor(x => x.LastName).NotEmpty();
+            //RuleFor(x => x.IsReferrer).NotNull().Must(x => x == false || x == true);
             Include(new NationalIdValidator());
             Include(new PhoneNumberValidator());
         }

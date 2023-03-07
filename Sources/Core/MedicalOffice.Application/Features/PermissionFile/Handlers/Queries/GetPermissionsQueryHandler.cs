@@ -5,7 +5,7 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MenuDTO;
 using MedicalOffice.Application.Dtos.PermissionDTO;
 using MedicalOffice.Application.Features.PermissionFile.Requests.Queries;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using System;
@@ -31,7 +31,6 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Queries
             _mapper = mapper;
             _requestTitle = GetType().Name.Replace("QueryHandler","");
         }
-
         public async Task<BaseResponse> Handle(GetPermissionsQuery request, CancellationToken cancellationToken)
         {
             var permissions = _PermissionRepository.GetAll().Result.ToList();

@@ -5,7 +5,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using System.Net;
@@ -37,40 +37,11 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(EditServiceCommand request, CancellationToken cancellationToken)
         {
-
-            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-            if (!validationOfficeId)
-            {
-                var error = "OfficeID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
-            var validationServiceId = await _servicerepository.CheckExistServiceId(request.OfficeId ,request.DTO.Id);
+            var validationServiceId = await _servicerepository.CheckExistServiceId(request.OfficeId, request.DTO.Id);
 
             if (!validationServiceId)
             {
                 var error = "ID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
-            var validationSectionId = await _sectionrepository.CheckExistSectionId(request.OfficeId, request.DTO.SectionId);
-
-            if (!validationSectionId)
-            {
-                var error = "SectionID isn't exist";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
@@ -93,34 +64,32 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
-            else
+
+            var isServiceNameExist = await _servicerepository.IsNameExistInOtherServices(request.DTO.Name, request.DTO.Id, request.OfficeId);
+            if (isServiceNameExist)
             {
-                try
+                var error = "The name is exist";
+                await _logger.Log(new Log
                 {
-                    var service = _mapper.Map<Service>(request.DTO);
-                    service.OfficeId = request.OfficeId;
-
-                    await _servicerepository.Update(service);
-
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Success,
-                        Header = $"{_requestTitle} succeded",
-                        AdditionalData = service.Id
-                    });
-                    return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", service.Id);
-                }
-                catch (Exception error)
-                {
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} failed",
-                        AdditionalData = error.Message
-                    });
-                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
-                }
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
+
+            var service = _mapper.Map<Service>(request.DTO);
+            service.OfficeId = request.OfficeId;
+
+            await _servicerepository.Update(service);
+
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = service.Id
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", service.Id);
         }
     }
 

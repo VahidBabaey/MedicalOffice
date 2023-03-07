@@ -28,7 +28,7 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// شماره نظام پزشکی
         /// </summary>
-        public string MedicalNumber { get; set; } = string.Empty;
+        public string? MedicalNumber { get; set; } = string.Empty;
 
         /// <summary>
         /// شماره تلفن
@@ -53,12 +53,12 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// نام کاربری بیمه سلامت
         /// </summary>
-        public string IHIOUserName { get; set; } = string.Empty;
+        public string? IHIOUserName { get; set; } = string.Empty;
 
         /// <summary>
         /// رمز عبور بیمه سلامت
         /// </summary>
-        public string IHIOPassword { get; set; } = string.Empty;
+        public string? IHIOPassword { get; set; } = string.Empty;
 
         /// <summary>
         /// لیست نقش ها
@@ -68,14 +68,14 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// مسئول  فنی
         /// </summary>
-        public bool IsTechnicalAssistant { get; set; }
+        public bool IsTechnicalAssistant { get; set; } = false;
         /// <summary>
         /// معرف
         /// </summary>
-        public bool IsReferrer { get; set; }
+        public bool IsReferrer { get; set; } = false;
         /// <summary>
         /// متخصص
         /// </summary>
-        public bool IsSpecialist { get; set; }
+        public bool IsSpecialist { get; set; } = false;
     }
 }

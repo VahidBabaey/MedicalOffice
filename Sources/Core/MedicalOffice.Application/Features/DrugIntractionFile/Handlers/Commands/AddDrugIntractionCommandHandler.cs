@@ -6,7 +6,7 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.DrugIntractionDTO;
 using MedicalOffice.Application.Dtos.DrugIntractionDTO.Validator;
 using MedicalOffice.Application.Features.DrugIntractionFile.Requests.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
 using System;

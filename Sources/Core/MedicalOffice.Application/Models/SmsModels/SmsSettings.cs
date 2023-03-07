@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Models
+namespace MedicalOffice.Application.Models.Sms
 {
     public class SmsSettings
     {
-        public string ApiKey{ get; set; } 
+        public string ApiKey { get; set; }
         public string SendTotpTemplate { get; set; }
     }
 }

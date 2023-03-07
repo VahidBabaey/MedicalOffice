@@ -5,7 +5,7 @@ using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Commands;
-using MedicalOffice.Application.Models;
+using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
@@ -56,7 +56,22 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                     validationResult.Errors.Select(error => error.ErrorMessage).ToArray());
             }
 
+            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
+
+            if (!validationOfficeId)
+            {
+                var error = "OfficeID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
             var office = _mapper.Map<Office>(request.DTO);
+            office.Id = request.OfficeId;
 
             await _officeRepository.Update(office);
 
@@ -65,7 +80,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeeded",
                 AdditionalData = office.Id
-            }) ;
+            });
 
             return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", office.Id);
         }

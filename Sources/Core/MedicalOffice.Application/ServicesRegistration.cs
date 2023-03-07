@@ -195,6 +195,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<ReceptionDetailDTO>, AddReceptionDetailValidator>();
         services.AddScoped<IValidator<ReceptionsDTO>, AddReceptionValidator>();
         services.AddScoped<IValidator<UpdateReceptionDetailDTO>, UpdateReceptionDetailValidator>();
+        services.AddScoped<IValidator<ReceptionDiscountDTO>, AddReceptionDiscountValidator>();
         #endregion
 
         #region ServiceRoom

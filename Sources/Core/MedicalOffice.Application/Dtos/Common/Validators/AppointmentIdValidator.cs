@@ -14,9 +14,9 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
     public class AppointmentIdValidator : AbstractValidator<IAppointmentIdDTO>
     {
         private readonly IAppointmentRepository _appointmentRepository;
-        private readonly IOfficeResolver _officeResolver;
+        private readonly IQueryStringResolver _officeResolver;
 
-        public AppointmentIdValidator(IAppointmentRepository appointmentRepository, IOfficeResolver officeResolver)
+        public AppointmentIdValidator(IAppointmentRepository appointmentRepository, IQueryStringResolver officeResolver)
         {
             _appointmentRepository = appointmentRepository;
             _officeResolver = officeResolver;
