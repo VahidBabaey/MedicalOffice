@@ -14,7 +14,7 @@ public class BasicInfoDetailRepository : GenericRepository<BasicInfoDetail, Guid
     }
     public async Task<IReadOnlyList<BasicInfoDetail>> GetByBasicInfoId(Guid basicInfoId)
     {
-        return await _dbContext.BasicInfoDetail.Where(p => p.basicInfoId == basicInfoId && p.IsDeleted == false).ToListAsync();
+        return await _dbContext.BasicInfoDetail.Where(p => p.basicInfoId == basicInfoId && p.IsDeleted == false).OrderByDescending(p => p.CreatedDate).ToListAsync();
     }
     public async Task<IReadOnlyList<BasicInfoDetail>> GetByBasicInfoIllnessId()
     {

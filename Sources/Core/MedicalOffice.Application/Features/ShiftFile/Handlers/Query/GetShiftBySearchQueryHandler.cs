@@ -8,12 +8,14 @@ using MedicalOffice.Application.Features.ShiftFile.Requests.Query;
 using MedicalOffice.Application.Models;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
 {
@@ -54,6 +56,12 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Query
             try
             {
                 var shifts = await _shiftrepository.GetShiftBySearch(request.Name, request.OfficeId);
+                shifts.OrderByDescending(x => x.CreatedDate);
+                if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+                {
+                    shifts = request.Order == Order.NewRecords ? shifts : shifts.OrderBy(x => x.CreatedDate).ToList();
+                }
+
                 var result = _mapper.Map<List<ShiftListDTO>>(shifts.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
                 await _logger.Log(new Log

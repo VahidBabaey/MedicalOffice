@@ -3,6 +3,7 @@ using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.FormCommitmentDTO;
 using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Commands;
 using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Queries;
+using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,9 +49,9 @@ public class FormCommitmentController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<FormCommitmentListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
+    public async Task<ActionResult<List<FormCommitmentListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order? order)
     {
-        var response = await _mediator.Send(new GatAllFormCommitmentQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GatAllFormCommitmentQuery() { Dto = dto, OfficeId = Guid.Parse(officeId), Order = order });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Quer
     public class GetAllServicesQuery : IRequest<BaseResponse>
     {
         public Guid OfficeId { get; set; }
+        public Order? Order { get; set; }
     }
 }

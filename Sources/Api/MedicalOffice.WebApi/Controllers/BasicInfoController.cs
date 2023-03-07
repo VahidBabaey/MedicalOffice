@@ -2,6 +2,7 @@
 using MedicalOffice.Application.Dtos.BasicInfoListDTO;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Features.BasicInfoFile.Requests.Queries;
+using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,11 +19,11 @@ public class BasicInfoController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<BasicInfoListDTO>>> GetAll([FromQuery] string officeId)
+    public async Task<ActionResult<List<BasicInfoListDTO>>> GetAll([FromQuery] string officeId , [FromQuery] Order? order)
     {
-        var response = await _mediator.Send(new GetAllBasicInfoQuery() { OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllBasicInfoQuery() { OfficeId = Guid.Parse(officeId) , Order = order });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

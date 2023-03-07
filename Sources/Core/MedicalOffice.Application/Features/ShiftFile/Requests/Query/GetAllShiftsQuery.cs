@@ -2,6 +2,7 @@
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.ShiftDTO;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace MedicalOffice.Application.Features.ShiftFile.Requests.Query
     {
         public ListDto Dto { get; set; } = new ListDto();
         public Guid OfficeId { get; set; }
+        public Order? Order { get; set; }
     }
 }
