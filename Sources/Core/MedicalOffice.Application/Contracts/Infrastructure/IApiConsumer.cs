@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Dtos.ServiceDTO;
-using MedicalOffice.Application.Models.ConsumableUrlsOutputs;
+using MedicalOffice.Application.Models.ApiConsumerModels;
 using RestSharp;
 
 namespace MedicalOffice.Application.Contracts.Infrastructure

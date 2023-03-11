@@ -61,21 +61,12 @@ public class MedicalStaffController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
     [Authorize]
     [HttpGet("referrer")]
     public async Task<ActionResult<List<MedicalStaffNameReferrerListDTO>>> GetAllReferrerMedicalStaff([FromQuery] string officeId)
     {
         var response = await _mediator.Send(new GetAllReferrerMedicalStaffsNamesQuery() {OfficeId = Guid.Parse(officeId) });
-
-        return StatusCode(Convert.ToInt32(response.StatusCode), response);
-    }
-
-    [Authorize]
-    [Permission(BasicInfoPermissions.GetAllDetails)]
-    [HttpPatch("permissions")]
-    public async Task<ActionResult<List<Guid>>> UpdateMedicalStaffPermissions([FromBody] MedicalStaffPermissionsDTO dto, [FromQuery] string officeId)
-    {
-        var response = await _mediator.Send(new UpdateMedicalStaffCommand() { DTO = dto, OffceId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

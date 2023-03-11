@@ -2,6 +2,7 @@
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators;
 using NLog.Config;
 using System;
 using System.Collections.Generic;
@@ -16,24 +17,46 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
         private readonly IInsuranceRepository _insuranceRepository;
         private readonly IServiceRepository _serviceRepository;
         private readonly IQueryStringResolver _officeResolver;
-        public AddTariffValidator(IQueryStringResolver officeResolver, IServiceRepository serviceRepository, IInsuranceRepository insuranceRepository)
+        private readonly IServiceTariffRepository _serviceTariffRepository;
+
+        public AddTariffValidator(IQueryStringResolver officeResolver, IServiceRepository serviceRepository, IInsuranceRepository insuranceRepository, IServiceTariffRepository serviceTariffRepository)
         {
             _officeResolver = officeResolver;
             _serviceRepository = serviceRepository;
             _insuranceRepository = insuranceRepository;
+            _serviceTariffRepository = serviceTariffRepository;
 
-            RuleFor(x => x.Difference)
-                .Equal(x => Math.Abs(x.InternalTariffValue - x.TariffValue))
-                .When(x => x.InternalTariffValue != default || x.TariffValue != default)
-                .WithMessage("{PropertyName} should be the subtraction of internalTariffValue and TariffValue");
-            RuleFor(x => x.Discount)
-                .GreaterThanOrEqualTo(0)
-                .LessThanOrEqualTo(100);
-            RuleFor(x => x.InsurancePercent)
-                .GreaterThanOrEqualTo(0)
-                .LessThanOrEqualTo(100);
+            var officeId = _officeResolver.GetOfficeId().Result;
+
             Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
-            Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
+
+            RuleFor(x => x.ServiceId)
+                .MustAsync(async (serviceId, token) =>
+                {
+                    return await _serviceRepository.isTariffValid(serviceId);
+                });
+
+            RuleForEach(x => x.Tariffs)
+                .SetValidator(new AddTariffListValidator(_officeResolver, _insuranceRepository));
+
+            RuleFor(x => x)
+                .MustAsync(async (x, token) =>
+                {
+                    if (x.Tariffs.Count != 0)
+                    {
+                        foreach (var item in x.Tariffs)
+                        {
+                            if (item.InsuranceId != null)
+                            {
+                                return await _serviceTariffRepository.IsUniqInsuranceTariff(item.InsuranceId, x.ServiceId, officeId);
+                            }
+                        }
+
+                        return true;
+                    }
+                    return true;
+                })
+                .WithMessage("There is already a tariff with this insuranceId");
         }
     }
 }

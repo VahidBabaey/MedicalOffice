@@ -17,7 +17,7 @@ public class ServiceTariffDTO
     public int? InsuranceCode { get; set; }
 
     /// <summary>
-    /// آیدی سزویس
+    /// آیدی سرویس
     /// </summary>
     public Guid? ServiceId { get; set; }
 

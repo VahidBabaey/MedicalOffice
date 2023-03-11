@@ -34,4 +34,9 @@ public class ServiceListDTO : BaseDto<Guid>
     /// هزینه مواد مصرفی
     /// </summary>
     public bool? IsConsumingMaterials { get; set; }
+
+    /// <summary>
+    /// تعیین تعرفه در زمان پذیرش
+    /// </summary>
+    public bool? TariffInReceptionTime { get; set; } = false;
 }

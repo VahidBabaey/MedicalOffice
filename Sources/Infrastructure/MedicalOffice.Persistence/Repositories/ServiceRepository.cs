@@ -104,4 +104,23 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
         bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Name == serviceName);
         return isExist;
     }
+
+    public async Task<bool> IsNameExistInOtherServices(string name, Guid id, Guid officeId)
+    {
+        var isExist = await _dbContext.Services.AnyAsync(x => x.Name == name && x.Id != id && x.OfficeId == officeId);
+
+        return isExist;
+    }
+
+    public async Task<bool> isTariffValid(Guid serviceId)
+    {
+        var service = await _dbContext.Services.SingleOrDefaultAsync(x => x.Id == serviceId && x.IsDeleted != true);
+
+        if (service != null)
+        {
+            return service.TariffInReceptionTime == true ? false : true;
+        }
+
+        return false;
+    }
 }

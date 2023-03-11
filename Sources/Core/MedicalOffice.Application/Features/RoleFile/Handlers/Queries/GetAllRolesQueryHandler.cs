@@ -34,10 +34,10 @@ namespace MedicalOffice.Application.Features.RoleFile.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
         {
-            var mainRoles = new Guid[] { AdminRole.Id, SuperAdminRole.Id, PatientRole.Id , TechnicalAssistant.Id};
-            //var result = new List<RoleDTO>();
-            var roles = _roleRepository.GetAll().Result.Select(x=> _mapper.Map<RoleListDTO>(x)).Where(x=>!mainRoles.Contains(x.Id));
-            
+            var mainRoles = new Guid[] { AdminRole.Id, SuperAdminRole.Id, PatientRole.Id, ExternalRefferer.Id };
+
+            var roles = _roleRepository.GetAll().Result.Select(x => _mapper.Map<RoleListDTO>(x)).Where(x => !mainRoles.Contains(x.Id));
+
             await _logger.Log(new Log
             {
                 Type = LogType.Success,

@@ -1,5 +1,6 @@
 ﻿using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Contracts.Persistence
 {
@@ -11,5 +12,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<List<InsuranceNamesDTO>> GetAllAdditionalInsuranceNames(Guid officeId);
         Task<List<Insurance>> GetInsuranceBySearch(string name, Guid officeId);
         Task<List<InsuranceNamesDTO>> GetInsuranceNames(Guid officeId);
+        Task<TariffType> GetTariffTypeByInsuranceId(Guid insuranceId, Guid officeId);
     }
 }

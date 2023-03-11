@@ -1,10 +1,11 @@
 ﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.Commons;
+using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.Tariff;
 
-public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
+public class TariffDTO : IServiceIdDTO
 {
     /// <summary>
     /// آیدی خدمت
@@ -12,24 +13,42 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     public Guid ServiceId { get; set; }
 
     /// <summary>
+    /// لیست تعرفه ها
+    /// </summary>
+    public List<TariffList> Tariffs { get; set; }
+}
+
+public class TariffList : IInsuranceIdDTO
+{
+    /// <summary>
     /// آیدی بیمه
     /// </summary>
     public Guid? InsuranceId { get; set; }
 
     /// <summary>
+    /// کد بیمه
+    /// </summary>
+    public long? InsuranceCode { get; set; }
+
+    /// <summary>
     /// مبلغ تعرفه
     /// </summary>
-    public float TariffValue { get; set; }=default(float);
+    public float TariffValue { get; set; }
 
     /// <summary>
     /// تعرفه داخلی
     /// </summary>
-    public float InternalTariffValue { get; set; } = default(float);
+    public float InternalTariffValue { get; set; }
+
+    /// <summary>
+    /// نوع سرویس
+    /// </summary>
+    public ServiceType ServiceType { get; set; }
 
     /// <summary>
     /// ما به التفاوت
     /// </summary>
-    public float Difference { get; set; } = default(float);
+    public float? Difference { get; set; }
 
     /// <summary>
     /// تخفیف
@@ -41,3 +60,4 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// </summary>
     public int InsurancePercent { get; set; }
 }
+

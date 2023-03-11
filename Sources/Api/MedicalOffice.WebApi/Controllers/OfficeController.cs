@@ -41,9 +41,9 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
         //[Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPatch]
-        public async Task<ActionResult<Guid>> Update([FromBody] UpdateOfficeDTO dto)
+        public async Task<ActionResult<Guid>> Update([FromBody] UpdateOfficeDTO dto , [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new EditOfficeCommand { DTO = dto});
+            var response = await _mediator.Send(new EditOfficeCommand { DTO = dto, OfficeId=Guid.Parse(officeId)});
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

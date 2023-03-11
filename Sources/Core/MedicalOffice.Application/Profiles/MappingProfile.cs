@@ -147,6 +147,7 @@ public class MappingProfile : Profile
         CreateMap<UpdateServiceRoomDTO, Room>().ReverseMap();
         CreateMap<UpdateOfficeDTO, Office>().ReverseMap();
         CreateMap<Permission, PermissionListDto>().ReverseMap();
+        CreateMap<Tariff, TariffList>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDTO>

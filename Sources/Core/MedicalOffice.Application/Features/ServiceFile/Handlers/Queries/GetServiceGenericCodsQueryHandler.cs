@@ -2,10 +2,8 @@
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Queries;
-using MedicalOffice.Application.Models.ConsumableUrlsOutputs;
+using MedicalOffice.Application.Models.ApiConsumerModels;
 using MedicalOffice.Application.Responses;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net;

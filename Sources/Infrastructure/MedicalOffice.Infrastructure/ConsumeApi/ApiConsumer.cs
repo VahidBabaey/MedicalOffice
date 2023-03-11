@@ -1,6 +1,6 @@
 ﻿using MedicalOffice.Application;
 using MedicalOffice.Application.Contracts.Infrastructure;
-using MedicalOffice.Application.Models.ConsumableUrlsOutputs;
+using MedicalOffice.Application.Models.ApiConsumerModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
@@ -23,11 +23,17 @@ namespace MedicalOffice.Infrastructure.FetchData
         public async Task<RestResponse> GetResponse(string path, List<ExternalApiInput> input)
         {
             var queryString = string.Empty;
-
-            foreach (var item in input)
-            {
-                queryString = string.Concat(queryString, $"?{item.Key}={item.Value}&");
-            }
+            //if (input.Count == 1)
+            //{
+            //    queryString = string.Concat(queryString, $"?{input[0].Key}={input[0].Value}");
+            //}
+            //else
+            //{
+                foreach (var item in input)
+                {
+                    queryString = string.Concat(queryString, $"?{item.Key}={item.Value}&");
+                }
+            //}
 
             var url = string.Concat(_apiConsumersetting.BaseDomain, path, queryString);
 

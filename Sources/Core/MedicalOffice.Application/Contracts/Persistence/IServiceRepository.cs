@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Application.Dtos.ServiceDTO;
+﻿using MedicalOffice.Application.Dtos.Tariff;
+using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Contracts.Persistence
@@ -16,7 +17,11 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<List<Service>> GetServiceBySearch(string name, Guid sectionId, Guid officeId);
 
         Task<List<Service>> GetAllByOfficeId(Guid officeId);
+
         Task<bool> CheckExistServiceName(Guid officeId, string serviceName);
+
+        Task<bool> IsNameExistInOtherServices(string name, Guid id, Guid officeId);
+        Task<bool> isTariffValid(Guid serviceId);
         Task<IReadOnlyList<ServicesByInsuranceIdDTO>> GetByInsuranceId(Guid officeId, Guid insuranceId);
     }
 }
