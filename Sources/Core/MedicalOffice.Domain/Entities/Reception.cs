@@ -15,6 +15,14 @@ public class Reception : BaseDomainEntity<Guid>
     /// <summary>
     /// مطب
     /// </summary>
+    public Appointment? Appointment { get; set; }
+    /// <summary>
+    /// آیدی مطب
+    /// </summary>
+    public Guid? AppointmentId { get; set; }
+    /// <summary>
+    /// مطب
+    /// </summary>
     public Office? Office { get; set; }
     /// <summary>
     /// آیدی مطب
