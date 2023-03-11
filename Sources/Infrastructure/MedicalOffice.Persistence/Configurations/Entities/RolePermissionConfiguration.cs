@@ -58,33 +58,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     RolePermissionCreator("8c07113f-ec06-4db0-90c7-e1d292525c7c","931f674f-c2a5-434b-97b1-438a9131e55d"),
                 #endregion
 
-                #region دسترسی متخصص
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","604688bf-66d9-4bf1-b5e0-9b6f3fff7073"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","5657088d-1870-4de4-918d-3698e92e7f22"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","42baa433-f392-4489-8f4e-d77b1c27978b"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","b968cb11-43a4-4bbe-a3ca-95a7d1bb9daa"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","b9e66192-1c2a-4dbf-97f6-79a6d861a872"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","94195d88-bd36-49b4-8bba-9f575e498b8d"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","e34710cc-d5eb-4a99-acaf-771a6dcd00f3"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","59114568-3b0c-44a9-950c-565fd6f67e23"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","99f8a553-8445-4d35-bb0e-6e3331353578"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","b43130fb-edbe-41a6-b4e0-07278191505c"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","9729da56-1152-4a10-8817-3f2b87a6f4a5"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","5921e3d9-33cb-40c3-95ec-aa30f27d8488"),
-
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","a438dcc1-8a04-4859-b224-a1ec6235bad1"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","077672d1-4a6c-4cc5-947e-7bc36954ee41"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","c54c7024-87e7-43de-a5b1-2763296be889"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","b9868f8e-1f05-4c89-a3f3-83c440961705"),
-
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","789a92c9-28b4-4200-b9f0-e1ebe8b9a7bf"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","dd63bb5f-c4a7-4d1e-9be5-76ec499f2e98"),
-
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","7dbb0a47-6aa3-442e-959a-e4d5fffeeac4"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","74d411ab-8667-4801-b412-7c015d556466"),
-                    RolePermissionCreator("fa87d211-3827-4e54-95f8-bf414d4a882f","931f674f-c2a5-434b-97b1-438a9131e55d"),
-                #endregion
-
                 #region دسترسی کارشناس
                     RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","604688bf-66d9-4bf1-b5e0-9b6f3fff7073"),
                     RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","5657088d-1870-4de4-918d-3698e92e7f22"),
@@ -112,33 +85,6 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     RolePermissionCreator("bdb58210-f29f-4114-8564-7f3d5d2d26d6","931f674f-c2a5-434b-97b1-438a9131e55d"),
 
                     #endregion
-
-                #region دسترسی مسئول فنی
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","604688bf-66d9-4bf1-b5e0-9b6f3fff7073"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","5657088d-1870-4de4-918d-3698e92e7f22"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","42baa433-f392-4489-8f4e-d77b1c27978b"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","b968cb11-43a4-4bbe-a3ca-95a7d1bb9daa"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","b9e66192-1c2a-4dbf-97f6-79a6d861a872"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","94195d88-bd36-49b4-8bba-9f575e498b8d"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","e34710cc-d5eb-4a99-acaf-771a6dcd00f3"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","59114568-3b0c-44a9-950c-565fd6f67e23"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","99f8a553-8445-4d35-bb0e-6e3331353578"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","b43130fb-edbe-41a6-b4e0-07278191505c"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","9729da56-1152-4a10-8817-3f2b87a6f4a5"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","5921e3d9-33cb-40c3-95ec-aa30f27d8488"),
-
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","a438dcc1-8a04-4859-b224-a1ec6235bad1"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","077672d1-4a6c-4cc5-947e-7bc36954ee41"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","c54c7024-87e7-43de-a5b1-2763296be889"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","b9868f8e-1f05-4c89-a3f3-83c440961705"),
-
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","789a92c9-28b4-4200-b9f0-e1ebe8b9a7bf"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","dd63bb5f-c4a7-4d1e-9be5-76ec499f2e98"),
-
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","7dbb0a47-6aa3-442e-959a-e4d5fffeeac4"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","74d411ab-8667-4801-b412-7c015d556466"),
-                    RolePermissionCreator("59671245-f477-4163-95e6-4b0fba717c51","931f674f-c2a5-434b-97b1-438a9131e55d"),
-                #endregion
 
                 #region دسترسی منشی
                     RolePermissionCreator("779c69ef-6857-4e19-b24e-1c4c4b2635d7","ea53dd69-35c5-43f7-a0aa-be02f24bfa71"),
