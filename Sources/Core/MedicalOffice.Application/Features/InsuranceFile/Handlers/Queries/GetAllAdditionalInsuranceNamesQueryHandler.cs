@@ -3,6 +3,7 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
+using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Features.TariffFile.Requests.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
@@ -13,7 +14,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
+namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Queries
 {
 
     public class GetAllAdditionalInsuranceNamesQueryHandler : IRequestHandler<GetAllAdditionalInsuranceNamesQuery, BaseResponse>

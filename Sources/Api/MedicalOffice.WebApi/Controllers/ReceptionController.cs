@@ -4,6 +4,7 @@ using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.ReceptionDTO;
+using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Commands;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Queries;
