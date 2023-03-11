@@ -22,19 +22,13 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
 public class DeleteReceptionDetailCommandHandler : IRequestHandler<DeleteReceptionDetailCommand, BaseResponse>
 {
     private readonly IReceptionRepository _receptionrepository;
-    private readonly ICashRepository _repositoryCash;
-    private readonly IReceptionDebtRepository _repositoryDebt;
-    private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteReceptionDetailCommandHandler(IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository receptionrepository, IMapper mapper, ILogger logger)
+    public DeleteReceptionDetailCommandHandler(IReceptionRepository receptionrepository, ILogger logger)
     {
         _receptionrepository = receptionrepository;
-        _mapper = mapper;
         _logger = logger;
-        _repositoryCash = repositoryCash;
-        _repositoryDebt = repositoryDebt;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 

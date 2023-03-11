@@ -38,5 +38,6 @@ public class Cash : BaseDomainEntity<Guid>
     public ICollection<CashPos> CashPoses { get; set; } = new List<CashPos>();
     public ICollection<CashCheck> CashChecks { get; set; } = new List<CashCheck>();
     public ICollection<CashCart> CashCarts { get; set; } = new List<CashCart>();
+    public ICollection<CashMoney> CashMoneies { get; set; } = new List<CashMoney>();
 
 }

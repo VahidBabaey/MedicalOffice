@@ -52,14 +52,6 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// </summary>
     public long Cost { get; set; }
     /// <summary>
-    /// اطلاعات تخفیف ها
-    /// </summary>
-    public ReceptionDiscount? ReceptionDiscount { get; set; }
-    /// <summary>
-    /// آیدی تخفیف
-    /// </summary>
-    public Guid? ReceptionDiscountId { get; set; }
-    /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>
     public long Deposit { get; set; }
@@ -71,6 +63,10 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// جمع کل
     /// </summary>
     public long Received { get; set; }
+    /// <summary>
+    /// تخفیف
+    /// </summary>
+    public long Discount { get; set; }
     /// <summary>
     /// جزئیات پذیرش - سرویس ها
     /// </summary>

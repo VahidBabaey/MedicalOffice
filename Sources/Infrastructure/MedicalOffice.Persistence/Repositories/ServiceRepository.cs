@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Domain.Entities;
@@ -19,6 +20,32 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
     public async Task<IReadOnlyList<Service>> GetBySectionId(Guid sectionId)
     {
         return await _dbContext.Services.Where(srv => srv.SectionId == sectionId && srv.IsDeleted == false).ToListAsync();
+    }
+    public async Task<IReadOnlyList<ServicesByInsuranceIdDTO>> GetByInsuranceId(Guid officeId, Guid insuranceId)
+    {
+        try
+        {
+            List<ServicesByInsuranceIdDTO> servicesByInsuranceIdDTOs = new List<ServicesByInsuranceIdDTO>();
+
+            var services = await _dbContext.Tariffs.Include(c => c.Service).Where(c => c.InsuranceId == insuranceId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false).ToListAsync();
+            foreach (var item in services)
+            {
+                ServicesByInsuranceIdDTO servicesByInsuranceIdDTO = new ServicesByInsuranceIdDTO()
+                {
+                    Id = item.Id,
+                    ServiceName = item.Service.Name,
+                    TariffValue = (decimal)item.InternalTariffValue
+                };
+
+                servicesByInsuranceIdDTOs.Add(servicesByInsuranceIdDTO);
+            }
+            return servicesByInsuranceIdDTOs; 
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
     }
     public async Task<IReadOnlyList<Service>> GetServiceByID(Guid Id)
     {

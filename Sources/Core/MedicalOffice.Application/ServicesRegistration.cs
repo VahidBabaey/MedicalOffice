@@ -184,6 +184,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<CashPosDTO>, AddCashPosValidator>();
         services.AddScoped<IValidator<UpdateCashPosDTO>, UpdateCashPosValidator>();
         services.AddScoped<IValidator<CashesDTO>, AddCashValidator>();
+        services.AddScoped<IValidator<CashMoneyDTO>, AddCashMoneyValidator>();
         #endregion
 
         #region MemberShipService

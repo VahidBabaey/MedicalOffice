@@ -90,6 +90,21 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
 
         return memberships;
     }
+    public async Task<List<MembershipsNamesDTO>> GetAllMembershipsNames(Guid officeId)
+    {
+        List<MembershipsNamesDTO> membershipsNames = new List<MembershipsNamesDTO>();
+        var memberships = await _dbContext.Memberships.Where(p => p.OfficeId == officeId && p.IsActive == true && p.IsDeleted == false).ToListAsync();
+        foreach (var item in memberships)
+        {
+            MembershipsNamesDTO membershipsNamesDTO = new()
+            {
+                Id = item.Id,
+                Name = item.Name
+            };
+            membershipsNames.Add(membershipsNamesDTO);
+        }
+        return membershipsNames;
+    }
     public async Task<bool> CheckExistMembershipName(Guid officeId, string membershipName)
     {
         bool isExist = await _dbContext.Memberships.AnyAsync(p => p.OfficeId == officeId && p.Name == membershipName);

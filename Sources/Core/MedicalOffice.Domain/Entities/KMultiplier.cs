@@ -23,8 +23,4 @@ public class KMultiplier : BaseDomainEntity<Guid>
     /// جزئیات ضرایب کا - فنی - حرفه ای - بیهوشی
     /// </summary>
     public ICollection<KMultiplierDetail>? KMultiplierDetails { get; set; }
-    /// <summary>
-    /// تعرفه ها
-    /// </summary>
-    public ICollection<Tariff>? Tariffs { get; set; }
 }

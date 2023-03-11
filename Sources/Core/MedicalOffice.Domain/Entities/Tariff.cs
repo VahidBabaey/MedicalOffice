@@ -17,35 +17,32 @@ public class Tariff : BaseDomainEntity<Guid>
     /// آیدی مرکز درمانی - مطب
     /// </summary>
     public Guid OfficeId { get; set; }
-
     /// <summary>
     /// خدمات
     /// </summary>
     public Service Service { get; set; }
-
     /// <summary>
     /// آیدی خدمت
     /// </summary>
     public Guid ServiceId { get; set; }
 
-    /// <summary>
-    /// نوع سرویس
-    /// </summary>
-    public ServiceType ServiceType { get; set; }
+    ///// <summary>
+    ///// نوع سرویس
+    ///// </summary>
+    //public ServiceType ServiceType { get; set; }
 
     /// <summary>
     /// تعرفه قابل تعیین توسط کاربر است یا خیر
     /// </summary>
     public Insurance? Insurance { get; set; }
-
     /// <summary>
     /// آیدی بیمه
     /// </summary>
     public Guid? InsuranceId { get; set; }
-<<<<<<< HEAD
-=======
-
->>>>>>> 927ee59f6cb75b6d45c3e9d32e8d43c09f767975
+    /// <summary>
+    /// آیدی بیمه تکمیلی
+    /// </summary>
+    public Guid? AdditionalInsuranceId { get; set; }
     /// <summary>
     /// مبلغ تعرفه
     /// </summary>
@@ -64,10 +61,10 @@ public class Tariff : BaseDomainEntity<Guid>
     /// <summary>
     /// تخفیف
     /// </summary>
-    public int Discount { get; set; }
+    public int? Discount { get; set; }
 
     /// <summary>
     /// درصد بیمه
     /// </summary>
-    public int InsurancePercent { get; set; }
+    public int? InsurancePercent { get; set; }
 }

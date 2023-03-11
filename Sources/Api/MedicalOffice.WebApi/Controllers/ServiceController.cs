@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
-//[Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ServiceController : Controller
@@ -77,6 +77,13 @@ public class ServiceController : Controller
     public async Task<ActionResult<List<ServiceGenericCodeDTO>>> GetServiceGenericCodes([FromQuery] string name)
     {
         var response = await _mediator.Send(new GetServiceGenericCodsQuery() { Name = name });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+    [HttpGet("services-insuranceid")]
+    public async Task<ActionResult<List<ServicesByInsuranceIdDTO>>> GetServicesByInsuranceId([FromQuery] string officeId, [FromQuery] string insuranceId)
+    {
+        var response = await _mediator.Send(new GetAllServicesByInsuranceIDQuery() { OfficeId = Guid.Parse(officeId), InsuranceId = Guid.Parse(insuranceId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

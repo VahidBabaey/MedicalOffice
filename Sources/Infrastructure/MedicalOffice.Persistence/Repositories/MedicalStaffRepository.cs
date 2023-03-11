@@ -88,7 +88,6 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
             foreach (var item in listmedi)
             {
-<<<<<<< HEAD
                 var medicalStaff = await _dbContext.MedicalStaffs.FirstOrDefaultAsync(x => x.UserId == item.UserId && x.OfficeId == officeId);
 
                 MedicalStaffNamesDTO medicalStaffNames = new()
@@ -120,20 +119,8 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         }
         catch (Exception ex)
         {
-
             throw;
         }
-=======
-                Id = medicalStaff.Id,
-                FirstName = medicalStaff.FirstName,
-                LastName = medicalStaff.LastName,
-                RoleId = item.Role.Id,
-                RoleName = item.Role.Name,
-            };
-            medicalStaffNamesDTO.Add(medicalStaffNames);
-        }
-        return Task.FromResult(medicalStaffNamesDTO);
->>>>>>> 927ee59f6cb75b6d45c3e9d32e8d43c09f767975
     }
 
     public async Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber)

@@ -23,20 +23,14 @@ public class UpdateReceptionDetailCommandHandler : IRequestHandler<UpdateRecepti
 {
     private readonly IValidator<UpdateReceptionDetailDTO> _validator;
     private readonly IReceptionRepository _receptionrepository;
-    private readonly ICashRepository _repositoryCash;
-    private readonly IReceptionDebtRepository _repositoryDebt;
-    private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public UpdateReceptionDetailCommandHandler(IValidator<UpdateReceptionDetailDTO> validator, IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository receptionrepository, IMapper mapper, ILogger logger)
+    public UpdateReceptionDetailCommandHandler(IValidator<UpdateReceptionDetailDTO> validator, IReceptionRepository receptionrepository, ILogger logger)
     {
         _validator = validator;
         _receptionrepository = receptionrepository;
-        _mapper = mapper;
         _logger = logger;
-        _repositoryCash = repositoryCash;
-        _repositoryDebt = repositoryDebt;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
@@ -74,7 +68,7 @@ public class UpdateReceptionDetailCommandHandler : IRequestHandler<UpdateRecepti
         {
             try
             {
-                var reception = await _receptionrepository.UpdateReceptionService(request.ReceptiodDetailId, request.DTO.MedicalStaffId, request.DTO.ShiftId, request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
+                var reception = await _receptionrepository.UpdateReceptionService(request.ReceptiodDetailId, request.OfficeId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.MedicalStaffs, request.DTO.Costd);
 
                 await _logger.Log(new Log
                 {

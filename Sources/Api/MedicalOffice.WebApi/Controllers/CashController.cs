@@ -4,9 +4,11 @@ using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.CashFile.Request.Commands;
 using MedicalOffice.Application.Features.CashFile.Request.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class CashController : Controller
@@ -29,7 +31,14 @@ public class CashController : Controller
     [HttpPost("Pos")]
     public async Task<ActionResult<Guid>> CreatePos([FromBody] CashPosDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddCashPosCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddCashPosCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+    [HttpPost("Money")]
+    public async Task<ActionResult<Guid>> CreateMoney([FromBody] CashMoneyDTO dto, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new AddCashMoneyCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -37,7 +46,7 @@ public class CashController : Controller
     [HttpPost("Check")]
     public async Task<ActionResult<Guid>> CreateCheck([FromBody] CashCheckDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddCashCheckCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddCashCheckCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -45,7 +54,7 @@ public class CashController : Controller
     [HttpPost("Cart")]
     public async Task<ActionResult<Guid>> CreateCart([FromBody] CashCartDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddCashCartCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddCashCartCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

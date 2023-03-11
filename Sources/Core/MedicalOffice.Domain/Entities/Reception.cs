@@ -13,14 +13,6 @@ public class Reception : BaseDomainEntity<Guid>
     /// </summary>
     public ReceptionType? ReceptionType { get; set; }
     /// <summary>
-    /// تاریخ پذیرش
-    /// </summary>
-    public string ReceptionDate { get; set; } = string.Empty;
-    /// <summary>
-    /// ساعت ثبت پذیرش
-    /// </summary>
-    public string ReceptionSubmitHour { get; set; } = string.Empty;
-    /// <summary>
     /// مطب
     /// </summary>
     public Office? Office { get; set; }
@@ -44,14 +36,6 @@ public class Reception : BaseDomainEntity<Guid>
     /// آیدی شیفت
     /// </summary>
     public Guid? ShiftId { get; set; }
-    /// <summary>
-    /// یوزر لاگین شده
-    /// </summary>
-    public MedicalStaff? LoggedInMedicalStaff { get; set; }
-    /// <summary>
-    /// آیدی یوزر لاگین شده
-    /// </summary>
-    public Guid? LoggedInMedicalStaffId { get; set; }
     /// <summary>
     /// شماره فاکتور
     /// </summary>

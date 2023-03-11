@@ -10,8 +10,6 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
 {
     Task<Guid> CreateNewReception
         (
-        Guid MedicalStaffId,
-        Guid shiftId,
         Guid officeId,
         Guid patientId,
         ReceptionType receptionType
@@ -20,7 +18,8 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
         (
         Guid serviceId,
         int serviceCount,
-        Guid? insuranceId
+        Guid? insuranceId,
+        Guid? additionalinsuranceId
         );
 
     //Task<ReceptionServiceDto> GetReceptionServiceInfo(Guid receptionDetailId);
@@ -33,15 +32,17 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
     Task<decimal> GetReceptionTotal(Guid id);
     Task<IEnumerable<MembershipNamesDTO>> GetAllMembershipNames();
     Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId);
-    Task<List<ReceptionDetailListDTO>> GetReceptionDetailList(Guid patientId);
+    Task<List<ReceptionDetailListDTO>> GetReceptionDetailList(Guid receptionId, Guid patientId);
     Task<Reception> CreateNewReceptionDebt(long Debt, Guid officeId, Guid receptionId);
     Task<ReceptionDetail> CreateNewReceptionDetailDebt(long Debt, Guid officeId, Guid receptionId);
     Task<bool> CheckExistReceptionId(Guid officeId, Guid receptionId);
     Task<List<ReceptionListDTO>> GetReceptionList(Guid patientId);
     int GetServiceCountsOfPatient(Guid receptionId);
     Task<List<ReceptionDetailListForReceptionDTO>> GetReceptionDetailListForReception(Guid patientId, Guid receptionId);
-    Task<ReceptionDetail> AddReceptionService(Guid medicalStaffId, Guid shiftId, Guid officeId, ReceptionType receptionType, Guid patientid, Guid? receptionId, Guid serviceId, int serviceCount, Guid? insuranceId, Guid additionalInsuranceId, Guid discountTypeId, Guid[] MedicalStaffs);
-    Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid medicalStaffId, Guid shiftId, Guid officeId, ReceptionType receptionType, Guid patientid, Guid? receptionId, Guid serviceId, int serviceCount, Guid? insuranceId, Guid additionalInsuranceId, Guid discountTypeId, Guid[] MedicalStaffs);
     Task<bool> CheckExistReceptionDetailId(Guid officeId, Guid receptiondetailId);
     Task UpdatereceptionDescription(Guid receptionid, string description);
+    Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId);
+    Task<long?> CalculateServiceTariff(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, int? discount);
+    Task<ReceptionDetail> AddReceptionService(Guid officeId, ReceptionType receptionType, Guid patientid, Guid receptionId, Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, Guid? membershipId, Guid[] MedicalStaffs, long costd);
+    Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid officeId, Guid receptionId, Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, Guid[] MedicalStaffs, long costd);
 }

@@ -24,6 +24,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<CashPos> CashPoses => Set<CashPos>();
     public DbSet<CashCart> CashCarts => Set<CashCart>();
     public DbSet<CashCheck> CashChecks => Set<CashCheck>();
+    public DbSet<CashMoney> CashMoneies => Set<CashMoney>();
     public DbSet<BasicInfoDetail> BasicInfoDetail => Set<BasicInfoDetail>();
     public DbSet<Diagnose> Diagnoses => Set<Diagnose>();
     public DbSet<DiscountType> DiscountTypes => Set<DiscountType>();

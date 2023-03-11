@@ -22,7 +22,7 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators
             _memberRepository = memberRepository;
             _officeResolver = officeResolver;
 
-            RuleFor(x => x.Discount).NotEmpty().LessThanOrEqualTo(100);
+            RuleFor(x => x.Discount).LessThanOrEqualTo(100);
             Include(new MembershipIdValidator(_memberRepository, _officeResolver));
             Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
         }

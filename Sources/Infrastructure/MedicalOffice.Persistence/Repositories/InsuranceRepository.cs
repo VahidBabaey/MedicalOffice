@@ -80,6 +80,21 @@ namespace MedicalOffice.Persistence.Repositories
             }
             return insuranceNamesListDTOs;
         }
+        public async Task<List<AdditionalInsuranceNamesDTO>> GetAdditionalInsuranceNames(Guid officeId)
+        {
+            List<AdditionalInsuranceNamesDTO> additionalinsuranceNamesListDTOs = new List<AdditionalInsuranceNamesDTO>();
+            var insurances = await _dbContext.Insurances.Where(p => p.OfficeId == officeId && p.IsDeleted == false && p.IsAdditionalInsurance == true).ToListAsync();
+            foreach (var item in insurances)
+            {
+                AdditionalInsuranceNamesDTO additionalinsuranceNamesListDTO = new()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                };
+                additionalinsuranceNamesListDTOs.Add(additionalinsuranceNamesListDTO);
+            }
+            return additionalinsuranceNamesListDTOs;
+        }
         public async Task<bool> CheckExistInsuranceName(Guid officeId, string insuranceName)
         {
             bool isExist = await _dbContext.Insurances.AnyAsync(p => p.OfficeId == officeId && p.Name == insuranceName);

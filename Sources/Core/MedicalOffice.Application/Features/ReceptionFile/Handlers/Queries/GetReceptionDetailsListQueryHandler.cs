@@ -37,7 +37,7 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
         {
             try
             {
-                var receptionDetailList = await _receptionrepository.GetReceptionDetailList(request.PatientId);
+                var receptionDetailList = await _receptionrepository.GetReceptionDetailList(request.ReceptionId, request.PatientId);
 
                 var result = _mapper.Map<List<ReceptionDetailListDTO>>(receptionDetailList.Skip(request.Dto.Skip).Take(request.Dto.Take));
 

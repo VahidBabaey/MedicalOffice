@@ -6,32 +6,16 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO;
 
-public class ReceptionsDTO : IPatientIdDTO, IShiftIdDTO, IMedicalStaffDTO
+public class ReceptionsDTO : IPatientIdDTO
 {
     /// <summary>
     /// تایپ پذیرش : پرداخت مبلغ امانی - پرداخت بدهی - برگشتی - پکیج - بدون فرانشیز - عادی
     /// </summary>
     public ReceptionType ReceptionType { get; set; }
     /// <summary>
-    /// تاریخ پذیرش
-    /// </summary>
-    public string ReceptionDate { get; set; } = string.Empty;
-    /// <summary>
-    /// ساعت ثبت پذیرش
-    /// </summary>
-    public string ReceptionSubmitHour { get; set; } = string.Empty;
-    /// <summary>
     /// آیدی بیمار
     /// </summary>
     public Guid PatientId { get; set; }
-    /// <summary>
-    /// آیدی شیفت
-    /// </summary>
-    public Guid ShiftId { get; set; }
-    /// <summary>
-    /// آیدی یوزر لاگین شده
-    /// </summary>
-    public Guid MedicalStaffId { get; set; }
     /// <summary>
     /// شماره فاکتور
     /// </summary>

@@ -31,4 +31,16 @@ public class DetailsofAllReceptionsDTO
     /// شماره فاکتور
     /// </summary>
     public int FactorNo { get; set; }
+    /// <summary>
+    /// توضیحات
+    /// </summary>
+    public string Description { get; set; }
+    /// <summary>
+    /// تاریخ پذیزش
+    /// </summary>
+    public string Date { get; set; }
+    /// <summary>
+    /// نام و نام خانوادگی یوزر ثبت کننده
+    /// </summary>
+    public string Username { get; set; }
 }

@@ -5,16 +5,19 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Models.Logger;
+using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
 {
 
-    public class GetAllMedicalStaffsNamesandRolesQueryHandler : IRequestHandler<GetAllMedicalStaffsNamesandRolesQuery, List<MedicalStaffNamesDTO>>
+    public class GetAllMedicalStaffsNamesandRolesQueryHandler : IRequestHandler<GetAllMedicalStaffsNamesandRolesQuery, BaseResponse>
     {
         private readonly IMedicalStaffRepository _repository;
         private readonly IMapper _mapper;
@@ -29,31 +32,30 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<List<MedicalStaffNamesDTO>> Handle(GetAllMedicalStaffsNamesandRolesQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetAllMedicalStaffsNamesandRolesQuery request, CancellationToken cancellationToken)
         {
-            List<MedicalStaffNamesDTO> result = new();
-            Log log = new();
-
             try
             {
                 var MedicalStaffs = await _repository.GetAllMedicalStaffsNamesandRoles(request.OfficeId);
 
-                result = _mapper.Map<List<MedicalStaffNamesDTO>>(MedicalStaffs);
-
-                log.Header = $"{_requestTitle} succeded";
-                log.Type = LogType.Success;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = MedicalStaffs.Count(), result = MedicalStaffs }
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = MedicalStaffs.Count(), result = MedicalStaffs });
             }
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData=(error.Message);
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
-
-            await _logger.Log(log);
-
-            return result;
         }
     }
-
 }

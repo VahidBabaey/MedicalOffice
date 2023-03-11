@@ -19,9 +19,5 @@ public class ReceptionDiscount : BaseDomainEntity<Guid>
     /// مبلغ تخفیف
     /// </summary>
     public long Discount { get; set; }
-    /// <summary>
-    /// جزئیات پذیرش
-    /// </summary>
-    public ICollection<ReceptionDetail>? ReceptionDetails { get; set; }
 
 }

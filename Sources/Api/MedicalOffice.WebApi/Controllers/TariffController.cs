@@ -48,12 +48,4 @@ public class TariffController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-
-    [HttpGet("insurance-names")]
-    public async Task<ActionResult<List<InsuranceNamesDTO>>> GetAllInsurances([FromQuery] string officeId)
-    {
-        var response = await _mediator.Send(new GetAllInsuranceNamesQuery() { OfficeId = Guid.Parse(officeId) });
-
-        return StatusCode(Convert.ToInt32(response.StatusCode), response);
-    }
 }

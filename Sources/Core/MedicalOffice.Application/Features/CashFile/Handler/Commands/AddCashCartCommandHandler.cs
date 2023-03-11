@@ -16,15 +16,17 @@ namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 public class AddCashCartCommandHandler : IRequestHandler<AddCashCartCommand, BaseResponse>
 {
     private readonly IValidator<CashCartDTO> _validator;
-    private readonly ICashCartRepository _repository;
+    private readonly ICashCartRepository _cashcartrepository;
+    private readonly ICashRepository _cashrepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddCashCartCommandHandler(IValidator<CashCartDTO> validator, ICashCartRepository repository, IMapper mapper, ILogger logger)
+    public AddCashCartCommandHandler(ICashRepository cashrepository, IValidator<CashCartDTO> validator, ICashCartRepository cashcartrepository, IMapper mapper, ILogger logger)
     {
         _validator = validator;
-        _repository = repository;
+        _cashrepository = cashrepository;
+        _cashcartrepository = cashcartrepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -50,10 +52,9 @@ public class AddCashCartCommandHandler : IRequestHandler<AddCashCartCommand, Bas
         {
             try
             {
-                var cashcart = _mapper.Map<CashCart>(request.DTO);
-                cashcart.OfficeId = request.OfficeId;
+                var cash = await _cashrepository.AddCashForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost);
 
-                cashcart = await _repository.Add(cashcart);
+                var cashcart = _cashcartrepository.AddCashCartForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, cash, request.DTO.Cost, request.DTO.BankId);
 
                 response.Success = true;
                 response.StatusCode = HttpStatusCode.OK;

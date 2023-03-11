@@ -22,16 +22,14 @@ public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, B
     private readonly IValidator<ReceptionsDTO> _validator;
     private readonly IOfficeRepository _officeRepository;
     private readonly IReceptionRepository _receptionrepository;
-    private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddReceptionCommandHandler(IValidator<ReceptionsDTO> validator, IOfficeRepository officeRepository, IReceptionRepository receptionrepository, IMapper mapper, ILogger logger)
+    public AddReceptionCommandHandler(IValidator<ReceptionsDTO> validator, IOfficeRepository officeRepository, IReceptionRepository receptionrepository, ILogger logger)
     {
         _validator = validator;
         _officeRepository = officeRepository;
         _receptionrepository = receptionrepository;
-        _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
@@ -70,10 +68,7 @@ public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, B
         {
             try
             {
-                //var reception = _mapper.Map<Reception>(request.DTO);
-                //reception.OfficeId = request.OfficeId;
-
-                var reception = await _receptionrepository.CreateNewReception(request.DTO.MedicalStaffId, request.DTO.ShiftId, request.OfficeId, request.DTO.PatientId, request.DTO.ReceptionType);
+               var reception = await _receptionrepository.CreateNewReception(request.OfficeId, request.DTO.PatientId, request.DTO.ReceptionType);
 
                 await _logger.Log(new Log
                 {

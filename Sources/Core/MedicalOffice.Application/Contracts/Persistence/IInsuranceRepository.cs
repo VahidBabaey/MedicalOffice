@@ -7,6 +7,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
     {
         Task<bool> CheckExistInsuranceId(Guid officeId, Guid? insuranceId);
         Task<bool> CheckExistInsuranceName(Guid officeId, string insuranceName);
+        Task<List<AdditionalInsuranceNamesDTO>> GetAdditionalInsuranceNames(Guid officeId);
         Task<List<InsuranceNamesDTO>> GetAllAdditionalInsuranceNames(Guid officeId);
         Task<List<Insurance>> GetInsuranceBySearch(string name, Guid officeId);
         Task<List<InsuranceNamesDTO>> GetInsuranceNames(Guid officeId);

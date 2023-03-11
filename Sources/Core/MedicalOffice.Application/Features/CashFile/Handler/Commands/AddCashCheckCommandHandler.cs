@@ -16,15 +16,17 @@ namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 public class AddCashCheckCommandHandler : IRequestHandler<AddCashCheckCommand, BaseResponse>
 {
     private readonly IValidator<CashCheckDTO> _validator;
-    private readonly ICashCheckRepository _repository;
+    private readonly ICashCheckRepository _cashcheckrepository;
+    private readonly ICashRepository _cashrepository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddCashCheckCommandHandler(IValidator<CashCheckDTO> validator, ICashCheckRepository repository, IMapper mapper, ILogger logger)
+    public AddCashCheckCommandHandler(ICashRepository cashrepository, IValidator<CashCheckDTO> validator, ICashCheckRepository cashcheckrepository, IMapper mapper, ILogger logger)
     {
         _validator = validator;
-        _repository = repository;
+        _cashrepository = cashrepository;
+        _cashcheckrepository = cashcheckrepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -50,10 +52,9 @@ public class AddCashCheckCommandHandler : IRequestHandler<AddCashCheckCommand, B
         {
             try
             {
-                var cashcheck = _mapper.Map<CashCheck>(request.DTO);
-                cashcheck.OfficeId = request.OfficeId;
+                var cash = await _cashrepository.AddCashForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost);
 
-                cashcheck = await _repository.Add(cashcheck);
+                var cashcheck = _cashcheckrepository.AddCashCheckForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, cash, request.DTO.Cost, request.DTO.BankId);
 
                 response.Success = true;
                 response.StatusCode = HttpStatusCode.OK;

@@ -28,45 +28,53 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
 
     public async Task<Guid> AddCashForAnyReceptionDetail(Guid OfficeId, Guid receptionId, long recieved)
     {
-        Cash cash = new()
+        try
         {
-            OfficeId = OfficeId,
-            ReceptionId = receptionId,
-            Recieved = recieved,  
-            IsReturned = false
-        };
-        await _cashRepository.Add(cash);
-
-        var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.Id == receptionId).ToListAsync();
-        foreach (var item in _list)
-        {
-            if (recieved > 0)
+            Cash cash = new()
             {
-                if (recieved > item.Debt)
+                OfficeId = OfficeId,
+                ReceptionId = receptionId,
+                Recieved = recieved,
+                IsReturned = false
+            };
+            await _cashRepository.Add(cash);
+
+            var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.Id == receptionId).ToListAsync();
+            foreach (var item in _list)
+            {
+                if (recieved > 0)
                 {
-                    item.Received += item.Debt;
-                    recieved = recieved - item.Debt;
-                    item.Debt = 0;
-                    await _receptionReceptionDetail.Update(item);
-                }
-                else if (recieved < item.Debt)
-                {
-                    item.Received += recieved;
-                    item.Debt = item.Debt - recieved;
-                    await _receptionReceptionDetail.Update(item);
-                    recieved = 0;
-                }
-                else if (recieved == item.Debt)
-                {
-                    item.Received += recieved;
-                    item.Debt = 0;
-                    await _receptionReceptionDetail.Update(item);
-                    recieved = 0;
+                    if (recieved > item.Debt)
+                    {
+                        item.Received += item.Debt;
+                        recieved = recieved - item.Debt;
+                        item.Debt = 0;
+                        await _receptionReceptionDetail.Update(item);
+                    }
+                    else if (recieved < item.Debt)
+                    {
+                        item.Received += recieved;
+                        item.Debt = item.Debt - recieved;
+                        await _receptionReceptionDetail.Update(item);
+                        recieved = 0;
+                    }
+                    else if (recieved == item.Debt)
+                    {
+                        item.Received += recieved;
+                        item.Debt = 0;
+                        await _receptionReceptionDetail.Update(item);
+                        recieved = 0;
+                    }
                 }
             }
-        }
 
-        return cash.Id;
+            return cash.Id;
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
     }
 
     public Task<List<CashListDTO>> GetPatientCashes(Guid receptionId)

@@ -14,6 +14,7 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Requests.Queries
     public class GetReceptionDetailsListQuery : IRequest<BaseResponse>
     {
         public Guid PatientId { get; set; }
+        public Guid ReceptionId { get; set; }
         public ListDto Dto { get; set; } = new ListDto();
     }
 }

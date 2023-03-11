@@ -16,15 +16,18 @@ namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 public class AddCashPosCommandHandler : IRequestHandler<AddCashPosCommand, BaseResponse>
 {
     private readonly IValidator<CashPosDTO> _validator;
-    private readonly ICashPosRepository _repository;
+    private readonly ICashPosRepository _cashposrepository;
+    private readonly ICashRepository _cashrepository;
+
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddCashPosCommandHandler(IValidator<CashPosDTO> validator, ICashPosRepository repository, IMapper mapper, ILogger logger)
+    public AddCashPosCommandHandler(ICashRepository cashrepository, IValidator<CashPosDTO> validator, ICashPosRepository cashposrepository, IMapper mapper, ILogger logger)
     {
         _validator = validator;
-        _repository = repository;
+        _cashrepository = cashrepository;
+        _cashposrepository = cashposrepository;
         _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
@@ -50,10 +53,9 @@ public class AddCashPosCommandHandler : IRequestHandler<AddCashPosCommand, BaseR
         {
             try
             {
-                var cashpos = _mapper.Map<CashPos>(request.DTO);
-                cashpos.OfficeId = request.OfficeId;
+                var cash = await _cashrepository.AddCashForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost);
 
-                cashpos = await _repository.Add(cashpos);
+                var cashpos = _cashposrepository.AddCashPosForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, cash, request.DTO.Cost, request.DTO.BankId);
 
                 response.Success = true;
                 response.StatusCode = HttpStatusCode.OK;

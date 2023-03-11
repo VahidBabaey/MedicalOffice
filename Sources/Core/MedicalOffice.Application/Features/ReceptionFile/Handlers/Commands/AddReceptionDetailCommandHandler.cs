@@ -23,20 +23,14 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
 {
     private readonly IValidator<ReceptionDetailDTO> _validator;
     private readonly IReceptionRepository _receptionrepository;
-    private readonly ICashRepository _repositoryCash;
-    private readonly IReceptionDebtRepository _repositoryDebt;
-    private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddReceptionDetailCommandHandler(IValidator<ReceptionDetailDTO> validator, IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository receptionrepository, IMapper mapper, ILogger logger)
+    public AddReceptionDetailCommandHandler(IValidator<ReceptionDetailDTO> validator, IReceptionRepository receptionrepository, ILogger logger)
     {
         _validator = validator;
         _receptionrepository = receptionrepository;
-        _mapper = mapper;
         _logger = logger;
-        _repositoryCash = repositoryCash;
-        _repositoryDebt = repositoryDebt;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
@@ -60,7 +54,7 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
         {
             try
             {
-                var receptionDetail = await _receptionrepository.AddReceptionService(request.DTO.MedicalStaffId, request.DTO.ShiftId, request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.ReceptionDiscountId, request.DTO.MedicalStaffs);
+                var receptionDetail = await _receptionrepository.AddReceptionService(request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.MembershipId, request.DTO.MedicalStaffs, request.DTO.Costd);
                 await _receptionrepository.UpdatereceptionDescription((Guid)request.DTO.ReceptionId, request.Description);
 
                 await _logger.Log(new Log
