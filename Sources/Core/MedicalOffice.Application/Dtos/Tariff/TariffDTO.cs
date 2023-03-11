@@ -5,13 +5,21 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.Tariff;
 
-public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
+public class TariffDTO : IServiceIdDTO
 {
     /// <summary>
     /// آیدی خدمت
     /// </summary>
     public Guid ServiceId { get; set; }
 
+    /// <summary>
+    /// لیست تعرفه ها
+    /// </summary>
+    public List<TariffList> Tariffs { get; set; }
+}
+
+public class TariffList : IInsuranceIdDTO
+{
     /// <summary>
     /// آیدی بیمه
     /// </summary>
@@ -52,3 +60,4 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// </summary>
     public int InsurancePercent { get; set; }
 }
+

@@ -50,10 +50,9 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
         bool isExist = await _dbContext.Tariffs.AnyAsync(p => p.Id == tariffId && p.OfficeId == officeId);
         return isExist;
     }
-
     public async Task<bool> IsUniqInsuranceTariff(Guid? insuranceId, Guid serviceId, Guid officeId)
     {
-        var isUniqe = await _dbContext.Tariffs.AnyAsync(x => x.InsuranceId == insuranceId && x.ServiceId == serviceId && x.OfficeId == officeId);
+        var isUniqe = await _dbContext.Tariffs.AnyAsync(x => x.InsuranceId == insuranceId && x.ServiceId == serviceId && x.OfficeId == officeId && x.IsDeleted == false);
 
         return !isUniqe;
     }

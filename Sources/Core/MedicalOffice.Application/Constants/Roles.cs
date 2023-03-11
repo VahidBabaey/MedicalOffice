@@ -34,20 +34,6 @@ namespace MedicalOffice.Application.Constants
         public static readonly Guid Id = Guid.Parse("8c07113f-ec06-4db0-90c7-e1d292525c7c");
     }
 
-    public static class SpecialistRole
-    {
-        public static readonly string Name = "Specialist";
-        public static readonly string NormalizedName = "SPECIALIST";
-        public static readonly Guid Id = Guid.Parse("fa87d211-3827-4e54-95f8-bf414d4a882f");
-    }
-
-    public static class TechnicalAssistant
-    {
-        public static readonly string Name = "TechnicalAssistant";
-        public static readonly string NormalizedName = "TECHNICALASSISTANT";
-        public static readonly Guid Id = Guid.Parse("59671245-f477-4163-95e6-4b0fba717c51");
-    }
-
     public static class SecretaryRole
     {
         public static readonly string Name = "Secretary";
@@ -60,5 +46,12 @@ namespace MedicalOffice.Application.Constants
         public static readonly string Name = "Expert";
         public static readonly string NormalizedName = "EXPERT";
         public static readonly Guid Id = Guid.Parse("bdb58210-f29f-4114-8564-7f3d5d2d26d6");
+    }
+
+    public static class ExternalRefferer
+    {
+        public static readonly string Name = "ExternalReferrer";
+        public static readonly string NormalizedName = "EXTERNALREFERRER";
+        public static readonly Guid Id = Guid.Parse("60EEAF14-A2E6-40DF-ABDC-31DFB55D0488");
     }
 }

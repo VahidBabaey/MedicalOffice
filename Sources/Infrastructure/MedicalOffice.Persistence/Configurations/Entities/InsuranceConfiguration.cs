@@ -53,6 +53,14 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                         InsuranceCode = 3,
                         TariffType = TariffType.Private
                     },
+                    new Insurance
+                    {
+                        Id = Guid.Parse("0c3bd851-13b7-453b-9143-6ac5d96dd9cd"),
+                        OfficeId = Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0"),
+                        Name = "آزاد",
+                        InsuranceCode = 4,
+                        TariffType = TariffType.Private
+                    },
                 });
         }
     }

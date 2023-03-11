@@ -21,14 +21,23 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 {
     public class AddServiceTariffCommandHandler : IRequestHandler<AddServiceTariffCommand, BaseResponse>
     {
-        private readonly IOfficeRepository _officeRepository;
         private readonly IValidator<TariffDTO> _validator;
+        private readonly IOfficeRepository _officeRepository;
         private readonly IServiceTariffRepository _tariffrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
-        public AddServiceTariffCommandHandler(IOfficeRepository officeRepository, IValidator<TariffDTO> validator, IServiceTariffRepository tariffrepository, IMapper mapper, ILogger logger)
+        private readonly IServiceRepository _serviceRepository;
+
+        public AddServiceTariffCommandHandler(
+            IValidator<TariffDTO> validator,
+            IOfficeRepository officeRepository,
+            IServiceTariffRepository tariffrepository,
+            IServiceRepository serviceRepository,
+            IMapper mapper,
+            ILogger logger)
         {
+            _serviceRepository = serviceRepository;
             _officeRepository = officeRepository;
             _validator = validator;
             _tariffrepository = tariffrepository;
@@ -52,18 +61,38 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
-            var tariff = _mapper.Map<Tariff>(request.DTO);
-            tariff.OfficeId = request.OfficeId;
+            if (request.DTO.Tariffs.Count == 0)
+            {
+                var existingService = await _serviceRepository.GetById(request.DTO.ServiceId);
+                existingService.TariffInReceptionTime = true;
+                await _serviceRepository.Update(existingService);
 
-            await _tariffrepository.Add(tariff);
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { }
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { });
+            }
+
+            var tariffs = _mapper.Map<List<Tariff>>(request.DTO.Tariffs);
+
+            foreach (var item in tariffs)
+            {
+                item.OfficeId = request.OfficeId;
+                item.ServiceId = request.DTO.ServiceId;
+            }
+
+            await _tariffrepository.AddRange(tariffs);
 
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeded",
-                AdditionalData = tariff.Id
+                AdditionalData = tariffs.Select(x => x.Id)
             });
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", tariff.Id);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", tariffs.Select(x => x.Id));
         }
     }
 }

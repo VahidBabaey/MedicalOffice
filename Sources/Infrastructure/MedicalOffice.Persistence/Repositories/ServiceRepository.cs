@@ -84,4 +84,16 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
 
         return isExist;
     }
+
+    public async Task<bool> isTariffValid(Guid serviceId)
+    {
+        var service = await _dbContext.Services.SingleOrDefaultAsync(x => x.Id == serviceId && x.IsDeleted != true);
+
+        if (service != null)
+        {
+            return service.TariffInReceptionTime == true ? false : true;
+        }
+
+        return false;
+    }
 }

@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Domain.Entities;
+﻿using MedicalOffice.Application.Dtos.Tariff;
+using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Contracts.Persistence
 {
@@ -19,5 +20,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> CheckExistServiceName(Guid officeId, string serviceName);
 
         Task<bool> IsNameExistInOtherServices(string name, Guid id, Guid officeId);
+        Task<bool> isTariffValid(Guid serviceId);
     }
 }
