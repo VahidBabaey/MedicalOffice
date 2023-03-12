@@ -8,51 +8,45 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators
     {
         public MedicalStaffDayScheduleValidator()
         {
-            #region MorningStartValidation
-            RuleFor(x => x.MorningStart)
-                .Must(x => TimeOnly.TryParse(x, out TimeOnly result))
-                .WithMessage(ValidationMessage.NotValid.For("MorningStart"));
+            RuleFor(obj => obj)
+                .Must(x => IsNullabalityValid(x.MorningStart, x.MorningEnd))
+                    .WithMessage("The MorningStart or MorningEnd isn't exist")
+                .Must(x => IsNullabalityValid(x.EveningStart, x.EveningEnd))
+                    .WithMessage("The EveningStart or EveningEnd isn't exist")
+                .Must(x => IsConvertbleToTimeOnly(x.MorningStart, x.MorningEnd))
+                    .WithMessage("The MorningStart should be less than MorningEnd")
+                .Must(x => IsConvertbleToTimeOnly(x.MorningStart, x.MorningEnd))
+                    .WithMessage("The EveningStart should be less than EveningEnd")
+                .Must(x => IsConvertbleToTimeOnly(x.MorningEnd, x.EveningStart))
+                    .WithMessage("The MorningEnd should be less than EveningStart");
+        }
 
-            RuleFor(x => TimeOnly.Parse(x.MorningStart))
-                .LessThan(x => TimeOnly.Parse(x.MorningEnd))
-                .WithMessage(ValidationMessage.LessThan.For("MorningStart", "MorningEnd"));
-            #endregion
+        private bool IsNullabalityValid(string? a, string? b)
+        {
+            if ((a != null && b == null) || (b != null && a == null))
+            {
+                return false;
+            }
+            return true;
+        }
 
-            #region MorningEndValidation
-            RuleFor(x => x.MorningEnd)
-                .Must(x => TimeOnly.TryParse(x, out TimeOnly result))
-                .WithMessage(ValidationMessage.NotValid.For("MorningEnd"));
+        private bool IsConvertbleToTimeOnly(string? a, string? b)
+        {
+            if (a != null && b != null)
+            {
+                var aIsValid = Task.FromResult(TimeOnly.TryParse(a, out TimeOnly aResult)).Result;
+                var bIsValid = Task.FromResult(TimeOnly.TryParse(a, out TimeOnly bResult)).Result;
+                if (!aIsValid || !bIsValid)
+                {
+                    return false;
+                }
 
-            RuleFor(x => TimeOnly.Parse(x.MorningEnd))
-                .GreaterThan(x => TimeOnly.Parse(x.MorningStart))
-                .WithMessage(ValidationMessage.GreaterThan.For("MorningEnd", "MorningStart"))
-                .LessThan(x => TimeOnly.Parse(x.EveningStart))
-                .WithMessage(ValidationMessage.LessThan.For("MorningEnd", "EveningStart"));
-            #endregion
-
-            #region EveningStartValidation
-            RuleFor(x => x.EveningStart)
-                .Must(x => TimeOnly.TryParse(x, out TimeOnly result))
-                .WithMessage(ValidationMessage.NotValid.For("EveningStart"));
-
-            RuleFor(x => TimeOnly.Parse(x.EveningStart))
-                .GreaterThan(x => TimeOnly.Parse(x.MorningEnd))
-                .WithMessage(ValidationMessage.GreaterThan.For("EveningStart", "MorningEnd"))
-                .LessThan(x => TimeOnly.Parse(x.EveningEnd))
-                .WithMessage(ValidationMessage.LessThan.For("EveningStart", "EveningEnd"));
-            #endregion
-
-            #region EveningEndValidation
-            RuleFor(x => x.EveningEnd)
-                .Must(x => TimeOnly.TryParse(x, out TimeOnly result))
-                .WithMessage(ValidationMessage.NotValid.For("EveningEnd"));
-
-            RuleFor(x => TimeOnly.Parse(x.EveningEnd))
-                .GreaterThan(x => TimeOnly.Parse(x.EveningStart))
-                .WithMessage(ValidationMessage.GreaterThan.For("EveningEnd", "EveningStart"));
-            #endregion
-
+                if (TimeOnly.Parse(a) > TimeOnly.Parse(b))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
-
