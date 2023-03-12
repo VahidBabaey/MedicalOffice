@@ -75,4 +75,8 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// پرداخت بدهی
     /// </summary>
     public bool IsDebt { get; set; }
+    /// <summary>
+    /// سهم سازمان
+    /// </summary>
+    public long OrganShare { get; set; }
 }

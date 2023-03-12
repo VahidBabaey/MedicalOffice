@@ -15,7 +15,6 @@ public class AddCashCheckValidator : AbstractValidator<CashCheckDTO>
         _officeResolver = officeResolver;
         RuleFor(x => x.Cost).NotEmpty();
         RuleFor(x => x.AccountNumber).NotEmpty().Length(1, 13);
-        RuleFor(x => x.Date).NotEmpty();
         Include(new CashIdValidator(_cashRepository, _officeResolver));
     }
 }
