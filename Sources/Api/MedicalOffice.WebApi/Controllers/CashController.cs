@@ -60,9 +60,9 @@ public class CashController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult<Guid>> GetCashList([FromQuery] Guid receptionId)
+    public async Task<ActionResult<Guid>> GetCashList([FromQuery] string receptionId, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetPatientCashesQuery() { ReceptionId = receptionId });
+        var response = await _mediator.Send(new GetPatientCashesQuery() { ReceptionId = Guid.Parse(receptionId), OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -92,9 +92,9 @@ public class CashController : Controller
     }
 
     [HttpDelete("Pos")]
-    public async Task<IActionResult> RemovePos(Guid id, [FromQuery] string officeId)
+    public async Task<IActionResult> RemovePos(Guid posid)
     {
-        var response = await _mediator.Send(new DeleteCashPosCommand() { CashPosId = id });
+        var response = await _mediator.Send(new DeleteCashPosCommand() { CashPosId = posid});
 
         return Ok(response);
     }

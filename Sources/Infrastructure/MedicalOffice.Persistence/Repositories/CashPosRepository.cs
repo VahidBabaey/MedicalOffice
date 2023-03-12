@@ -33,16 +33,25 @@ public class CashPosRepository : GenericRepository<CashPos, Guid>, ICashPosRepos
         bool isExist = await _dbContext.CashPoses.AnyAsync(p => p.Id == cashPosId);
         return isExist;
     }
-    public async Task<Guid> AddCashPosForAnyReceptionDetail(Guid OfficeId, Guid receptionId, Guid cashid, long recieved, Guid bankid)
+    public async Task<Guid> AddCashPosForAnyReceptionDetail(Guid OfficeId, Guid receptionId, long recieved, Guid bankid)
     {
         try
         {
+            Cash cash = new()
+            {
+                OfficeId = OfficeId,
+                ReceptionId = receptionId,
+                Recieved = recieved,
+                IsReturned = false
+            };
+            await _cashRepository.Add(cash);
+
             CashPos cashPos = new()
             {
                 OfficeId = OfficeId,
                 ReceptionId = receptionId,
                 Cost = recieved,
-                CashId = cashid,
+                CashId = cash.Id,
                 BankId = bankid
             };
             await _cashPosRepository.Add(cashPos);
@@ -57,6 +66,7 @@ public class CashPosRepository : GenericRepository<CashPos, Guid>, ICashPosRepos
                         item.Received += item.Debt;
                         recieved = recieved - item.Debt;
                         item.Debt = 0;
+                        item.IsDebt = false;
                         await _receptionReceptionDetail.Update(item);
                     }
                     else if (recieved < item.Debt)
@@ -76,6 +86,48 @@ public class CashPosRepository : GenericRepository<CashPos, Guid>, ICashPosRepos
                 }
             }
             return cashPos.Id;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+    public async Task DeleteCashPosForAnyReceptionDetail(Guid posId)
+    {
+        try
+        {
+            var _pos = await _dbContext.CashPoses.Where(p => p.Id == posId).FirstOrDefaultAsync();
+            var _cash = await _dbContext.Cashes.Where(p => p.Id == _pos.CashId).FirstOrDefaultAsync();
+            var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.Id == _pos.ReceptionId).ToListAsync();
+            foreach (var item in _list)
+            {
+                if (_pos.Cost> 0)
+                {
+                    if (_pos.Cost > item.Received)
+                    {
+                        _pos.Cost = _pos.Cost - item.Received;
+                        item.Debt = item.Received;
+                        item.Received = 0;
+                        await _receptionReceptionDetail.Update(item);
+                    }
+                    else if (_pos.Cost < item.Received)
+                    {
+                        item.Received = item.Received - _pos.Cost;
+                        item.Debt = item.Debt + _pos.Cost;
+                        await _receptionReceptionDetail.Update(item);
+                        _pos.Cost = 0;
+                    }
+                    else if (_pos.Cost == item.Debt)
+                    {
+                        item.Debt = item.Received;
+                        item.Received = 0;
+                        await _receptionReceptionDetail.Update(item);
+                        _pos.Cost = 0;
+                    }
+                }
+            }
+            await _cashPosRepository.Delete(_pos);
+            await _cashRepository.Delete(_cash);
         }
         catch (Exception ex)
         {

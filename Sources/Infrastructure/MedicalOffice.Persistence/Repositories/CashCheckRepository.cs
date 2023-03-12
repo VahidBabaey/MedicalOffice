@@ -6,14 +6,16 @@ namespace MedicalOffice.Persistence.Repositories;
 
 public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashCheckRepository
 {
+    private readonly IGenericRepository<Cash, Guid> _cashRepository;
     private readonly IGenericRepository<CashCheck, Guid> _cashCheckRepository;
     private readonly IGenericRepository<ReceptionDetail, Guid> _receptionReceptionDetail;
 
     private readonly ApplicationDbContext _dbContext;
 
-    public CashCheckRepository(IGenericRepository<ReceptionDetail, Guid> receptionReceptionDetail, IGenericRepository<CashCheck, Guid> cashCheckRepository, ApplicationDbContext dbContext) : base(dbContext)
+    public CashCheckRepository(IGenericRepository<Cash, Guid> cashRepository, IGenericRepository<ReceptionDetail, Guid> receptionReceptionDetail, IGenericRepository<CashCheck, Guid> cashCheckRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
+        _cashRepository = cashRepository;
         _receptionReceptionDetail = receptionReceptionDetail;
         _cashCheckRepository = cashCheckRepository;
     }
@@ -32,16 +34,25 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
         bool isExist = await _dbContext.CashChecks.AnyAsync(p => p.Id == cashCheckId);
         return isExist;
     }
-    public async Task<Guid> AddCashCheckForAnyReceptionDetail(Guid OfficeId, Guid receptionId, Guid cashid, long recieved, Guid bankid)
+    public async Task<Guid> AddCashCheckForAnyReceptionDetail(Guid OfficeId, Guid receptionId, long recieved, Guid bankid)
     {
         try
         {
+            Cash cash = new()
+            {
+                OfficeId = OfficeId,
+                ReceptionId = receptionId,
+                Recieved = recieved,
+                IsReturned = false
+            };
+            await _cashRepository.Add(cash);
+
             CashCheck cashCheck = new()
             {
                 OfficeId = OfficeId,
                 ReceptionId = receptionId,
                 Cost = recieved,
-                CashId = cashid,
+                CashId = cash.Id,
                 BankId = bankid
             };
             await _cashCheckRepository.Add(cashCheck);
@@ -56,6 +67,7 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
                         item.Received += item.Debt;
                         recieved = recieved - item.Debt;
                         item.Debt = 0;
+                        item.IsDebt = false;
                         await _receptionReceptionDetail.Update(item);
                     }
                     else if (recieved < item.Debt)
@@ -75,6 +87,48 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
                 }
             }
             return cashCheck.Id;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+    public async Task DeleteCashCheckForAnyReceptionDetail(Guid checkId)
+    {
+        try
+        {
+            var _check = await _dbContext.CashChecks.Where(p => p.Id == checkId).FirstOrDefaultAsync();
+            var _cash = await _dbContext.Cashes.Where(p => p.Id == _check.CashId).FirstOrDefaultAsync();
+            var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.Id == _check.ReceptionId).ToListAsync();
+            foreach (var item in _list)
+            {
+                if (_check.Cost > 0)
+                {
+                    if (_check.Cost > item.Received)
+                    {
+                        _check.Cost = _check.Cost - item.Received;
+                        item.Debt = item.Received;
+                        item.Received = 0;
+                        await _receptionReceptionDetail.Update(item);
+                    }
+                    else if (_check.Cost < item.Received)
+                    {
+                        item.Received = item.Received - _check.Cost;
+                        item.Debt = item.Debt + _check.Cost;
+                        await _receptionReceptionDetail.Update(item);
+                        _check.Cost = 0;
+                    }
+                    else if (_check.Cost == item.Debt)
+                    {
+                        item.Debt = item.Received;
+                        item.Received = 0;
+                        await _receptionReceptionDetail.Update(item);
+                        _check.Cost = 0;
+                    }
+                }
+            }
+            await _cashCheckRepository.Delete(_check);
+            await _cashRepository.Delete(_cash);
         }
         catch (Exception ex)
         {

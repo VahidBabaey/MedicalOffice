@@ -20,10 +20,6 @@ public class CashCheckDTO : ICashIdDTO
     /// </summary>
     public string AccountNumber { get; set; }
     /// <summary>
-    /// تاریخ
-    /// </summary>
-    public string Date { get; set; }
-    /// <summary>
     /// آیدی بانک
     /// </summary>
     public Guid BankId { get; set; }

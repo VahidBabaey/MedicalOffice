@@ -17,69 +17,58 @@ public class AddCashMoneyCommandHandler : IRequestHandler<AddCashMoneyCommand, B
 {
     private readonly IValidator<CashMoneyDTO> _validator;
     private readonly ICashMoneyRepository _cashmoneyrepository;
-    private readonly ICashRepository _cashrepository;
-    private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddCashMoneyCommandHandler(ICashMoneyRepository cashmoneyrepository, IValidator<CashMoneyDTO> validator, ICashRepository cashrepository, IMapper mapper, ILogger logger)
+    public AddCashMoneyCommandHandler(ICashMoneyRepository cashmoneyrepository, IValidator<CashMoneyDTO> validator, ILogger logger)
     {
         _validator = validator;
-        _cashrepository = cashrepository;
         _cashmoneyrepository = cashmoneyrepository;
-        _mapper = mapper;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(AddCashMoneyCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
-
-        Log log = new();
 
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-            log.Type = LogType.Error;
+            var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
         else
         {
             try
             {
-                var cash = await _cashrepository.AddCashForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost);
+                var cashmoney = _cashmoneyrepository.AddCashMoneyForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost);
 
-                var cashmoney = _cashmoneyrepository.AddCashMoneyForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, cash, request.DTO.Cost);
-
-                response.Success = true;
-                response.StatusCode = HttpStatusCode.OK;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = cashmoney.Id });
-
-                log.Type = LogType.Success;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = cashmoney
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", cashmoney);
             }
             catch (Exception error)
             {
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
     }
 }
 

@@ -38,36 +38,6 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
                 IsReturned = false
             };
             await _cashRepository.Add(cash);
-
-            var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.Id == receptionId).ToListAsync();
-            foreach (var item in _list)
-            {
-                if (recieved > 0)
-                {
-                    if (recieved > item.Debt)
-                    {
-                        item.Received += item.Debt;
-                        recieved = recieved - item.Debt;
-                        item.Debt = 0;
-                        await _receptionReceptionDetail.Update(item);
-                    }
-                    else if (recieved < item.Debt)
-                    {
-                        item.Received += recieved;
-                        item.Debt = item.Debt - recieved;
-                        await _receptionReceptionDetail.Update(item);
-                        recieved = 0;
-                    }
-                    else if (recieved == item.Debt)
-                    {
-                        item.Received += recieved;
-                        item.Debt = 0;
-                        await _receptionReceptionDetail.Update(item);
-                        recieved = 0;
-                    }
-                }
-            }
-
             return cash.Id;
         }
         catch (Exception ex)
@@ -77,13 +47,13 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         }
     }
 
-    public Task<List<CashListDTO>> GetPatientCashes(Guid receptionId)
+    public async Task<List<CashListDTO>> GetPatientCashes(Guid officeId, Guid receptionId)
     {
         List<CashListDTO> list = new();
 
-        var _listPos = _dbContext.CashPoses.Where(p => p.ReceptionId == receptionId).ToList();
-        var _listCheck = _dbContext.CashChecks.Where(p => p.ReceptionId == receptionId).ToList();
-        var _listCart = _dbContext.CashCarts.Where(p => p.ReceptionId == receptionId).ToList();
+        var _listPos = await _dbContext.CashPoses.Where(p => p.ReceptionId == receptionId && p.OfficeId == officeId).ToListAsync();
+        var _listCheck = await _dbContext.CashChecks.Where(p => p.ReceptionId == receptionId && p.OfficeId == officeId).ToListAsync();
+        var _listCart = await _dbContext.CashCarts.Where(p => p.ReceptionId == receptionId && p.OfficeId == officeId).ToListAsync();
 
         foreach (var itempos in _listPos)
         {
@@ -122,7 +92,7 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
             list.Add(cashListDTO);
         }
 
-        return Task.FromResult(list);
+        return list;
     }
 
     public Task<decimal> GetCashDifferenceWithRecieved(Guid receptionId)

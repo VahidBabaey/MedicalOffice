@@ -14,5 +14,6 @@ namespace MedicalOffice.Application.Features.CashFile.Request.Queries
     public class GetPatientCashesQuery : IRequest<BaseResponse>
     {
         public Guid ReceptionId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

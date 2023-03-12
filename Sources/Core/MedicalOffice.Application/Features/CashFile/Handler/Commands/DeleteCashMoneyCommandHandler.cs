@@ -12,25 +12,25 @@ using System.Net;
 
 namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
-public class DeleteCashPosCommandHandler : IRequestHandler<DeleteCashPosCommand, BaseResponse>
+public class DeleteCashMoneyCommandHandler : IRequestHandler<DeleteCashMoneyCommand, BaseResponse>
 {
-    private readonly ICashPosRepository _casgposrepository;
+    private readonly ICashMoneyRepository _cashmoneyrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteCashPosCommandHandler(ICashPosRepository casgposrepository, ILogger logger)
+    public DeleteCashMoneyCommandHandler(ICashMoneyRepository cashmoneyrepository, ILogger logger)
     {
-        _casgposrepository = casgposrepository;
+        _cashmoneyrepository = cashmoneyrepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
-    public async Task<BaseResponse> Handle(DeleteCashPosCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(DeleteCashMoneyCommand request, CancellationToken cancellationToken)
     {
 
-        bool iscashPosIdExist = await _casgposrepository.CheckCashPosId(request.CashPosId);
+        bool iscashMoneyIdExist = await _cashmoneyrepository.CheckCashMoneyId(request.CashMoneyId);
 
-        if (!iscashPosIdExist)
+        if (!iscashMoneyIdExist)
         {
             var error = "ID isn't exist";
             await _logger.Log(new Log
@@ -44,7 +44,7 @@ public class DeleteCashPosCommandHandler : IRequestHandler<DeleteCashPosCommand,
 
         try
         {
-            await _casgposrepository.DeleteCashPosForAnyReceptionDetail(request.CashPosId);
+            await _cashmoneyrepository.DeleteCashMoneyForAnyReceptionDetail(request.CashMoneyId);
 
             await _logger.Log(new Log
             {
