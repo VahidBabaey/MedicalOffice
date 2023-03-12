@@ -10,9 +10,6 @@ namespace MedicalOffice.Persistence.Repositories;
 public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMedicalStaffRepository
 {
     private readonly ApplicationDbContext _dbContext;
-
-    string roleName = "";
-
     public MedicalStaffRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
@@ -31,15 +28,14 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
             _dbContext.UserOfficeRoles.Add(item);
         }
     }
-
     public async Task<List<MedicalStaffListDTO>> GetAllMedicalStaffs(Guid officeId)
     {
-        List<MedicalStaffListDTO> medicalStaffListDTOs = new List<MedicalStaffListDTO>();
+        var medicalStaffListDTOs = new List<MedicalStaffListDTO>();
         var _list = await _dbContext.MedicalStaffs.Where(p => p.OfficeId == officeId).ToListAsync();
 
         foreach (var item in _list)
         {
-            MedicalStaffListDTO medicalStaffListDTO = new()
+            var medicalStaffListDTO = new MedicalStaffListDTO()
             {
                 Id = item.Id,
                 FirstName = item.FirstName,
@@ -74,55 +70,46 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
         return _list;
     }
-
     public async Task<List<MedicalStaffNamesDTO>> GetAllMedicalStaffsNamesandRoles(Guid officeId)
     {
-        try
+        var medicalStaffNamesDTO = new List<MedicalStaffNamesDTO>();
+
+        //var listmedi = _dbContext.UserOfficeRoles.Include(x => x.User).ThenInclude(x => x.MedicalStaffs)
+        //    .Where(x => x.OfficeId == officeId && x.Role.ShowInReception == true);
+
+        var listmedi = await _dbContext.UserOfficeRoles.Include(x => x.User).Include(x => x.Role).Where(x => x.Role.ShowInReception == true).ToListAsync();
+
+        foreach (var item in listmedi)
         {
-            List<MedicalStaffNamesDTO> medicalStaffNamesDTO = new();
+            var medicalStaff = await _dbContext.MedicalStaffs.FirstOrDefaultAsync(x => x.UserId == item.UserId && x.OfficeId == officeId);
 
-            //var listmedi = _dbContext.UserOfficeRoles.Include(x => x.User).ThenInclude(x => x.MedicalStaffs)
-            //    .Where(x => x.OfficeId == officeId && x.Role.ShowInReception == true);
-
-            var listmedi = await _dbContext.UserOfficeRoles.Include(x => x.User).Include(x => x.Role).Where(x => x.Role.ShowInReception == true).ToListAsync();
-
-            foreach (var item in listmedi)
+            var medicalStaffNames = new MedicalStaffNamesDTO()
             {
-                var medicalStaff = await _dbContext.MedicalStaffs.FirstOrDefaultAsync(x => x.UserId == item.UserId && x.OfficeId == officeId);
-
-                MedicalStaffNamesDTO medicalStaffNames = new()
-                {
-                    Id = medicalStaff.Id,
-                    FirstName = medicalStaff.FirstName,
-                    LastName = medicalStaff.LastName,
-                    RoleId = item.RoleId,
-                    RoleName = item.Role.PersianName,
-                };
-                medicalStaffNamesDTO.Add(medicalStaffNames);
-            }
-            //var _list = _dbContext.MedicalStaffRoles
-            //    .Include(p => p.MedicalStaff).Include(x => x.Role).Where(x => x.Role.ShowInReception == true);
-
-            //foreach (var item in _list)
-            //{
-            //    MedicalStaffNamesDTO medicalStaffNames = new()
-            //    {
-            //        Id = item.MedicalStaff.Id,
-            //        FirstName = item.MedicalStaff.FirstName,
-            //        LastName = item.MedicalStaff.LastName,
-            //        RoleId = item.Role.Id,
-            //        RoleName = item.Role.Name,
-            //    };
-            //    medicalStaffNamesDTO.Add(medicalStaffNames);
-            //}
-            return medicalStaffNamesDTO;
+                Id = medicalStaff.Id,
+                FirstName = medicalStaff.FirstName,
+                LastName = medicalStaff.LastName,
+                RoleId = item.RoleId,
+                RoleName = item.Role.PersianName,
+            };
+            medicalStaffNamesDTO.Add(medicalStaffNames);
         }
-        catch (Exception ex)
-        {
-            throw;
-        }
+        //var _list = _dbContext.MedicalStaffRoles
+        //    .Include(p => p.MedicalStaff).Include(x => x.Role).Where(x => x.Role.ShowInReception == true);
+
+        //foreach (var item in _list)
+        //{
+        //    MedicalStaffNamesDTO medicalStaffNames = new()
+        //    {
+        //        Id = item.MedicalStaff.Id,
+        //        FirstName = item.MedicalStaff.FirstName,
+        //        LastName = item.MedicalStaff.LastName,
+        //        RoleId = item.Role.Id,
+        //        RoleName = item.Role.Name,
+        //    };
+        //    medicalStaffNamesDTO.Add(medicalStaffNames);
+        //}
+        return medicalStaffNamesDTO;
     }
-
     public async Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber)
     {
         bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.PhoneNumber == phoneNumber);
@@ -152,7 +139,6 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
         return staffs;
     }
-
     public async Task<MedicalStaff> GetExistingStaffById(Guid id, Guid officeId)
     {
         var medicalStaff = await _dbContext.MedicalStaffs.Include(x => x.User).Where(x => x.Id == id && x.OfficeId == officeId).FirstOrDefaultAsync();
