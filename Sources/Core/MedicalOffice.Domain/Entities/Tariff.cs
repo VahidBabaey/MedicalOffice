@@ -27,22 +27,30 @@ public class Tariff : BaseDomainEntity<Guid>
     public Guid ServiceId { get; set; }
 
     ///// <summary>
-    ///// نوع سرویس
+    ///// نوع خدمت
     ///// </summary>
-    //public ServiceType ServiceType { get; set; }
+    public ServiceType ServiceType { get; set; }
 
     /// <summary>
     /// تعرفه قابل تعیین توسط کاربر است یا خیر
     /// </summary>
     public Insurance? Insurance { get; set; }
+
     /// <summary>
     /// آیدی بیمه
     /// </summary>
     public Guid? InsuranceId { get; set; }
+
+    /// <summary>
+    /// کد بیمه ای برای نمایش در دیسکت
+    /// </summary>
+    public long? TariffInsuranceCode { get; set; }
+
     /// <summary>
     /// آیدی بیمه تکمیلی
     /// </summary>
     public Guid? AdditionalInsuranceId { get; set; }
+
     /// <summary>
     /// مبلغ تعرفه
     /// </summary>

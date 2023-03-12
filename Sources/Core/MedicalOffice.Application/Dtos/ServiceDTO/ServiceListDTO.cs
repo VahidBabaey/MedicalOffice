@@ -21,6 +21,11 @@ public class ServiceListDTO : BaseDto<Guid>
     public string GenericCode { get; set; } = string.Empty;
 
     /// <summary>
+    /// نام ارزش نسبی
+    /// </summary>
+    public string? ICD10Name { get; set; }
+
+    /// <summary>
     /// نحوه محاسبه
     /// </summary>
     public CalculationMethod CalculationMethod { get; set; }
