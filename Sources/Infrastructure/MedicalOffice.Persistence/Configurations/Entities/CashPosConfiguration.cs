@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MedicalOffice.Persistence.Configurations.Entities
 {
-    public class CashPosConfiguration : BaseEntityTypeConfiguration<CashPos, Guid>
+    public class CashMoneyConfiguration : BaseEntityTypeConfiguration<CashMoney, Guid>
     {
-        public override void ConfigureEntity(EntityTypeBuilder<CashPos> builder)
+        public override void ConfigureEntity(EntityTypeBuilder<CashMoney> builder)
         {
             builder
                 .HasOne(e => e.Office)
-                .WithMany(e => e.CashPoses)
+                .WithMany(e => e.CashMoneies)
                 .HasForeignKey(e => e.OfficeId)
                 .OnDelete(DeleteBehavior.NoAction);
 

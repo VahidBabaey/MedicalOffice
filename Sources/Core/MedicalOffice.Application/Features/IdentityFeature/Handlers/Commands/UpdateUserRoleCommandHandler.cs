@@ -21,25 +21,27 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 {
     public class UpdateUserRoleCommandHandler : IRequestHandler<UpdateUserRoleCommand, BaseResponse>
     {
-        private readonly RoleManager<Role> _roleManager;
-        private readonly IOfficeRepository _officeRepository;
-        private readonly UserManager<User> _userManager;
-        private readonly IUserOfficeRoleRepository _usercOfficeRoleRepository;
         private readonly IValidator<UpdateUserRoleDTO> _validator;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly UserManager<User> _userManager;
+        private readonly IOfficeRepository _officeRepository;
+        private readonly IUserOfficeRoleRepository _usercOfficeRoleRepository;
         private readonly ILogger _logger;
-
         private readonly string _requestTitle;
+        private readonly IRoleRepository _roleRepository;
 
         public UpdateUserRoleCommandHandler(
+            IValidator<UpdateUserRoleDTO> validator,
+            IRoleRepository roleRepository,
             RoleManager<Role> roleManager,
             UserManager<User> userManager,
             IOfficeRepository officeRepository,
-            IValidator<UpdateUserRoleDTO> validator,
             IUserOfficeRoleRepository userOfficeRoleRepository,
             ILogger logger
             )
         {
             _officeRepository = officeRepository;
+            _roleRepository = roleRepository;
             _roleManager = roleManager;
             _usercOfficeRoleRepository = userOfficeRoleRepository;
             _userManager = userManager;
@@ -66,7 +68,7 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             var user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
             if (user == null)
             {
-                var error = "User not found";
+                var error = "The User is not found";
 
                 await _logger.Log(new Log
                 {
@@ -78,25 +80,11 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
-            var office = _officeRepository.GetById(request.DTO.OfficeId);
-            if (office == null)
-            {
-                var error = "Office not found";
-
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-
-                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
-            }
-
-            var role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
+            //var role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
+            var role = await _roleRepository.GetById(request.DTO.RoleId);
             if (role == null)
             {
-                var error = "Role not found";
+                var error = "The role is not found";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
@@ -107,19 +95,30 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
             }
 
-            var IsuserOfficeRoleExist = _usercOfficeRoleRepository.GetAll().Result
-                .Any(uor => uor.UserId == user.Id && uor.OfficeId == request.DTO.OfficeId && uor.RoleId == request.DTO.RoleId);
-            if (IsuserOfficeRoleExist)
-            {
-                var error = "This UserOfficeRole is IsExist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
+            var existingUserOfficeRole = await _usercOfficeRoleRepository.GetByUserAndOfficeId(user.Id, request.OfficeId);
 
-                return ResponseBuilder.Faild(HttpStatusCode.Conflict, $"{_requestTitle} failed", error);
+            if (existingUserOfficeRole != null)
+            {
+                if (existingUserOfficeRole.RoleId != request.DTO.RoleId)
+                {
+                    existingUserOfficeRole.RoleId = request.DTO.RoleId;
+                    await _usercOfficeRoleRepository.Update(existingUserOfficeRole);
+                    await _userManager.AddToRoleAsync(user, role.NormalizedName);
+
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Success,
+                        Header = $"{_requestTitle} succeeded",
+                        AdditionalData = existingUserOfficeRole.UserId
+                    });
+
+                    return ResponseBuilder.Success(HttpStatusCode.Conflict, $"{_requestTitle} succeeded", existingUserOfficeRole.UserId);
+                }
+                else
+                {
+                    return ResponseBuilder.Success(HttpStatusCode.Conflict, $"{_requestTitle} succeeded", existingUserOfficeRole.UserId);
+                }
+
             }
 
             var updateUserRoles = await _userManager.AddToRoleAsync(user, role.NormalizedName);
@@ -129,18 +128,18 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = updateUserRoles.Errors.Select(error => error.ToString()).ToArray()
+                    AdditionalData = updateUserRoles.Errors.Select(error => error.Description).ToArray()
                 });
 
                 return ResponseBuilder.Faild(HttpStatusCode.InternalServerError, $"{_requestTitle} failed",
-                    updateUserRoles.Errors.Select(error => error.ToString()).ToArray());
+                    updateUserRoles.Errors.Select(error => error.Description).ToArray());
             }
 
             var updateUserOfficeRole = await _usercOfficeRoleRepository.Add(new UserOfficeRole
             {
                 UserId = user.Id,
                 RoleId = request.DTO.RoleId,
-                OfficeId = request.DTO.OfficeId
+                OfficeId = request.OfficeId
             });
 
             await _logger.Log(new Log

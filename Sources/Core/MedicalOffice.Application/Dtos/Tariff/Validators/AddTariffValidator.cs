@@ -36,23 +36,28 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
                     return await _serviceRepository.isTariffValid(serviceId);
                 });
 
-            RuleForEach(x => x.Tariffs)
-                .SetValidator(new AddTariffListValidator(_officeResolver, _insuranceRepository));
+            Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
+
+            RuleFor(x => x.InternalTariffValue)
+                .NotEmpty();
+
+            RuleFor(x => x.TariffValue)
+                .NotEmpty();
+
+            RuleFor(x => x.Discount)
+                .GreaterThanOrEqualTo(0)
+                .LessThanOrEqualTo(100);
+
+            RuleFor(x => x.InsurancePercent)
+                .GreaterThanOrEqualTo(0)
+                .LessThanOrEqualTo(100);
 
             RuleFor(x => x)
                 .MustAsync(async (x, token) =>
                 {
-                    if (x.Tariffs.Count != 0)
+                    if (x.InsuranceId != null)
                     {
-                        foreach (var item in x.Tariffs)
-                        {
-                            if (item.InsuranceId != null)
-                            {
-                                return await _serviceTariffRepository.IsUniqInsuranceTariff(item.InsuranceId, x.ServiceId, officeId);
-                            }
-                        }
-
-                        return true;
+                        return await _serviceTariffRepository.IsUniqInsuranceTariff(x.InsuranceId, x.ServiceId, officeId);
                     }
                     return true;
                 })

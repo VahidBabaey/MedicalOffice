@@ -12,6 +12,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
 
         Task<List<UserOfficeRole>> GetByUserId(Guid UserId);
 
-        Task<UserOfficeRole> GetByUserAndOfficeId(Guid userId, Guid officeId);
+        Task<UserOfficeRole?> GetByUserAndOfficeId(Guid userId, Guid officeId);
     }
 }
