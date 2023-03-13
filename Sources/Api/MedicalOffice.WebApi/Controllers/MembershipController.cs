@@ -5,6 +5,7 @@ using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Features.Experiment.Requests.Queries;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Commands;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Queries;
+using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,17 +42,17 @@ public class MembershipController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
+    public async Task<ActionResult<List<MembershipListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order? order)
     {
-        var response = await _mediator.Send(new GetAllMemberships() { Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllMemberships() { Dto = dto, OfficeId = Guid.Parse(officeId), Order = order });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
     [Authorize]
     [HttpGet("search")]
-    public async Task<ActionResult<List<MembershipListDTO>>> GetMembershipBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
+    public async Task<ActionResult<List<MembershipListDTO>>> GetMembershipBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order? order)
     {
-        var response = await _mediator.Send(new GetMembershipBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetMembershipBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId), Order = order });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

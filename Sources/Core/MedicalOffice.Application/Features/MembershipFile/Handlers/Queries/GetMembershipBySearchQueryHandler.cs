@@ -10,7 +10,9 @@ using MedicalOffice.Application.Features.ServiceFile.Requests.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using System.Net;
+using static System.Collections.Specialized.BitVector32;
 
 namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Queries;
 
@@ -50,7 +52,12 @@ public class GetMembershipBySearchQueryHandler : IRequestHandler<GetMembershipBy
 
         try
         {
-            var memberShip = _membershiprepository.GetMembershipBySearch(request.Name).Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+            var memberShip = _membershiprepository.GetMembershipBySearch(request.Name).Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).OrderByDescending(x => x.CreatedDate);
+            if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+            {
+                memberShip = request.Order == Order.NewRecords ? memberShip : memberShip.OrderBy(x => x.CreatedDate);
+            }
+
             var result = _mapper.Map<List<MembershipListDTO>>(memberShip.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             await _logger.Log(new Log

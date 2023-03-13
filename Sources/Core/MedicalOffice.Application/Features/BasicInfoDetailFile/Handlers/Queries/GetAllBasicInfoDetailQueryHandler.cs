@@ -8,6 +8,7 @@ using MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using System.Net;
 
 namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Queries
@@ -64,6 +65,12 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Querie
             try
             {
                 var basicInfoDetails = await _basicinfodetailrepository.GetByBasicInfoId(request.BasicInfoId);
+
+                if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+                {
+                    basicInfoDetails = request.Order == Order.NewRecords ? basicInfoDetails : basicInfoDetails.OrderBy(x => x.CreatedDate).ToList();
+                }
+
                 var result = basicInfoDetails.Skip(request.DTO.Skip).Take(request.DTO.Take).Select(x => _mapper.Map<BasicInfoDetailListDTO>(x));
 
                 await _logger.Log(new Log

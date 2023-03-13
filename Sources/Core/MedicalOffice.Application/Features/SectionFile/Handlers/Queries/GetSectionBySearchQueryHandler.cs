@@ -8,6 +8,7 @@ using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Common;
+using MedicalOffice.Domain.Enums;
 using System.Net;
 
 namespace MedicalOffice.Application.Features.SectionFile.Handlers.Queries;
@@ -48,7 +49,13 @@ public class GetSectionBySearchQueryHandler : IRequestHandler<GetSectionBySearch
 
         try
         {
-            var section = await _sectionrepository.GetSectionBySearch(request.Name, request.OfficeId);
+            var section = _sectionrepository.GetSectionBySearch(request.Name, request.OfficeId).Result.OrderByDescending(x => x.CreatedDate);
+
+            if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+            {
+                section = request.Order == Order.NewRecords ? section : section.OrderBy(x => x.CreatedDate);
+            }
+
             var result = _mapper.Map<List<SectionListDTO>>(section.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             await _logger.Log(new Log

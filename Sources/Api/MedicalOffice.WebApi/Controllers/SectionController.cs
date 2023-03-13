@@ -62,9 +62,9 @@ public class SectionController : Controller
 
     [Authorize]
     [HttpGet("search")]
-    public async Task<ActionResult<List<SectionListDTO>>> GetSectionBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
+    public async Task<ActionResult<List<SectionListDTO>>> GetSectionBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order? order)
     {
-        var response = await _mediator.Send(new GetSectionBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetSectionBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId), Order = order });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

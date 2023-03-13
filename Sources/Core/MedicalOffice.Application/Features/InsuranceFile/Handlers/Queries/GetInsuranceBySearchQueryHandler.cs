@@ -8,6 +8,7 @@ using MedicalOffice.Application.Features.SectionFile.Requests.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Common;
+using MedicalOffice.Domain.Enums;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,12 @@ public class GetInsuranceBySearchQueryHandler : IRequestHandler<GetInsuranceBySe
         try
         {
             var insurances = await _insurancerepository.GetInsuranceBySearch(request.Name, request.OfficeId);
+            insurances.OrderByDescending(x => x.CreatedDate);
+            if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+            {
+                insurances = request.Order == Order.NewRecords ? insurances : insurances.OrderBy(x => x.CreatedDate).ToList();
+            }
+
             var result = _mapper.Map<List<InsuranceListDTO>>(insurances.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             await _logger.Log(new Log

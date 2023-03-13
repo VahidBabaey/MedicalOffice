@@ -7,7 +7,9 @@ using MedicalOffice.Application.Features.BasicInfoFile.Requests.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using System.Net;
+using static System.Collections.Specialized.BitVector32;
 
 namespace MedicalOffice.Application.Features.BasicInfoFile.Handlers.Queries
 {
@@ -15,7 +17,7 @@ namespace MedicalOffice.Application.Features.BasicInfoFile.Handlers.Queries
     public class GetAllBasicInfoQueryHandler : IRequestHandler<GetAllBasicInfoQuery, BaseResponse>
     {
         private readonly IOfficeRepository _officeRepository;
-        private readonly IBasicInfoRepository _basicinforepository;
+        private readonly IBasicInfoRepository _basicinfoRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
@@ -23,7 +25,7 @@ namespace MedicalOffice.Application.Features.BasicInfoFile.Handlers.Queries
         public GetAllBasicInfoQueryHandler(IOfficeRepository officeRepository, IBasicInfoRepository basicinforepository, IMapper mapper, ILogger logger)
         {
             _officeRepository = officeRepository;
-            _basicinforepository = basicinforepository;
+            _basicinfoRepository = basicinforepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -48,7 +50,8 @@ namespace MedicalOffice.Application.Features.BasicInfoFile.Handlers.Queries
 
             try
             {
-                var basicInfos =  _basicinforepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+                var basicInfos =  _basicinfoRepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+
                 var result = _mapper.Map<List<BasicInfoListDTO>>(basicInfos);
 
                 await _logger.Log(new Log
