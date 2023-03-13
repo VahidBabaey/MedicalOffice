@@ -21,18 +21,18 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators
                     .WithMessage("The MorningEnd should be less than EveningStart");
         }
 
-        private bool IsNullabalityValid(string? a, string? b)
+        private bool IsNullabalityValid(string a, string b)
         {
-            if ((a != null && b == null) || (b != null && a == null))
+            if ((a != string.Empty && b == string.Empty) || (b != string.Empty && a == string.Empty))
             {
                 return false;
             }
             return true;
         }
 
-        private bool IsConvertbleToTimeOnly(string? a, string? b)
+        private bool IsConvertbleToTimeOnly(string a, string b)
         {
-            if (a != null && b != null)
+            if (a != string.Empty && b != string.Empty)
             {
                 var aIsValid = Task.FromResult(TimeOnly.TryParse(a, out TimeOnly aResult)).Result;
                 var bIsValid = Task.FromResult(TimeOnly.TryParse(a, out TimeOnly bResult)).Result;
