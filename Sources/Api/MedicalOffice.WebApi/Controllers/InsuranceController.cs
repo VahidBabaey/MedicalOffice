@@ -23,7 +23,7 @@ public class InsuranceController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] InsuranceDTO dto, [FromQuery] string officeId)
     {

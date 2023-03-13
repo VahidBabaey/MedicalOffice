@@ -80,7 +80,7 @@ public class ReceptionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost("ReceptionDetail")]
     public async Task<ActionResult<Guid>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId, [FromQuery] string description)
     {
@@ -88,7 +88,7 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    [Authorize]
+    //[Authorize]
     [HttpPost("calculatediscount")]
     public async Task<ActionResult<long>> CalculateServiceTariff([FromQuery] string serviceId, [FromQuery] int ServiceCount, [FromQuery] string insuranceId, [FromQuery] string? additionalinsuranceId, [FromQuery] int? discount)
     {
@@ -96,7 +96,7 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    [Authorize]
+    //[Authorize]
     [HttpGet("discount")]
     public async Task<ActionResult<int>> GetCalculatedDiscount([FromQuery] Guid officeId, [FromQuery] Guid serviceId, [FromQuery] Guid MembershipId)
     {
@@ -113,7 +113,7 @@ public class ReceptionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("detailsList")]
     public async Task<ActionResult<List<ReceptionDetailListDTO>>> GetDetailsList([FromQuery] Guid patientId, [FromQuery] Guid receptionId, [FromQuery] ListDto dto)
     {

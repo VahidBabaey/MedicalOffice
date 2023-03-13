@@ -53,9 +53,62 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             return 0;
         }
     }
+    public async Task<long> GetReceptionServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
+    {
+        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
+        return (long)Convert.ToDouble(service.TariffValue * serviceCount);
+    }
+    public async Task<long> GetPatientShareofServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
+    {
+
+        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
+        return (long)Convert.ToDouble(((service.TariffValue * serviceCount) - ((service.TariffValue * serviceCount) * service.InsurancePercent / 100)) + service.Difference);
+
+    }
+    public async Task<long> GetOrganShareofServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
+    {
+
+        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
+        return (long)Convert.ToDouble(((service.TariffValue * serviceCount) * service.InsurancePercent / 100));
+
+    }
+    public async Task<long> GetAdditionalServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalinsuranceId)
+    {
+
+        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == additionalinsuranceId).FirstOrDefaultAsync();
+        if (service.TariffValue != 0)
+        {
+            return (long)Convert.ToDouble(service.TariffValue * serviceCount);
+        }
+        else
+        {
+            return await GetInsuranceServiceCost(serviceId, serviceCount, insuranceId);
+        }
+
+    }
+    public async Task<long> GetInsuranceServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
+    {
+
+        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
+
+        return (long)Convert.ToDouble(service.TariffValue * serviceCount);
+
+    }
+    public async Task<long> CalculateAdditionalServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalinsuranceId)
+    {
+        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == additionalinsuranceId).FirstOrDefaultAsync();
+        var servicetariff = GetAdditionalServiceCost(serviceId, serviceCount, insuranceId, additionalinsuranceId);
+
+        return ((Convert.ToInt64(servicetariff) * Convert.ToInt64(service.InsurancePercent) / 100) - await GetOrganShareofServiceCost(serviceId, serviceCount, insuranceId));
+
+    }
     public async Task<long?> CalculateServiceTariff(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, int? discount)
     {
-        var cost = await GetReceptionServiceCost(serviceId, serviceCount, insuranceId, additionalInsuranceId);
+        var cost = await GetPatientShareofServiceCost(serviceId, serviceCount, insuranceId);
+        if (additionalInsuranceId != null)
+        {
+            cost = cost - await CalculateAdditionalServiceCost(serviceId, serviceCount, insuranceId, additionalInsuranceId);
+        }
         var costd = discount > 0 ? cost - ((cost * discount) / 100) : cost;
 
         return costd;
@@ -74,6 +127,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         Guid[] MedicalStaffs,
         long costd)
     {
+        long cost;
         var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Date == DateTime.Now.Date);
         if (receptionpatient == null)
         {
@@ -84,8 +138,14 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         {
             receptionID = _dbContext.Receptions.Where(r => r.Id == receptionId).FirstOrDefault().Id;
         }
-
-        var cost = await GetReceptionServiceCost(serviceId, serviceCount, insuranceId, additionalInsuranceId);
+        if (additionalInsuranceId != null)
+        {
+            cost = await GetPatientShareofServiceCost(serviceId, serviceCount, insuranceId) - await CalculateAdditionalServiceCost(serviceId, serviceCount, insuranceId, additionalInsuranceId);
+        }
+        else
+        {
+            cost = await GetPatientShareofServiceCost(serviceId, serviceCount, insuranceId);
+        }
 
         ReceptionDetail detail = new()
         {
@@ -101,6 +161,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             OfficeId = officeId,
             ReceptionId = receptionID,
             ServiceCount = serviceCount,
+            OrganShare = await GetOrganShareofServiceCost(serviceId, serviceCount, insuranceId)
         };
 
         var addedDetail = await _receptionDetailRepository.Add(detail);
@@ -167,8 +228,15 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             await _receptionDetailRepository.Delete(receptionDetailList);
 
         var receptionID = _dbContext.Receptions.Where(r => r.Id == receptionId).FirstOrDefault().Id;
-
-        long cost = await GetReceptionServiceCost(serviceId, serviceCount, insuranceId, additionalInsuranceId);
+        long cost;
+        if (additionalInsuranceId != null)
+        {
+            cost = await GetPatientShareofServiceCost(serviceId, serviceCount, insuranceId) - await CalculateAdditionalServiceCost(serviceId, serviceCount, insuranceId, additionalInsuranceId);
+        }
+        else
+        {
+            cost = await GetPatientShareofServiceCost(serviceId, serviceCount, insuranceId);
+        }
         long cost1 = costd;
         long recieved = 0;
         long debt = 0;
@@ -225,6 +293,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             OfficeId = officeId,
             ReceptionId = receptionID,
             ServiceCount = serviceCount,
+            OrganShare = await GetOrganShareofServiceCost(serviceId, serviceCount, insuranceId)
         };
 
         var addedDetail = await _receptionDetailRepository.Add(detail);
@@ -383,19 +452,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         return nextNo;
     }
 
-    public async Task<long> GetReceptionServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalinsuranceId)
-    {
-        if (additionalinsuranceId != null)
-        {
-            var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId && p.AdditionalInsuranceId == additionalinsuranceId).FirstOrDefaultAsync();
-            return (long)Convert.ToDouble(service.TariffValue * serviceCount);
-        }
-        else
-        {
-            var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
-            return (long)Convert.ToDouble(service.TariffValue * serviceCount);
-        }
-    }
 
     public async Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId)
     {
@@ -457,6 +513,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 Discount = item.Discount,
                 Deposit = item.Deposit,
                 Debt = item.Debt,
+                OrganShare = item.OrganShare,
             };
             receptionDetailListDTO.Add(receptiondetaillistDTO);
             medicalStaffNames = "";

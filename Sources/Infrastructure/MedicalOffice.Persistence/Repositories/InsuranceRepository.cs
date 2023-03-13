@@ -69,7 +69,7 @@ namespace MedicalOffice.Persistence.Repositories
         public async Task<List<InsuranceNamesDTO>> GetInsuranceNames(Guid officeId)
         {
             List<InsuranceNamesDTO> insuranceNamesListDTOs = new List<InsuranceNamesDTO>();
-            var insurances = await _dbContext.Insurances.Where(p => p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
+            var insurances = await _dbContext.Insurances.Where(p => p.OfficeId == officeId && p.IsDeleted == false && p.IsAdditionalInsurance == false).ToListAsync();
             foreach (var item in insurances)
             {
                 InsuranceNamesDTO insuranceNamesListDTO = new()
