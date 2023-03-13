@@ -54,6 +54,7 @@ namespace MedicalOffice.Persistence.Repositories
                     HasAdditionalInsurance = item.HasAdditionalInsurance,
                     InsurancePercent = item.InsurancePercent,
                     IsAdditionalInsurance = item.IsAdditionalInsurance,
+                    ShowonDisket = item.ShowonDisket,   
                     Joinable = item.Joinable
                 };
 
