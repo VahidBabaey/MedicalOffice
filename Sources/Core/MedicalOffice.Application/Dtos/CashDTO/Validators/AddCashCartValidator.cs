@@ -13,8 +13,16 @@ public class AddCashCartValidator : AbstractValidator<CashCartDTO>
     {
         _cashRepository = cashRepository;
         _officeResolver = officeResolver;
-        RuleFor(x => x.Cost).NotEmpty();
-        RuleFor(x => x.CartNumber).NotEmpty().Length(1, 16);
+        RuleFor(x => x.Cost)
+            .NotEmpty()
+            .WithMessage("ورود مبلغ ضروری است");
+
+        RuleFor(x => x.CartNumber)
+            .NotEmpty()
+            .WithMessage("شماره کارت ضروری است")
+            .Length(1, 16)
+            .WithMessage("طول جزییات اطلاعات پایه باید بین 1 تا 16 کاراکتر باشد");
+
         Include(new CashIdValidator(_cashRepository, _officeResolver));
     }
 }

@@ -27,17 +27,19 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
             Include(new ServiceIdsValidator(_officeResolver, _serviceRepository));
 
             RuleFor(x => x.Name)
-                .NotEmpty();
-
+                .NotEmpty()
+                .WithMessage("ورود نام اتاق ضروری است");
             RuleFor(x => x)
                 .MustAsync(async (roomName, token) =>
                 {
                     return await _serviceRoomRepository.isNameUniqeDuringUpdate(roomName, officeId);
                 })
-                .WithMessage("{PropertyName} is not uniqe");
+                //.WithMessage("{PropertyName} is not uniqe");
+                .WithMessage("نام اتاق باید یکتا باشد");
 
             RuleFor(x => x.Id)
                 .NotEmpty()
+                .WithMessage("ورود شناسه مطب ضروری است")
                 .MustAsync(async (Id, Token) =>
                 {
                     return await _serviceRoomRepository.isServiceRoomExist(officeId, Id);

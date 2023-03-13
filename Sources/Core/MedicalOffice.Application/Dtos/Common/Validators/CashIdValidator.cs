@@ -26,6 +26,7 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
 
             RuleFor(x => x.CashId)
                 .NotEmpty()
+                .WithMessage("ورود شناسه صندوق ضروری است")
                 .MustAsync(async (cashId, token) =>
                 {
                     var leaveTypeExists = await _cashRepository.CheckExistCashId(officeId, cashId);
@@ -35,7 +36,8 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
                     }
                     return false;
                 })
-                .WithMessage("{PropertyName} isn't exist");
+                //.WithMessage("{PropertyName} isn't exist");
+                .WithMessage("شناسه صندوق مورد نظر موجود نیست");
         }
     }
 }

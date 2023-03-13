@@ -25,7 +25,8 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
 
             RuleFor(x => x.AppointmentId)
                 .NotEmpty()
-                .WithMessage("{PropertyName} is required")
+                //.WithMessage("{PropertyName} is required")
+                .WithMessage("شناسه نوبت ضروری است")
                 .MustAsync(async (appointmentId, token) =>
                 {
                     return await _appointmentRepository.checkAppointmentExist(appointmentId, officeId);

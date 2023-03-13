@@ -14,7 +14,10 @@ public class AddCashValidator : AbstractValidator<CashesDTO>
         _officeResolver = officeResolver;
         _cashRepository = cashRepository;
 
-        RuleFor(x => x.Recieved).NotEmpty();
+        RuleFor(x => x.Recieved)
+            .NotEmpty()
+            .WithMessage("ورود مبلغ دریافتی ضروری است");
+
         Include(new CashReceptionIdValidator(_cashRepository, _officeResolver));
     }
 }

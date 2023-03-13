@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+
 using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Common.CommonValidators
@@ -15,9 +16,15 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
         public NationalIdValidator()
         {
             RuleFor(x => x.NationalID)
-                .NotEmpty().WithMessage(ValidationMessage.Required.For("NationalID"))
-                .MaximumLength(MaximumLength).WithMessage(ValidationMessage.MaximumLength.For("NationalID", MaximumLength))
-                .Must(x => IsValidNationalId(x)).WithMessage(ValidationMessage.NotValid.For("NationalID"));
+                .NotEmpty()
+                //.WithMessage(ValidationMessage.Required.For("NationalID"))
+                .WithMessage("ورود شماره ملی الزامی است")
+                .MaximumLength(MaximumLength)
+                //.WithMessage(ValidationMessage.MaximumLength.For("NationalID", MaximumLength))
+                .WithMessage("برای شماره ملی حداکثر 10 رقم وارد شود")
+                .Must(x => IsValidNationalId(x))
+                //.WithMessage(ValidationMessage.NotValid.For("NationalID"));
+                .WithMessage("کد ملی وارد شده صحیح نیست");
         }
 
         private static bool IsValidNationalId(string NationalID)

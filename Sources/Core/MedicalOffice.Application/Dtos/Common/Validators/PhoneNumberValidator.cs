@@ -14,8 +14,12 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
         public PhoneNumberValidator()
         {
             RuleFor(x => x.PhoneNumber)
-                .NotEmpty().WithMessage(ValidationMessage.Required.For("PhoneNumber"))
-                .Must(x => IsValidPhoneNumber(x)).WithMessage(ValidationMessage.NotValid.For("PhoneNumber"));
+                .NotEmpty()
+                //.WithMessage(ValidationMessage.Required.For("PhoneNumber"))
+                .WithMessage("ورود شماره تلفن ضروری است")
+                .Must(x => IsValidPhoneNumber(x))
+                //.WithMessage(ValidationMessage.NotValid.For("PhoneNumber"));
+                .WithMessage("شماره تلفن یافت نشد");
         }
         private static bool IsValidPhoneNumber(string phoneNumber)
         {

@@ -39,18 +39,22 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
             Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
 
             RuleFor(x => x.InternalTariffValue)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage("ورود تعرفه داخلی ضروری است");
 
             RuleFor(x => x.TariffValue)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage("ورود مبلغ تعرفه ضروری است");
 
             RuleFor(x => x.Discount)
                 .GreaterThanOrEqualTo(0)
-                .LessThanOrEqualTo(100);
+                .LessThanOrEqualTo(100)
+                .WithMessage("مبلغ تخفیف باید بین 0 تا 100 کاراکتر داشته باشد");
 
             RuleFor(x => x.InsurancePercent)
                 .GreaterThanOrEqualTo(0)
-                .LessThanOrEqualTo(100);
+                .LessThanOrEqualTo(100)
+                .WithMessage("درصد بیمه باید بین 0 تا 100 کاراکتر داشته باشد");
 
             RuleFor(x => x)
                 .MustAsync(async (x, token) =>
@@ -61,7 +65,8 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
                     }
                     return true;
                 })
-                .WithMessage("There is already a tariff with this insuranceId");
+                //.WithMessage("There is already a tariff with this insuranceId");
+                .WithMessage("قبلا تعرفه ای با این آیدی بیمه تعریف شده");
         }
     }
 }
