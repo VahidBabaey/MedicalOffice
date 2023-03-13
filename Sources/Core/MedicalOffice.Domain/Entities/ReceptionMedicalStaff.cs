@@ -6,7 +6,8 @@ namespace MedicalOffice.Domain.Entities;
 /// کاربران / دکتران پذیرش
 /// </summary>
 public class ReceptionMedicalStaff : BaseDomainEntity<Guid>
-{
+{   
+
     /// <summary>
     /// جزئیات پذیرش
     /// </summary>
@@ -15,10 +16,10 @@ public class ReceptionMedicalStaff : BaseDomainEntity<Guid>
     /// آیدی جزئیات پذیرش
     /// </summary>
     public Guid ReceptionDetailId { get; set; }
-    /// <summary>
-    /// نفش کادر درمان
-    /// </summary>
-    public MedicalStaff MedicalStaff { get; set; } = new();
+    ///// <summary>
+    ///// نفش کادر درمان
+    ///// </summary>
+    //public MedicalStaff MedicalStaff { get; set; } = new();
     /// <summary>
     /// آیدی نقش کادر درمان
     /// </summary>

@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 {
-
     public class AddShiftCommandHandler : IRequestHandler<AddShiftCommand, BaseResponse>
     {
         private readonly IValidator<ShiftDTO> _validator;
@@ -40,7 +39,6 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 
         public async Task<BaseResponse> Handle(AddShiftCommand request, CancellationToken cancellationToken)
         {
-
             var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
             if (!validationOfficeId)

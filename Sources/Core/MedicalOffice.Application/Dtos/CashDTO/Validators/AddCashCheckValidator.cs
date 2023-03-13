@@ -13,9 +13,16 @@ public class AddCashCheckValidator : AbstractValidator<CashCheckDTO>
     {
         _cashRepository = cashRepository;
         _officeResolver = officeResolver;
-        RuleFor(x => x.Cost).NotEmpty();
-        RuleFor(x => x.AccountNumber).NotEmpty().Length(1, 13);
-        RuleFor(x => x.Date).NotEmpty();
+        RuleFor(x => x.Cost)
+            .NotEmpty()
+            .WithMessage("ورود مبلغ ضروری است");
+
+        RuleFor(x => x.AccountNumber)
+            .NotEmpty()
+            .WithMessage(" ورود شماره حساب ضروری است")
+            .Length(1, 13)
+            .WithMessage("شماره حساب باید بین 1 تا 13 کاراکتر باشد");
+
         Include(new CashIdValidator(_cashRepository, _officeResolver));
     }
 }

@@ -12,8 +12,5 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO
         public string PhoneNumber { get; set; }
 
         public Guid RoleId { get; set; }
-
-        public Guid OfficeId { get; set; }
-
     }
 }

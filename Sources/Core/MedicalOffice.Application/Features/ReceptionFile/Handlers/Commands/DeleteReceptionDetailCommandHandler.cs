@@ -14,68 +14,61 @@ using MedicalOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Commands;
 
 public class DeleteReceptionDetailCommandHandler : IRequestHandler<DeleteReceptionDetailCommand, BaseResponse>
 {
-    private readonly IReceptionRepository _repository;
-    private readonly ICashRepository _repositoryCash;
-    private readonly IReceptionDebtRepository _repositoryDebt;
-    private readonly IMapper _mapper;
+    private readonly IReceptionRepository _receptionrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteReceptionDetailCommandHandler(IReceptionDebtRepository repositoryDebt, ICashRepository repositoryCash, IReceptionRepository repository, IMapper mapper, ILogger logger)
+    public DeleteReceptionDetailCommandHandler(IReceptionRepository receptionrepository, ILogger logger)
     {
-        _repository = repository;
-        _mapper = mapper;
+        _receptionrepository = receptionrepository;
         _logger = logger;
-        _repositoryCash = repositoryCash;
-        _repositoryDebt = repositoryDebt;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(DeleteReceptionDetailCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
 
-        Log log = new();
+        try
+        {
+            var validationReceptionDetailId = await _receptionrepository.CheckExistReceptionDetailId(request.OfficeId, request.ReceptiodDetailId);
 
-            try
+            if (!validationReceptionDetailId)
             {
-            await _repository.DeleteReceptionService(request.ReceptiodDetailId, request.OfficeId);
-
-                //await _repositoryCash.AddCashForAnyReceptionDetail(receptionDetail.OfficeId, receptionDetail.ReceptionId, receptionDetail.Cost);
-
-                //if (receptionDetail.Debt > 0)
-                //{
-
-                //    //await _repositoryDebt.AddReceptionDebt(receptionDetail.ReceptionId, receptionDetail.Id, receptionDetail.OfficeId, receptionDetail.Debt);
-
-                //}
-
-                response.Success = true;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                //response.Data = (new { Id = receptionDetail });
-
-                log.Type = LogType.Success;
+                var error = "ID isn't exist";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
-            catch (Exception error)
+
+            await _receptionrepository.DeleteReceptionService(request.ReceptiodDetailId, request.OfficeId);
+
+            await _logger.Log(new Log
             {
-                response.Success = false;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
-            }        
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
+        }
+        catch (Exception error)
+        {
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
+        }
     }
 }

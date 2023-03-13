@@ -33,10 +33,6 @@ public class CashCheck : BaseDomainEntity<Guid>
     /// </summary>
     public string AccountNumber { get; set; }
     /// <summary>
-    /// تاریخ
-    /// </summary>
-    public string Date { get; set; }
-    /// <summary>
     /// بانک
     /// </summary>
     public Bank? Bank { get; set; }

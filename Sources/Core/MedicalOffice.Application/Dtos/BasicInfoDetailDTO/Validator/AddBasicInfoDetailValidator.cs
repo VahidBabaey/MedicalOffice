@@ -18,7 +18,12 @@ namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO.Validator
         {
             _repositoryBasicInfoDetail = repositoryBasicInfoDetail;
             _officeResolver = officeResolver;
-            RuleFor(x => x.InfoDetailName).NotEmpty().Length(1, 50);
+            RuleFor(x => x.InfoDetailName)
+                .NotEmpty()
+                .WithMessage("نام جزییات اطلاعات پایه موضوعی ضروری است.")
+                .Length(1, 50)
+                .WithMessage("طول جزییات اطلاعات پایه باید بین 1 تا 50 کاراکتر باشد.");
+
             Include(new BasicInfoDetailIdValidator(_repositoryBasicInfoDetail, _officeResolver));
         }
     }

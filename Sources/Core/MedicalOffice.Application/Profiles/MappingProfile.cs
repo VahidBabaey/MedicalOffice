@@ -147,6 +147,7 @@ public class MappingProfile : Profile
         CreateMap<UpdateServiceRoomDTO, Room>().ReverseMap();
         CreateMap<UpdateOfficeDTO, Office>().ReverseMap();
         CreateMap<Permission, PermissionListDto>().ReverseMap();
+        CreateMap<MedicalStaff, MedicalStaffListDTO>().ReverseMap();
     }
 
     public class PatientMapper : ITypeConverter<Patient, PatientListDTO>
@@ -175,7 +176,7 @@ public class MappingProfile : Profile
             source.PatientName = destination.PatientName;
             source.PatientLastName = destination.PatientLastName;
             source.PhoneNumber = destination.PhoneNumber;
-            source.NationalID = destination.NationalID;
+            source.NationalId = destination.NationalId;
             source.ReferrerId = destination.ReferrerId;
             source.Description = destination.Description;
 

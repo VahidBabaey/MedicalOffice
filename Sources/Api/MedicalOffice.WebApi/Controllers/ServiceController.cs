@@ -80,4 +80,11 @@ public class ServiceController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+    [HttpGet("services-insuranceid")]
+    public async Task<ActionResult<List<ServicesByInsuranceIdDTO>>> GetServicesByInsuranceId([FromQuery] string officeId, [FromQuery] string insuranceId)
+    {
+        var response = await _mediator.Send(new GetAllServicesByInsuranceIDQuery() { OfficeId = Guid.Parse(officeId), InsuranceId = Guid.Parse(insuranceId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
 }

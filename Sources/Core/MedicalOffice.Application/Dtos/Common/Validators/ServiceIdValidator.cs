@@ -24,12 +24,14 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
 
             RuleFor(x => x.ServiceId)
                 .NotEmpty()
+                .WithMessage("ورود شناسه خدمت ضروری است")
                 .MustAsync(async (serviceId, token) =>
                     {
                         return await _serviceRepository.CheckExistServiceId(officeId, serviceId);
 
                     })
-                .WithMessage("{PropertyName} isn't exist");
+                //.WithMessage("{PropertyName} isn't exist");
+                .WithMessage("شناسه خدمت یافت نشد");
         }
     }
 }

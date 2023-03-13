@@ -16,69 +16,59 @@ namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 public class AddCashCartCommandHandler : IRequestHandler<AddCashCartCommand, BaseResponse>
 {
     private readonly IValidator<CashCartDTO> _validator;
-    private readonly ICashCartRepository _repository;
-    private readonly IMapper _mapper;
+    private readonly ICashCartRepository _cashcartrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public AddCashCartCommandHandler(IValidator<CashCartDTO> validator, ICashCartRepository repository, IMapper mapper, ILogger logger)
+    public AddCashCartCommandHandler(IValidator<CashCartDTO> validator, ICashCartRepository cashcartrepository, ILogger logger)
     {
         _validator = validator;
-        _repository = repository;
-        _mapper = mapper;
+        _cashcartrepository = cashcartrepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(AddCashCartCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
-
-        Log log = new();
 
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
-
-            log.Type = LogType.Error;
+            var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
         else
         {
             try
             {
-                var cashcart = _mapper.Map<CashCart>(request.DTO);
-                cashcart.OfficeId = request.OfficeId;
+                var cashcart = _cashcartrepository.AddCashCartForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.CartNumber, request.DTO.Cost, request.DTO.BankId);
 
-                cashcart = await _repository.Add(cashcart);
-
-                response.Success = true;
-                response.StatusCode = HttpStatusCode.OK;
-                response.StatusDescription = $"{_requestTitle} succeded";
-                response.Data = (new { Id = cashcart.Id });
-
-                log.Type = LogType.Success;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = cashcart
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", cashcart);
             }
             catch (Exception error)
             {
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.StatusDescription = $"{_requestTitle} failed";
-                response.Errors.Add(error.Message);
-
-                log.Type = LogType.Error;
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
     }
 }
 

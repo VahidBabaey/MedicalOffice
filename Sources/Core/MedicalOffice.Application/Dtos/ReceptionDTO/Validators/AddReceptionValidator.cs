@@ -20,7 +20,5 @@ public class AddReceptionValidator : AbstractValidator<ReceptionsDTO>
         _officeResolver = officeResolver;
 
         Include(new PatientIdValidator(_patientRepository, _officeResolver));
-        Include(new ShiftIdValidator(_shiftRepository, _officeResolver));
-        Include(new MedicalStaffValidator(_medicalStaffRepository, _officeResolver));
     }
 }

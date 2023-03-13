@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Responses;
@@ -13,5 +14,7 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Requests.Queries
     public class GetReceptionDetailsListQuery : IRequest<BaseResponse>
     {
         public Guid PatientId { get; set; }
+        public Guid ReceptionId { get; set; }
+        public ListDto Dto { get; set; } = new ListDto();
     }
 }

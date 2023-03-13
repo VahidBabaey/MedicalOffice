@@ -2,7 +2,6 @@
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.Common.Validators;
-using MedicalOffice.Application.Dtos.Commons;
 using MedicalOffice.Domain.Entities;
 using NLog.Config;
 using System;
@@ -26,6 +25,7 @@ namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO.Validator
 
             RuleFor(x => x.BasicInfoId)
                 .NotEmpty()
+                .WithMessage("شناسه اطلاعات پایه موضوعی ضروری است")
                 .MustAsync(async (basicInfoId, token) =>
                 {
                     var leaveTypeExists = await _repositoryBasicInfoDetail.CheckExistBasicInfoId(officeId, basicInfoId);
@@ -35,7 +35,8 @@ namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO.Validator
                     }
                     return false;
                 })
-                .WithMessage("{PropertyName} isn't exist");
+                //.WithMessage("{PropertyName} isn't exist");
+                .WithMessage("شناسه اطلاعات پایه موضوعی موجود نیست");
         }
     }
 }

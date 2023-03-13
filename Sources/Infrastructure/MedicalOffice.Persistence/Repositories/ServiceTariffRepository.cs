@@ -32,13 +32,14 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
             TariffListDTO tariffListDTO = new();
             tariffListDTO.Id = item.Id;
             tariffListDTO.ServiceId = item.ServiceId;
+            tariffListDTO.InsuranceId = item.InsuranceId ?? default;
             tariffListDTO.InsuranceId = item.InsuranceId;
-            tariffListDTO.InsuranceCode = item.Insurance.InsuranceCode;
+            tariffListDTO.TariffInsuranceCode = item.TariffInsuranceCode;
             tariffListDTO.TariffValue = item.TariffValue;
             tariffListDTO.InternalTariffValue = item.InternalTariffValue;
             tariffListDTO.Difference = item.Difference;
-            tariffListDTO.InsurancePercent = item.InsurancePercent;
-            tariffListDTO.Discount = item.Discount;
+            tariffListDTO.InsurancePercent = item.InsurancePercent ?? default;
+            tariffListDTO.Discount = item.Discount ?? default;
             tariffListDTO.InsuranceName = item.Insurance.Name;
 
             tariffListDTOs.Add(tariffListDTO);
@@ -50,10 +51,9 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
         bool isExist = await _dbContext.Tariffs.AnyAsync(p => p.Id == tariffId && p.OfficeId == officeId);
         return isExist;
     }
-
     public async Task<bool> IsUniqInsuranceTariff(Guid? insuranceId, Guid serviceId, Guid officeId)
     {
-        var isUniqe = await _dbContext.Tariffs.AnyAsync(x => x.InsuranceId == insuranceId && x.ServiceId == serviceId && x.OfficeId == officeId);
+        var isUniqe = await _dbContext.Tariffs.AnyAsync(x => x.InsuranceId == insuranceId && x.ServiceId == serviceId && x.OfficeId == officeId && x.IsDeleted == false);
 
         return !isUniqe;
     }

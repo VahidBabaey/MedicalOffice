@@ -44,6 +44,11 @@ public class Service : BaseDomainEntity<Guid>
     public string GenericCode { get; set; } = string.Empty;
 
     /// <summary>
+    /// نام ارزش نسبی
+    /// </summary>
+    public string? ICD10Name { get; set; }
+
+    /// <summary>
     /// نحوه محاسبه قیمت
     /// </summary>
     public CalculationMethod CalculationMethod { get; set; }

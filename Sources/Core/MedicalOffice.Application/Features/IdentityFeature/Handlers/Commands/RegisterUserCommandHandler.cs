@@ -62,10 +62,10 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
             #endregion
 
             #region MakeSureUserIsntExist
-            var existingUser = await _userRepository.CheckByPhoneOrNationalId(request.DTO.PhoneNumber, request.DTO.NationalID);
+            var existingUser = await _userRepository.CheckByPhoneOrNationalId(request.DTO.PhoneNumber, request.DTO.NationalId);
             if (existingUser != null)
             {
-                var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";
+                var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalId}' already exists.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

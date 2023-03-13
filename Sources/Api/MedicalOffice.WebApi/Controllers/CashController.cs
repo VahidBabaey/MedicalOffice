@@ -4,9 +4,11 @@ using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Features.CashFile.Request.Commands;
 using MedicalOffice.Application.Features.CashFile.Request.Queries;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace MedicalOffice.WebApi.WebApi.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class CashController : Controller
@@ -29,7 +31,14 @@ public class CashController : Controller
     [HttpPost("Pos")]
     public async Task<ActionResult<Guid>> CreatePos([FromBody] CashPosDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddCashPosCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddCashPosCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+
+        return Ok(response);
+    }
+    [HttpPost("Money")]
+    public async Task<ActionResult<Guid>> CreateMoney([FromBody] CashMoneyDTO dto, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new AddCashMoneyCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -37,7 +46,7 @@ public class CashController : Controller
     [HttpPost("Check")]
     public async Task<ActionResult<Guid>> CreateCheck([FromBody] CashCheckDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddCashCheckCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddCashCheckCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -45,15 +54,15 @@ public class CashController : Controller
     [HttpPost("Cart")]
     public async Task<ActionResult<Guid>> CreateCart([FromBody] CashCartDTO dto, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new AddCashCartCommand() { DTO = dto });
+        var response = await _mediator.Send(new AddCashCartCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
 
     [HttpGet]
-    public async Task<ActionResult<Guid>> GetCashList([FromQuery] Guid receptionId)
+    public async Task<ActionResult<Guid>> GetCashList([FromQuery] string receptionId, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetPatientCashesQuery() { ReceptionId = receptionId });
+        var response = await _mediator.Send(new GetPatientCashesQuery() { ReceptionId = Guid.Parse(receptionId), OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }
@@ -83,9 +92,9 @@ public class CashController : Controller
     }
 
     [HttpDelete("Pos")]
-    public async Task<IActionResult> RemovePos(Guid id, [FromQuery] string officeId)
+    public async Task<IActionResult> RemovePos(Guid posid)
     {
-        var response = await _mediator.Send(new DeleteCashPosCommand() { CashPosId = id });
+        var response = await _mediator.Send(new DeleteCashPosCommand() { CashPosId = posid});
 
         return Ok(response);
     }
@@ -113,7 +122,13 @@ public class CashController : Controller
 
         return Ok(response);
     }
+    [HttpPost("returncash")]
+    public async Task<ActionResult<Guid>> ReturnCash([FromQuery] string officeId, [FromQuery] string cashId)
+    {
+        var response = await _mediator.Send(new ReturnCashCommand() { OfficeId = Guid.Parse(officeId), CashId = Guid.Parse(cashId) });
 
+        return Ok(response);
+    }
     [HttpPost("CashDebt")]
     public async Task<ActionResult<Guid>> CreateCashDebt([FromBody] CashesDTO dto, [FromQuery] string officeId)
     {

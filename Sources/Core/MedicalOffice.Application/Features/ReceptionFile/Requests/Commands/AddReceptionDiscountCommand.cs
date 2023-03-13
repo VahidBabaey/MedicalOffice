@@ -12,5 +12,6 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Requests.Commands
     public class AddReceptionDiscountCommand : IRequest<BaseResponse>
     {
         public ReceptionDiscountDTO DTO { get; set; } = new ReceptionDiscountDTO();
+        public Guid OfficeId { get; set; }
     }
 }

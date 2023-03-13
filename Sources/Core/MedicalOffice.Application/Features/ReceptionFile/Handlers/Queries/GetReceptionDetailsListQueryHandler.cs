@@ -20,14 +20,14 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
 {
     public class GetReceptionDetailsListQueryHandler : IRequestHandler<GetReceptionDetailsListQuery, BaseResponse>
     {
-        private readonly IReceptionRepository _repository;
+        private readonly IReceptionRepository _receptionrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetReceptionDetailsListQueryHandler(IReceptionRepository repository, IMapper mapper, ILogger logger)
+        public GetReceptionDetailsListQueryHandler(IReceptionRepository receptionrepository, IMapper mapper, ILogger logger)
         {
-            _repository = repository;
+            _receptionrepository = receptionrepository;
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
@@ -35,32 +35,31 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetReceptionDetailsListQuery request, CancellationToken cancellationToken)
         {
-            Log log = new();
-
             try
             {
-                var receptionDetailList = await _repository.GetReceptionDetailList(request.PatientId);
+                var receptionDetailList = await _receptionrepository.GetReceptionDetailList(request.ReceptionId, request.PatientId);
 
-                var result = _mapper.Map<List<ReceptionDetailListDTO>>(receptionDetailList);
+                var result = _mapper.Map<List<ReceptionDetailListDTO>>(receptionDetailList.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
-                log.Header = $"{_requestTitle} succeded";
-                log.Type = LogType.Success;
-                log.AdditionalData = result;
-                await _logger.Log(log);
-
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = new { total = receptionDetailList.Count(), result = result }
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = receptionDetailList.Count(), result = result });
             }
 
             catch (Exception error)
             {
-                log.Header = $"{_requestTitle} failed";
-                log.AdditionalData = error.Message;
-                log.Type = LogType.Error;
-                await _logger.Log(log);
-
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
-
     }
 }

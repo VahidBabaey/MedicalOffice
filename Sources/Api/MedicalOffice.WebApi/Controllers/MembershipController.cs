@@ -56,7 +56,14 @@ public class MembershipController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+    [Authorize]
+    [HttpGet("names")]
+    public async Task<ActionResult<List<MembershipsNamesDTO>>> GetAllMembershipsNames([FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetAllMembershipsNames() { OfficeId = Guid.Parse(officeId) });
 
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
     [Authorize]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateMembershipDTO dto, [FromQuery] string officeId)

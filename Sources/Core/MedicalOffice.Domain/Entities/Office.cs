@@ -94,6 +94,10 @@ public class Office : BaseDomainEntity<Guid>
     /// </summary>
     public ICollection<CashPos>? CashPoses { get; set; }
     /// <summary>
+    /// نقد
+    /// </summary>
+    public ICollection<CashMoney>? CashMoneies { get; set; }
+    /// <summary>
     /// چک
     /// </summary>
     public ICollection<CashCheck>? CashChecks { get; set; }

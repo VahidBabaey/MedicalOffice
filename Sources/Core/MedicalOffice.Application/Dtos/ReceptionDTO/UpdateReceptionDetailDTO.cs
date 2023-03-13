@@ -6,12 +6,12 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO;
 
-public class UpdateReceptionDetailDTO : BaseDto<Guid>, IInsuranceIdDTO, IServiceIdDTO
+public class UpdateReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO, IReceptionIdDTO
 {
     /// <summary>
     /// آیدی پذیرش
     /// </summary>
-    public Guid? ReceptionId { get; set; }
+    public Guid ReceptionId { get; set; }
     /// <summary>
     /// آیدی خدمت
     /// </summary>
@@ -27,39 +27,15 @@ public class UpdateReceptionDetailDTO : BaseDto<Guid>, IInsuranceIdDTO, IService
     /// <summary>
     /// آیدی بیمه تکمیلی
     /// </summary>
-    public Guid AdditionalInsuranceId { get; set; }
-    /// <summary>
-    /// آیدی تخفیف
-    /// </summary>
-    public Guid ReceptionDiscountId { get; set; }
-    /// <summary>
-    /// مبلغ امانی / بیعانه
-    /// </summary>
-    public float Deposit { get; set; }
-    /// <summary>
-    /// بدهی
-    /// </summary>
-    public long Debt { get; set; }
+    public Guid? AdditionalInsuranceId { get; set; }
     /// <summary>
     /// جمع کل
     /// </summary>
-    public float Total { get; } //readonly
+    public long Costd { get; set; }
     /// <summary>
-    /// تایپ پذیرش : پرداخت مبلغ امانی - پرداخت بدهی - برگشتی - پکیج - بدون فرانشیز - عادی
+    /// مبلغ تخفیف
     /// </summary>
-    public ReceptionType ReceptionType { get; set; }
-    /// <summary>
-    /// آیدی بیمار
-    /// </summary>
-    public Guid PatientId { get; set; }
-    /// <summary>
-    /// آیدی شیفت
-    /// </summary>
-    public Guid ShiftId { get; set; }
-    /// <summary>
-    /// آیدی یوزر لاگین شده
-    /// </summary>
-    public Guid MedicalStaffId { get; set; }
+    public float? Discount { get; set; }
     /// <summary>
     /// آیدی تیم پزشکی
     /// </summary>

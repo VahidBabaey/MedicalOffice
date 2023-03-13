@@ -19,7 +19,9 @@ namespace MedicalOffice.Application.Dtos.FormCommitmentDTO.Validators
             _patientRepository = patientRepository;
             _officeResolver = officeResolver;
 
-            RuleFor(x => x.Name).NotEmpty();
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .WithMessage("ورود نام فرم تعهد نامه ضروری است");
         }
     }
 }

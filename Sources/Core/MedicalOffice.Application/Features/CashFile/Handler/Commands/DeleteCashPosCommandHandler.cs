@@ -14,61 +14,55 @@ namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
 public class DeleteCashPosCommandHandler : IRequestHandler<DeleteCashPosCommand, BaseResponse>
 {
-    private readonly ICashPosRepository _repository;
+    private readonly ICashPosRepository _casgposrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteCashPosCommandHandler(ICashPosRepository repository, ILogger logger)
+    public DeleteCashPosCommandHandler(ICashPosRepository casgposrepository, ILogger logger)
     {
-        _repository = repository;
+        _casgposrepository = casgposrepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(DeleteCashPosCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
-        Log log = new();
 
-        bool iscashPosIdExist = await _repository.CheckCashPosId(request.CashPosId);
+        bool iscashPosIdExist = await _casgposrepository.CheckCashPosId(request.CashPosId);
 
         if (!iscashPosIdExist)
         {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add("ID isn't exist");
-
-            log.Type = LogType.Error;
-            return response;
+            var error = "ID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         try
         {
-            await _repository.Delete(request.CashPosId);
+            await _casgposrepository.DeleteCashPosForAnyReceptionDetail(request.CashPosId);
 
-            response.Success = true;
-            response.StatusCode = HttpStatusCode.OK;
-            response.StatusDescription = $"{_requestTitle} succeded";
-            response.Data = (new { Id = request.CashPosId });
-
-            log.Type = LogType.Success;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
         }
         catch (Exception error)
         {
-            response.Success = false;
-            response.StatusCode = HttpStatusCode.BadRequest;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add(error.Message);
-
-            log.Type = LogType.Error;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
     }
 }
 

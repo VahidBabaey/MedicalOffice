@@ -11,7 +11,7 @@ public class TariffListDTO : BaseDto<Guid>
     public Guid ServiceId { get; set; }
 
     /// <summary>
-    /// نوع سرویس
+    /// نوع خدمت
     /// </summary>
     public ServiceType ServiceType { get; set; }
 
@@ -28,7 +28,7 @@ public class TariffListDTO : BaseDto<Guid>
     /// <summary>
     /// کد بیمه
     /// </summary>
-    public long? InsuranceCode { get; set; }
+    public long? TariffInsuranceCode { get; set; }
 
     /// <summary>
     /// مبلغ تعرفه

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Dtos.Common.CommonValidators;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,34 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO.Validators
         {
             RuleFor(x => x.FirstName).NotEmpty();
             RuleFor(x => x.LastName).NotEmpty();
-            //RuleFor(x => x.IsReferrer).NotNull().Must(x => x == false || x == true);
+            RuleFor(x => x)
+                .Must(x => isRoleValid(x.RoleId, x.IsTechnicalAssistant, x.IsSpecialist))
+                .WithMessage("نقش های دیگر به جز پزشک نمی توانند متخصص یا مسئول فنی باشند.");
+            RuleFor(x=>x)
+                .Must(x => isSecretoryValid(x.RoleId, x.SpecializationId))
+                .WithMessage("نقش منشی باید فاقد پارامتر تخصص باشد.");
+
             Include(new NationalIdValidator());
             Include(new PhoneNumberValidator());
+        }
+
+        private bool isRoleValid(Guid roleId, bool isTechnicalAssistant, bool isSpecialist)
+        {
+            if (roleId != DoctorRole.Id)
+            {
+                return isTechnicalAssistant == true || isSpecialist == true ? false : true;
+            }
+            return true;
+        }
+
+        private bool isSecretoryValid(Guid roleId, Guid? specializationId)
+        {
+            if (roleId == SecretaryRole.Id)
+            {
+                return specializationId != null ? false : true;
+            }
+
+            return true;
         }
     }
 }

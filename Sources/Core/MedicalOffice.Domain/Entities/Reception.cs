@@ -13,13 +13,13 @@ public class Reception : BaseDomainEntity<Guid>
     /// </summary>
     public ReceptionType? ReceptionType { get; set; }
     /// <summary>
-    /// تاریخ پذیرش
+    /// مطب
     /// </summary>
-    public string ReceptionDate { get; set; } = string.Empty;
+    public Appointment? Appointment { get; set; }
     /// <summary>
-    /// ساعت ثبت پذیرش
+    /// آیدی مطب
     /// </summary>
-    public string ReceptionSubmitHour { get; set; } = string.Empty;
+    public Guid? AppointmentId { get; set; }
     /// <summary>
     /// مطب
     /// </summary>
@@ -45,14 +45,6 @@ public class Reception : BaseDomainEntity<Guid>
     /// </summary>
     public Guid? ShiftId { get; set; }
     /// <summary>
-    /// یوزر لاگین شده
-    /// </summary>
-    public MedicalStaff? LoggedInMedicalStaff { get; set; }
-    /// <summary>
-    /// آیدی یوزر لاگین شده
-    /// </summary>
-    public Guid? LoggedInMedicalStaffId { get; set; }
-    /// <summary>
     /// شماره فاکتور
     /// </summary>
     public int FactorNo { get; set; }
@@ -61,8 +53,13 @@ public class Reception : BaseDomainEntity<Guid>
     /// </summary>
     public int FactorNoToday { get; set; }
     /// <summary>
+    /// توضیحات
+    /// </summary>
+    public string? Description { get; set; } = string.Empty;
+    /// <summary>
     /// جزئیات پذیرش
     /// </summary>
+    /// 
     public ICollection<ReceptionDetail> ReceptionDetails { get; set; } = new List<ReceptionDetail>();
     /// <summary>
     /// پرداخت

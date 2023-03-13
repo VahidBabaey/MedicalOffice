@@ -69,7 +69,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
                     AdditionalData = error
                 });
 
-                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             #endregion
 

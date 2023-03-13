@@ -12,4 +12,8 @@ public class MembershipNamesDTO : BaseDto<Guid>
     /// تخفیف
     /// </summary>
     public string Discount { get; set; } = string.Empty;
+    /// <summary>
+    /// فعال یا غیرفعال
+    /// </summary>
+    public bool IsActive { get; set; }
 }

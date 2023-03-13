@@ -285,7 +285,7 @@ namespace MedicalOffice.Persistence.Repositories
                     .Include(x => x.CreatedBy)
                     .Where(x =>
                 (x.PhoneNumber.Contains(input) ||
-                x.NationalID.Contains(input) ||
+                x.NationalId.Contains(input) ||
                 x.PatientLastName.Contains(input) ||
                 x.PatientName.Contains(input)) &&
                 x.OfficeId == officeId &&
@@ -296,7 +296,7 @@ namespace MedicalOffice.Persistence.Repositories
             {
                 appointments = _dbcontext.Appointments.Where(x =>
                 (x.PhoneNumber.Contains(input) ||
-                x.NationalID.Contains(input) ||
+                x.NationalId.Contains(input) ||
                 x.PatientLastName.Contains(input) ||
                 x.PatientName.Contains(input)) &&
                 x.OfficeId == officeId).ToList();

@@ -22,6 +22,11 @@ public class ServiceDTO : ISectionIdDTO
     public string? GenericCode { get; set; }
 
     /// <summary>
+    /// نام ارزش نسبی
+    /// </summary>
+    public string? ICD10Name { get; set; }
+
+    /// <summary>
     /// نحوه محاسبه قیمت
     /// </summary>
     public CalculationMethod CalculationMethod { get; set; }

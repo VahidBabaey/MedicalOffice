@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Features.TariffFile.Requests.Queries
+namespace MedicalOffice.Application.Features.InsuranceFile.Requests.Queries
 {
     public class GetAllAdditionalInsuranceNamesQuery : IRequest<BaseResponse>
     {

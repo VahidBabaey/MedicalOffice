@@ -102,11 +102,11 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize]
         [HttpPatch("role")]
-        public async Task<ActionResult<Guid>> UpdateUserRole([FromBody] UpdateUserRoleDTO dto)
+        public async Task<ActionResult<Guid>> UpdateUserRole([FromBody] UpdateUserRoleDTO dto, [FromQuery] string officeId)
         {
-            var response = await _mediator.Send(new UpdateUserRoleCommand() { DTO = dto });
+            var response = await _mediator.Send(new UpdateUserRoleCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

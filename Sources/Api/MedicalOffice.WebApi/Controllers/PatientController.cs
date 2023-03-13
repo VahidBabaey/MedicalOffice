@@ -21,7 +21,7 @@ public class PatientController : Controller
         _mediator = mediator;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] PatientDTO dto, [FromQuery] string officeId)
     {

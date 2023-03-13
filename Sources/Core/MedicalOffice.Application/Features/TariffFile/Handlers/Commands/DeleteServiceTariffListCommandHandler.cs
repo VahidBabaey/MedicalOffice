@@ -44,29 +44,17 @@ public class DeleteServiceTariffListCommandHandler : IRequestHandler<DeleteTarif
             }
         }
 
-        try
+        foreach (var item in request.DTO.TariffId)
         {
-            foreach (var item in request.DTO.TariffId)
-            {
-                await _tariffrepository.SoftDelete(item);
-            }
+            await _tariffrepository.SoftDelete(item);
+        }
 
-            await _logger.Log(new Log
-            {
-                Type = LogType.Success,
-                Header = $"{_requestTitle} succeded",
-            });
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
-        }
-        catch (Exception error)
+        await _logger.Log(new Log
         {
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = $"{_requestTitle} failed",
-                AdditionalData = error.Message
-            });
-            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
-        }
+            Type = LogType.Success,
+            Header = $"{_requestTitle} succeded",
+        });
+        return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
+
     }
 }

@@ -145,6 +145,7 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
 
         if (property == null)
             throw new ArgumentException("entity is not recognized!");
+
         _dbContext.Update(entity);
         property.SetValue(entity, true);
         await _dbContext.SaveChangesAsync();

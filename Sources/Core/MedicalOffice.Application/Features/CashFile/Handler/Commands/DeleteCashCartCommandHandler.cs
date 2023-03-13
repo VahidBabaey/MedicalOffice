@@ -14,61 +14,55 @@ namespace MedicalOffice.Application.Features.CashFile.Handlers.Commands;
 
 public class DeleteCashCartCommandHandler : IRequestHandler<DeleteCashCartCommand, BaseResponse>
 {
-    private readonly ICashCartRepository _repository;
+    private readonly ICashCartRepository _cashcartrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteCashCartCommandHandler(ICashCartRepository repository, ILogger logger)
+    public DeleteCashCartCommandHandler(ICashCartRepository cashcartrepository, ILogger logger)
     {
-        _repository = repository;
+        _cashcartrepository = cashcartrepository;
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
 
     public async Task<BaseResponse> Handle(DeleteCashCartCommand request, CancellationToken cancellationToken)
     {
-        BaseResponse response = new();
-        Log log = new();
 
-        bool iscashCartIdExist = await _repository.CheckCashCartId(request.CashCartId);
+        bool iscashCartIdExist = await _cashcartrepository.CheckCashCartId(request.CashCartId);
 
         if (!iscashCartIdExist)
         {
-            response.Success = false;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add("ID isn't exist");
-
-            log.Type = LogType.Error;
-            return response;
+            var error = "ID isn't exist";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         try
         {
-            await _repository.Delete(request.CashCartId);
+            await _cashcartrepository.DeleteCashCartForAnyReceptionDetail(request.CashCartId);
 
-            response.Success = true;
-            response.StatusCode = HttpStatusCode.OK;
-            response.StatusDescription = $"{_requestTitle} succeded";
-            response.Data = (new { Id = request.CashCartId });
-
-            log.Type = LogType.Success;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded");
         }
         catch (Exception error)
         {
-            response.Success = false;
-            response.StatusCode = HttpStatusCode.BadRequest;
-            response.StatusDescription = $"{_requestTitle} failed";
-            response.Errors.Add(error.Message);
-
-            log.Type = LogType.Error;
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
-
-        log.Header = response.StatusDescription;
-        log.AdditionalData = response.Errors;
-
-        await _logger.Log(log);
-
-        return response;
     }
 }
 

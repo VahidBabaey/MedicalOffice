@@ -21,6 +21,6 @@ public class UpdateReceptionDetailValidator : AbstractValidator<UpdateReceptionD
         RuleFor(x => x.ServiceCount).NotEmpty();
         Include(new InsuranceIdValidator(_insuranceRepository, _QueryStringResolver));
         Include(new ServiceIdValidator(_serviceRepository, _QueryStringResolver));
-        //Include(new ReceptionIdValidator(_receptionRepository, _QueryStringResolver));
+        Include(new ReceptionIdValidator(_receptionRepository, _QueryStringResolver));
     }
 }

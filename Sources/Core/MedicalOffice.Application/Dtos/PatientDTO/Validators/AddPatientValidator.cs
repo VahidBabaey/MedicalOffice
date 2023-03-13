@@ -22,15 +22,15 @@ public class AddPatientValidator : AbstractValidator<PatientDTO>
 
         var officeId = _officeResolver.GetOfficeId().Result;
 
-        Include(new IPhoneNumberListValidator());
-        Include(new NationalIdValidator());
+        //Include(new IPhoneNumberListValidator());
+        //Include(new NationalIdValidator());
 
         RuleFor(x => x.FirstName).NotEmpty().Length(1, 100);
 
         RuleFor(x => x.LastName).NotEmpty().Length(1, 100);
 
-        RuleFor(p => p.TelePhoneNumber)
-            .Must(p => IsValidTelePhoneNumberList(p)).WithMessage("{PropertyName} is not valid");
+        //RuleFor(p => p.TelePhoneNumber)
+        //    .Must(p => IsValidTelePhoneNumberList(p)).WithMessage("{PropertyName} is not valid");
 
         RuleFor(x => x.InsuranceId)
             .MustAsync(async (insuranceId, token) =>

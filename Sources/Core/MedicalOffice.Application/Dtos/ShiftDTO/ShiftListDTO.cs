@@ -13,17 +13,20 @@ namespace MedicalOffice.Application.Dtos.ShiftDTO
         /// عنوان شیفت : صبح - ظهر - عصر - غیره
         /// </summary>
         public string Name { get; set; } = string.Empty;
+
         /// <summary>
         /// تایم شروع
         /// </summary>
         public string StartTime { get; set; } = string.Empty;
+
         /// <summary>
         /// تایم پایان
         /// </summary>
         public string EndTime { get; set; } = string.Empty;
+
         /// <summary>
         /// آیا شیفت روز های تعطبل نیز هست یا خیر
         /// </summary>
-        public bool HolidayShift { get; set; }
+        public bool NextDay { get; set; }
     }
 }

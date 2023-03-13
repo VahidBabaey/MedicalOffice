@@ -87,77 +87,29 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             }
             #endregion
 
-            #region CreateBaseOfNewStaff
-            var newMedicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
-            newMedicalStaff.User = existingMedicalStaff.User;
-            newMedicalStaff.UserId = existingMedicalStaff.UserId;
-            newMedicalStaff.OfficeId = request.OfficeId;
-            #endregion
+            //Check user is exist
+            var user = new User();
+            var userByPhoneNumber = new User();
+            var userByNationalId = new User();
 
-            #region CheckUerSituation
-            var user = newMedicalStaff.User;    
-            if (request.DTO.PhoneNumber != existingMedicalStaff.PhoneNumber ||
-                request.DTO.NationalID != existingMedicalStaff.NationalID)
+            if (existingMedicalStaff.PhoneNumber == request.DTO.PhoneNumber && existingMedicalStaff.NationalId == request.DTO.NationalId)
             {
-                var existingUserByPhoneNumber = await _userRepository.GetUserByPhoneNumber(request.DTO.PhoneNumber);
-                var existingUserByNationalId = await _userRepository.GetUserByNationalId(request.DTO.NationalID);
+                user = existingMedicalStaff.User;
+            }
+            else
+            {
+                userByPhoneNumber = await _userRepository.GetUserByPhoneNumber(request.DTO.PhoneNumber);
+                userByNationalId = await _userRepository.GetUserByNationalId(request.DTO.NationalId);
 
-                #region BothExist
-                if (existingUserByPhoneNumber != null && existingUserByNationalId != null)
-                {
-                    switch (existingUserByNationalId.Id == existingUserByNationalId.Id)
-                    {
-                        case true:
-                            var isStaffExistingStaffInOffice = await _medicalStaffrepository.CheckExistByOfficeIdAndPhoneNumber(request.OfficeId, request.DTO.PhoneNumber);
-                            if (isStaffExistingStaffInOffice)
-                            {
-                                await _logger.Log(new Log
-                                {
-                                    Type = LogType.Error,
-                                    Header = $"{_requestTitle} failed",
-                                    AdditionalData = "There is a medical staff with this phoneNumber in this office"
-                                });
-                                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed",
-                                    "There is a medical staff with this phoneNumber in this office");
-                            }
+                //condistions
+                var bothNotExist = userByPhoneNumber == null && userByNationalId == null;
+                var bothExist = userByPhoneNumber != null && userByNationalId != null;
+                var phoneNumberExist = userByPhoneNumber != null || userByNationalId == null;
+                var nationalIdExist = userByPhoneNumber == null || userByNationalId != null;
 
-                            user = existingUserByPhoneNumber;
-                            break;
-
-                        case false:
-                            var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";
-                            await _logger.Log(new Log
-                            {
-                                Type = LogType.Error,
-                                Header = $"{_requestTitle} failed",
-                                AdditionalData = error
-                            });
-                            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-                    }
-                }
-                #endregion
-
-                #region InvalidPhoneAndNationalId
-                var invalidPhoneAndNationalId = (existingUserByPhoneNumber != null && existingUserByNationalId == null) || (existingUserByPhoneNumber == null && existingUserByNationalId != null);
-                if (invalidPhoneAndNationalId)
-                {
-                    var error = $"PhoneNumber: '{request.DTO.PhoneNumber}' or nationalId: '{request.DTO.NationalID}' already exists.";
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} failed",
-                        AdditionalData = error
-                    });
-                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-                }
-                #endregion
-
-                #region NoUserExist
-                var noUserExist = existingUserByPhoneNumber == null && existingUserByNationalId == null;
-                if (noUserExist)
+                if (bothNotExist)
                 {
                     var newUser = _mapper.Map<User>(request.DTO);
-                    newUser.Id = Guid.NewGuid();
                     newUser.UserName = request.DTO.PhoneNumber;
                     newUser.NormalizedUserName = request.DTO.PhoneNumber;
 
@@ -173,16 +125,84 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                         return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", userCreation.Errors.Select(x => x.Description).ToArray());
                     }
 
-                    user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
+                    user = await _userRepository.GetById(newUser.Id);
                 }
-                #endregion
 
-                newMedicalStaff.UserId = user.Id;
+                else if (bothExist)
+                {
+                    if (userByPhoneNumber.Id == userByNationalId.Id)
+                    {
+                        user = userByPhoneNumber;
+                    }
+                    else
+                    {
+                        await _logger.Log(new Log
+                        {
+                            Type = LogType.Error,
+                            Header = $"{_requestTitle} failed",
+                            AdditionalData = "شماره تماس و کد ملی به کاربران دیگیری متعلق است."
+                            //AdditionalData = "This phone and nationalId is belong to other users"
+                        });
+                        return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", "شماره تماس و کد ملی به کاربران دیگیری متعلق است.");
+                    }
+                }
+
+                else if (phoneNumberExist)
+                {
+                    var hasPassWord = await _userManager.HasPasswordAsync(userByPhoneNumber);
+                    if (hasPassWord)
+                    {
+                        await _logger.Log(new Log
+                        {
+                            Type = LogType.Error,
+                            Header = $"{_requestTitle} failed",
+                            AdditionalData = "این شماره تماس به کاربر دیگری متعلق است."
+                            //AdditionalData = "This phone is belonged to another user"
+                        });
+                        return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", "این شماره تماس به کاربر دیگری متعلق است.");
+                    }
+                    else
+                    {
+                        userByPhoneNumber.NationalId = request.DTO.NationalId;
+                        await _userManager.UpdateAsync(userByPhoneNumber);
+
+                        user = userByPhoneNumber;
+                    }
+                }
+
+                else if (nationalIdExist)
+                {
+                    var hasPassWord = await _userManager.HasPasswordAsync(userByNationalId);
+                    if (hasPassWord)
+                    {
+                        await _logger.Log(new Log
+                        {
+                            Type = LogType.Error,
+                            Header = $"{_requestTitle} failed",
+                            AdditionalData = "این کدملی به کاربر دیگری متعلق است"
+                            //AdditionalData = "This nationalId is belonged to another user"
+                        });
+                        return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", "این کدملی به کاربر دیگری متعلق است");
+                    }
+                    else
+                    {
+                        userByNationalId.PhoneNumber = request.DTO.PhoneNumber;
+                        userByNationalId.UserName = request.DTO.PhoneNumber;
+                        userByNationalId.NormalizedUserName = request.DTO.PhoneNumber;
+                        await _userManager.UpdateAsync(userByNationalId);
+
+                        user = userByNationalId;
+                    }
+                }
             }
-            #endregion
+
+            var newMedicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
+            newMedicalStaff.OfficeId = request.OfficeId;
+            newMedicalStaff.UserId = user.Id;
+            newMedicalStaff.User = user;
 
             #region UpdateMedicalStaff
-            await _medicalStaffrepository.Patch(existingMedicalStaff, newMedicalStaff, true);
+            await _medicalStaffrepository.Patch(existingMedicalStaff, newMedicalStaff, false);
             #endregion
 
             #region RemoveOldStaffPermissions
@@ -205,8 +225,14 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             #endregion
 
             #region RemoveUserOfficeRole
-            var userOfficeRole= await _userOfficeRoleRepository.GetByUserAndOfficeId(existingMedicalStaff.UserId, request.OfficeId);
-            await _userOfficeRoleRepository.SoftDelete(userOfficeRole.Id);
+            var userOfficeRole = await _userOfficeRoleRepository.GetByUserAndOfficeId(existingMedicalStaff.UserId, request.OfficeId);
+            if (userOfficeRole != null)
+            {
+                foreach (var item in userOfficeRole)
+                {
+                    await _userOfficeRoleRepository.SoftDelete(item.Id);
+                }
+            }
             #endregion
 
             #region AddRoleToUser
@@ -217,7 +243,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 OfficeId = request.OfficeId
             });
 
-            Role role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
+            var role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
             if (role != null)
             {
                 await _userManager.AddToRoleAsync(user, role.NormalizedName);
