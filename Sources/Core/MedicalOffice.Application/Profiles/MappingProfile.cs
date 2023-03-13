@@ -176,7 +176,7 @@ public class MappingProfile : Profile
             source.PatientName = destination.PatientName;
             source.PatientLastName = destination.PatientLastName;
             source.PhoneNumber = destination.PhoneNumber;
-            source.NationalID = destination.NationalID;
+            source.NationalId = destination.NationalId;
             source.ReferrerId = destination.ReferrerId;
             source.Description = destination.Description;
 

@@ -86,7 +86,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                         p.IsDeleted == false &&
                         p.FirstName.Contains(firstName) &&
                         p.LastName.Contains(lastName) &&
-                        p.NationalID.StartsWith(nationalCode) &&
+                        p.NationalId.StartsWith(nationalCode) &&
                         p.FileNumber == fileNumber
                       )
                 .Include(p => p.PatientContacts)
@@ -103,7 +103,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                     Id = item.Id,
                     FirstName = item.FirstName,
                     LastName = item.LastName,
-                    NationalID = item.NationalID,
+                    NationalId = item.NationalId,
                     FatherName = item.FatherName,
                     InsuranceId = item.InsuranceId ?? default,
                     InsuranceName = item.Insurance?.Name ?? "",
@@ -153,7 +153,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                     Id = item.Id,
                     FirstName = item.FirstName,
                     LastName = item.LastName,
-                    NationalID = item.NationalID,
+                    NationalId = item.NationalId,
                     FatherName = item.FatherName,
                     InsuranceId = item.InsuranceId ?? default,
                     InsuranceName = item.Insurance?.Name ?? "",

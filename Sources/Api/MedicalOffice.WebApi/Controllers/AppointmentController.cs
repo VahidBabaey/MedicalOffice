@@ -112,7 +112,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         //[HttpGet("patient")]
         //public async Task<ActionResult<PatientDTO>> FilterPatientByPhoneOrNationalId([FromQuery] string? phoneNumber, [FromQuery] string? nationalId)
         //{
-        //    var response = await _mediator.Send(new FilterPatientByPhoneOrNationalIdQuery { PhoneNumber = phoneNumber ,NationalID = nationalId});
+        //    var response = await _mediator.Send(new FilterPatientByPhoneOrNationalIdQuery { PhoneNumber = phoneNumber ,NationalId = nationalId});
 
         //    return StatusCode(Convert.ToInt32(response.StatusCode), response);
         //}

@@ -80,7 +80,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                         AdditionalData = error
                     });
 
-                    return ResponseBuilder.Faild(HttpStatusCode.NotFound,
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest,
                         $"{_requestTitle} failed",
                         error);
                 }
@@ -97,7 +97,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                         AdditionalData = error
                     });
 
-                    return ResponseBuilder.Faild(HttpStatusCode.Conflict,
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest,
                         $"{_requestTitle} failed",
                         error);
                 }

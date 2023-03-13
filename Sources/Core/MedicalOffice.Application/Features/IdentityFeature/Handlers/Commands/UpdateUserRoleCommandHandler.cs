@@ -99,26 +99,24 @@ namespace MedicalOffice.Application.Features.IdentityFeature.Handlers.Commands
 
             if (existingUserOfficeRole != null)
             {
-                if (existingUserOfficeRole.RoleId != request.DTO.RoleId)
+                foreach (var item in existingUserOfficeRole)
                 {
-                    existingUserOfficeRole.RoleId = request.DTO.RoleId;
-                    await _usercOfficeRoleRepository.Update(existingUserOfficeRole);
-                    await _userManager.AddToRoleAsync(user, role.NormalizedName);
-
-                    await _logger.Log(new Log
+                    if (item.RoleId != request.DTO.RoleId)
                     {
-                        Type = LogType.Success,
-                        Header = $"{_requestTitle} succeeded",
-                        AdditionalData = existingUserOfficeRole.UserId
-                    });
+                        item.RoleId = request.DTO.RoleId;
+                        await _usercOfficeRoleRepository.Update(item);
+                        await _userManager.AddToRoleAsync(user, role.NormalizedName);
 
-                    return ResponseBuilder.Success(HttpStatusCode.Conflict, $"{_requestTitle} succeeded", existingUserOfficeRole.UserId);
-                }
-                else
-                {
-                    return ResponseBuilder.Success(HttpStatusCode.Conflict, $"{_requestTitle} succeeded", existingUserOfficeRole.UserId);
-                }
+                        await _logger.Log(new Log
+                        {
+                            Type = LogType.Success,
+                            Header = $"{_requestTitle} succeeded",
+                            AdditionalData = item.UserId
+                        });
+                    }
 
+                    return ResponseBuilder.Success(HttpStatusCode.Conflict, $"{_requestTitle} succeeded", existingUserOfficeRole.Select(x=>x.UserId));
+                }
             }
 
             var updateUserRoles = await _userManager.AddToRoleAsync(user, role.NormalizedName);
