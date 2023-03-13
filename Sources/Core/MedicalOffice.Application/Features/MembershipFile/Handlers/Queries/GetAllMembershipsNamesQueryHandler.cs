@@ -52,7 +52,6 @@ public class GetAllMembershipsNamesQueryHandler : IRequestHandler<GetAllMembersh
         try
         {
             var memberShip = _membershiprepository.GetAllMembershipsNames(request.OfficeId);
-            //var result = _mapper.Map<List<MembershipsNamesDTO>>(memberShip);
 
             await _logger.Log(new Log
             {

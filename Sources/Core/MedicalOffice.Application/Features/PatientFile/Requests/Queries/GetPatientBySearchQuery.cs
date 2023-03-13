@@ -19,7 +19,7 @@ namespace MedicalOffice.Application.Features.PatientFile.Requests.Queries
     }
     public class SearchFields
     {
-        public string NationalID { get; set; } = string.Empty;
+        public string NationalId { get; set; } = string.Empty;
         public int FileNumber { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;

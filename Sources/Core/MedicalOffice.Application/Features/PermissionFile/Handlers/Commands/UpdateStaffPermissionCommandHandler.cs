@@ -51,7 +51,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
-                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             #endregion
 
@@ -67,7 +67,7 @@ namespace MedicalOffice.Application.Features.PermissionFile.Handlers.Commands
                     Header = $"{_requestTitle} failed",
                     AdditionalData = error
                 });
-                return ResponseBuilder.Faild(HttpStatusCode.NotFound, $"{_requestTitle} failed", error);
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
             #endregion
 

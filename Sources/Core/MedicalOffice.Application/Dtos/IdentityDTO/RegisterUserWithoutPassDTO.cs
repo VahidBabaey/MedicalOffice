@@ -10,6 +10,6 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO
 
         public string LastName { get; set; } = string.Empty;
 
-        public string NationalID { get; set; } = string.Empty;
+        public string NationalId { get; set; } = string.Empty;
     }
 }
