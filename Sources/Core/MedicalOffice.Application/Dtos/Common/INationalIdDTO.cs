@@ -8,6 +8,6 @@ namespace MedicalOffice.Application.Dtos.Common
 {
     public interface INationalIdDTO
     {
-        public string NationalID { get; set; }
+        public string NationalId { get; set; }
     }
 }

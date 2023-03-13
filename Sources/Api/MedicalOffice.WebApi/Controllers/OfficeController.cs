@@ -30,6 +30,15 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<OfficeListDTO>> GetById([FromQuery] string officeId)
+        {
+            var response = await _mediator.Send(new GetByOfficeIdQuery { officeId = Guid.Parse(officeId)});
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
         [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<ActionResult<Guid>> create([FromBody] AddOfficeDto dto)

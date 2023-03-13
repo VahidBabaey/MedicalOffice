@@ -14,20 +14,20 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
         private static readonly int MaximumLength = 10;
         public NationalIdValidator()
         {
-            RuleFor(x => x.NationalID)
-                .NotEmpty().WithMessage(ValidationMessage.Required.For("NationalID"))
-                .MaximumLength(MaximumLength).WithMessage(ValidationMessage.MaximumLength.For("NationalID", MaximumLength))
-                .Must(x => IsValidNationalId(x)).WithMessage(ValidationMessage.NotValid.For("NationalID"));
+            RuleFor(x => x.NationalId)
+                .NotEmpty().WithMessage(ValidationMessage.Required.For("NationalId"))
+                .MaximumLength(MaximumLength).WithMessage(ValidationMessage.MaximumLength.For("NationalId", MaximumLength))
+                .Must(x => IsValidNationalId(x)).WithMessage(ValidationMessage.NotValid.For("NationalId"));
         }
 
-        private static bool IsValidNationalId(string NationalID)
+        private static bool IsValidNationalId(string NationalId)
         {
             Regex regex = new Regex("^(\\d)(?!\\1{9})\\d{9}$");
 
-            if (!regex.IsMatch(NationalID))
+            if (!regex.IsMatch(NationalId))
                 return false;
 
-            char[] nationalIdCharArray = NationalID.ToCharArray();
+            char[] nationalIdCharArray = NationalId.ToCharArray();
             int[] nationalIdNumArray = new int[nationalIdCharArray.Length];
 
             for (int i = 0; i < nationalIdCharArray.Length; i++)

@@ -26,7 +26,7 @@ namespace MedicalOffice.Application.Dtos
 
         public string? PhoneNumber { get; set; }
 
-        public string? NationalID { get; set; }
+        public string? NationalId { get; set; }
 
         public string DeviceName { get; set; }
 
