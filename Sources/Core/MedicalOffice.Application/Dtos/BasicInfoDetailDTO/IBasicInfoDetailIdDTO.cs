@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Dtos.Commons
+namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO
 {
     public interface IBasicInfoDetailIdDTO
     {

@@ -16,8 +16,14 @@ public class AddServiceValidator : AbstractValidator<ServiceDTO>
         _sectionRepository = sectionRepository;
 
         Include(new SectionIdValidator(_sectionRepository, _officeResolver));
-        
-        RuleFor(x => x.Name).NotEmpty().Length(1, 200);
-        RuleFor(x => x.CalculationMethod).NotEmpty();
+
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .WithMessage("ورود نام خدمت ضروری است")
+            .Length(1, 200)
+            .WithMessage("نام خدمت باید بین 1 تا 200 کاراکتر داشته باشد");
+        RuleFor(x => x.CalculationMethod)
+            .NotEmpty()
+            .WithMessage("ورود نحوه محاسبه قیمت ضروری است");
     }
 }

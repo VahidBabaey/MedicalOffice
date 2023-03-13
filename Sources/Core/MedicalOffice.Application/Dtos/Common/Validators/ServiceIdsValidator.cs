@@ -27,6 +27,7 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
 
             RuleFor(x => x.ServiceIds)
                 .NotEmpty()
+                .WithMessage("ورود شناسه خدمت ضروری است")
                 .MustAsync(async (serviceIds, token) =>
                 {
                     foreach (var item in serviceIds)
@@ -39,7 +40,8 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
                     }
                     return true;
                 })
-                .WithMessage("{PropertyName} has some invalid values");
+                //.WithMessage("{PropertyName} has some invalid values");
+                .WithMessage("شناسه خدمت دارای مقدارهای نامعتبر میباشد");
         }
     }
 }

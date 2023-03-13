@@ -22,11 +22,13 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
 
             RuleFor(x => x.PhoneNumber)
             .NotEmpty()
+            .WithMessage("ورود شماره تلفن ضروری است")
             .MustAsync(async (phoneNumber, token) =>
             {
                 return await _userManager.Users.AnyAsync(x => x.PhoneNumber == phoneNumber);
             })
-            .WithMessage("The {PropertyName} is't exist.");
+            //.WithMessage("The {PropertyName} is't exist.");
+            .WithMessage("شماره تلفن موجود نیست");
         }
     }
 }

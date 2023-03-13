@@ -25,6 +25,7 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
 
             RuleFor(x => x.MembershipId)
                 .NotEmpty()
+                .WithMessage("ورود شناسه عضویت ضروری است")
                 .MustAsync(async (membershipId, token) =>
                 {
                     var leaveTypeExists = await _membershipRepository.CheckExistMembershipId(officeId, membershipId);
@@ -34,7 +35,8 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
                     }
                     return false;
                 })
-                .WithMessage("{PropertyName} isn't exist");
+                //.WithMessage("{PropertyName} isn't exist");
+                .WithMessage("شناسه عضویت موجود نیست");
         }
     }
 }
