@@ -31,7 +31,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("id")]
         public async Task<ActionResult<OfficeListDTO>> GetById([FromQuery] string officeId)
         {
             var response = await _mediator.Send(new GetByOfficeIdQuery { officeId = Guid.Parse(officeId)});

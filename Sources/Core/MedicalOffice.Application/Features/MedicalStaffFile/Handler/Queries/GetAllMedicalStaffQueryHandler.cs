@@ -30,7 +30,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
 
         public async Task<BaseResponse> Handle(GetAllMedicalStaffsQuery request, CancellationToken cancellationToken)
         {
-
             var medicalStaffs = await _repository.GetAllMedicalStaffs(request.OfficeId);
             var result = _mapper.Map<List<MedicalStaffListDTO>>(medicalStaffs.Skip(request.Dto.Skip).Take(request.Dto.Take));
 

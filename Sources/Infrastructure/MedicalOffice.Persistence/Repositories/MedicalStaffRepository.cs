@@ -31,7 +31,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
     public async Task<List<MedicalStaffListDTO>> GetAllMedicalStaffs(Guid officeId)
     {
         var medicalStaffListDTOs = new List<MedicalStaffListDTO>();
-        var _list = await _dbContext.MedicalStaffs.Where(p => p.OfficeId == officeId).ToListAsync();
+        var _list = await _dbContext.MedicalStaffs.Include(x=>x.Specialization).Include(x=>x.Role).Where(p => p.OfficeId == officeId).ToListAsync();
 
         foreach (var item in _list)
         {
@@ -43,12 +43,12 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
                 PhoneNumber = item.PhoneNumber,
                 MedicalNumber = item.MedicalNumber,
                 SpecializationId = item.SpecializationId,
-                SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Name }).Where(x => x.Id == item.SpecializationId).FirstOrDefault().Name,
+                SpecializationName = item.Specialization?.Name,
                 IHIOPassword = item.IHIOPassword,
                 IHIOUserName = item.IHIOUserName,
                 Title = item.Title,
                 NationalId = item.NationalId,
-                RoleName = _dbContext.Roles.SingleOrDefault(x => x.Id == item.RoleId).Name,
+                RoleName = item.Role.Name,
                 RoleId = item.RoleId,
                 IsTechnicalAssistant = item.IsTechnicalAssistant,
                 IsReferrer = item.IsReferrer,
