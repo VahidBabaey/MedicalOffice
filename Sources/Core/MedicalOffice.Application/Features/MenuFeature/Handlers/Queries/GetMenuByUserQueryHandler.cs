@@ -30,7 +30,6 @@ namespace MedicalOffice.Application.Features.MenuFeature.Handlers.Queries
             _userResolver = userResolver;
             _logger = logger;
             _mapper = mapper;
-
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
         public async Task<BaseResponse> Handle(GetMenuByUserQuery request, CancellationToken cancellationToken)
@@ -50,9 +49,9 @@ namespace MedicalOffice.Application.Features.MenuFeature.Handlers.Queries
             }
             else
             {
-                var roleIs = officeRoles.Select(x => x.RoleId).ToList();
+                var roleIds = officeRoles.Select(x => x.RoleId).ToList();
 
-                var menuByUserId = await _menuRepository.GetAllByUserId(Guid.Parse(userId), request.OfficeId, roleIs);
+                var menuByUserId = await _menuRepository.GetAllByUserId(Guid.Parse(userId), request.OfficeId, roleIds);
                 result = GetMenu(menuByUserId);
             }
 

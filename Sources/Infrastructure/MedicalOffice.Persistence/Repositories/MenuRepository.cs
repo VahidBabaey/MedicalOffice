@@ -20,14 +20,15 @@ namespace MedicalOffice.Persistence.Repositories
         public async Task<List<Menu>> GetAllByUserId(Guid userId, Guid officId, List<Guid> roleIds)
         {
             var permissions = await _dbContext.UserOfficePermissions.Where(x => x.UserId == userId && x.OfficeId == officId).Select(x => x.PermissionId).ToListAsync();
-            if (permissions.Count == 0)
+            if (!permissions.Any())
             {
                 permissions = await _dbContext.RolePermissions.Where(x => roleIds.Contains(x.RoleId)).Select(x => x.PermissionId).ToListAsync();
             }
 
-            var Menu = await _dbContext.MenuPermissions.Where(x => permissions.Contains(x.PermissionId)).Select(x=>x.Menu).ToListAsync();
+            var menuIds = await _dbContext.MenuPermissions.Where(x => permissions.Contains(x.PermissionId)).Select(x => x.MenuId).Distinct().ToListAsync();
 
-            return Menu;
+            var menus = await _dbContext.Menu.Where(x => x.ParentId == null ? menuIds.Contains(x.Id) : menuIds.Contains((Guid)x.ParentId)).ToListAsync();
+            return menus;
         }
     }
 }
