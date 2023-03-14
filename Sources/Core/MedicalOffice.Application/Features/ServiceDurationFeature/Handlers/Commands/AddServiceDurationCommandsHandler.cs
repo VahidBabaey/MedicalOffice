@@ -27,7 +27,6 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
         private readonly IMapper _mapper;
 
         private readonly string _requestTitle;
-
         public AddServiceDurationCommandsHandler(
             IValidator<ServiceDurationDTO> validator,
             IMapper mapper,
@@ -69,7 +68,7 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
             var isStaffServiceExist = await _serviceDurationRepository.CheckStaffHasServiceDuration(request.DTO.MedicalStaffId, request.DTO.ServiceId);
             if (isStaffServiceExist)
             {
-                var error = "This staff has service duration";
+                var error = "مدت زمان خدمت قبلا برای این کادر درمان ثبت شده است.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

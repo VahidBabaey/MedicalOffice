@@ -24,7 +24,6 @@ public class GetAllMembershipsQueryHandler : IRequestHandler<GetAllMemberships, 
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
-
     public GetAllMembershipsQueryHandler(IOfficeRepository officeRepository, IMembershipRepository membershiprepository, IMapper mapper, ILogger logger)
     {
         _officeRepository = officeRepository;
@@ -33,10 +32,8 @@ public class GetAllMembershipsQueryHandler : IRequestHandler<GetAllMemberships, 
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
-
     public async Task<BaseResponse> Handle(GetAllMemberships request, CancellationToken cancellationToken)
     {
-
         var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)

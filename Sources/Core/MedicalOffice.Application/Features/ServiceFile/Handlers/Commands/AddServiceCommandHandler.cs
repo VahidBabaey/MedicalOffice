@@ -59,7 +59,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
             var validationServiceName = await _servicerepository.CheckExistServiceName(request.OfficeId, request.DTO.Name);
             if (validationServiceName)
             {
-                var error = "Name Must be Unique";
+                var error = "نام سرویس باید یکتا باشد.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

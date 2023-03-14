@@ -11,13 +11,11 @@ using System.Net;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
 {
-
     public class GetAllReferrerMedicalStaffNamesQueryHandler : IRequestHandler<GetAllReferrerMedicalStaffsNamesQuery, BaseResponse>
     {
         private readonly IMedicalStaffRepository _medicalstaffrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
-
         private readonly string _requestTitle;
 
         public GetAllReferrerMedicalStaffNamesQueryHandler(IMedicalStaffRepository medicalstaffrepository, IMapper mapper, ILogger logger)
@@ -25,7 +23,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
             _medicalstaffrepository = medicalstaffrepository;
             _mapper = mapper;
             _logger = logger;
-
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 

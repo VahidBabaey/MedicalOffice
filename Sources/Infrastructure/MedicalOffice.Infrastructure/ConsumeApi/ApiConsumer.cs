@@ -23,17 +23,11 @@ namespace MedicalOffice.Infrastructure.FetchData
         public async Task<RestResponse> GetResponse(string path, List<ExternalApiInput> input)
         {
             var queryString = string.Empty;
-            //if (input.Count == 1)
-            //{
-            //    queryString = string.Concat(queryString, $"?{input[0].Key}={input[0].Value}");
-            //}
-            //else
-            //{
-                foreach (var item in input)
-                {
-                    queryString = string.Concat(queryString, $"?{item.Key}={item.Value}&");
-                }
-            //}
+
+            foreach (var item in input)
+            {
+                queryString = string.Concat(queryString, $"?{item.Key}={item.Value}&");
+            }
 
             var url = string.Concat(_apiConsumersetting.BaseDomain, path, queryString);
 

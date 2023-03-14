@@ -24,31 +24,15 @@ public class DeleteShiftListCommandHandler : IRequestHandler<DeleteShiftListComm
         _logger = logger;
         _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
     }
-
     public async Task<BaseResponse> Handle(DeleteShiftListCommand request, CancellationToken cancellationToken)
     {
-
-        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-        if (!validationOfficeId)
-        {
-            var error = "OfficeID isn't exist";
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = $"{_requestTitle} failed",
-                AdditionalData = error
-            });
-            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-        }
-
         foreach (var item in request.DTO.ShiftId)
         {
             var validationSectionId = await _shiftrepository.CheckExistShiftId(request.OfficeId, item);
 
             if (!validationSectionId)
             {
-                var error = "ID isn't exist";
+                var error = "شناسه شیفت وجود ندارد.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

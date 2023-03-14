@@ -33,21 +33,6 @@ public class GetAllSectionsQueryHandler : IRequestHandler<GetAllSectionQuery, Ba
 
     public async Task<BaseResponse> Handle(GetAllSectionQuery request, CancellationToken cancellationToken)
     {
-
-        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-        if (!validationOfficeId)
-        {
-            var error = "OfficeID isn't exist";
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = $"{_requestTitle} failed",
-                AdditionalData = error
-            });
-            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-        }
-
         try
         {
             var section = _sectionrepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).OrderByDescending(x => x.CreatedDate);

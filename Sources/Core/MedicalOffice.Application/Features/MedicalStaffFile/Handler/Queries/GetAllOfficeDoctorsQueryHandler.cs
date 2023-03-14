@@ -7,6 +7,8 @@ using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using System.Net;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
@@ -17,22 +19,20 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
-
         public GetAllOfficeDoctorsQueryHandler(
             IMedicalStaffRepository medicalStaffRepository,
             IMapper mapper,
-            ILogger logger
-            )
+            ILogger logger)
         {
             _medicalStaffRepository = medicalStaffRepository;
             _mapper = mapper;
             _logger = logger;
 
-            _requestTitle = GetType().Name.Replace("QueryHandler",string.Empty);
+            _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
         public async Task<BaseResponse> Handle(GetAllOfficeDoctorsQuery request, CancellationToken cancellationToken)
         {
-            var staffs = await _medicalStaffRepository.GetAllDoctorsAndExperts(request.OfficeId);
+            var staffs = _medicalStaffRepository.GetAllDoctorsAndExperts(request.OfficeId).Result.OrderByDescending(x => x.CreatedDate);
             var staffNamse = _mapper.Map<List<MedicalStaffNameListDTO>>(staffs);
             var result = new List<NameDTO>();
 

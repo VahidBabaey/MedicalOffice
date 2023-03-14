@@ -55,9 +55,9 @@ public class MedicalStaffController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto)
+    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order order)
     {
-        var response = await _mediator.Send(new GetAllMedicalStaffsQuery() { Dto = dto, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllMedicalStaffsQuery() { Dto = dto, OfficeId = Guid.Parse(officeId), Order = order });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -66,16 +66,16 @@ public class MedicalStaffController : Controller
     [HttpGet("referrer")]
     public async Task<ActionResult<List<MedicalStaffNameReferrerListDTO>>> GetAllReferrerMedicalStaff([FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetAllReferrerMedicalStaffsNamesQuery() {OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllReferrerMedicalStaffsNamesQuery() { OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
     [HttpGet("search")]
-    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetMedicalStaffBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto)
+    public async Task<ActionResult<List<MedicalStaffListDTO>>> GetMedicalStaffBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order order)
     {
-        var response = await _mediator.Send(new GetMedicalStaffBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetMedicalStaffBySearchQuery() { Dto = dto, Name = name, OfficeId = Guid.Parse(officeId) ,Order=order});
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

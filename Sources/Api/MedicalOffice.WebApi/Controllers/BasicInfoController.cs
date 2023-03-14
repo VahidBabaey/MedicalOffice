@@ -3,6 +3,7 @@ using MedicalOffice.Application.Dtos.BasicInfoListDTO;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Features.BasicInfoFile.Requests.Queries;
 using MedicalOffice.Domain.Enums;
+using MedicalOffice.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

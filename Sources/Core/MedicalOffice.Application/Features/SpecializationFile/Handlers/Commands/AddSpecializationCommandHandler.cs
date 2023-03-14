@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Commands
 {
-
     public class AddSpecializationCommandHandler : IRequestHandler<AddSpecializationCommand, BaseResponse>
     {
         private readonly IValidator<SpecializationDTO> _validator;
@@ -35,7 +34,6 @@ namespace MedicalOffice.Application.Features.SpecializationFile.Handlers.Command
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
-
         public async Task<BaseResponse> Handle(AddSpecializationCommand request, CancellationToken cancellationToken)
         {
             BaseResponse response = new();

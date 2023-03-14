@@ -15,6 +15,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries
     {
         public ListDto Dto { get; set; } = new ListDto();
         public Guid OfficeId { get; set; }
-        public Order? Order { get;}
+        public Order? Order { get; set; }
     }
 }

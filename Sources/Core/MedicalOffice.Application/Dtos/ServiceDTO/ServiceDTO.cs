@@ -19,7 +19,7 @@ public class ServiceDTO : ISectionIdDTO
     /// <summary>
     /// کد ژنریک
     /// </summary>
-    public string? GenericCode { get; set; }
+    public string? GenericCode { get; set; }=string.Empty;
 
     /// <summary>
     /// نام ارزش نسبی
