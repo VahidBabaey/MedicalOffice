@@ -2,6 +2,7 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.OfficeDTO;
 using MedicalOffice.Application.Features.OfficeFeature.Requests.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
@@ -32,8 +33,8 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetByOfficeIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await _officeRepository.GetById(request.officeId);
-            if (result == null)
+            var office = await _officeRepository.GetById(request.officeId);
+            if (office == null)
             {
                 var error = "مطب با این شناسه وجود ندارد.";
                 await _logger.Log(new Log
@@ -45,6 +46,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Queries
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
+            var result = _mapper.Map<OfficeListDTO>(office);
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
