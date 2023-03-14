@@ -30,7 +30,7 @@ public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNu
     /// <summary>
     /// کد ملی
     /// </summary>
-    public string? NationalID { get; set; } = string.Empty;
+    public string? NationalId { get; set; } = string.Empty;
     /// <summary>
     /// تاریخ تولد
     /// </summary>

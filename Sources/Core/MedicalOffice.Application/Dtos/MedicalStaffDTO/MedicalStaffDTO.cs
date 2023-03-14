@@ -38,7 +38,7 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO
         /// <summary>
         /// کد ملی
         /// </summary>
-        public string NationalID { get; set; } = string.Empty;
+        public string NationalId { get; set; } = string.Empty;
 
         /// <summary>
         /// عنوان

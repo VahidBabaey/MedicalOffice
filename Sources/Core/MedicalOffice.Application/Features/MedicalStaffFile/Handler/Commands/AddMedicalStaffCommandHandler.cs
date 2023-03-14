@@ -26,6 +26,8 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
     public class AddMedicalStaffCommandHandler : IRequestHandler<AddMedicalStaffCommand, BaseResponse>
     {
         private readonly IValidator<MedicalStaffDTO> _validator;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
@@ -33,9 +35,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
         private readonly IRolePermissionRepository _rolePermissionRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserOfficePermissionRepository _userOfficePermissionRepository;
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
-
         private readonly string _requestTitle;
 
         public AddMedicalStaffCommandHandler(
@@ -75,6 +74,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
 
+
             //Check staff is exist
             var isMedicalStaffExist = await _medicalStaffrepository.CheckExistByOfficeIdAndPhoneNumber(
                 request.OfficeId, request.DTO.PhoneNumber);
@@ -92,13 +92,19 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             }
 
             //Check user is exist
-            var user = await _userRepository.CheckByPhoneOrNationalId(request.DTO.PhoneNumber, request.DTO.NationalID);
+            var user = new User();
+            var userByPhoneNumber = await _userRepository.GetUserByPhoneNumber(request.DTO.PhoneNumber);
+            var userByNationalId = await _userRepository.GetUserByNationalId(request.DTO.NationalId);
 
-            //Create user if is not exist
-            if (user == null)
+            //condistions
+            var bothNotExist = userByPhoneNumber == null && userByNationalId == null;
+            var bothExist = userByPhoneNumber != null && userByNationalId != null;
+            var phoneNumberExist = userByPhoneNumber != null || userByNationalId == null;
+            var nationalIdExist = userByPhoneNumber == null || userByNationalId != null;
+
+            if (bothNotExist)
             {
                 var newUser = _mapper.Map<User>(request.DTO);
-                newUser.Id = Guid.NewGuid();
                 newUser.UserName = request.DTO.PhoneNumber;
                 newUser.NormalizedUserName = request.DTO.PhoneNumber;
 
@@ -115,6 +121,43 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                 }
 
                 user = await _userManager.FindByNameAsync(request.DTO.PhoneNumber);
+            }
+            else if (bothExist)
+            {
+                if (userByPhoneNumber.Id == userByNationalId.Id)
+                {
+                    user = userByPhoneNumber;
+                }
+                else
+                {
+                    await _logger.Log(new Log
+                    {
+                        Type = LogType.Error,
+                        Header = $"{_requestTitle} failed",
+                        AdditionalData = " شماره تماس و کدملی متعلق به کاربر دیگری است."
+                    }); ;
+                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", " شماره تماس و کدملی متعلق به کاربر دیگری است.");
+                }
+            }
+            else if (phoneNumberExist)
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = " شماره تماس متعلق به کاربر دیگری است"
+                }); ;
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", " شماره تماس متعلق به کاربر دیگری است");
+            }
+            else if (nationalIdExist)
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = " کدملی متعلق به کاربر دیگری است"
+                }); ;
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", " کدملی متعلق به کاربر دیگری است");
             }
 
             //Create medicalStaff
@@ -144,7 +187,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             }
             await _userOfficePermissionRepository.AddRange(userOfficePermissions);
 
-            Role role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
+            var role = await _roleManager.FindByIdAsync(request.DTO.RoleId.ToString());
             if (role != null)
             {
                 await _userManager.AddToRoleAsync(user, role.NormalizedName);

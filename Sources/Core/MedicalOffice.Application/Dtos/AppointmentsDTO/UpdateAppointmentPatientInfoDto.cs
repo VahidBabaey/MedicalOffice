@@ -13,7 +13,7 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO
 
         public string PhoneNumber { get; set; }
 
-        public string NationalID { get; set; }
+        public string NationalId { get; set; }
 
         public Guid? ReferrerId { get; set; }
 

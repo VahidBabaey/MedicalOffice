@@ -29,7 +29,7 @@ namespace MedicalOffice.Domain.Entities
         /// <summary>
         /// کد ملی
         /// </summary>
-        public string NationalID { get; set; } = string.Empty;
+        public string NationalId { get; set; } = string.Empty;
 
         /// <summary>
         /// فعال یا غیرفعال

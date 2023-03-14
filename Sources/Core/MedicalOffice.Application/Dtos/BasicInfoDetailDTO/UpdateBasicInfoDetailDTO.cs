@@ -1,5 +1,4 @@
 ﻿using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;

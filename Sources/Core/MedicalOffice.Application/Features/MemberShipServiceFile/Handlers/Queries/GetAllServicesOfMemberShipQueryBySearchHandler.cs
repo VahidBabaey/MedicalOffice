@@ -9,12 +9,14 @@ using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace MedicalOffice.Application.Features.MemberShipServiceFile.Handlers.Queries;
 public class GetAllServicesOfMemberShipQueryBySearchHandler : IRequestHandler<GetAllServicesOfMemberShipQueryBySearch, BaseResponse>
@@ -69,7 +71,12 @@ public class GetAllServicesOfMemberShipQueryBySearchHandler : IRequestHandler<Ge
 
         try
         {
-            var services = await _membershipservicerepository.GetAllServicesOfMemberShipBySearch(request.OfficeId, request.MemberShipId, request.Name);
+            var services = _membershipservicerepository.GetAllServicesOfMemberShipBySearch(request.OfficeId, request.MemberShipId, request.Name).Result.OrderByDescending(x => x.CreatedDate);
+            if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+            {
+                services = request.Order == Order.NewRecords ? services : services.OrderBy(x => x.CreatedDate);
+            }
+
             var result = _mapper.Map<List<ServicesOfMemeberShipListDTO>>(services.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             await _logger.Log(new Log
@@ -90,6 +97,11 @@ public class GetAllServicesOfMemberShipQueryBySearchHandler : IRequestHandler<Ge
                 AdditionalData = error.Message
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
+        }
+
+        static object GetCreatedDate(ServicesOfMemeberShipListDTO x)
+        {
+            return x.CreatedDate;
         }
     }
 

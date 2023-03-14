@@ -61,7 +61,7 @@ namespace MedicalOffice.Application.Features.AppointmentFeature.Handlers.Command
             existingAppointment.PatientName = request.DTO.PatientName;
             existingAppointment.PatientLastName = request.DTO.PatientLastName;
             existingAppointment.PhoneNumber = request.DTO.PhoneNumber;
-            existingAppointment.NationalID = request.DTO.NationalID;
+            existingAppointment.NationalId = request.DTO.NationalId;
             existingAppointment.ReferrerId = request.DTO.ReferrerId;
             existingAppointment.Description = request.DTO.Description;
 

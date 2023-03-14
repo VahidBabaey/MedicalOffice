@@ -25,6 +25,7 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
 
             RuleFor(x => x.ReceptionId)
                 .NotEmpty()
+                .WithMessage("ورود شناسه پذیرش ضروری است")
                 .MustAsync(async (receptionId, token) =>
                 {
                     var leaveTypeExists = await _cashRepository.CheckExistReceptionId(officeId, receptionId);
@@ -34,7 +35,8 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
                     }
                     return false;
                 })
-                .WithMessage("{PropertyName} isn't exist");
+                //.WithMessage("{PropertyName} isn't exist");
+                .WithMessage("شناسه پذیرش موجود نیست");
         }
     }
 }

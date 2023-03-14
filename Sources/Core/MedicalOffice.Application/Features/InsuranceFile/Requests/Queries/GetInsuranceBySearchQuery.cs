@@ -2,6 +2,7 @@
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,4 +16,5 @@ public class GetInsuranceBySearchQuery : IRequest<BaseResponse>
     public ListDto Dto { get; set; } = new ListDto();
     public string Name { get; set; }
     public Guid OfficeId { get; set; }
+    public Order? Order { get; set; }
 }

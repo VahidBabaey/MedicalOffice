@@ -30,9 +30,11 @@ namespace MedicalOffice.Application.Dtos.OfficeDTO.Validators
 
             RuleFor(o => o.Name)
                 .NotEmpty()
-                .WithMessage("{PropertyName} is required")
+                //.WithMessage("{PropertyName} is required")
+                .WithMessage("ورود نام ضروری است")
                 .MinimumLength(3)
-                .WithMessage("minimum length of {PropertyName} is 3");
+                //.WithMessage("minimum length of {PropertyName} is 3");
+                .WithMessage("نام نباید کمتر از 3 کاراکتر باشد");
         }
     }
 }

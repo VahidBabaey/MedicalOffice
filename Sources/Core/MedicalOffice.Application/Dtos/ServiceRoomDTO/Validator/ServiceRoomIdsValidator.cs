@@ -31,6 +31,7 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
 
             RuleFor(x => x.RoomIds)
                 .NotEmpty()
+                .WithMessage("ورود شناسه اتاق ضروری است")
                 .MustAsync(async (serviceRoomIds, Token) =>
                 {
                     foreach (var item in serviceRoomIds)

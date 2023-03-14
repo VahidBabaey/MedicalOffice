@@ -6,6 +6,7 @@ using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Commands
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Queries;
 using MedicalOffice.Application.Features.ServiceFile.Requests.Commands;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,9 +41,9 @@ public class MemberShipServiceController : Controller
     }
     [Authorize]
     [HttpGet("services")]
-    public async Task<ActionResult<List<ServiceListDTO>>> GetAll([FromQuery] string officeId)
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAll([FromQuery] string officeId, [FromQuery] Order? order)
     {
-        var response = await _mediator.Send(new GetAllServicesQuery() { OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllServicesQuery() { OfficeId = Guid.Parse(officeId), Order = order });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -58,9 +59,9 @@ public class MemberShipServiceController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShip(Guid memberShipId, [FromQuery] string officeId, [FromQuery] ListDto dto)
+    public async Task<ActionResult<List<ServiceListDTO>>> GetAllServicesOfMemberShip(Guid memberShipId, [FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order? order)
     {
-        var response = await _mediator.Send(new GetAllServicesOfMemberShipQuery() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetAllServicesOfMemberShipQuery() { Dto = dto, MemberShipId = memberShipId, OfficeId = Guid.Parse(officeId), Order = order });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

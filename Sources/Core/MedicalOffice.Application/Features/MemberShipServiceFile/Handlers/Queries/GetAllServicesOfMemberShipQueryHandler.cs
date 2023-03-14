@@ -8,6 +8,8 @@ using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Enums;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +71,12 @@ public class GetAllServicesOfMemberShipQueryHandler : IRequestHandler<GetAllServ
         try
         {
             var services = await _membershipservicerepository.GetAllServicesOfMemberShip(request.OfficeId, request.MemberShipId);
+            services.OrderByDescending(x => x.CreatedDate);
+            if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+            {
+                services = request.Order == Order.NewRecords ? services : services.OrderBy(x => x.CreatedDate).ToList();
+            }
+
             var result = _mapper.Map<List<ServicesOfMemeberShipListDTO>>(services.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
             await _logger.Log(new Log

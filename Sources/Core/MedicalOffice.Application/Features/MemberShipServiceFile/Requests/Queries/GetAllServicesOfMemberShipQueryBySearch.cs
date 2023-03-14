@@ -3,6 +3,7 @@ using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.MemberShipServiceDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,6 @@ namespace MedicalOffice.Application.Features.MemberShipServiceFile.Requests.Quer
         public Guid MemberShipId { get; set; }
         public Guid OfficeId { get; set; }
         public string Name { get; set; } = string.Empty;
+        public Order?  Order { get; set; }
     }
 }

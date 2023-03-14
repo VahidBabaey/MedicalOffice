@@ -32,17 +32,21 @@ namespace MedicalOffice.Application.Dtos.ServiceDurationDTO.Validators
 
             RuleFor(x => x.MedicalStaffId)
                 .NotEmpty()
-                .WithMessage(ValidationMessage.Required.For("MedicalStaffId"));
+                //.WithMessage(ValidationMessage.Required.For("MedicalStaffId"));
+                .WithMessage("ورود شناسه کادر درمان ضروری است");
 
             RuleFor(x => x.ServiceId)
                .NotEmpty()
-               .WithMessage(ValidationMessage.Required.For("ServiceId"));
+               //.WithMessage(ValidationMessage.Required.For("ServiceId"));
+               .WithMessage("ورود شناسه خدمت ضروری است");
 
             RuleFor(x => x.Duration)
                .NotEmpty()
-               .WithMessage(ValidationMessage.Required.For("Duration"))
+               //.WithMessage(ValidationMessage.Required.For("Duration"))
+               .WithMessage("ورود مدت زمان خدمت ضروری است")
                .GreaterThanOrEqualTo(minDuration)
-               .WithMessage(ValidationMessage.GreaterOrEqual.For("Duration", minDuration));
+               //.WithMessage(ValidationMessage.GreaterOrEqual.For("Duration", minDuration));
+               .WithMessage("مدت زمان خدمت باید بزرگتر یا برابر با 1 باشد");
         }
     }
 }

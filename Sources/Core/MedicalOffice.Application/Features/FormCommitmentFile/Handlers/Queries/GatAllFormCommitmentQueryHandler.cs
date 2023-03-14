@@ -8,6 +8,8 @@ using MedicalOffice.Application.Features.FormCommitmentFile.Requests.Queries;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +55,11 @@ namespace MedicalOffice.Application.Features.FormCommitmentFile.Handlers.Queries
 
             try
             {
-                var formCommitments = _formcommitmentrepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+                var formCommitments = _formcommitmentrepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false).OrderByDescending(x => x.CreatedDate);
+                if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+                {
+                    formCommitments = request.Order == Order.NewRecords ? formCommitments : formCommitments.OrderBy(x => x.CreatedDate);
+                }
                 var result = _mapper.Map<List<FormCommitmentListDTO>>(formCommitments.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
                 await _logger.Log(new Log

@@ -15,9 +15,20 @@ namespace MedicalOffice.Domain.Enums
         /// جناب آقای دکتر
         /// </summary>
         MrDoctor = 1,
+
         /// <summary>
         /// سرکار خانم دکتر
         /// </summary>
-        MrsDoctor = 2,
+        MrsDoctor,
+
+        /// <summary>
+        /// جناب آقای
+        /// </summary>
+        Mr,
+
+        /// <summary>
+        /// سرکار خانم
+        /// </summary>
+        Mrs
     }
 }

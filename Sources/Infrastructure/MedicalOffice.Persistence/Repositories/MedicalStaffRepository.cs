@@ -31,7 +31,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
     public async Task<List<MedicalStaffListDTO>> GetAllMedicalStaffs(Guid officeId)
     {
         var medicalStaffListDTOs = new List<MedicalStaffListDTO>();
-        var _list = await _dbContext.MedicalStaffs.Where(p => p.OfficeId == officeId).ToListAsync();
+        var _list = await _dbContext.MedicalStaffs.Include(x=>x.Specialization).Include(x=>x.Role).Where(p => p.OfficeId == officeId).ToListAsync();
 
         foreach (var item in _list)
         {
@@ -43,12 +43,12 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
                 PhoneNumber = item.PhoneNumber,
                 MedicalNumber = item.MedicalNumber,
                 SpecializationId = item.SpecializationId,
-                SpecializationName = _dbContext.Specializations.Select(x => new { x.Id, x.Name }).Where(x => x.Id == item.SpecializationId).FirstOrDefault().Name,
+                SpecializationName = item.Specialization?.Name,
                 IHIOPassword = item.IHIOPassword,
                 IHIOUserName = item.IHIOUserName,
                 Title = item.Title,
-                NationalID = item.NationalID,
-                RoleName = _dbContext.Roles.SingleOrDefault(x => x.Id == item.RoleId).Name,
+                NationalId = item.NationalId,
+                RoleName = item.Role.Name,
                 RoleId = item.RoleId,
                 IsTechnicalAssistant = item.IsTechnicalAssistant,
                 IsReferrer = item.IsReferrer,
@@ -110,6 +110,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         //}
         return medicalStaffNamesDTO;
     }
+
     public async Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber)
     {
         bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.PhoneNumber == phoneNumber);
@@ -121,11 +122,13 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.Id == MedicalStaffId);
         return isExist;
     }
+
     public async Task<bool> CheckMedicalStaffReferrerExist(Guid? MedicalStaffId, Guid officeId)
     {
         bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.Id == MedicalStaffId && p.IsReferrer == true);
         return isExist;
     }
+
     public async Task<List<MedicalStaff>> GetMedicalStaffBySearch(string name, Guid officeId)
     {
         var medicalStaffs = await _dbContext.MedicalStaffs.Where(p => p.FirstName.Contains(name) || p.LastName.Contains(name) && p.OfficeId == officeId).ToListAsync();
@@ -139,6 +142,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
         return staffs;
     }
+
     public async Task<MedicalStaff> GetExistingStaffById(Guid id, Guid officeId)
     {
         var medicalStaff = await _dbContext.MedicalStaffs.Include(x => x.User).Where(x => x.Id == id && x.OfficeId == officeId).FirstOrDefaultAsync();

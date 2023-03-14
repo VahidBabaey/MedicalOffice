@@ -20,14 +20,14 @@ namespace MedicalOffice.Persistence.Repositories
 
         public async Task<User?> CheckByPhoneAndNationalId(string phoneNumber, string nationalId)
         {
-            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.NationalID == nationalId);
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.NationalId == nationalId);
             return user;
         }
 
         public async Task<User?> CheckByPhoneOrNationalId(string phoneNumber, string nationalId)
         {
 
-            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber || x.NationalID == nationalId);
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber || x.NationalId == nationalId);
             return user;
 
             //if (user != null)
@@ -52,7 +52,7 @@ namespace MedicalOffice.Persistence.Repositories
 
         public async Task<User?> GetUserByNationalId(string nationalId)
         {
-            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.NationalID == nationalId);
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.NationalId == nationalId);
 
             if (user != null)
             {
