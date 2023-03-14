@@ -79,4 +79,12 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// سهم سازمان
     /// </summary>
     public long OrganShare { get; set; }
+    /// <summary>
+    /// سهم بیمار
+    /// </summary>
+    public long PatientShare { get; set; }
+    /// <summary>
+    /// سهم بیمه تکمیلی
+    /// </summary>
+    public long AdditionalInsuranceShare { get; set; }
 }

@@ -29,14 +29,6 @@ public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO, IReceptionIdDT
     /// </summary>
     public Guid? AdditionalInsuranceId { get; set; }
     /// <summary>
-    /// مبلغ امانی / بیعانه
-    /// </summary>
-    public float Deposit { get; set; }
-    /// <summary>
-    /// بدهی
-    /// </summary>
-    public long Debt { get; set; }
-    /// <summary>
     /// جمع کل
     /// </summary>
     public long Costd { get; set; }
@@ -53,10 +45,9 @@ public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO, IReceptionIdDT
     /// </summary>
     public Guid? MembershipId { get; set; }
     /// <summary>
-    /// مبلغ تخفیف
+    /// درصد تخفیف
     /// </summary>
     public float? Discount { get; set; }
-
     /// <summary>
     /// آیدی تیم پزشکی
     /// </summary>

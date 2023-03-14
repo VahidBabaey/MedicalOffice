@@ -18,8 +18,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
         (
         Guid serviceId,
         int serviceCount,
-        Guid? insuranceId,
-        Guid? additionalinsuranceId
+        Guid? insuranceId
         );
 
     //Task<ReceptionServiceDto> GetReceptionServiceInfo(Guid receptionDetailId);
@@ -42,7 +41,12 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
     Task<bool> CheckExistReceptionDetailId(Guid officeId, Guid receptiondetailId);
     Task UpdatereceptionDescription(Guid receptionid, string description);
     Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId);
-    Task<long?> CalculateServiceTariff(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, int? discount);
+    Task<long> CalculateServiceTariff(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, int? discount);
     Task<ReceptionDetail> AddReceptionService(Guid officeId, ReceptionType receptionType, Guid patientid, Guid receptionId, Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, Guid? membershipId, Guid[] MedicalStaffs, long costd);
     Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid officeId, Guid receptionId, Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, Guid[] MedicalStaffs, long costd);
+    Task<long> GetPatientShareofServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId);
+    Task<long> GetOrganShareofServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId);
+    Task<long> GetAdditionalServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalinsuranceId);
+    Task<long> GetInsuranceServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId);
+    Task<long> CalculateAdditionalServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalinsuranceId);
 }

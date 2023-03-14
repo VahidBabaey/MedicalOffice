@@ -47,11 +47,6 @@ public class Tariff : BaseDomainEntity<Guid>
     public long? TariffInsuranceCode { get; set; }
 
     /// <summary>
-    /// آیدی بیمه تکمیلی
-    /// </summary>
-    public Guid? AdditionalInsuranceId { get; set; }
-
-    /// <summary>
     /// مبلغ تعرفه
     /// </summary>
     public float TariffValue { get; set; }
@@ -64,7 +59,7 @@ public class Tariff : BaseDomainEntity<Guid>
     /// <summary>
     /// ما به التفاوت
     /// </summary>
-    public float Difference { get; set; }
+    public long Difference { get; set; }
 
     /// <summary>
     /// تخفیف
