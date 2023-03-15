@@ -8,11 +8,11 @@ public enum Order
     /// <summary>
     /// قدیمی ترین
     /// </summary>
-    OldRecords = 0,
+    OldRecords = 1,
 
     /// <summary>
     /// جدیدترین
     /// </summary>
-    NewRecords = 1,
+    NewRecords = 0,
 
 }
