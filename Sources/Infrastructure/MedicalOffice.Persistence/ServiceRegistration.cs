@@ -99,6 +99,7 @@ public static class ServiceRegistration
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
         services.AddScoped<IOfficeRepository, OfficeRepository>();
+        services.AddScoped<IBankRepository, BankRepository>();
         services.AddScoped<IPatientRepository, PatientRepository>();
         services.AddScoped<IPatientAddressRepository, PatientAddressRepository>();
         services.AddScoped<IPatientContactRepository, PatientContactRepository>();

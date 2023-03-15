@@ -4,13 +4,8 @@ using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Dtos.CashDTO;
 
-public class CashCartDTO : ICashIdDTO
+public class CashCartDTO
 {
-
-    /// <summary>
-    /// آیدی صندوق
-    /// </summary>
-    public Guid CashId { get; set; }
     /// <summary>
     /// پرداختی
     /// </summary>

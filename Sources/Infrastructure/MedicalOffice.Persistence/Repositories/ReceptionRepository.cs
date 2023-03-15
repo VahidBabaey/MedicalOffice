@@ -41,7 +41,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
     public async Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId)
     {
-
         var membershipServices = await _dbContext.MemberShipServices.Include(c => c.Service).Include(c => c.MemberShip).Where(c => c.MembershipId == membershipId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false && c.ServiceId == serviceId).FirstOrDefaultAsync();
         if (membershipServices != null && Convert.ToInt32(membershipServices.Discount) != 0)
         {
@@ -64,7 +63,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     // محاسبه سهم بیمار + ما به تفاوت
     public async Task<long> GetPatientShareofServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
     {
-
         var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
         if (service.InsurancePercent != 0)
         {
@@ -76,12 +74,10 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             patientshare = (long)Convert.ToDouble((service.TariffValue * serviceCount) - await GetOrganShareofServiceCost(serviceId, serviceCount, insuranceId));
             return patientshare;
         }
-
     }
     // محاسبه سهم سازمان
     public async Task<long> GetOrganShareofServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
     {
-
         var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
         if (service.InsurancePercent != 0)
         {
@@ -94,11 +90,9 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             organshare = (long)Convert.ToDouble(((service.TariffValue * serviceCount) * insurance.InsurancePercent / 100));
             return organshare;
         }
-
     }
     public async Task<long> GetAdditionalServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalinsuranceId)
     {
-
         var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == additionalinsuranceId).FirstOrDefaultAsync();
         if (service != null && service.TariffValue != 0)
         {
@@ -108,15 +102,12 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         {
             return await GetInsuranceServiceCost(serviceId, serviceCount, insuranceId);
         }
-
     }
     public async Task<long> GetInsuranceServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
     {
-
         var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
 
         return (long)Convert.ToDouble(service.TariffValue * serviceCount);
-
     }
     // محاسبه سهم بیمه تکمیلی
     public async Task<long> CalculateAdditionalServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalinsuranceId)
@@ -264,7 +255,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             throw;
         }
     }
-
     public async Task<Guid> UpdateReceptionService(
         Guid receptionDetailId,
         Guid officeId,
@@ -401,7 +391,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         if (receptionDetailList != null)
             await _receptionDetailRepository.SoftDelete(receptionDetailList.Id);
     }
-
     public async Task<Guid> CreateNewReception(Guid officeId, Guid patientId, ReceptionType receptionType)
     {
         var factorNo = await GetFactorNo();
@@ -429,7 +418,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return reception.Id;
     }
-
     public async Task<Reception> CreateNewReceptionDebt(long Debt, Guid officeId, Guid receptionId)
     {
         var factorNo = await GetFactorNo();
@@ -460,7 +448,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return reception;
     }
-
     public async Task<ReceptionDetail> CreateNewReceptionDetailDebt(long Debt, Guid officeId, Guid receptionId)
     {
         ReceptionDetail receptionDetail = new()
@@ -484,7 +471,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return receptionDetail;
     }
-
     public async Task<int> GetFactorNo()
     {
         if (_dbContext.Receptions.Any() == false)
@@ -497,7 +483,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             return lastNo + 1;
         }
     }
-
     public async Task<int> GetFactorNoToday()
     {
         var lastReception = await _dbContext.Receptions
@@ -518,8 +503,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return nextNo;
     }
-
-
     public async Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId)
     {
         var reception = await _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefaultAsync();
@@ -555,7 +538,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return detailsofAllReceptions;
     }
-
     public async Task<List<ReceptionDetailListDTO>> GetReceptionDetailList(Guid receptionId, Guid patientId)
     {
         List<ReceptionDetailListDTO> receptionDetailListDTO = new();
@@ -712,7 +694,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         return membershipNames;
 
     }
-
     public async Task<decimal> GetReceptionTotal(Guid id)
     {
         var totalDebt = await _dbContext.Receptions.Where(r => r.PatientId == id).SumAsync(r => r.TotalDebt);
@@ -721,7 +702,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return balance;
     }
-
     public async Task<Reception> SummarizeReception(Guid receptionId)
     {
         var reception = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.Id == receptionId);
@@ -743,7 +723,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return reception;
     }
-
     public async Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, long discount, Guid discountTypeId, Guid[] MedicalStaffs)
     {
         throw new NotImplementedException();

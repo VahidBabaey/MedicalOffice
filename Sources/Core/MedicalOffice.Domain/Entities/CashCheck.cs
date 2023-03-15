@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Common;
+using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Domain.Entities;
 
@@ -33,6 +34,10 @@ public class CashCheck : BaseDomainEntity<Guid>
     /// </summary>
     public string AccountNumber { get; set; }
     /// <summary>
+    /// شعبه
+    /// </summary>
+    public string Branch { get; set; }
+    /// <summary>
     /// بانک
     /// </summary>
     public Bank? Bank { get; set; }
@@ -44,5 +49,9 @@ public class CashCheck : BaseDomainEntity<Guid>
     /// آیدی پذیرش
     /// </summary>
     public Guid ReceptionId { get; set; }
+    /// <summary>
+    /// نوع پرداخت
+    /// </summary>
+    public Cashtype? CashType { get; set; }
 
 }

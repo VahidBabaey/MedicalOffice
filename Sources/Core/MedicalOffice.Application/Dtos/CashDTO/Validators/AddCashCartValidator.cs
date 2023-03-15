@@ -23,6 +23,5 @@ public class AddCashCartValidator : AbstractValidator<CashCartDTO>
             .Length(1, 16)
             .WithMessage("طول جزییات اطلاعات پایه باید بین 1 تا 16 کاراکتر باشد");
 
-        Include(new CashIdValidator(_cashRepository, _officeResolver));
     }
 }

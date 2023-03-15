@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Domain.Common;
+using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Domain.Entities;
 
@@ -44,5 +45,9 @@ public class CashCart : BaseDomainEntity<Guid>
     /// آیدی پذیرش
     /// </summary>
     public Guid ReceptionId { get; set; }
+    /// <summary>
+    /// نوع پرداخت
+    /// </summary>
+    public Cashtype? CashType { get; set; }
 
 }

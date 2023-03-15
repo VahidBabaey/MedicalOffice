@@ -74,40 +74,21 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
     {
         var medicalStaffNamesDTO = new List<MedicalStaffNamesDTO>();
 
-        //var listmedi = _dbContext.UserOfficeRoles.Include(x => x.User).ThenInclude(x => x.MedicalStaffs)
-        //    .Where(x => x.OfficeId == officeId && x.Role.ShowInReception == true);
+        var listmedicalstaff = await _dbContext.MedicalStaffs.Include(p => p.Role).Where(p => p.OfficeId == officeId && (p.Role.PersianName == "پزشک" || p.Role.PersianName == "کارشناس")).ToListAsync();
 
-        var listmedi = await _dbContext.UserOfficeRoles.Include(x => x.User).Include(x => x.Role).Where(x => x.Role.ShowInReception == true).ToListAsync();
-
-        foreach (var item in listmedi)
+        foreach (var item in listmedicalstaff)
         {
-            var medicalStaff = await _dbContext.MedicalStaffs.FirstOrDefaultAsync(x => x.UserId == item.UserId && x.OfficeId == officeId);
-
             var medicalStaffNames = new MedicalStaffNamesDTO()
             {
-                Id = medicalStaff.Id,
-                FirstName = medicalStaff.FirstName,
-                LastName = medicalStaff.LastName,
+                Id = item.Id,
+                FirstName = item.FirstName,
+                LastName = item.LastName,
                 RoleId = item.RoleId,
                 RoleName = item.Role.PersianName,
             };
             medicalStaffNamesDTO.Add(medicalStaffNames);
         }
-        //var _list = _dbContext.MedicalStaffRoles
-        //    .Include(p => p.MedicalStaff).Include(x => x.Role).Where(x => x.Role.ShowInReception == true);
 
-        //foreach (var item in _list)
-        //{
-        //    MedicalStaffNamesDTO medicalStaffNames = new()
-        //    {
-        //        Id = item.MedicalStaff.Id,
-        //        FirstName = item.MedicalStaff.FirstName,
-        //        LastName = item.MedicalStaff.LastName,
-        //        RoleId = item.Role.Id,
-        //        RoleName = item.Role.Name,
-        //    };
-        //    medicalStaffNamesDTO.Add(medicalStaffNames);
-        //}
         return medicalStaffNamesDTO;
     }
 

@@ -42,7 +42,6 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         }
         catch (Exception ex)
         {
-
             throw;
         }
     }
@@ -54,6 +53,7 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         var _listPos = await _dbContext.CashPoses.Where(p => p.ReceptionId == receptionId && p.OfficeId == officeId).ToListAsync();
         var _listCheck = await _dbContext.CashChecks.Where(p => p.ReceptionId == receptionId && p.OfficeId == officeId).ToListAsync();
         var _listCart = await _dbContext.CashCarts.Where(p => p.ReceptionId == receptionId && p.OfficeId == officeId).ToListAsync();
+        var _listMoney = await _dbContext.CashMoneies.Where(p => p.ReceptionId == receptionId && p.OfficeId == officeId).ToListAsync();
 
         foreach (var itempos in _listPos)
         {
@@ -64,6 +64,7 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
                 Cost = itempos.Cost,
                 CreatedDate = itempos.CreatedDate,
                 ReceptionId = itempos.ReceptionId,
+                Cashtype = itempos.CashType,
             };
             list.Add(cashListDTO);
         }
@@ -76,6 +77,7 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
                 Cost = itemcheck.Cost,
                 CreatedDate = itemcheck.CreatedDate,
                 ReceptionId = itemcheck.ReceptionId,
+                Cashtype = itemcheck.CashType,
             };
             list.Add(cashListDTO);
         }
@@ -88,10 +90,23 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
                 Cost = itemcart.Cost,
                 CreatedDate = itemcart.CreatedDate,
                 ReceptionId = itemcart.ReceptionId,
+                Cashtype = itemcart.CashType,
             };
             list.Add(cashListDTO);
         }
-
+        foreach (var itemmoney in _listMoney)
+        {
+            CashListDTO cashListDTO = new()
+            {
+                Id = itemmoney.Id,
+                CashId = itemmoney.CashId,
+                Cost = itemmoney.Cost,
+                CreatedDate = itemmoney.CreatedDate,
+                ReceptionId = itemmoney.ReceptionId,
+                Cashtype = itemmoney.CashType,
+            };
+            list.Add(cashListDTO);
+        }
         return list;
     }
 

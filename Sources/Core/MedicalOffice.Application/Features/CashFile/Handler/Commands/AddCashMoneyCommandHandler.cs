@@ -48,7 +48,7 @@ public class AddCashMoneyCommandHandler : IRequestHandler<AddCashMoneyCommand, B
         {
             try
             {
-                var cashmoney = _cashmoneyrepository.AddCashMoneyForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost);
+                var cashmoney = await _cashmoneyrepository.AddCashMoneyForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost);
 
                 await _logger.Log(new Log
                 {
