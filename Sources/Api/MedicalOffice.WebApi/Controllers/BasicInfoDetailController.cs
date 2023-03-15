@@ -1,9 +1,11 @@
 ﻿using MediatR;
+using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Dtos.BasicInfoDetailDTO;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Commands;
 using MedicalOffice.Application.Features.BasicInfoDetailFile.Requests.Queries;
 using MedicalOffice.Domain.Enums;
+using MedicalOffice.WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +23,7 @@ public class BasicInfoDetailController : Controller
     }
 
     [Authorize]
+    [Permission(BasicInfoPermissions.CreateDetails)]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] BasicInfoDetailDTO dto, [FromQuery] string officeId)
     {
@@ -30,6 +33,7 @@ public class BasicInfoDetailController : Controller
     }
 
     [Authorize]
+    [Permission(BasicInfoPermissions.GetAllDetails)]
     [HttpGet]
     public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string basicinfoId, [FromQuery] string officerId , [FromQuery] Order? order)
     {
@@ -39,6 +43,7 @@ public class BasicInfoDetailController : Controller
     }
 
     [Authorize]
+    [Permission(BasicInfoPermissions.DeleteDetails)]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid Id, [FromQuery] string officeId)
     {
@@ -48,6 +53,7 @@ public class BasicInfoDetailController : Controller
     }
 
     [Authorize]
+    [Permission(BasicInfoPermissions.UpdateDetails)]
     [HttpPatch]
     public async Task<ActionResult<Guid>> Update([FromBody] UpdateBasicInfoDetailDTO dto, [FromQuery] string officeId)
     {

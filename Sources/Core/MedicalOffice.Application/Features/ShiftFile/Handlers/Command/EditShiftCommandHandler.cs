@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 {
-
     public class EditShiftCommandHandler : IRequestHandler<EditShiftCommand, BaseResponse>
     {
         private readonly IValidator<UpdateShiftDTO> _validator;
@@ -39,26 +38,11 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 
         public async Task<BaseResponse> Handle(EditShiftCommand request, CancellationToken cancellationToken)
         {
-
-            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-            if (!validationOfficeId)
-            {
-                var error = "OfficeID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
             var validationShiftId = await _shiftrepository.CheckExistShiftId(request.OfficeId, request.DTO.Id);
 
             if (!validationShiftId)
             {
-                var error = "ID isn't exist";
+                var error = "شناسه شیفت یافت نشد.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

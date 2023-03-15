@@ -34,26 +34,11 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(DeleteServiceCommand request, CancellationToken cancellationToken)
         {
-
-            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-            if (!validationOfficeId)
-            {
-                var error = "OfficeID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
             var validationServiceId = await _servicerepository.CheckExistServiceId(request.OfficeId, request.ServiceId);
 
             if (!validationServiceId)
             {
-                var error = "ID isn't exist";
+                var error = "شناسه خدمت یافت نشد.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

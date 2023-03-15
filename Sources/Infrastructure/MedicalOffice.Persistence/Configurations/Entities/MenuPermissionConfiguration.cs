@@ -56,6 +56,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
 
             #region TodayPatient
                 MenuPermissionCreator("aaa52e09-ca9c-421a-972e-764ef9a22d4a","0f8e8881-c090-4d01-9ba7-c2fdb42549b3"),
+                MenuPermissionCreator("aaa52e09-ca9c-421a-972e-764ef9a22d4a","931f674f-c2a5-434b-97b1-438a9131e55d"),
 	        #endregion
 
             #region Appointment
@@ -131,10 +132,12 @@ namespace MedicalOffice.Persistence.Configurations.Entities
 
             #region BasicInfo
                 MenuPermissionCreator("b5e1e8df-35fb-4672-b7a2-12a30a4bd29e","529e3ed5-51ea-4411-8fbb-ab62e99f7691"),
+                MenuPermissionCreator("b5e1e8df-35fb-4672-b7a2-12a30a4bd29e","a23e6968-b82a-404c-92ec-16e8ddb7651f"),
             #endregion
 
             #region Support
                 MenuPermissionCreator("f7829a47-bcd2-4ede-b3ba-2624222437cd","202eafde-1b56-428b-9b0b-60a8d5efe812"),
+                MenuPermissionCreator("f7829a47-bcd2-4ede-b3ba-2624222437cd","74d411ab-8667-4801-b412-7c015d556466"),
 	        #endregion
             });
         }

@@ -33,7 +33,7 @@ public class DeleteServiceTariffListCommandHandler : IRequestHandler<DeleteTarif
 
             if (!validationSectionId)
             {
-                var error = "ID isn't exist";
+                var error = "شناسه تعرفه یافت نشد.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

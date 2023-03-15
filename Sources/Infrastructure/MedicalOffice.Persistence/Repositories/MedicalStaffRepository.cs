@@ -53,6 +53,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
                 IsTechnicalAssistant = item.IsTechnicalAssistant,
                 IsReferrer = item.IsReferrer,
                 IsSpecialist = item.IsSpecialist,
+                CreatedDate = item.CreatedDate,
             };
             medicalStaffListDTOs.Add(medicalStaffListDTO);
         }

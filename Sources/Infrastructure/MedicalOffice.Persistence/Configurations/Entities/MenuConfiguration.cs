@@ -1,12 +1,6 @@
 ﻿using MedicalOffice.Domain.Entities;
-using MedicalOffice.Persistence.Configurations.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MedicalOffice.Persistence.Configurations.Entities
 {
@@ -17,6 +11,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
 
         public void Configure(EntityTypeBuilder<Menu> builder)
         {
+            //builder.HasOne(x => x.Parent).WithMany(x => x.Children).HasForeignKey(x => x.ParentId);
+
             builder.HasData(new Menu[]
             {
                 MenuCreator("bd389ea9-3cd5-48d6-bf01-669f6a87711c","File","پرونده",order:1),

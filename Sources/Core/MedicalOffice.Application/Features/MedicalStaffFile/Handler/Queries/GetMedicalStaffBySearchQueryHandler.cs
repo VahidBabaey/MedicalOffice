@@ -6,17 +6,16 @@ using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Enums;
 using System.Net;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
 {
-
     public class GetMedicalStaffBySearchQueryHandler : IRequestHandler<GetMedicalStaffBySearchQuery, BaseResponse>
     {
         private readonly IMedicalStaffRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
-
         private readonly string _requestTitle;
 
         public GetMedicalStaffBySearchQueryHandler(IMedicalStaffRepository repository, IMapper mapper, ILogger logger)
@@ -24,7 +23,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
-
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
@@ -32,7 +30,11 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
         {
             try
             {
-                var medicalStaffs = await _repository.GetMedicalStaffBySearch(request.Name, request.OfficeId);
+                var medicalStaffs = _repository.GetMedicalStaffBySearch(request.Name, request.OfficeId).Result.OrderByDescending(x => x.CreatedDate);
+                if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+                {
+                    medicalStaffs = request.Order == Order.NewRecords ? medicalStaffs : medicalStaffs.OrderBy(x => x.CreatedDate);
+                };
                 var result = _mapper.Map<List<MedicalStaffListDTO>>(medicalStaffs.Skip(request.Dto.Skip).Take(request.Dto.Take));
 
                 await _logger.Log(new Log

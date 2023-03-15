@@ -37,7 +37,6 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
         }
-
         public async Task<BaseResponse> Handle(EditServiceDurationCommand request, CancellationToken cancellationToken)
         {
             #region Validate
@@ -59,9 +58,24 @@ namespace MedicalOffice.Application.Features.ServiceDurationScheduling.Handlers.
 
             #region checkStaffServiceExist
             var existingServiceDuration = await _serviceDurationRepository.GetById(request.DTO.Id);
+            
             if (existingServiceDuration == null || existingServiceDuration.OfficeId != request.OfficeId)
             {
-                var error = "This service duration isn't exist";
+                var error = "خدمت مورد نظر یافت نشد.";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} faild",
+                    AdditionalData = error
+                });
+
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            var staffHasThisServiceDuration = existingServiceDuration.ServiceId == request.DTO.ServiceId && existingServiceDuration.MedicalStaffId == request.DTO.MedicalStaffId;
+            if (staffHasThisServiceDuration)
+            {
+                var error = "مدت زمان این خدمت قبلا برای این کادر درمان ثبت شده است.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

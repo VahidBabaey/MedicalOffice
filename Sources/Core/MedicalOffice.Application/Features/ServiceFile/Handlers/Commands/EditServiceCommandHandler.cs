@@ -37,20 +37,6 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(EditServiceCommand request, CancellationToken cancellationToken)
         {
-            var validationServiceId = await _servicerepository.CheckExistServiceId(request.OfficeId, request.DTO.Id);
-
-            if (!validationServiceId)
-            {
-                var error = "ID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
             if (!validationResult.IsValid)
@@ -68,7 +54,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
             var isServiceNameExist = await _servicerepository.IsNameExistInOtherServices(request.DTO.Name, request.DTO.Id, request.OfficeId);
             if (isServiceNameExist)
             {
-                var error = "The name is exist";
+                var error = "نام خدمت باید یکتا باشد.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

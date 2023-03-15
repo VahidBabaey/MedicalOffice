@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
 {
-
     public class GetAllMedicalStaffsNamesandRolesQueryHandler : IRequestHandler<GetAllMedicalStaffsNamesandRolesQuery, BaseResponse>
     {
         private readonly IMedicalStaffRepository _repository;

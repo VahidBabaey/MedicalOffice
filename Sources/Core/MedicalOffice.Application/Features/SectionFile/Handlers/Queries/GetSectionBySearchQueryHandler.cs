@@ -29,24 +29,8 @@ public class GetSectionBySearchQueryHandler : IRequestHandler<GetSectionBySearch
         _logger = logger;
         _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
     }
-
     public async Task<BaseResponse> Handle(GetSectionBySearchQuery request, CancellationToken cancellationToken)
     {
-
-        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-        if (!validationOfficeId)
-        {
-            var error = "OfficeID isn't exist";
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = $"{_requestTitle} failed",
-                AdditionalData = error
-            });
-            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-        }
-
         try
         {
             var section = _sectionrepository.GetSectionBySearch(request.Name, request.OfficeId).Result.OrderByDescending(x => x.CreatedDate);

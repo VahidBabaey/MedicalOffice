@@ -71,7 +71,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 
             if (validationShiftName)
             {
-                var error = "Name Must be Unique";
+                var error = "نام شیفت کاری باید یکتا باشد.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
