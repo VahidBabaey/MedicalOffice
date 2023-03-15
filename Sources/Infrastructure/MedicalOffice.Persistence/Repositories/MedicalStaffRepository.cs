@@ -53,6 +53,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
                 IsTechnicalAssistant = item.IsTechnicalAssistant,
                 IsReferrer = item.IsReferrer,
                 IsSpecialist = item.IsSpecialist,
+                CreatedDate = item.CreatedDate,`
             };
             medicalStaffListDTOs.Add(medicalStaffListDTO);
         }
@@ -93,21 +94,6 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
             };
             medicalStaffNamesDTO.Add(medicalStaffNames);
         }
-        //var _list = _dbContext.MedicalStaffRoles
-        //    .Include(p => p.MedicalStaff).Include(x => x.Role).Where(x => x.Role.ShowInReception == true);
-
-        //foreach (var item in _list)
-        //{
-        //    MedicalStaffNamesDTO medicalStaffNames = new()
-        //    {
-        //        Id = item.MedicalStaff.Id,
-        //        FirstName = item.MedicalStaff.FirstName,
-        //        LastName = item.MedicalStaff.LastName,
-        //        RoleId = item.Role.Id,
-        //        RoleName = item.Role.Name,
-        //    };
-        //    medicalStaffNamesDTO.Add(medicalStaffNames);
-        //}
         return medicalStaffNamesDTO;
     }
 
