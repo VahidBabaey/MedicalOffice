@@ -2,7 +2,7 @@
 
 public class ReceptionSummaryDto
 {
-    public decimal Payable { get; set; }
-    public decimal Deposit { get; set; }
-    public decimal Debt { get; set; }
+    public float Payable { get; set; }
+    public float Deposit { get; set; }
+    public float Debt { get; set; }
 }

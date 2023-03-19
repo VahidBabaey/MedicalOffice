@@ -14,7 +14,7 @@ public class ReceptionDetailListForReceptionDTO : BaseDto<Guid>
     /// <summary>
     /// تعداد
     /// </summary>
-    public float ServiceCount { get; set; }
+    public int ServiceCount { get; set; }
     /// <summary>
     /// لیست تیم پزشکی
     /// </summary>
@@ -30,15 +30,15 @@ public class ReceptionDetailListForReceptionDTO : BaseDto<Guid>
     /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>
-    public float Deposit { get; set; }
+    public long Deposit { get; set; }
     /// <summary>
     /// بدهی
     /// </summary>
-    public float Debt { get; set; }
+    public long Debt { get; set; }
     /// <summary>
     /// جمع کل
     /// </summary>
-    public float Total { get; set; }
+    public long Total { get; set; }
     /// <summary>
     /// لیست  پزشکان
     /// </summary>

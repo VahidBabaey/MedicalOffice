@@ -6,12 +6,8 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO;
 
-public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO, IReceptionIdDTO
+public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO
 {
-    /// <summary>
-    /// آیدی پذیرش
-    /// </summary>
-    public Guid ReceptionId { get; set; }
     /// <summary>
     /// آیدی خدمت
     /// </summary>
@@ -29,10 +25,6 @@ public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO, IReceptionIdDT
     /// </summary>
     public Guid? AdditionalInsuranceId { get; set; }
     /// <summary>
-    /// جمع کل
-    /// </summary>
-    public long Costd { get; set; }
-    /// <summary>
     /// تایپ پذیرش : پرداخت مبلغ امانی - پرداخت بدهی - برگشتی - پکیج - بدون فرانشیز - عادی
     /// </summary>
     public ReceptionType ReceptionType { get; set; }
@@ -47,9 +39,27 @@ public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO, IReceptionIdDT
     /// <summary>
     /// درصد تخفیف
     /// </summary>
-    public float? Discount { get; set; }
+    public long? Discount { get; set; }
     /// <summary>
     /// آیدی تیم پزشکی
     /// </summary>
     public Guid[] MedicalStaffs { get; set; }
+    /// تعرفه سرویس
+    /// </summary>
+    public long Tariff { get; set; }
+    /// دریافتی
+    /// </summary>
+    public long Recieved { get; set; }
+    /// <summary>
+    /// سهم سازمان
+    /// </summary>
+    public long OrganShare { get; set; }
+    /// <summary>
+    /// سهم بیمار
+    /// </summary>
+    public long PatientShare { get; set; }
+    /// <summary>
+    /// سهم بیمه تکمیلی
+    /// </summary>
+    public long AdditionalInsuranceShare { get; set; }
 }

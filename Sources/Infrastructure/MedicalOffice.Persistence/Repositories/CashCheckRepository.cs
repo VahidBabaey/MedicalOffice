@@ -66,7 +66,7 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
                     if (recieved > item.Debt)
                     {
                         item.Received += item.Debt;
-                        recieved = recieved - item.Debt;
+                        recieved = (recieved - item.Debt);
                         item.Debt = 0;
                         item.IsDebt = false;
                         await _receptionReceptionDetail.Update(item);
@@ -107,7 +107,7 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
                 {
                     if (_check.Cost > item.Received)
                     {
-                        _check.Cost = _check.Cost - item.Received;
+                        _check.Cost = (_check.Cost - item.Received);
                         item.Debt = item.Received;
                         item.Received = 0;
                         await _receptionReceptionDetail.Update(item);

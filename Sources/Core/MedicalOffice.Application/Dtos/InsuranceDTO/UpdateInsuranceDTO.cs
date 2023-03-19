@@ -13,7 +13,7 @@ public class UpdateInsuranceDTO : BaseDto<Guid>
     /// <summary>
     /// کد بیمه
     /// </summary>
-    public long InsuranceCode { get; set; }
+    public float InsuranceCode { get; set; }
 
     /// <summary>
     /// درصد بیمه

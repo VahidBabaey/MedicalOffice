@@ -141,7 +141,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                             Type = LogType.Error,
                             Header = $"{_requestTitle} failed",
                             AdditionalData = "شماره تماس و کد ملی به کاربران دیگیری متعلق است."
-                            //AdditionalData = "This phone and nationalId is belong to other users"
+                            //AdditionalData = "This phone and nationalId is befloat to other users"
                         });
                         return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", "شماره تماس و کد ملی به کاربران دیگیری متعلق است.");
                     }
@@ -157,7 +157,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                             Type = LogType.Error,
                             Header = $"{_requestTitle} failed",
                             AdditionalData = "این شماره تماس به کاربر دیگری متعلق است."
-                            //AdditionalData = "This phone is belonged to another user"
+                            //AdditionalData = "This phone is befloated to another user"
                         });
                         return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", "این شماره تماس به کاربر دیگری متعلق است.");
                     }
@@ -180,7 +180,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
                             Type = LogType.Error,
                             Header = $"{_requestTitle} failed",
                             AdditionalData = "این کدملی به کاربر دیگری متعلق است"
-                            //AdditionalData = "This nationalId is belonged to another user"
+                            //AdditionalData = "This nationalId is befloated to another user"
                         });
                         return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", "این کدملی به کاربر دیگری متعلق است");
                     }

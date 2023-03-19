@@ -110,37 +110,37 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         return list;
     }
 
-    public Task<decimal> GetCashDifferenceWithRecieved(Guid receptionId)
-    {
-        long CashCost = 0;
+    //public Task<float> GetCashDifferenceWithRecieved(Guid receptionId)
+    //{
+    //    float CashCost = 0;
 
-        decimal receptionRecieved = _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefault().TotalReceived;
+    //    float receptionRecieved = _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefault().TotalReceived;
 
-        var _listPos = _dbContext.CashPoses.Where(p => p.ReceptionId == receptionId).ToList();
-        var _listCheck = _dbContext.CashChecks.Where(p => p.ReceptionId == receptionId).ToList();
-        var _listCart = _dbContext.CashCarts.Where(p => p.ReceptionId == receptionId).ToList();
+    //    var _listPos = _dbContext.CashPoses.Where(p => p.ReceptionId == receptionId).ToList();
+    //    var _listCheck = _dbContext.CashChecks.Where(p => p.ReceptionId == receptionId).ToList();
+    //    var _listCart = _dbContext.CashCarts.Where(p => p.ReceptionId == receptionId).ToList();
 
-        foreach (var itempos in _listPos)
-        {
-            CashCost += itempos.Cost;
-        }
-        foreach (var itemcheck in _listCheck)
-        {
-            CashCost += itemcheck.Cost;
-        }
-        foreach (var itemcart in _listCart)
-        {
-            CashCost += itemcart.Cost;
-        }
+    //    foreach (var itempos in _listPos)
+    //    {
+    //        CashCost += itempos.Cost;
+    //    }
+    //    foreach (var itemcheck in _listCheck)
+    //    {
+    //        CashCost += itemcheck.Cost;
+    //    }
+    //    foreach (var itemcart in _listCart)
+    //    {
+    //        CashCost += itemcart.Cost;
+    //    }
 
-        return Task.FromResult(receptionRecieved - CashCost);
-    }
+    //    return receptionRecieved - CashCost;
+    //}
 
     public async void UpdateDebtForReception(Guid receptionId)
     {
         long CashCost = 0;
 
-        decimal receptionRecieved = _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefault().TotalReceived;
+        long receptionRecieved = _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefault().TotalReceived;
 
         var _listPos = _dbContext.CashPoses.Where(p => p.ReceptionId == receptionId).ToList();
         var _listCheck = _dbContext.CashChecks.Where(p => p.ReceptionId == receptionId).ToList();
@@ -159,10 +159,10 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
             CashCost += itemcart.Cost;
         }
 
-        decimal difference = receptionRecieved - CashCost;
+        long difference = receptionRecieved - CashCost;
 
-        decimal receptionDebt = _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefault().TotalDebt;
-        decimal newreceptionDebt = receptionDebt + difference;
+        long receptionDebt = _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefault().TotalDebt;
+        long newreceptionDebt = receptionDebt + difference;
 
         var reception = _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefault();
         reception.TotalDebt = newreceptionDebt;

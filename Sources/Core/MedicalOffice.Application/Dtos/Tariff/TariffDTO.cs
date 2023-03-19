@@ -20,7 +20,7 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// <summary>
     /// کد بیمه
     /// </summary>
-    public long? TariffInsuranceCode { get; set; }
+    public float? TariffInsuranceCode { get; set; }
 
     /// <summary>
     /// مبلغ تعرفه

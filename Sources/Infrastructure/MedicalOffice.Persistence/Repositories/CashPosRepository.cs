@@ -65,7 +65,7 @@ public class CashPosRepository : GenericRepository<CashPos, Guid>, ICashPosRepos
                     if (recieved > item.Debt)
                     {
                         item.Received += item.Debt;
-                        recieved = recieved - item.Debt;
+                        recieved = (recieved - item.Debt);
                         item.Debt = 0;
                         item.IsDebt = false;
                         await _receptionReceptionDetail.Update(item);
@@ -106,7 +106,7 @@ public class CashPosRepository : GenericRepository<CashPos, Guid>, ICashPosRepos
                 {
                     if (_pos.Cost > item.Received)
                     {
-                        _pos.Cost = _pos.Cost - item.Received;
+                        _pos.Cost = (_pos.Cost - item.Received);
                         item.Debt = item.Received;
                         item.Received = 0;
                         await _receptionReceptionDetail.Update(item);

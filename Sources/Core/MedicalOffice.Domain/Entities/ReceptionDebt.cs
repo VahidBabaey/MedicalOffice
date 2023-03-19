@@ -31,7 +31,7 @@ public class ReceptionDebt : BaseDomainEntity<Guid>
     /// <summary>
     /// بدهی دریافتی
     /// </summary>
-    public long ReceptionDebtPrice { get; set; }
+    public float ReceptionDebtPrice { get; set; }
     /// <summary>
     /// اطلاعات تخفیف ها
     /// </summary>

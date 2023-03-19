@@ -12,7 +12,7 @@ public class UpdateCashCartDTO : BaseDto<Guid>
     /// <summary>
     /// پرداختی
     /// </summary>
-    public long Cost { get; set; }
+    public float Cost { get; set; }
     /// <summary>
     /// شماره کارت
     /// </summary>

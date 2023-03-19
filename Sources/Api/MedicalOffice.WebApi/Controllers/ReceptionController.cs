@@ -6,6 +6,7 @@ using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Features.InsuranceFile.Requests.Queries;
 using MedicalOffice.Application.Features.MedicalStaffFile.Request.Queries;
+using MedicalOffice.Application.Features.PatientFile.Requests.Queries;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Commands;
 using MedicalOffice.Application.Features.ReceptionFile.Requests.Queries;
 using MedicalOffice.Application.Features.TariffFile.Requests.Queries;
@@ -71,7 +72,7 @@ public class ReceptionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost("Reception")]
     public async Task<ActionResult<Guid>> CreateReception([FromBody] ReceptionsDTO dto, [FromQuery] string officeId)
     {
@@ -80,7 +81,7 @@ public class ReceptionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost("ReceptionDetail")]
     public async Task<ActionResult<Guid>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId, [FromQuery] string description)
     {
@@ -88,11 +89,11 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    [Authorize]
+    //[Authorize]
     [HttpPost("calculatediscount")]
-    public async Task<ActionResult<long>> CalculateServiceTariff([FromQuery] string serviceId, [FromQuery] int ServiceCount, [FromQuery] string insuranceId, [FromQuery] string? additionalinsuranceId, [FromQuery] int? discount)
+    public async Task<ActionResult<float>> CalculateServiceTariff([FromQuery] string serviceId, [FromQuery] int ServiceCount, [FromQuery] string insuranceId, [FromQuery] string? additionalinsuranceId, [FromQuery] int? discount, [FromQuery] long tariff)
     {
-        var response = await _mediator.Send(new CalculateServiceTariffCommand() { ServiceId = Guid.Parse(serviceId), ServiceCount = ServiceCount, InsuranceId = Guid.Parse(insuranceId), AdditionalInsuranceId = additionalinsuranceId != null ? Guid.Parse(additionalinsuranceId) : null, Discount = discount });
+        var response = await _mediator.Send(new CalculateServiceTariffCommand() { ServiceId = Guid.Parse(serviceId), ServiceCount = ServiceCount, InsuranceId = Guid.Parse(insuranceId), AdditionalInsuranceId = additionalinsuranceId != null ? Guid.Parse(additionalinsuranceId) : null, Discount = discount, Tariff = tariff });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -121,7 +122,15 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    [Authorize]
+    //[Authorize]
+    [HttpGet("patientreceptions")]
+    public async Task<ActionResult<List<ReceptionDetailListForReceptionDTO>>> GetPatientreceptions([FromQuery] Guid officeId, [FromQuery] Guid patientId, [FromQuery] Guid receptionId, [FromQuery] ListDto dto)
+    {
+        var response = await _mediator.Send(new GetAllPatientReceptionDetailsforReceptionQuery() {OfficeId = officeId , PatientId = patientId, ReceptionId = receptionId });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+    //[Authorize]
     [HttpPatch("updatereceptiondetail")]
     public async Task<ActionResult<Guid>> UpdateReceptionDetail([FromBody] UpdateReceptionDetailDTO dto, [FromQuery] string receptiodDetailId, [FromQuery] string officeId)
     {

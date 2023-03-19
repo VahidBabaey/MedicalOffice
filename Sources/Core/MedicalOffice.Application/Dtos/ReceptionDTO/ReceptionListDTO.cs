@@ -26,7 +26,7 @@ public class ReceptionListDTO : BaseDto<Guid>
     /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>
-    public float Deposit { get; set; }
+    public long Deposit { get; set; }
     /// <summary>
     /// بدهی
     /// </summary>
@@ -34,7 +34,7 @@ public class ReceptionListDTO : BaseDto<Guid>
     /// <summary>
     /// جمع کل
     /// </summary>
-    public float TotalReception { get; set; }
+    public long TotalReception { get; set; }
     /// <summary>
     /// لیست  پزشکان
     /// </summary>

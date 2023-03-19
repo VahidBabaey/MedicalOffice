@@ -38,9 +38,9 @@ public class GetCashDefferenceWithRecievedQueryHandler : IRequestHandler<GetCash
 
         try
         {
-            var cashdiffernece = await _repository.GetCashDifferenceWithRecieved(request.ReceptionId);
+            //var cashdiffernece = await _repository.GetCashDifferenceWithRecieved(request.ReceptionId);
 
-            result.CostDifference = cashdiffernece;
+            //result.CostDifference = cashdiffernece;
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;
