@@ -72,7 +72,7 @@ public class ReceptionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost("Reception")]
     public async Task<ActionResult<Guid>> CreateReception([FromBody] ReceptionsDTO dto, [FromQuery] string officeId)
     {
@@ -81,7 +81,7 @@ public class ReceptionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost("ReceptionDetail")]
     public async Task<ActionResult<Guid>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId, [FromQuery] string description)
     {
@@ -89,7 +89,7 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    //[Authorize]
+    [Authorize]
     [HttpPost("calculatediscount")]
     public async Task<ActionResult<float>> CalculateServiceTariff([FromQuery] string serviceId, [FromQuery] int ServiceCount, [FromQuery] string insuranceId, [FromQuery] string? additionalinsuranceId, [FromQuery] int? discount, [FromQuery] long tariff)
     {
@@ -122,7 +122,7 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    //[Authorize]
+    [Authorize]
     [HttpGet("patientreceptions")]
     public async Task<ActionResult<List<ReceptionDetailListForReceptionDTO>>> GetPatientreceptions([FromQuery] Guid officeId, [FromQuery] Guid patientId, [FromQuery] Guid receptionId, [FromQuery] ListDto dto)
     {
@@ -130,7 +130,7 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    //[Authorize]
+    [Authorize]
     [HttpPatch("updatereceptiondetail")]
     public async Task<ActionResult<Guid>> UpdateReceptionDetail([FromBody] UpdateReceptionDetailDTO dto, [FromQuery] string receptiodDetailId, [FromQuery] string officeId)
     {

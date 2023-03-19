@@ -38,7 +38,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         _receptionDetailServiceRepository = receptionDetailServiceRepository;
         _receptionReception = receptionReception;
     }
-
+     // این تابع درصد تخفیف سرویس انتخاب شده بر اساس نوع عضویت را بر میگرداند
     public async Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId)
     {
         var membershipServices = await _dbContext.MemberShipServices.Include(c => c.Service).Include(c => c.MemberShip).Where(c => c.MembershipId == membershipId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false && c.ServiceId == serviceId).FirstOrDefaultAsync();
@@ -60,33 +60,37 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
         return (long)Convert.ToDouble(service.TariffValue * serviceCount);
     }
+    //این تابع برای محاسبه دریافتی 
     public async Task<ReceptionDetailSharesDTO> CalculateServiceTariff(
         Guid serviceId,
         int serviceCount,
         Guid? insuranceId,
         Guid? additionalInsuranceId,
         int? discount,
-        long Tariff)
+        long Tariff) // تعرفه سرویس
     {
-        long organshare = 0;
-        long patientshare = 0;
-        long recieved = 0;
-        long insPercent = 0;
-        long TariffDiff = 0;
-        long insAddPercent = 0;
-        long InsAddTariff = 0;
-        long AddShare = 0;
-
+        long organshare = 0; // سهم سازمان
+        long patientshare = 0; // سهم بیمار
+        long recieved = 0; // دریافتی
+        long insPercent = 0; // درصد بیمه
+        long TariffDiff = 0; // مابه تفاوت
+        long insAddPercent = 0; // درصد بیمه تکمیلی
+        long InsAddTariff = 0; // تعرفه بیمه تکمیلی
+        long AddShare = 0; // سهم بیمه تکمیلی
+        
+        //  تعرفه سرویس 
         var serviceTariff = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId &&
             p.InsuranceId == insuranceId).FirstOrDefaultAsync();
 
         if (serviceTariff != null)
         {
             TariffDiff = serviceTariff.Difference;
+            // اگر درصد دارد
             if (serviceTariff.InsurancePercent != null && serviceTariff.InsurancePercent.Value > 0)
             {
                 insPercent = serviceTariff.InsurancePercent.Value;
             }
+            // در غیر این صورت درصد ثبت شده در جدول بیمه
             else
             {
                 var insurance = await _dbContext.Insurances.Where(p => p.Id == insuranceId).SingleAsync();
@@ -106,18 +110,21 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         recieved = ((long)(discount > 0 ? recieved - ((recieved * discount) / 100) : recieved));
 
+        //اگر بیمه تکمیلی دارد
         if (additionalInsuranceId.HasValue)
         {
             var serviceTariffAdd = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == additionalInsuranceId).FirstOrDefaultAsync();
 
             if (serviceTariffAdd != null)
             {
+                // اگر درصد دارد
                 if (serviceTariffAdd.InsurancePercent.HasValue && serviceTariffAdd.InsurancePercent.Value > 0)
                 {
                     insAddPercent = serviceTariffAdd.InsurancePercent.Value;
                 }
-                InsAddTariff = serviceTariffAdd.TariffValue;
+                InsAddTariff = (long)serviceTariffAdd.TariffValue;
             }
+            // در غیر این صورت درصد ثبت شده در جدول بیمه
             else
             {
                 var insurance = await _dbContext.Insurances.Where(p => p.Id == insuranceId).SingleAsync();
@@ -138,6 +145,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             }
 
         }
+        // به صورت یک دی تی او به سمت فرانت میرود
         ReceptionDetailSharesDTO receptionDetailSharesDTO = new()
         {
             Recieved = recieved,
@@ -151,6 +159,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
     }
 
+    // تابع ثبت نهایی
     public async Task<ReceptionDetail> AddReceptionService(
         Guid officeId,
         ReceptionType receptionType,
@@ -169,6 +178,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     {
         var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
         var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day);
+        // اگر بیمار در همون روز پذیرش نشده
         if (receptionpatient == null)
         {
             var recid = await CreateNewReception(officeId, patientid, receptionType);
@@ -377,7 +387,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     public async Task<Guid> CreateNewReception(Guid officeId, Guid patientId, ReceptionType receptionType)
     {
         var factorNo = await GetFactorNo();
-        //var factorNoToday = await GetFactorNoToday();
+        var factorNoToday = await GetFactorNoToday();
 
         Reception reception = new()
         {
