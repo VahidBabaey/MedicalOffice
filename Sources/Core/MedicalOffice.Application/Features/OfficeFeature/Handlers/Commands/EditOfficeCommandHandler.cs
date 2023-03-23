@@ -20,13 +20,13 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 {
     public class EditOfficeCommandHandler : IRequestHandler<EditOfficeCommand, BaseResponse>
     {
-        private readonly IValidator<UpdateOfficeDTO> _validator;
+        private readonly IValidator<OfficeDTO> _validator;
         private readonly IOfficeRepository _officeRepository;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly string _requestTitle;
         public EditOfficeCommandHandler(
-            IValidator<UpdateOfficeDTO> validator,
+            IValidator<OfficeDTO> validator,
             IUserResolverService userResolverService,
             IUserOfficeRoleRepository userOfficeRoleRepository,
             IOfficeRepository officeRepository,

@@ -5,10 +5,10 @@ using MedicalOffice.Application.Dtos.Common.CommonValidators;
 
 namespace MedicalOffice.Application.Dtos.OfficeDTO.Validators;
 
-public class AddOfficeDtoValidator : AbstractValidator<AddOfficeDto>
+public class OfficeDTOValidator : AbstractValidator<OfficeDTO>
 {
     private readonly IOfficeRepository _officeRepository;
-    public AddOfficeDtoValidator(IOfficeRepository officeRepository)
+    public OfficeDTOValidator(IOfficeRepository officeRepository)
     {
         _officeRepository = officeRepository;
 
@@ -22,12 +22,5 @@ public class AddOfficeDtoValidator : AbstractValidator<AddOfficeDto>
             .MinimumLength(3)
             //.WithMessage("minimum length of {PropertyName} is 3");
             .WithMessage("نام نباید کمتر از 3 کاراکتر باشد");
-
-        RuleFor(o => o.Address)
-            .NotEmpty()
-            //.WithMessage("{PropertyName} is required")
-            .WithMessage("ورود آدرس ضروری است")
-            .MinimumLength(10)
-            .WithMessage("آدرس نباید کمتر از 10 کاراکتر باشد");
     }
 }

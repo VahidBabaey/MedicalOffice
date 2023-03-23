@@ -125,7 +125,7 @@ public class MappingProfile : Profile
         CreateMap<ReceptionDiscount, ReceptionDiscountDTO>().ReverseMap();
         CreateMap<Reception, ReceptionsDTO>().ReverseMap();
         CreateMap<User, UserRoleDTO>().ReverseMap();
-        CreateMap<Office, AddOfficeDto>().ReverseMap();
+        CreateMap<Office, OfficeDTO>().ReverseMap();
         CreateMap<Office, OfficeListDTO>().ReverseMap();
         CreateMap<Office, UserOfficeDTO>().ReverseMap();
         CreateMap<MedicalStaffSchedule, MedicalStaffDaySchedule>().ReverseMap();
@@ -145,7 +145,7 @@ public class MappingProfile : Profile
         CreateMap<ServiceIdNameDTO, Service>().ReverseMap();
         CreateMap<AddServiceRoomDTO, Room>().ReverseMap();
         CreateMap<UpdateServiceRoomDTO, Room>().ReverseMap();
-        CreateMap<UpdateOfficeDTO, Office>().ReverseMap();
+        CreateMap<OfficeDTO, Office>().ReverseMap();
         CreateMap<Permission, PermissionListDto>().ReverseMap();
         CreateMap<MedicalStaff, MedicalStaffListDTO>().ReverseMap();
     }

@@ -20,8 +20,12 @@ namespace MedicalOffice.Application.Dtos.OfficeDTO.Validators
             RuleFor(x => x.TelePhoneNumber)
                 .MustAsync(async (phone, token) =>
                 {
-                    var isTelePhoneNumberExist =await _officeRepository.isTelePhoneNumberExist(phone);
-                    return !isTelePhoneNumberExist;
+                    if (phone != null || phone!=string.Empty)
+                    {
+                        var isTelePhoneNumberExist = await _officeRepository.isTelePhoneNumberExist(phone);
+                        return !isTelePhoneNumberExist;
+                    }
+                    return true;
                 });
         }
     }
