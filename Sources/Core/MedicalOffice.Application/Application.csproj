@@ -50,7 +50,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Dtos\BankDTO\Validators\" />
     <Folder Include="Dtos\PermissionDTO\Validators\" />
+    <Folder Include="Features\BankFile\Handlers\Commands\" />
+    <Folder Include="Features\BankFile\Requests\Commands\" />
     <Folder Include="Features\BasicInfoFile\Handlers\Commands\" />
     <Folder Include="Features\BasicInfoFile\Requests\Commands\" />
     <Folder Include="Features\MenuFeature\Handlers\Commands\" />

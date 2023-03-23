@@ -18,6 +18,6 @@ public class ReceptionDiscount : BaseDomainEntity<Guid>
     /// <summary>
     /// مبلغ تخفیف
     /// </summary>
-    public long Discount { get; set; }
+    public float Discount { get; set; }
 
 }

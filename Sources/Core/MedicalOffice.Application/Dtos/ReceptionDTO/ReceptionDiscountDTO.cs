@@ -14,6 +14,6 @@ public class ReceptionDiscountDTO : IMembershipIdDTO
     /// <summary>
     /// مبلغ تخفیف
     /// </summary>
-    public float Discount { get; set; }
+    public int Discount { get; set; }
 
 }

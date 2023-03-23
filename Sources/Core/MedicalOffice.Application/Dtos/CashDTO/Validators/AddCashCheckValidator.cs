@@ -23,6 +23,5 @@ public class AddCashCheckValidator : AbstractValidator<CashCheckDTO>
             .Length(1, 13)
             .WithMessage("شماره حساب باید بین 1 تا 13 کاراکتر باشد");
 
-        Include(new CashIdValidator(_cashRepository, _officeResolver));
     }
 }

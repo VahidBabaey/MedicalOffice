@@ -27,19 +27,37 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
         {
             List<ServicesByInsuranceIdDTO> servicesByInsuranceIdDTOs = new List<ServicesByInsuranceIdDTO>();
 
-            var services = await _dbContext.Tariffs.Include(c => c.Service).Where(c => c.InsuranceId == insuranceId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false).ToListAsync();
+            var services = await  _dbContext.Services.Where(c => c.TariffInReceptionTime == true).ToListAsync();
+            var servicestariff = await _dbContext.Tariffs.Where(c => c.InsuranceId == insuranceId).Include(c => c.Service).ToListAsync();
+
+
             foreach (var item in services)
             {
                 ServicesByInsuranceIdDTO servicesByInsuranceIdDTO = new ServicesByInsuranceIdDTO()
                 {
                     Id = item.Id,
-                    ServiceName = item.Service.Name,
-                    TariffValue = (decimal)item.InternalTariffValue
+                    ServiceName = item.Name,
+                    TariffValue = 0,
+                    TariffInReceptionTime = true
                 };
 
                 servicesByInsuranceIdDTOs.Add(servicesByInsuranceIdDTO);
             }
-            return servicesByInsuranceIdDTOs; 
+
+            foreach (var item in servicestariff)
+            {
+                ServicesByInsuranceIdDTO servicesByInsuranceIdDTO = new ServicesByInsuranceIdDTO()
+                {
+                    Id = item.Id,
+                    ServiceName = item.Service.Name,
+                    TariffValue = item.InternalTariffValue,
+                    TariffInReceptionTime = false
+                };
+
+                servicesByInsuranceIdDTOs.Add(servicesByInsuranceIdDTO);
+            }
+
+            return servicesByInsuranceIdDTOs;
         }
         catch (Exception ex)
         {

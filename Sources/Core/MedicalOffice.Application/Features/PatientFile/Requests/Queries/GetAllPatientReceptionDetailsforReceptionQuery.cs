@@ -16,5 +16,6 @@ namespace MedicalOffice.Application.Features.PatientFile.Requests.Queries
         public ReceptionDetailListForReceptionDTO DTO { get; set; } = new ReceptionDetailListForReceptionDTO();
         public Guid PatientId { get; set; }
         public Guid ReceptionId { get; set; }
+        public Guid OfficeId { get; set; }
     }
 }

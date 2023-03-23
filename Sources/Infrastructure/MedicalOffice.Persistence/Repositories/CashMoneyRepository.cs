@@ -53,6 +53,7 @@ public class CashMoneyRepository : GenericRepository<CashMoney, Guid>, ICashMone
                 ReceptionId = receptionId,
                 Cost = recieved,
                 CashId = cash.Id,
+                CashType = (Domain.Enums.Cashtype?)4
             };
             await _cashmoneyrepository.Add(cashMoney);
 
@@ -64,7 +65,7 @@ public class CashMoneyRepository : GenericRepository<CashMoney, Guid>, ICashMone
                     if (recieved > item.Debt)
                     {
                         item.Received += item.Debt;
-                        recieved = recieved - item.Debt;
+                        recieved = (recieved - item.Debt);
                         item.Debt = 0;
                         item.IsDebt = false;
                         await _receptionReceptionDetail.Update(item);
@@ -105,7 +106,7 @@ public class CashMoneyRepository : GenericRepository<CashMoney, Guid>, ICashMone
                 {
                     if (_money.Cost > item.Received)
                     {
-                        _money.Cost = _money.Cost - item.Received;
+                        _money.Cost = (_money.Cost - item.Received);
                         item.Debt = item.Received;
                         item.Received = 0;
                         await _receptionReceptionDetail.Update(item);

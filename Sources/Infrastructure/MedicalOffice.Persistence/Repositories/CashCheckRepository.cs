@@ -34,7 +34,7 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
         bool isExist = await _dbContext.CashChecks.AnyAsync(p => p.Id == cashCheckId);
         return isExist;
     }
-    public async Task<Guid> AddCashCheckForAnyReceptionDetail(Guid OfficeId, Guid receptionId, long recieved, Guid bankid)
+    public async Task<Guid> AddCashCheckForAnyReceptionDetail(Guid OfficeId, Guid receptionId, long recieved, Guid bankid, string branch)
     {
         try
         {
@@ -53,7 +53,8 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
                 ReceptionId = receptionId,
                 Cost = recieved,
                 CashId = cash.Id,
-                BankId = bankid
+                BankId = bankid,
+                Branch = branch
             };
             await _cashCheckRepository.Add(cashCheck);
 
@@ -65,7 +66,7 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
                     if (recieved > item.Debt)
                     {
                         item.Received += item.Debt;
-                        recieved = recieved - item.Debt;
+                        recieved = (recieved - item.Debt);
                         item.Debt = 0;
                         item.IsDebt = false;
                         await _receptionReceptionDetail.Update(item);
@@ -106,7 +107,7 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
                 {
                     if (_check.Cost > item.Received)
                     {
-                        _check.Cost = _check.Cost - item.Received;
+                        _check.Cost = (_check.Cost - item.Received);
                         item.Debt = item.Received;
                         item.Received = 0;
                         await _receptionReceptionDetail.Update(item);

@@ -22,6 +22,6 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO
         /// <summary>
         /// تخفیف
         /// </summary>
-        public long Discount { get; set; }
+        public float Discount { get; set; }
     }
 }

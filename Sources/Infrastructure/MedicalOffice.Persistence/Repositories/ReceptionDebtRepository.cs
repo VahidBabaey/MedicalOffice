@@ -15,7 +15,7 @@ public class ReceptionDebtRepository : GenericRepository<ReceptionDebt, Guid>, I
         _receptionReceptionDebt = receptionReceptionDebt;
     }
 
-    public async Task<Guid> AddReceptionDebt(Guid receptionId, Guid receptionDetailId, Guid officeId, long receptionDebtPrice)
+    public async Task<Guid> AddReceptionDebt(Guid receptionId, Guid receptionDetailId, Guid officeId, float receptionDebtPrice)
     {
         ReceptionDebt receptionDebt = new()
         {

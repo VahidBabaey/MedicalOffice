@@ -16,5 +16,6 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Requests.Commands
         public Guid InsuranceId { get; set; }
         public Guid? AdditionalInsuranceId { get; set; }
         public int? Discount { get; set; }
+        public long Tariff { get; set; }
     }
 }

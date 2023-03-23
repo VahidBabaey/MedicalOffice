@@ -26,9 +26,9 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     string servicesNames = "";
     string DoctorsNames = "";
     string ExpertsNames = "";
-    long organshare;
-    long patientshare;
-    long additionalinsuranceshare;
+    float organshare;
+    float patientshare;
+    float additionalinsuranceshare;
     Guid receptionID;
     public ReceptionRepository(IGenericRepository<Reception, Guid> receptionReception, IGenericRepository<ReceptionDetailService, Guid> receptionDetailServiceRepository, IGenericRepository<ReceptionMedicalStaff, Guid> receptionDetailMedicalStaffRepository, IGenericRepository<ReceptionDetail, Guid> receptionDetailRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
@@ -38,10 +38,9 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         _receptionDetailServiceRepository = receptionDetailServiceRepository;
         _receptionReception = receptionReception;
     }
-
+     // این تابع درصد تخفیف سرویس انتخاب شده بر اساس نوع عضویت را بر میگرداند
     public async Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId)
     {
-
         var membershipServices = await _dbContext.MemberShipServices.Include(c => c.Service).Include(c => c.MemberShip).Where(c => c.MembershipId == membershipId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false && c.ServiceId == serviceId).FirstOrDefaultAsync();
         if (membershipServices != null && Convert.ToInt32(membershipServices.Discount) != 0)
         {
@@ -61,134 +60,125 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
         return (long)Convert.ToDouble(service.TariffValue * serviceCount);
     }
-    // محاسبه سهم بیمار + ما به تفاوت
-    public async Task<long> GetPatientShareofServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
+    //این تابع برای محاسبه دریافتی 
+    public async Task<ReceptionDetailSharesDTO> CalculateServiceTariff(
+        Guid serviceId,
+        int serviceCount,
+        Guid? insuranceId,
+        Guid? additionalInsuranceId,
+        int? discount,
+        long Tariff) // تعرفه سرویس
     {
+        long organshare = 0; // سهم سازمان
+        long patientshare = 0; // سهم بیمار
+        long recieved = 0; // دریافتی
+        long insPercent = 0; // درصد بیمه
+        long TariffDiff = 0; // مابه تفاوت
+        long insAddPercent = 0; // درصد بیمه تکمیلی
+        long InsAddTariff = 0; // تعرفه بیمه تکمیلی
+        long AddShare = 0; // سهم بیمه تکمیلی
+        
+        //  تعرفه سرویس 
+        var serviceTariff = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId &&
+            p.InsuranceId == insuranceId).FirstOrDefaultAsync();
 
-        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
-        if (service.InsurancePercent != 0)
+        if (serviceTariff != null)
         {
-            patientshare = (long)Convert.ToDouble((service.TariffValue * serviceCount) - await GetOrganShareofServiceCost(serviceId, serviceCount, insuranceId));
-            return patientshare;
-        }
-        else
-        {
-            patientshare = (long)Convert.ToDouble((service.TariffValue * serviceCount) - await GetOrganShareofServiceCost(serviceId, serviceCount, insuranceId));
-            return patientshare;
-        }
-
-    }
-    // محاسبه سهم سازمان
-    public async Task<long> GetOrganShareofServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
-    {
-
-        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
-        if (service.InsurancePercent != 0)
-        {
-            organshare = (long)Convert.ToDouble(((service.TariffValue * serviceCount) * service.InsurancePercent / 100));
-            return organshare;
-        }
-        else
-        {
-            var insurance = await _dbContext.Insurances.Where(p => p.Id == insuranceId).FirstOrDefaultAsync();
-            organshare = (long)Convert.ToDouble(((service.TariffValue * serviceCount) * insurance.InsurancePercent / 100));
-            return organshare;
-        }
-
-    }
-    public async Task<long> GetAdditionalServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalinsuranceId)
-    {
-
-        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == additionalinsuranceId).FirstOrDefaultAsync();
-        if (service != null && service.TariffValue != 0)
-        {
-            return (long)Convert.ToDouble(service.TariffValue * serviceCount);
-        }
-        else
-        {
-            return await GetInsuranceServiceCost(serviceId, serviceCount, insuranceId);
-        }
-
-    }
-    public async Task<long> GetInsuranceServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
-    {
-
-        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
-
-        return (long)Convert.ToDouble(service.TariffValue * serviceCount);
-
-    }
-    // محاسبه سهم بیمه تکمیلی
-    public async Task<long> CalculateAdditionalServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalinsuranceId)
-    {
-        try
-        {
-            var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == additionalinsuranceId).FirstOrDefaultAsync();
-            var servicetariff = GetAdditionalServiceCost(serviceId, serviceCount, insuranceId, additionalinsuranceId);
-            if (service != null && service.InsurancePercent != 0)
+            TariffDiff = serviceTariff.Difference;
+            // اگر درصد دارد
+            if (serviceTariff.InsurancePercent != null && serviceTariff.InsurancePercent.Value > 0)
             {
-                additionalinsuranceshare = ((await servicetariff * (long)service.InsurancePercent) / 100) < await GetOrganShareofServiceCost(serviceId, serviceCount, insuranceId) ? 0 : (((await servicetariff * (long)service.InsurancePercent) / 100) - await GetOrganShareofServiceCost(serviceId, serviceCount, insuranceId));
-                return additionalinsuranceshare;
+                insPercent = serviceTariff.InsurancePercent.Value;
             }
+            // در غیر این صورت درصد ثبت شده در جدول بیمه
             else
             {
-                var insurance = await _dbContext.Insurances.Where(p => p.Id == additionalinsuranceId).FirstOrDefaultAsync();
-                additionalinsuranceshare = ((await servicetariff * (long)insurance.InsurancePercent) / 100) < await GetOrganShareofServiceCost(serviceId, serviceCount, insuranceId) ? 0 : (((await servicetariff * (long)insurance.InsurancePercent) / 100) - await GetOrganShareofServiceCost(serviceId, serviceCount, insuranceId));
-                return additionalinsuranceshare;
+                var insurance = await _dbContext.Insurances.Where(p => p.Id == insuranceId).SingleAsync();
+                insPercent = insurance.InsurancePercent;
             }
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    // محاسبه دریافتی
-    public async Task<long> CalculateServiceTariff(
-        Guid serviceId, 
-        int serviceCount, 
-        Guid? insuranceId, 
-        Guid? additionalInsuranceId, 
-        int? discount)
-    {
-        var cost = await GetPatientShareofServiceCost(serviceId, serviceCount, insuranceId);
-        long costd;
-        if (additionalInsuranceId != null)
-        {
-            cost = cost - await CalculateAdditionalServiceCost(serviceId, serviceCount, insuranceId, additionalInsuranceId);
-            if (cost <= 0)
-            {
-                cost = 0;
-                additionalinsuranceshare = patientshare;
-            }
-        }
-        if (cost == 0)
-        {
-            costd = 0;
         }
         else
         {
-          costd = (long)(discount > 0 ? cost - ((cost * discount) / 100) : cost);
+            var insurance = await _dbContext.Insurances.Where(p => p.Id == insuranceId).SingleAsync();
+            insPercent = insurance.InsurancePercent;
         }
 
-        return costd;
+        organshare = ((Tariff * serviceCount) * insPercent / 100);
+        patientshare = (Tariff * serviceCount) - organshare;
+
+        recieved = patientshare + TariffDiff;
+
+        recieved = ((long)(discount > 0 ? recieved - ((recieved * discount) / 100) : recieved));
+
+        //اگر بیمه تکمیلی دارد
+        if (additionalInsuranceId.HasValue)
+        {
+            var serviceTariffAdd = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == additionalInsuranceId).FirstOrDefaultAsync();
+
+            if (serviceTariffAdd != null)
+            {
+                // اگر درصد دارد
+                if (serviceTariffAdd.InsurancePercent.HasValue && serviceTariffAdd.InsurancePercent.Value > 0)
+                {
+                    insAddPercent = serviceTariffAdd.InsurancePercent.Value;
+                }
+                InsAddTariff = (long)serviceTariffAdd.TariffValue;
+            }
+            // در غیر این صورت درصد ثبت شده در جدول بیمه
+            else
+            {
+                var insurance = await _dbContext.Insurances.Where(p => p.Id == insuranceId).SingleAsync();
+                insAddPercent = insurance.InsurancePercent;
+
+                InsAddTariff = Tariff;
+            }
+            AddShare = (InsAddTariff * insAddPercent / 100) > organshare ? (InsAddTariff * insAddPercent / 100) - organshare : 0;
+
+            recieved = patientshare + TariffDiff - AddShare <= 0 ? 0 : patientshare + TariffDiff - AddShare;
+
+            recieved = ((long)(discount > 0 ? recieved - ((recieved * discount) / 100) : recieved));
+
+            if (recieved <= 0)
+            {
+                discount = 0;
+                recieved = 0;
+            }
+
+        }
+        // به صورت یک دی تی او به سمت فرانت میرود
+        ReceptionDetailSharesDTO receptionDetailSharesDTO = new()
+        {
+            Recieved = recieved,
+            Tariff = Tariff * serviceCount,
+            OrganShare = organshare,
+            PatientShare = patientshare,
+            AdditionalInsuranceShare = AddShare
+        };
+        return receptionDetailSharesDTO;
+
+
     }
 
+    // تابع ثبت نهایی
     public async Task<ReceptionDetail> AddReceptionService(
         Guid officeId,
         ReceptionType receptionType,
         Guid patientid,
-        Guid receptionId,
         Guid serviceId,
         int serviceCount,
         Guid? insuranceId,
         Guid? additionalInsuranceId,
         Guid? membershipId,
         Guid[] MedicalStaffs,
-        long costd)
+        long recieved,
+        long organshare,
+        long patientshare,
+        long addshare,
+        long tariff)
     {
-        long cost;
         var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
-        var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Date == DateTime.Now.Date);
+        var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day);
+        // اگر بیمار در همون روز پذیرش نشده
         if (receptionpatient == null)
         {
             var recid = await CreateNewReception(officeId, patientid, receptionType);
@@ -196,26 +186,17 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         }
         else if (receptionpatient != null)
         {
-            receptionID = _dbContext.Receptions.Where(r => r.Id == receptionId).FirstOrDefault().Id;
-        }
-        long patientshare = await GetPatientShareofServiceCost(serviceId, serviceCount, insuranceId);
-        if (additionalInsuranceId != null)
-        {
-            cost = patientshare + service.Difference - await CalculateAdditionalServiceCost(serviceId, serviceCount, insuranceId, additionalInsuranceId);
-        }
-        else
-        {
-            cost = patientshare + service.Difference;
+            receptionID = _dbContext.Receptions.Where(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day).FirstOrDefault().Id;
         }
 
         ReceptionDetail detail = new()
         {
             AdditionalInsuranceId = additionalInsuranceId,
-            Cost = cost,
+            Cost = tariff,
             Received = 0,
             Deposit = 0,
-            Debt = costd,
-            Discount = cost - costd,
+            Debt = recieved,
+            Discount = tariff - recieved,
             InsuranceId = insuranceId,
             IsDeleted = false,
             IsDebt = true,
@@ -224,7 +205,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             ServiceCount = serviceCount,
             OrganShare = organshare,
             PatientShare = patientshare,
-            AdditionalInsuranceShare = additionalinsuranceshare
+            AdditionalInsuranceShare = addshare
         };
 
         var addedDetail = await _receptionDetailRepository.Add(detail);
@@ -264,7 +245,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             throw;
         }
     }
-
     public async Task<Guid> UpdateReceptionService(
         Guid receptionDetailId,
         Guid officeId,
@@ -274,116 +254,119 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         Guid? insuranceId,
         Guid? additionalInsuranceId,
         Guid[] MedicalStaffs,
-        long costd)
+        long Recieved,
+        long organshare,
+        long patientshare,
+        long addshare,
+        long tariff
+        )
     {
-        var receptionDetailService = await _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == receptionDetailId).FirstOrDefaultAsync();
-        if (receptionDetailService != null)
-            await _receptionDetailServiceRepository.Delete(receptionDetailService);
+        try
+        {
+            var receptionDetailService = await _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == receptionDetailId).FirstOrDefaultAsync();
+            if (receptionDetailService != null)
+                await _receptionDetailServiceRepository.Delete(receptionDetailService);
 
-        var receptionDetailMedicalStaff = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == receptionDetailId).ToListAsync();
-        foreach (var item in receptionDetailMedicalStaff)
-        {
-            await _receptionDetailMedicalStaffRepository.Delete(item);
-        }
-
-        var receptionDetailList = await _dbContext.ReceptionDetails.Where(p => p.Id == receptionDetailId).FirstOrDefaultAsync();
-        if (receptionDetailList != null)
-            await _receptionDetailRepository.Delete(receptionDetailList);
-
-        var receptionID = _dbContext.Receptions.Where(r => r.Id == receptionId).FirstOrDefault().Id;
-        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
-        long cost;
-        long patientshare = await GetPatientShareofServiceCost(serviceId, serviceCount, insuranceId);
-        if (additionalInsuranceId != null)
-        {
-            cost = patientshare + service.Difference - await CalculateAdditionalServiceCost(serviceId, serviceCount, insuranceId, additionalInsuranceId);
-        }
-        else
-        {
-            cost = patientshare + service.Difference;
-        }
-        long cost1 = costd;
-        long recieved = 0;
-        long debt = 0;
-        long discount = 0;
-        long deposit = 0;
-        if (receptionDetailList.Received == 0)
-        {
-            recieved = 0;
-            debt = cost1;
-            discount = cost - cost1;
-            deposit = 0;
-        }
-        if (receptionDetailList.Received > 0 && receptionDetailList.Received > cost1 && receptionDetailList.Debt > cost1)
-        {
-            recieved = receptionDetailList.Received;
-            debt = receptionDetailList.Debt < 0 ? cost1 - receptionDetailList.Received + receptionDetailList.Debt : cost1 - receptionDetailList.Received;
-            discount = cost - cost1;
-            deposit = 0;
-        }
-        if (receptionDetailList.Received > 0 && receptionDetailList.Received > cost1 && receptionDetailList.Debt < cost1)
-        {
-            recieved = receptionDetailList.Received;
-            debt = receptionDetailList.Debt < 0 ? cost1 - receptionDetailList.Received + receptionDetailList.Debt : cost1 - receptionDetailList.Received;
-            discount = cost - cost1;
-            deposit = 0;
-        }
-        if (receptionDetailList.Received > 0 && receptionDetailList.Received <= cost1 && receptionDetailList.Debt < cost1)
-        {
-            recieved = receptionDetailList.Received;
-            debt = receptionDetailList.Debt < 0 ? cost1 - recieved + Math.Abs(receptionDetailList.Debt) : cost1 - recieved;
-            discount = cost - cost1;
-            deposit = 0;
-        }
-        if (receptionDetailList.Received > 0 && receptionDetailList.Received <= cost1 && receptionDetailList.Debt > cost1)
-        {
-            recieved = receptionDetailList.Received;
-            debt = receptionDetailList.Debt < 0 ? cost1 - recieved + Math.Abs(receptionDetailList.Debt) : cost1 - recieved;
-            discount = cost - cost1;
-            deposit = 0;
-        }
-
-        ReceptionDetail detail = new()
-        {
-            Id = receptionDetailId,
-            AdditionalInsuranceId = additionalInsuranceId,
-            Cost = cost,
-            Received = recieved,
-            Deposit = deposit,
-            Debt = debt,
-            Discount = cost - cost1,
-            InsuranceId = insuranceId,
-            IsDeleted = false,
-            IsDebt = false,
-            OfficeId = officeId,
-            ReceptionId = receptionID,
-            ServiceCount = serviceCount,
-            OrganShare = organshare,
-            PatientShare = patientshare,
-            AdditionalInsuranceShare = additionalinsuranceshare
-        };
-
-        var addedDetail = await _receptionDetailRepository.Add(detail);
-
-        foreach (var MedicalStaffId in MedicalStaffs)
-        {
-            var receptionMedicalStaff = new ReceptionMedicalStaff()
+            var receptionDetailMedicalStaff = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == receptionDetailId).ToListAsync();
+            foreach (var item in receptionDetailMedicalStaff)
             {
+                await _receptionDetailMedicalStaffRepository.Delete(item);
+            }
+
+            var receptionDetailList = await _dbContext.ReceptionDetails.Where(p => p.Id == receptionDetailId).FirstOrDefaultAsync();
+            if (receptionDetailList != null)
+                await _receptionDetailRepository.Delete(receptionDetailList);
+
+            var receptionID = _dbContext.Receptions.Where(r => r.Id == receptionId).FirstOrDefault().Id;
+            var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
+
+            long recieved = Recieved;
+            long debt = 0;
+            long discount = 0;
+            long deposit = 0;
+            if (receptionDetailList.Received == 0)
+            {
+                recieved = 0;
+                debt = Recieved;
+                discount = tariff - Recieved;
+                deposit = 0;
+            }
+            if (receptionDetailList.Received > 0 && receptionDetailList.Received > Recieved && receptionDetailList.Debt > Recieved)
+            {
+                recieved = receptionDetailList.Received;
+                debt = receptionDetailList.Debt < 0 ? Recieved - receptionDetailList.Received + receptionDetailList.Debt : Recieved - receptionDetailList.Received;
+                discount = tariff - Recieved;
+                deposit = 0;
+            }
+            if (receptionDetailList.Received > 0 && receptionDetailList.Received > Recieved && receptionDetailList.Debt < Recieved)
+            {
+                recieved = receptionDetailList.Received;
+                debt = receptionDetailList.Debt < 0 ? Recieved - receptionDetailList.Received + receptionDetailList.Debt : Recieved - receptionDetailList.Received;
+                discount = tariff - Recieved;
+                deposit = 0;
+            }
+            if (receptionDetailList.Received > 0 && receptionDetailList.Received <= Recieved && receptionDetailList.Debt < Recieved)
+            {
+                recieved = receptionDetailList.Received;
+                debt = receptionDetailList.Debt < 0 ? Recieved - recieved + Math.Abs(receptionDetailList.Debt) : Recieved - recieved;
+                discount = tariff - Recieved;
+                deposit = 0;
+            }
+            if (receptionDetailList.Received > 0 && receptionDetailList.Received <= Recieved && receptionDetailList.Debt > Recieved)
+            {
+                recieved = receptionDetailList.Received;
+                debt = receptionDetailList.Debt < 0 ? Recieved - recieved + Math.Abs(receptionDetailList.Debt) : Recieved - recieved;
+                discount = tariff - Recieved;
+                deposit = 0;
+            }
+
+            ReceptionDetail detail = new()
+            {
+                Id = receptionDetailId,
+                AdditionalInsuranceId = additionalInsuranceId,
+                Cost = tariff,
+                Received = recieved,
+                Deposit = deposit,
+                Debt = debt,
+                Discount = tariff - Recieved,
+                InsuranceId = insuranceId,
                 IsDeleted = false,
-                ReceptionDetailId = addedDetail.Id,
-                MedicalStaffId = MedicalStaffId
+                IsDebt = false,
+                OfficeId = officeId,
+                ReceptionId = receptionID,
+                ServiceCount = serviceCount,
+                OrganShare = organshare,
+                PatientShare = patientshare,
+                AdditionalInsuranceShare = addshare
             };
-            await _receptionDetailMedicalStaffRepository.Add(receptionMedicalStaff);
+
+            var addedDetail = await _receptionDetailRepository.Add(detail);
+
+            foreach (var MedicalStaffId in MedicalStaffs)
+            {
+                var receptionMedicalStaff = new ReceptionMedicalStaff()
+                {
+                    IsDeleted = false,
+                    ReceptionDetailId = addedDetail.Id,
+                    MedicalStaffId = MedicalStaffId
+                };
+                await _receptionDetailMedicalStaffRepository.Add(receptionMedicalStaff);
+            }
+
+            var receptionDetailServices = new ReceptionDetailService()
+            {
+                ReceptionDetailId = addedDetail.Id,
+                ServiceId = serviceId
+            };
+            await _receptionDetailServiceRepository.Add(receptionDetailServices);
+
+            return addedDetail.Id;
         }
-
-        var receptionDetailServices = new ReceptionDetailService()
+        catch (Exception ex)
         {
-            ReceptionDetailId = addedDetail.Id,
-            ServiceId = serviceId
-        };
-        await _receptionDetailServiceRepository.Add(receptionDetailServices);
 
-        return addedDetail.Id;
+            throw;
+        }
     }
     public async Task DeleteReceptionService(Guid receptionDetailId, Guid officeId)
     {
@@ -401,7 +384,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         if (receptionDetailList != null)
             await _receptionDetailRepository.SoftDelete(receptionDetailList.Id);
     }
-
     public async Task<Guid> CreateNewReception(Guid officeId, Guid patientId, ReceptionType receptionType)
     {
         var factorNo = await GetFactorNo();
@@ -410,7 +392,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         Reception reception = new()
         {
             FactorNo = factorNo,
-            FactorNoToday = factorNoToday,
+            FactorNoToday = 1,
             IsCancelled = false,
             IsDeleted = false,
             IsReturned = false,
@@ -429,7 +411,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return reception.Id;
     }
-
     public async Task<Reception> CreateNewReceptionDebt(long Debt, Guid officeId, Guid receptionId)
     {
         var factorNo = await GetFactorNo();
@@ -460,7 +441,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return reception;
     }
-
     public async Task<ReceptionDetail> CreateNewReceptionDetailDebt(long Debt, Guid officeId, Guid receptionId)
     {
         ReceptionDetail receptionDetail = new()
@@ -484,7 +464,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return receptionDetail;
     }
-
     public async Task<int> GetFactorNo()
     {
         if (_dbContext.Receptions.Any() == false)
@@ -497,12 +476,11 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             return lastNo + 1;
         }
     }
-
     public async Task<int> GetFactorNoToday()
     {
         var lastReception = await _dbContext.Receptions
-            .OrderByDescending(r => r.CreatedDate)
-            .FirstOrDefaultAsync();
+                .OrderByDescending(r => r.CreatedDate)
+                .FirstOrDefaultAsync();
 
         int nextNo = default;
 
@@ -518,8 +496,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return nextNo;
     }
-
-
     public async Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId)
     {
         var reception = await _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefaultAsync();
@@ -555,7 +531,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return detailsofAllReceptions;
     }
-
     public async Task<List<ReceptionDetailListDTO>> GetReceptionDetailList(Guid receptionId, Guid patientId)
     {
         List<ReceptionDetailListDTO> receptionDetailListDTO = new();
@@ -590,7 +565,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         }
         return receptionDetailListDTO;
     }
-    public async Task<List<ReceptionDetailListForReceptionDTO>> GetReceptionDetailListForReception(Guid patientId, Guid receptionId)
+    public async Task<List<ReceptionDetailListForReceptionDTO>> GetReceptionDetailListForReception(Guid officeId, Guid patientId, Guid receptionId)
     {
         List<ReceptionDetailListForReceptionDTO> receptionDetailListForReceptionDTO = new();
         var _list = await _dbContext.ReceptionDetails.Where(x => x.ServiceCount > 0).Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId && p.Reception.Id == receptionId).ToListAsync();
@@ -601,17 +576,16 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             var medicalStaffIds = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == item.Id).ToListAsync();
             foreach (var medicalStaffitem in medicalStaffIds)
             {
-                //var medicalStaff = await _dbContext.MedicalStaffRoles.Where(p => p.MedicalStaffId == medicalStaffitem.MedicalStaffId).FirstOrDefaultAsync();
-                //var roleId = await _dbContext.Roles.Where(p => p.Id == medicalStaff.RoleId).FirstOrDefaultAsync();
+                var listmedicalstaff = await _dbContext.MedicalStaffs.Include(p => p.Role).Where(p => p.OfficeId == officeId && p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefaultAsync();
 
-                //if (roleId.PersianName == "کارشناس")
-                //{
-                //    ExpertsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString() + "، ";
-                //}
-                //else
-                //{
-                //    DoctorsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString() + "، ";
-                //}
+                if (listmedicalstaff.Role.PersianName == "کارشناس")
+                {
+                    ExpertsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString() + "، ";
+                }
+                else
+                {
+                    DoctorsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString() + "، ";
+                }
             }
             medicalStaffIds = null;
             ReceptionDetailListForReceptionDTO receptiondetaillistForReceptionDTO = new()
@@ -668,7 +642,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 ServicesNames = servicesNames,
                 ServiceCount = GetServiceCountsOfPatient(receptionItem.Id),
                 Cost = Convert.ToInt64(receptionItem.TotalReceived),
-                Deposit = (float)receptionItem.TotalDeposit,
+                Deposit = receptionItem.TotalDeposit,
                 Debt = Convert.ToInt64(receptionItem.TotalDebt),
                 TotalReception = Convert.ToInt64(receptionItem.TotalReceptionCost),
                 DoctorsNames = DoctorsNames,
@@ -712,8 +686,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         return membershipNames;
 
     }
-
-    public async Task<decimal> GetReceptionTotal(Guid id)
+    public async Task<long> GetReceptionTotal(Guid id)
     {
         var totalDebt = await _dbContext.Receptions.Where(r => r.PatientId == id).SumAsync(r => r.TotalDebt);
         var totalDeposit = await _dbContext.Receptions.Where(r => r.PatientId == id).SumAsync(r => r.TotalDeposit);
@@ -721,7 +694,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return balance;
     }
-
     public async Task<Reception> SummarizeReception(Guid receptionId)
     {
         var reception = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.Id == receptionId);
@@ -743,8 +715,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return reception;
     }
-
-    public async Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, long received, long discount, Guid discountTypeId, Guid[] MedicalStaffs)
+    public async Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid serviceId, int serviceCount, Guid insuranceId, Guid additionalInsuranceId, float received, float discount, Guid discountTypeId, Guid[] MedicalStaffs)
     {
         throw new NotImplementedException();
     }

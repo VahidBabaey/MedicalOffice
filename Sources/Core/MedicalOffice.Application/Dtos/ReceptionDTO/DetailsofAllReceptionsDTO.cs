@@ -18,15 +18,15 @@ public class DetailsofAllReceptionsDTO
     /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>
-    public decimal Deposit { get; set; }
+    public long Deposit { get; set; }
     /// <summary>
     /// بدهی
     /// </summary>
-    public decimal Debt { get; set; }
+    public long Debt { get; set; }
     /// <summary>
     /// دریافتی
     /// </summary>
-    public decimal Recieved { get; set; }
+    public long Recieved { get; set; }
     /// <summary>
     /// شماره فاکتور
     /// </summary>

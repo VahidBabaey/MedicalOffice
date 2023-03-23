@@ -72,19 +72,19 @@ public class Reception : BaseDomainEntity<Guid>
     /// <summary>
     /// جمع کلی هزینه
     /// </summary>
-    public decimal TotalReceptionCost { get; set; }
+    public long TotalReceptionCost { get; set; }
     /// <summary>
     /// جمع کلی دریافتی
     /// </summary>
-    public decimal TotalReceived { get; set; }
+    public long TotalReceived { get; set; }
     /// <summary>
     /// جمع کلی بدهی
     /// </summary>
-    public decimal TotalDebt { get; set; }
+    public long TotalDebt { get; set; }
     /// <summary>
     /// جمع کلی مبلغ امانی
     /// </summary>
-    public decimal TotalDeposit { get; set; }
+    public long TotalDeposit { get; set; }
     /// <summary>
     /// عدم مراجعه
     /// </summary>

@@ -53,7 +53,7 @@ public class AddCashCheckCommandHandler : IRequestHandler<AddCashCheckCommand, B
             try
             {
 
-                var cashcheck = _cashcheckrepository.AddCashCheckForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost, request.DTO.BankId);
+                var cashcheck = _cashcheckrepository.AddCashCheckForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost, request.DTO.BankId, request.DTO.Branch);
 
                 await _logger.Log(new Log
                 {

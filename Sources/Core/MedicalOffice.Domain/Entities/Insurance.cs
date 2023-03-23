@@ -31,7 +31,7 @@ public class Insurance : BaseDomainEntity<Guid>
     /// <summary>
     /// درصد بیمه
     /// </summary>
-    public float InsurancePercent { get; set; }
+    public int InsurancePercent { get; set; }
 
     /// <summary>
     ///  بیمه تکمیلی هست یا نه

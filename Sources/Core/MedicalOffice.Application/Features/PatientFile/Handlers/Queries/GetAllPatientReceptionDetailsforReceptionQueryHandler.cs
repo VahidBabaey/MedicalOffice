@@ -40,7 +40,7 @@ public class GetAllPatientReceptionDetailsforReceptionQueryHandler : IRequestHan
 
         try
         {
-            var receptionsList = await _repository.GetReceptionDetailListForReception(request.PatientId, request.ReceptionId);
+            var receptionsList = await _repository.GetReceptionDetailListForReception(request.OfficeId, request.PatientId, request.ReceptionId);
 
             var result = _mapper.Map<List<ReceptionDetailListForReceptionDTO>>(receptionsList);
 

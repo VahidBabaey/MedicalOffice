@@ -3,6 +3,7 @@ using MedicalOffice.Application.Dtos.CashDTO;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

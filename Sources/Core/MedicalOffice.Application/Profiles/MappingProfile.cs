@@ -37,6 +37,7 @@ using MedicalOffice.Application.Dtos.FormIllnessDTO;
 using MedicalOffice.Application.Dtos.FormReferalDTO;
 using MedicalOffice.Application.Dtos.ServiceRoomDTO;
 using MedicalOffice.Domain;
+using MedicalOffice.Application.Dtos.BankDTO;
 
 namespace MedicalOffice.Application.Profiles;
 
@@ -50,6 +51,9 @@ public class MappingProfile : Profile
         CreateMap<Patient, PatientListDTO>().ReverseMap();
         CreateMap<MedicalStaff, PatientDTO>().ReverseMap();
         CreateMap<Section, AddSectionDTO>().ReverseMap();
+        CreateMap<Bank, BankListDTO>().ReverseMap()
+            .ForMember(dest => dest.BankName, opt => opt.MapFrom(src => src.BankName))
+            .ReverseMap();
         CreateMap<Section, SectionListDTO>().ReverseMap();
         CreateMap<Section, UpdateSectionDTO>().ReverseMap();
         CreateMap<Service, ServiceDTO>().ReverseMap();

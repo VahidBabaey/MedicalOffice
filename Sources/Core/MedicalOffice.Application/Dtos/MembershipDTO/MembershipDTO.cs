@@ -16,6 +16,6 @@ public class MembershipDTO
     /// <summary>
     /// تخفیف
     /// </summary>
-    public long Discount { get; set; }
+    public float Discount { get; set; }
 
 }

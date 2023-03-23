@@ -25,7 +25,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Queries
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
-
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
         public async Task<BaseResponse> Handle(GetAllMedicalStaffsQuery request, CancellationToken cancellationToken)

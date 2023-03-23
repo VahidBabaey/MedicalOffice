@@ -10,5 +10,5 @@ public class ReceptionServiceDto
     public Guid[]? MedicalStaffs { get; set; }
     public long Received { get; set; }
     public Guid DiscountTypeId { get; set; }
-    public long DiscountAmount { get; set; }
+    public int DiscountAmount { get; set; }
 }

@@ -4,6 +4,8 @@
     {
         public Guid Id { get; set; }
         public string ServiceName { get; set; }
-        public decimal TariffValue { get; set; }
+        // تعرفه سرویس
+        public float TariffValue { get; set; }
+        public bool TariffInReceptionTime { get; set; }
     }
 }
