@@ -77,9 +77,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
     {
         try
         {
-
             List<PatientListDTO> patientList = new();
-
             var list = await _dbContext.Patients
                 .Where(
                         p =>
@@ -97,6 +95,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
 
             foreach (var item in list)
             {
+                var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == item.Id && r.CreatedDate.Day == DateTime.Now.Day);
 
                 PatientListDTO patientListDto = new()
                 {
@@ -121,7 +120,8 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                     MaritalStatus = item.MaritalStatus,
                     EducationStatus = item.EducationStatus,
                     Occupation = item.Occupation,
-                    IntroducerType = item.IntroducerType
+                    IntroducerType = item.IntroducerType,
+                    ReceptionId = receptionpatient != null ? receptionpatient.Id : null,
                 };
                 patientList.Add(patientListDto);
             }

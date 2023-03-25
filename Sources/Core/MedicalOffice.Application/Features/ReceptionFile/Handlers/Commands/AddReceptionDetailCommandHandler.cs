@@ -36,7 +36,6 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
 
     public async Task<BaseResponse> Handle(AddReceptionDetailCommand request, CancellationToken cancellationToken)
     {
-
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
@@ -50,31 +49,29 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
-        else
-        {
-            try
-            {
-                var receptionDetail = await _receptionrepository.AddReceptionService(request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.MembershipId, request.DTO.MedicalStaffs, request.DTO.Recieved, request.DTO.OrganShare, request.DTO.PatientShare, request.DTO.AdditionalInsuranceShare, request.DTO.Tariff);
-                await _receptionrepository.UpdatereceptionDescription(receptionDetail.ReceptionId, request.Description);
 
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Success,
-                    Header = $"{_requestTitle} succeded",
-                    AdditionalData = receptionDetail.Id
-                });
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", receptionDetail.Id);
-            }
-            catch (Exception error)
+        try
+        {
+            var receptionDetail = await _receptionrepository.AddReceptionService(request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.MembershipId, request.DTO.MedicalStaffs, request.DTO.Recieved, request.DTO.OrganShare, request.DTO.PatientShare, request.DTO.AdditionalInsuranceShare, request.DTO.Tariff);
+            await _receptionrepository.UpdatereceptionDescription(receptionDetail.ReceptionId, request.Description);
+
+            await _logger.Log(new Log
             {
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error.Message
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
-            }
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = receptionDetail.Id
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", receptionDetail.Id);
+        }
+        catch (Exception error)
+        {
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
     }
 }

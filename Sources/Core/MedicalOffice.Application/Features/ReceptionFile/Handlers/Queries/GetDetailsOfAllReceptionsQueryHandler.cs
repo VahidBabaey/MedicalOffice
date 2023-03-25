@@ -36,7 +36,7 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetDetailsOfAllReceptionsQuery request, CancellationToken cancellationToken)
         {
-            DetailsofAllReceptionsDTO result = new();
+            DetailsOfAllReceptionsDTO result = new();
 
             Log log = new();
 
@@ -44,7 +44,7 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
             {
                 var detailsofallreceptions = await _repository.GetDetailsofAllReceptions(request.PatientId, request.ReceptionId);
 
-                result = _mapper.Map<DetailsofAllReceptionsDTO>(detailsofallreceptions);
+                result = _mapper.Map<DetailsOfAllReceptionsDTO>(detailsofallreceptions);
 
                 log.Header = $"{_requestTitle} succeded";
                 log.Type = LogType.Success;

@@ -181,8 +181,8 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         // اگر بیمار در همون روز پذیرش نشده
         if (receptionpatient == null)
         {
-            var recid = await CreateNewReception(officeId, patientid, receptionType);
-            receptionID = _dbContext.Receptions.Where(r => r.Id == recid).FirstOrDefault().Id;
+            var recId = await CreateNewReception(officeId, patientid, receptionType);
+            receptionID = _dbContext.Receptions.Where(r => r.Id == recId).FirstOrDefault().Id;
         }
         else if (receptionpatient != null)
         {
@@ -496,7 +496,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return nextNo;
     }
-    public async Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId)
+    public async Task<DetailsOfAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId)
     {
         var reception = await _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefaultAsync();
         reception.TotalDebt = 0;
@@ -508,7 +508,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         var username = await _dbContext.Users.Where(p => p.Id == reception.CreatedById).FirstOrDefaultAsync();
         var facNo = await _dbContext.Receptions.Where(p => p.PatientId == patientId).FirstOrDefaultAsync();
         var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId && p.Reception.Id == receptionId).ToListAsync();
-        DetailsofAllReceptionsDTO detailsofAllReceptions = new DetailsofAllReceptionsDTO();
+        DetailsOfAllReceptionsDTO detailsofAllReceptions = new DetailsOfAllReceptionsDTO();
         foreach (var item in _list)
         {
             detailsofAllReceptions.ReceptionId = item.ReceptionId;

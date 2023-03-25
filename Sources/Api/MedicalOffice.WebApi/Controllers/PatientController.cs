@@ -15,7 +15,6 @@ namespace MedicalOffice.WebApi.WebApi.Controllers;
 public class PatientController : Controller
 {
     private readonly IMediator _mediator;
-
     public PatientController(IMediator mediator)
     {
         _mediator = mediator;
@@ -58,23 +57,25 @@ public class PatientController : Controller
     }
 
     [Authorize]
-    [HttpGet("SearchByRequestedFeilds")]
+    [HttpGet("Search")]
     public async Task<ActionResult<List<PatientListDTO>>> GetBySearch([FromQuery] SearchFields searchFields, [FromQuery] ListDto dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new GetPatientBySearchQuery() { Dto = dto, searchFields = searchFields, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
     [Authorize]
-    [HttpGet("searchreceptionslist")]
+    [HttpGet("receptions")]
     public async Task<ActionResult<List<ReceptionListDTO>>> GetReceptionsList([FromQuery] string patientId)
     {
         var response = await _mediator.Send(new GetAllPatientReceptionsQuery() { PatientId = Guid.Parse(patientId) });
 
         return Ok(response);
     }
+
     [Authorize]
-    [HttpGet("searchreceptiondetailsforreceptionlist")]
+    [HttpGet("reception-details")]
     public async Task<ActionResult<List<ReceptionDetailListForReceptionDTO>>> GetReceptionDetailsListForReception([FromQuery] string patientId, [FromQuery] string receptionId)
     {
         var response = await _mediator.Send(new GetAllPatientReceptionDetailsforReceptionQuery() { PatientId = Guid.Parse(patientId), ReceptionId = Guid.Parse(receptionId) });

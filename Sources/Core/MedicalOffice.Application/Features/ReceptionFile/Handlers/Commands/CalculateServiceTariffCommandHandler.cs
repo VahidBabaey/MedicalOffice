@@ -42,7 +42,7 @@ public class CalculateServiceTariffCommandHandler : IRequestHandler<CalculateSer
     {
         try
         {
-            var receptiondiscount = await _receptionrepository.CalculateServiceTariff(request.ServiceId, request.ServiceCount, request.InsuranceId, request.AdditionalInsuranceId, request.Discount, request.Tariff);
+            var receptiondiscount = await _receptionrepository.CalculateServiceTariff(request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.Discount, request.DTO.Tariff);
 
             await _logger.Log(new Log
             {
