@@ -31,6 +31,16 @@ public class MembershipController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
+
+    [Authorize]
+    [HttpPatch]
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateMembershipDTO dto, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new EditMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+
     [Authorize]
     [HttpDelete]
     public async Task<IActionResult> Remove(Guid id, [FromQuery] string officeId)
@@ -48,6 +58,7 @@ public class MembershipController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
     [Authorize]
     [HttpGet("search")]
     public async Task<ActionResult<List<MembershipListDTO>>> GetMembershipBySearch([FromQuery] string name, [FromQuery] string officeId, [FromQuery] ListDto dto, [FromQuery] Order? order)
@@ -56,19 +67,12 @@ public class MembershipController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
     [Authorize]
     [HttpGet("names")]
     public async Task<ActionResult<List<MembershipsNamesDTO>>> GetAllMembershipsNames([FromQuery] string officeId)
     {
         var response = await _mediator.Send(new GetAllMembershipsNames() { OfficeId = Guid.Parse(officeId) });
-
-        return StatusCode(Convert.ToInt32(response.StatusCode), response);
-    }
-    [Authorize]
-    [HttpPatch]
-    public async Task<ActionResult<Guid>> Update([FromBody] UpdateMembershipDTO dto, [FromQuery] string officeId)
-    {
-        var response = await _mediator.Send(new EditMembershipCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

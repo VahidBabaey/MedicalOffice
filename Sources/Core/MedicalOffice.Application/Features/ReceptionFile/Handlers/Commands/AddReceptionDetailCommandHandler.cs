@@ -52,7 +52,7 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
 
         try
         {
-            var receptionDetail = await _receptionrepository.AddReceptionService(request.OfficeId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.MembershipId, request.DTO.MedicalStaffs, request.DTO.Recieved, request.DTO.OrganShare, request.DTO.PatientShare, request.DTO.AdditionalInsuranceShare, request.DTO.Tariff);
+            var receptionDetail = await _receptionrepository.AddReceptionService(request.OfficeId, request.DTO.ReceptionId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.MembershipId, request.DTO.MedicalStaffs, request.DTO.Recieved, request.DTO.OrganShare, request.DTO.PatientShare, request.DTO.AdditionalInsuranceShare, request.DTO.Tariff);
             await _receptionrepository.UpdatereceptionDescription(receptionDetail.ReceptionId, request.Description);
 
             await _logger.Log(new Log

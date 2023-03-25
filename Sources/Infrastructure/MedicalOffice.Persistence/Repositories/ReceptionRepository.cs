@@ -26,10 +26,10 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     string servicesNames = "";
     string DoctorsNames = "";
     string ExpertsNames = "";
-    float organshare;
-    float patientshare;
-    float additionalinsuranceshare;
-    Guid receptionID;
+    //float organshare;
+    //float patientshare;
+    //float additionalinsuranceshare;
+    //Guid receptionID;
     public ReceptionRepository(IGenericRepository<Reception, Guid> receptionReception, IGenericRepository<ReceptionDetailService, Guid> receptionDetailServiceRepository, IGenericRepository<ReceptionMedicalStaff, Guid> receptionDetailMedicalStaffRepository, IGenericRepository<ReceptionDetail, Guid> receptionDetailRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
@@ -38,7 +38,8 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         _receptionDetailServiceRepository = receptionDetailServiceRepository;
         _receptionReception = receptionReception;
     }
-     // این تابع درصد تخفیف سرویس انتخاب شده بر اساس نوع عضویت را بر میگرداند
+
+    // این تابع درصد تخفیف سرویس انتخاب شده بر اساس نوع عضویت را بر میگرداند
     public async Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId)
     {
         var membershipServices = await _dbContext.MemberShipServices.Include(c => c.Service).Include(c => c.MemberShip).Where(c => c.MembershipId == membershipId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false && c.ServiceId == serviceId).FirstOrDefaultAsync();
@@ -77,7 +78,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         long insAddPercent = 0; // درصد بیمه تکمیلی
         long InsAddTariff = 0; // تعرفه بیمه تکمیلی
         long AddShare = 0; // سهم بیمه تکمیلی
-        
+
         //  تعرفه سرویس 
         var serviceTariff = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId &&
             p.InsuranceId == insuranceId).FirstOrDefaultAsync();
@@ -162,6 +163,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     // تابع ثبت نهایی
     public async Task<ReceptionDetail> AddReceptionService(
         Guid officeId,
+        Guid? receptionId,
         ReceptionType receptionType,
         Guid patientid,
         Guid serviceId,
@@ -177,16 +179,21 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         long tariff)
     {
         var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
-        var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day);
-        // اگر بیمار در همون روز پذیرش نشده
-        if (receptionpatient == null)
+
+        var receptionPatient = new Reception();
+        if (receptionId == null)
         {
-            var recId = await CreateNewReception(officeId, patientid, receptionType);
-            receptionID = _dbContext.Receptions.Where(r => r.Id == recId).FirstOrDefault().Id;
-        }
-        else if (receptionpatient != null)
-        {
-            receptionID = _dbContext.Receptions.Where(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day).FirstOrDefault().Id;
+            receptionPatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day);
+            // اگر بیمار در همون روز پذیرش نشده
+            if (receptionPatient == null)
+            {
+                var recId = await CreateNewReception(officeId, patientid, receptionType);
+                receptionId = _dbContext.Receptions.Where(r => r.Id == recId).FirstOrDefault().Id;
+            }
+            else if (receptionPatient != null)
+            {
+                receptionId = _dbContext.Receptions.Where(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day).FirstOrDefault().Id;
+            }
         }
 
         ReceptionDetail detail = new()
@@ -201,7 +208,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             IsDeleted = false,
             IsDebt = true,
             OfficeId = officeId,
-            ReceptionId = receptionID,
+            ReceptionId = (Guid)receptionId,
             ServiceCount = serviceCount,
             OrganShare = organshare,
             PatientShare = patientshare,
