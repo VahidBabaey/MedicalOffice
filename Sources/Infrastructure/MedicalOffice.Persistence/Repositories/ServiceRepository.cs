@@ -21,59 +21,54 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
     {
         return await _dbContext.Services.Where(srv => srv.SectionId == sectionId && srv.IsDeleted == false).ToListAsync();
     }
+
     public async Task<IReadOnlyList<ServicesByInsuranceIdDTO>> GetByInsuranceId(Guid officeId, Guid insuranceId)
     {
-        try
+        List<ServicesByInsuranceIdDTO> servicesByInsuranceIdDTOs = new List<ServicesByInsuranceIdDTO>();
+
+        var services = await _dbContext.Services.Where(c => c.TariffInReceptionTime == true).ToListAsync();
+        var servicestariff = await _dbContext.Tariffs.Where(c => c.InsuranceId == insuranceId).Include(c => c.Service).ToListAsync();
+
+        foreach (var item in services)
         {
-            List<ServicesByInsuranceIdDTO> servicesByInsuranceIdDTOs = new List<ServicesByInsuranceIdDTO>();
-
-            var services = await  _dbContext.Services.Where(c => c.TariffInReceptionTime == true).ToListAsync();
-            var servicestariff = await _dbContext.Tariffs.Where(c => c.InsuranceId == insuranceId).Include(c => c.Service).ToListAsync();
-
-
-            foreach (var item in services)
+            ServicesByInsuranceIdDTO servicesByInsuranceIdDTO = new ServicesByInsuranceIdDTO()
             {
-                ServicesByInsuranceIdDTO servicesByInsuranceIdDTO = new ServicesByInsuranceIdDTO()
-                {
-                    Id = item.Id,
-                    ServiceName = item.Name,
-                    TariffValue = 0,
-                    TariffInReceptionTime = true
-                };
+                Id = item.Id,
+                ServiceName = item.Name,
+                TariffValue = 0,
+                TariffInReceptionTime = true
+            };
 
-                servicesByInsuranceIdDTOs.Add(servicesByInsuranceIdDTO);
-            }
-
-            foreach (var item in servicestariff)
-            {
-                ServicesByInsuranceIdDTO servicesByInsuranceIdDTO = new ServicesByInsuranceIdDTO()
-                {
-                    Id = item.Id,
-                    ServiceName = item.Service.Name,
-                    TariffValue = item.InternalTariffValue,
-                    TariffInReceptionTime = false
-                };
-
-                servicesByInsuranceIdDTOs.Add(servicesByInsuranceIdDTO);
-            }
-
-            return servicesByInsuranceIdDTOs;
+            servicesByInsuranceIdDTOs.Add(servicesByInsuranceIdDTO);
         }
-        catch (Exception ex)
+
+        foreach (var item in servicestariff)
         {
+            ServicesByInsuranceIdDTO servicesByInsuranceIdDTO = new ServicesByInsuranceIdDTO()
+            {
+                Id = item.ServiceId,
+                ServiceName = item.Service.Name,
+                TariffValue = item.InternalTariffValue,
+                TariffInReceptionTime = false
+            };
 
-            throw;
+            servicesByInsuranceIdDTOs.Add(servicesByInsuranceIdDTO);
         }
+
+        return servicesByInsuranceIdDTOs;
     }
+
     public async Task<IReadOnlyList<Service>> GetServiceByID(Guid Id)
     {
         return (IReadOnlyList<Service>)await _dbContext.Services.Select(srv => new { srv.Id }).Where(srv => srv.Id == Id).ToListAsync();
     }
+
     public async Task<bool> CheckExistServiceId(Guid officeId, Guid serviceId)
     {
         bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Id == serviceId);
         return isExist;
     }
+
     public async Task<bool> CheckExistServiceListId(Guid officeId, Guid[] serviceId)
     {
         int exixt = 0;
@@ -94,16 +89,19 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
             return false;
         }
     }
+
     public async Task<bool> CheckSectionId(Guid officeId, Guid sectionId)
     {
         bool isExist = await _dbContext.Sections.AnyAsync(p => p.OfficeId == officeId && p.Id == sectionId);
         return isExist;
     }
+
     public async Task<bool> CheckSpecializationId(Guid specializationId)
     {
         bool isExist = await _dbContext.Specializations.AnyAsync(p => p.Id == specializationId);
         return isExist;
     }
+
     public async Task<List<Service>> GetServiceBySearch(string name, Guid sectionId, Guid officeId)
     {
         var services = await _dbContext.Services.Where(p => p.Name.Contains(name) && p.OfficeId == officeId && p.SectionId == sectionId && p.IsDeleted == false).ToListAsync();
@@ -117,6 +115,7 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
 
         return services;
     }
+
     public async Task<bool> CheckExistServiceName(Guid officeId, string serviceName)
     {
         bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Name == serviceName);
