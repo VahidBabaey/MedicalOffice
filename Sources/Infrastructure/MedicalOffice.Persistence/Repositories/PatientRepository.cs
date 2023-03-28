@@ -74,18 +74,18 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         {
             List<PatientListDTO> patientList = new();
             var list = await _dbContext.Patients
+                .Include(p => p.PatientContacts)
+                    .Where(x => phoneNumber != "" ? x.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber) : true)
+                .Include(p => p.PatientAddresses)
+                .Include(p => p.PatientTags)
                 .Where(
                         p =>
-                        p.IsDeleted == false &&
-                        p.FirstName.Contains(firstName) &&
-                        p.LastName.Contains(lastName) &&
-                        p.NationalId.StartsWith(nationalCode) &&
-                        p.FileNumber == fileNumber
+                        p.OfficeId == officeId && p.IsDeleted == false && (
+                        p.FirstName.Contains(firstName) ||
+                        p.LastName.Contains(lastName) ||
+                        p.NationalId.StartsWith(nationalCode) ||
+                        p.FileNumber == fileNumber)
                       )
-                .Include(p => p.PatientContacts)
-                .Where(x => phoneNumber != "" ? x.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber) : true)
-                .Include(p => p.PatientAddresses).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
-                .Include(p => p.PatientTags).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
                 .ToListAsync();
 
             foreach (var item in list)
@@ -234,7 +234,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         }
     }
 
-    public async Task<bool> CheckExistByNationalId(string? nationalId, Guid officeId,Guid? id)
+    public async Task<bool> CheckExistByNationalId(string? nationalId, Guid officeId, Guid? id)
     {
         var isFileNumberExist = false;
         if (nationalId != null)
