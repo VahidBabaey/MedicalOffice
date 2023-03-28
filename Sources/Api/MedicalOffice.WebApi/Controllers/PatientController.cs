@@ -22,7 +22,7 @@ public class PatientController : Controller
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] PatientDTO dto, [FromQuery] string officeId)
+    public async Task<ActionResult<Guid>> Create([FromBody] AddPatientDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new AddPatientCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 

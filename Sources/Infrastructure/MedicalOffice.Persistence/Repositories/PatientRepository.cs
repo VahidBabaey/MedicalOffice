@@ -24,22 +24,17 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         _addressRepository = addressRepository;
         _tagRepository = tagRepository;
         _mapper = mapper;
-
     }
-    public async Task<PatientContact> InsertContactValueofPatientAsync(Guid patientid, string contactnumber)
+    public async Task<PatientContact> InsertContactValueOfPatientAsync(Guid patientId, string contactnumber, ContactType type)
     {
         PatientContact patientContact = new PatientContact();
 
         if (patientContact == null)
             throw new Exception();
 
-        patientContact.PatientId = patientid;
+        patientContact.PatientId = patientId;
         patientContact.ContactValue = contactnumber;
-
-        if (patientContact.ContactValue.StartsWith("09"))
-            patientContact.ContactType = (ContactType)1;
-        else
-            patientContact.ContactType = (ContactType)2;
+        patientContact.ContactType = type;
 
         await _contactRepository.Add(patientContact);
 
@@ -237,5 +232,55 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
             var lastNo = await _dbContext.Patients.Select(p => p.FileNumber).MaxAsync();
             return Convert.ToInt32((lastNo + 1));
         }
+    }
+
+    public async Task<bool> CheckExistByNationalId(string? nationalId, Guid officeId,Guid? id)
+    {
+        var isFileNumberExist = false;
+        if (nationalId != null)
+        {
+            if (id != null)
+            {
+                isFileNumberExist = await _dbContext.Patients.AnyAsync(x =>
+                x.NationalId == nationalId &&
+                x.Id != id &&
+                x.OfficeId == officeId &&
+                x.IsDeleted == false);
+
+            }
+            else
+            {
+                isFileNumberExist = await _dbContext.Patients.AnyAsync(x =>
+                x.NationalId == nationalId &&
+                x.OfficeId == officeId &&
+                x.IsDeleted == false);
+            }
+        }
+        return isFileNumberExist;
+    }
+
+    public async Task<bool> IsFileNumberExist(int? fileNumber, Guid officeId, Guid? id = null)
+    {
+        var isFileNumberExist = false;
+        if (fileNumber != null)
+        {
+            if (id != null)
+            {
+                isFileNumberExist = await _dbContext.Patients.AnyAsync(x =>
+                x.FileNumber == fileNumber &&
+                x.Id != id &&
+                x.OfficeId == officeId &&
+                x.IsDeleted == false);
+
+            }
+            else
+            {
+                isFileNumberExist = await _dbContext.Patients.AnyAsync(x =>
+                x.FileNumber == fileNumber &&
+                x.OfficeId == officeId &&
+                x.IsDeleted == false);
+            }
+        }
+        return isFileNumberExist;
     }
 }

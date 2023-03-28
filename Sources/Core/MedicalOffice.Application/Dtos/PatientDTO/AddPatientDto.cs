@@ -5,8 +5,13 @@ using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.PatientDTO;
 
-public class PatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationalIdDTO, IInsuranceIdDTO, IReferrerMedicalStaffIdDTO
+public class AddPatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INationalIdDTO, IInsuranceIdDTO, IReferrerMedicalStaffIdDTO
 {
+    /// <summary>
+    /// شماره پرونده
+    /// </summary>
+    public int? FileNumber{ get; set; }
+
     /// <summary>
     /// نام
     /// </summary>

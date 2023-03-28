@@ -40,16 +40,15 @@ using MedicalOffice.Domain;
 using MedicalOffice.Application.Dtos.BankDTO;
 
 namespace MedicalOffice.Application.Profiles;
-
 public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Patient, PatientDTO>().ReverseMap();
+        CreateMap<Patient, AddPatientDTO>().ReverseMap();
         CreateMap<Patient, UpdatePatientDTO>().ReverseMap();
         CreateMap<Patient, PatientListDTO>().ConvertUsing(new PatientMapper());
         CreateMap<Patient, PatientListDTO>().ReverseMap();
-        CreateMap<MedicalStaff, PatientDTO>().ReverseMap();
+        CreateMap<MedicalStaff, AddPatientDTO>().ReverseMap();
         CreateMap<Section, AddSectionDTO>().ReverseMap();
         CreateMap<Bank, BankListDTO>().ReverseMap()
             .ForMember(dest => dest.BankName, opt => opt.MapFrom(src => src.BankName))

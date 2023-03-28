@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace MedicalOffice.Application.Dtos.PatientDTO.Validators;
 
-public class AddPatientValidator : AbstractValidator<PatientDTO>
+public class AddPatientValidator : AbstractValidator<AddPatientDTO>
 {
     private readonly IInsuranceRepository _insuranceRepository;
     private readonly IQueryStringResolver _officeResolver;
@@ -29,8 +29,8 @@ public class AddPatientValidator : AbstractValidator<PatientDTO>
 
         RuleFor(x => x.LastName).NotEmpty().Length(1, 100);
 
-        //RuleFor(p => p.TelePhoneNumber)
-        //    .Must(p => IsValidTelePhoneNumberList(p)).WithMessage("{PropertyName} is not valid");
+        RuleFor(p => p.TelePhoneNumber)
+            .Must(p => IsValidTelePhoneNumberList(p)).WithMessage("{PropertyName} is not valid");
 
         RuleFor(x => x.InsuranceId)
             .MustAsync(async (insuranceId, token) =>

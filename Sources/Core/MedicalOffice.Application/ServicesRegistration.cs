@@ -167,7 +167,7 @@ public static class ServicesRegistration
         #endregion
 
         #region Patient
-        services.AddScoped<IValidator<PatientDTO>, AddPatientValidator>();
+        services.AddScoped<IValidator<AddPatientDTO>, AddPatientValidator>();
         services.AddScoped<IValidator<UpdatePatientDTO>, UpdatePatientValidator>();
         services.AddScoped<IValidator<PatientReferralFormDTO>, AddPatientReferralFormValidator>();
         services.AddScoped<IValidator<PatientIllnessFormDTO>, AddPatientIllnessFormValidator>();
