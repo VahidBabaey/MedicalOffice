@@ -55,13 +55,19 @@ public class AddReceptionDetailCommandHandler : IRequestHandler<AddReceptionDeta
             var receptionDetail = await _receptionrepository.AddReceptionService(request.OfficeId, request.DTO.ReceptionId, request.DTO.ReceptionType, request.DTO.PatientId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.MembershipId, request.DTO.MedicalStaffs, request.DTO.Recieved, request.DTO.OrganShare, request.DTO.PatientShare, request.DTO.AdditionalInsuranceShare, request.DTO.Tariff);
             await _receptionrepository.UpdatereceptionDescription(receptionDetail.ReceptionId, request.Description);
 
+            var result = new ReceptionDetailResponseDTO
+            {
+                ReceptionDetailId = receptionDetail.Id,
+                ReceptionId = receptionDetail.ReceptionId
+            };
+
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeded",
-                AdditionalData = receptionDetail.Id
+                AdditionalData = result
             });
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", receptionDetail.Id);
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
         }
         catch (Exception error)
         {

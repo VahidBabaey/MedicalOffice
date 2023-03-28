@@ -84,7 +84,7 @@ public class ReceptionController : Controller
 
     [Authorize]
     [HttpPost("reception-detail")]
-    public async Task<ActionResult<Guid>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId, [FromQuery] string description)
+    public async Task<ActionResult<ReceptionDetailResponseDTO>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId, [FromQuery] string description)
     {
         var response = await _mediator.Send(new AddReceptionDetailCommand() { DTO = dto, OfficeId = Guid.Parse(officeId), Description = description });
 
