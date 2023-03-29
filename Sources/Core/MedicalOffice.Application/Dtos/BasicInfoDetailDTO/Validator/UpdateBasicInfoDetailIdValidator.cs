@@ -15,8 +15,8 @@ namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO.Validator
     public class UpdateBasicInfoDetailIdValidator : AbstractValidator<IBasicInfoDetailIdDTO>
     {
         private readonly IBasicInfoDetailRepository _repositoryBasicInfoDetail;
-        private readonly IQueryStringResolver _officeResolver;
-        public UpdateBasicInfoDetailIdValidator(IBasicInfoDetailRepository repositoryBasicInfoDetail, IQueryStringResolver officeResolver)
+        private readonly IRouteResolver _officeResolver;
+        public UpdateBasicInfoDetailIdValidator(IBasicInfoDetailRepository repositoryBasicInfoDetail, IRouteResolver officeResolver)
         {
             _officeResolver = officeResolver;
             _repositoryBasicInfoDetail = repositoryBasicInfoDetail;

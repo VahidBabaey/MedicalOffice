@@ -16,8 +16,8 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators
     {
         private readonly IMembershipRepository _memberRepository;
         private readonly IServiceRepository _serviceRepository;
-        private readonly IQueryStringResolver _officeResolver;
-        public UpdateMemberShipServiceValidator(IServiceRepository serviceRepository, IMembershipRepository memberRepository, IQueryStringResolver officeResolver)
+        private readonly IRouteResolver _officeResolver;
+        public UpdateMemberShipServiceValidator(IServiceRepository serviceRepository, IMembershipRepository memberRepository, IRouteResolver officeResolver)
         {
             _serviceRepository = serviceRepository;
             _memberRepository = memberRepository;

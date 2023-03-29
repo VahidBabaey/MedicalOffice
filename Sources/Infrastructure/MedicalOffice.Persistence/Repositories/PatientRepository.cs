@@ -73,22 +73,22 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         try
         {
             List<PatientListDTO> patientList = new();
-            var list = await _dbContext.Patients
+
+            var list = _dbContext.Patients
                 .Include(p => p.PatientContacts)
-                    .Where(x => phoneNumber != "" ? x.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber) : true)
                 .Include(p => p.PatientAddresses)
                 .Include(p => p.PatientTags)
                 .Where(
                         p =>
                         p.OfficeId == officeId && p.IsDeleted == false && (
-                        p.FirstName.Contains(firstName) ||
-                        p.LastName.Contains(lastName) ||
-                        p.NationalId.StartsWith(nationalCode) ||
-                        p.FileNumber == fileNumber)
-                      )
-                .ToListAsync();
+                        (firstName != string.Empty && p.FirstName.Contains(firstName)) ||
+                        (lastName != string.Empty && p.LastName.Contains(lastName)) ||
+                        (nationalCode != string.Empty && p.NationalId.StartsWith(nationalCode)) ||
+                        (fileNumber != 0 && p.FileNumber == fileNumber))||
+                        (phoneNumber != string.Empty && p.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber))
+                      );
 
-            foreach (var item in list)
+            foreach (var item in list.ToList())
             {
                 var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == item.Id && r.CreatedDate.Day == DateTime.Now.Day);
 
@@ -121,7 +121,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                 patientList.Add(patientListDto);
             }
 
-            return patientList.ToList();
+            return patientList;
         }
         catch (Exception)
         {

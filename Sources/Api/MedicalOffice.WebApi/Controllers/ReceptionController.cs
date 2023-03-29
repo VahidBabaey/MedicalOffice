@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MedicalOffice.Application;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;

@@ -6,10 +6,10 @@ using System.Security.Claims;
 
 namespace MedicalOffice.Application.Contracts.Infrastructure;
 
-public class QueryStringResolverService : IQueryStringResolver
+public class RouteResolverService : IRouteResolver
 {
     private readonly IHttpContextAccessor _context;
-    public QueryStringResolverService(IHttpContextAccessor context)
+    public RouteResolverService(IHttpContextAccessor context)
     {
         _context = context;
     }

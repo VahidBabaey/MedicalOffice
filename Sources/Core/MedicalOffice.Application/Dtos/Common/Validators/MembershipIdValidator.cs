@@ -14,9 +14,9 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
     public class MembershipIdValidator : AbstractValidator<IMembershipIdDTO>
     {
         private readonly IMembershipRepository _membershipRepository;
-        private readonly IQueryStringResolver _officeResolver;
+        private readonly IRouteResolver _officeResolver;
 
-        public MembershipIdValidator(IMembershipRepository membershipRepository, IQueryStringResolver officeResolver)
+        public MembershipIdValidator(IMembershipRepository membershipRepository, IRouteResolver officeResolver)
         {
             _officeResolver = officeResolver;
             _membershipRepository = membershipRepository;

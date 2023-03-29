@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MedicalOffice.Application
+namespace MedicalOffice.Application.Dtos.ReceptionDTO
 {
     public class CalculateDiscountDTO
     {

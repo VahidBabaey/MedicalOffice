@@ -9,9 +9,9 @@ public class UpdateReceptionDetailValidator : AbstractValidator<UpdateReceptionD
 {
     private readonly IReceptionRepository _receptionRepository;
     private readonly IInsuranceRepository _insuranceRepository;
-    private readonly IQueryStringResolver _QueryStringResolver;
+    private readonly IRouteResolver _QueryStringResolver;
     private readonly IServiceRepository _serviceRepository;
-    public UpdateReceptionDetailValidator(IReceptionRepository receptionRepository, IServiceRepository serviceRepository, IQueryStringResolver QueryStringResolver, IInsuranceRepository insuranceRepository)
+    public UpdateReceptionDetailValidator(IReceptionRepository receptionRepository, IServiceRepository serviceRepository, IRouteResolver QueryStringResolver, IInsuranceRepository insuranceRepository)
     {
         _receptionRepository = receptionRepository;
         _serviceRepository = serviceRepository;

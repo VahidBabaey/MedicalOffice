@@ -13,8 +13,8 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
     public class MedicalStaffReferrerValidator : AbstractValidator<IReferrerMedicalStaffIdDTO>
     {
         private readonly IMedicalStaffRepository _medicalStaffRepository;
-        private readonly IQueryStringResolver _officeResolver;
-        public MedicalStaffReferrerValidator(IMedicalStaffRepository medicalStaffRepository, IQueryStringResolver officeResolver)
+        private readonly IRouteResolver _officeResolver;
+        public MedicalStaffReferrerValidator(IMedicalStaffRepository medicalStaffRepository, IRouteResolver officeResolver)
         {
             _officeResolver = officeResolver;
             _medicalStaffRepository = medicalStaffRepository;
