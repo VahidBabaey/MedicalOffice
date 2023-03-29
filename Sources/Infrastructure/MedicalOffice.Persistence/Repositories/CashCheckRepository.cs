@@ -1,4 +1,5 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.CashDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,7 +35,7 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
         bool isExist = await _dbContext.CashChecks.AnyAsync(p => p.Id == cashCheckId);
         return isExist;
     }
-    public async Task<Guid> AddCashCheckForAnyReceptionDetail(Guid OfficeId, Guid receptionId, long recieved, Guid bankid, string branch)
+    public async Task<CashCheckResponseDTO> AddCashCheckForAnyReceptionDetail(Guid OfficeId, Guid receptionId, long recieved, Guid bankid, string branch, string accountNumber)
     {
         try
         {
@@ -49,6 +50,7 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
 
             CashCheck cashCheck = new()
             {
+                AccountNumber = accountNumber,
                 OfficeId = OfficeId,
                 ReceptionId = receptionId,
                 Cost = recieved,
@@ -87,11 +89,11 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
                     }
                 }
             }
-            return cashCheck.Id;
+            return new CashCheckResponseDTO { Id = cashCheck.Id, exception = null };
         }
         catch (Exception ex)
         {
-            throw;
+            return new CashCheckResponseDTO { Id = null, exception = ex };
         }
     }
     public async Task DeleteCashCheckForAnyReceptionDetail(Guid checkId)
