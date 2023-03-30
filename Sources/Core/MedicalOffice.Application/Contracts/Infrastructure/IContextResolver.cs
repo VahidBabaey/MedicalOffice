@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Contracts.Infrastructure
 {
-    public interface IRouteResolver
+    public interface IContextResolver
     {
         Task<Guid> GetOfficeId();
 

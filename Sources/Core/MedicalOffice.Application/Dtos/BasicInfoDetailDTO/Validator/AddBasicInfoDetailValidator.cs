@@ -13,8 +13,8 @@ namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO.Validator
     public class AddBasicInfoDetailValidator : AbstractValidator<BasicInfoDetailDTO>
     {
         private readonly IBasicInfoDetailRepository _repositoryBasicInfoDetail;
-        private readonly IRouteResolver _officeResolver;
-        public AddBasicInfoDetailValidator(IBasicInfoDetailRepository repositoryBasicInfoDetail, IRouteResolver officeResolver)
+        private readonly IContextResolver _officeResolver;
+        public AddBasicInfoDetailValidator(IBasicInfoDetailRepository repositoryBasicInfoDetail, IContextResolver officeResolver)
         {
             _repositoryBasicInfoDetail = repositoryBasicInfoDetail;
             _officeResolver = officeResolver;

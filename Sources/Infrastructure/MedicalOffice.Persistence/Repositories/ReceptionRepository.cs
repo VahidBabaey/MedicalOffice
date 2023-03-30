@@ -42,19 +42,39 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     // این تابع درصد تخفیف سرویس انتخاب شده بر اساس نوع عضویت را بر میگرداند
     public async Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId)
     {
-        var membershipServices = await _dbContext.MemberShipServices.Include(c => c.Service).Include(c => c.MemberShip).Where(c => c.MembershipId == membershipId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false && c.ServiceId == serviceId).FirstOrDefaultAsync();
-        if (membershipServices != null && Convert.ToInt32(membershipServices.Discount) != 0)
-        {
-            return Convert.ToInt32(membershipServices.Discount);
-        }
-        if (membershipServices != null && Convert.ToInt32(membershipServices.Discount) == 0)
-        {
-            return Convert.ToInt32(membershipServices.MemberShip.Discount);
-        }
+        var memberShip = await _dbContext.Memberships
+            .Where(x => x.Id == membershipId && x.Id == officeId)
+            .FirstOrDefaultAsync();
+
+        var membershipService = await _dbContext.MemberShipServices
+            .Include(c => c.Service)
+            .Include(c => c.MemberShip)
+            .Where(c =>
+                c.MembershipId == membershipId &&
+                c.ServiceId == serviceId &&
+                c.OfficeId == officeId &&
+                c.IsDeleted == false &&
+                c.MemberShip.IsDeleted == false &&
+                c.Service.IsDeleted == false)
+            .FirstOrDefaultAsync();
+
+        if (membershipService == null && memberShip != null)
+            return Convert.ToInt32(memberShip.Discount);
+
+        if (membershipService != null)
+            return Convert.ToInt32(membershipService.Discount);
+
+        //if (membershipServices != null && Convert.ToInt32(membershipServices.Discount) != 0)
+
+        //    return Convert.ToInt32(membershipServices.Discount);
+
+        //if (membershipServices != null && Convert.ToInt32(membershipServices.Discount) == 0)
+
+        //    return Convert.ToInt32(membershipServices.MemberShip.Discount);
+
         else
-        {
             return 0;
-        }
+
     }
     public async Task<long> GetReceptionServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
     {

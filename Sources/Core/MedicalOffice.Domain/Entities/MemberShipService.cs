@@ -13,26 +13,32 @@ namespace MedicalOffice.Domain.Entities
         /// آیدی مطب
         /// </summary>
         public Guid OfficeId { get; set; }
+
         /// <summary>
         /// مطب
         /// </summary>
         public Office? Office { get; set; }
+
         /// <summary>
         /// عضویت
         /// </summary>
         public Membership? MemberShip { get; set; }
+
         /// <summary>
         /// آیدی عضویت
         /// </summary>
         public Guid? MembershipId { get; set; }
+
         /// <summary>
         /// سرویس
         /// </summary>
         public Service Service { get; set; }
+
         /// <summary>
         /// آیدی سرویس
         /// </summary>
         public Guid ServiceId { get; set; }
+
         /// <summary>
         /// تخفیف
         /// </summary>

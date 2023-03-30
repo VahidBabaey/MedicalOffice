@@ -30,7 +30,7 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
     public class GetGenericCodeTariffQueryHandler : IRequestHandler<GetGenericCodeTariffQuery, BaseResponse>
     {
         private readonly ApiConsumerSettings _apiConsumersetting;
-        private readonly IRouteResolver _QueryStringResolver;
+        private readonly IContextResolver _QueryStringResolver;
         private readonly IApiConsumer _apiConsumer;
         private readonly string _requestTitle;
         private readonly IInsuranceRepository _insuranceRepository;
@@ -38,7 +38,7 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 
         public GetGenericCodeTariffQueryHandler(
             IApiConsumer apiConsumer,
-            IRouteResolver officeResolver,
+            IContextResolver officeResolver,
             IOptions<ApiConsumerSettings> apiConsumersetting,
             IInsuranceRepository insuranceRepository,
             IMapper mapper)

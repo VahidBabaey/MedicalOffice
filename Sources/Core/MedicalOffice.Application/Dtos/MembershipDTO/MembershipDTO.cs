@@ -9,13 +9,15 @@ public class MembershipDTO
     /// نام عضویت
     /// </summary>
     public string Name { get; set; } = string.Empty;
+
     /// <summary>
     /// فعال یا غیرفعال
     /// </summary>
     public bool? IsActive { get; set; }
+
     /// <summary>
     /// تخفیف
     /// </summary>
-    public float Discount { get; set; }
+    public int Discount { get; set; }
 
 }

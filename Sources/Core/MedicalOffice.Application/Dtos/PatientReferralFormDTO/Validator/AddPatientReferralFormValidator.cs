@@ -13,8 +13,8 @@ namespace MedicalOffice.Application.Dtos.PatientReferralFormDTO.Validator
     public class AddPatientReferralFormValidator : AbstractValidator<PatientReferralFormDTO>
     {
         private readonly IPatientRepository _patientRepository;
-        private readonly IRouteResolver _officeResolver;
-        public AddPatientReferralFormValidator(IPatientRepository patientRepository, IRouteResolver officeResolver)
+        private readonly IContextResolver _officeResolver;
+        public AddPatientReferralFormValidator(IPatientRepository patientRepository, IContextResolver officeResolver)
         {
             _patientRepository = patientRepository;
             _officeResolver = officeResolver;

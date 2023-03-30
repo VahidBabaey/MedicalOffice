@@ -15,10 +15,10 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
 {
     public class ServiceIdsValidator : AbstractValidator<IServiceIdsDTO>
     {
-        private readonly IRouteResolver _officeResolver;
+        private readonly IContextResolver _officeResolver;
         private readonly IServiceRepository _serviceRepository;
 
-        public ServiceIdsValidator(IRouteResolver officeResolver, IServiceRepository serviceRepository)
+        public ServiceIdsValidator(IContextResolver officeResolver, IServiceRepository serviceRepository)
         {
             _officeResolver = officeResolver;
             _serviceRepository = serviceRepository;

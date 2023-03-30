@@ -14,8 +14,8 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
     public class UpdateAppointmentDescriptionValidator: AbstractValidator<UpdateAppointmentDescriptionDTO>
     {
         private readonly IAppointmentRepository _appointmentRepository;
-        private readonly IRouteResolver _officeResolver;
-        public UpdateAppointmentDescriptionValidator(IAppointmentRepository appointmentRepository, IRouteResolver officeResolver)
+        private readonly IContextResolver _officeResolver;
+        public UpdateAppointmentDescriptionValidator(IAppointmentRepository appointmentRepository, IContextResolver officeResolver)
         {
             _appointmentRepository = appointmentRepository;
             _officeResolver = officeResolver;

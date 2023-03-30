@@ -26,7 +26,6 @@ namespace MedicalOffice.Persistence.Repositories
 
         public async Task<User?> CheckByPhoneOrNationalId(string phoneNumber, string nationalId)
         {
-
             var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phoneNumber || x.NationalId == nationalId);
             return user;
 

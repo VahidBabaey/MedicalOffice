@@ -4,21 +4,14 @@ using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MembershipDTO;
-using MedicalOffice.Application.Dtos.MembershipDTO.Validators;
 using MedicalOffice.Application.Features.MembershipFile.Requests.Commands;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
 using MedicalOffice.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
 {
-
     public class AddMembershipCommandHandler : IRequestHandler<AddMembershipCommand, BaseResponse>
     {
         private readonly IValidator<MembershipDTO> _validator;
@@ -36,14 +29,11 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
             _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("CommandHandler", string.Empty);
-
         }
 
         public async Task<BaseResponse> Handle(AddMembershipCommand request, CancellationToken cancellationToken)
         {
-
             var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
             if (!validationOfficeId)
             {
                 var error = "OfficeID isn't exist";
@@ -57,7 +47,6 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
             }
 
             var validationMembershipName = await _membershiprepository.CheckExistMembershipName(request.OfficeId, request.DTO.Name);
-
             if (validationMembershipName)
             {
                 var error = "Name Must be Unique";
@@ -71,7 +60,6 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
             }
 
             var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
-
             if (!validationResult.IsValid)
             {
                 var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
@@ -114,5 +102,4 @@ namespace MedicalOffice.Application.Features.MembershipFile.Handlers.Commands
             }
         }
     }
-
 }

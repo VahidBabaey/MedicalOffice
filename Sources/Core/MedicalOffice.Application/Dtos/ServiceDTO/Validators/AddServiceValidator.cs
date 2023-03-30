@@ -9,8 +9,8 @@ namespace MedicalOffice.Application.Dtos.ServiceDTO.Validators;
 public class AddServiceValidator : AbstractValidator<ServiceDTO>
 {
     private readonly ISectionRepository _sectionRepository;
-    private readonly IRouteResolver _officeResolver;
-    public AddServiceValidator(ISectionRepository sectionRepository, IRouteResolver officeResolver)
+    private readonly IContextResolver _officeResolver;
+    public AddServiceValidator(ISectionRepository sectionRepository, IContextResolver officeResolver)
     {
         _officeResolver = officeResolver;
         _sectionRepository = sectionRepository;

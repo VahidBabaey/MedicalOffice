@@ -56,7 +56,7 @@ public class CashCartRepository : GenericRepository<CashCart, Guid>, ICashCartRe
                 CashId = cash.Id,
                 BankId = bankid
             };
-            await _cashCartRepository.Add(cashCart);
+            var x = await _cashCartRepository.Add(cashCart);
 
             var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.Id == receptionId).ToListAsync();
             foreach (var item in _list)

@@ -18,6 +18,10 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO
         /// تخفیف
         /// </summary>
         public string Discount { get; set; } = string.Empty;
-        public object CreatedDate { get; internal set; }
+
+        /// <summary>
+        /// تاریخ تولید عضویت خدمت
+        /// </summary>
+        public object CreatedDate { get; set; }
     }
 }

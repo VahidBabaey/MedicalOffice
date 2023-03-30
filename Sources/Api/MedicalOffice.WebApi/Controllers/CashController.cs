@@ -44,6 +44,7 @@ public class CashController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
+    [Authorize]
     [HttpPost("Cart")]
     public async Task<ActionResult<Guid>> CreateCart([FromBody] CashCartDTO dto, [FromQuery] string officeId)
     {

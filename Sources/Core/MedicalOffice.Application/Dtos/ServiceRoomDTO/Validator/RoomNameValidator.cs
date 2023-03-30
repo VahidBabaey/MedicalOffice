@@ -8,9 +8,9 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
     public class RoomNameValidator : AbstractValidator<INameDTO>
     {
         private readonly IRoomRepository _serviceRoomRepository;
-        private readonly IRouteResolver _officeResolver;
+        private readonly IContextResolver _officeResolver;
 
-        public RoomNameValidator(IRoomRepository serviceRoomRepository, IRouteResolver officeResolver)
+        public RoomNameValidator(IRoomRepository serviceRoomRepository, IContextResolver officeResolver)
         {
             _serviceRoomRepository = serviceRoomRepository;
             _officeResolver = officeResolver;

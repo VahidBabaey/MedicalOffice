@@ -11,8 +11,8 @@ public class AddReceptionValidator : AbstractValidator<ReceptionsDTO>
     private readonly IMedicalStaffRepository _medicalStaffRepository;
     private readonly IShiftRepository _shiftRepository;
     private readonly IPatientRepository _patientRepository;
-    private readonly IRouteResolver _officeResolver;
-    public AddReceptionValidator(IMedicalStaffRepository medicalStaffRepository, IShiftRepository shiftRepository, IPatientRepository patientRepository, IRouteResolver officeResolver)
+    private readonly IContextResolver _officeResolver;
+    public AddReceptionValidator(IMedicalStaffRepository medicalStaffRepository, IShiftRepository shiftRepository, IPatientRepository patientRepository, IContextResolver officeResolver)
     {
         _medicalStaffRepository = medicalStaffRepository;
         _shiftRepository = shiftRepository;

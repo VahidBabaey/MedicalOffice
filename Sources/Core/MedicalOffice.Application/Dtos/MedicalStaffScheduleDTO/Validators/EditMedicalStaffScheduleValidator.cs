@@ -14,11 +14,11 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators
     public class EditMedicalStaffScheduleValidator : AbstractValidator<MedicalStaffScheduleDTO>
     {
         private readonly IMedicalStaffRepository _medicalStaffRepository;
-        private readonly IRouteResolver _officeResolver;
+        private readonly IContextResolver _officeResolver;
 
         public EditMedicalStaffScheduleValidator(
             IMedicalStaffRepository medicalStaffRepository,
-            IRouteResolver officeResolver)
+            IContextResolver officeResolver)
         {
             _medicalStaffRepository = medicalStaffRepository;
             _officeResolver = officeResolver;

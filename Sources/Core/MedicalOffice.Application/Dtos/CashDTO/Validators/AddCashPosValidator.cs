@@ -8,9 +8,9 @@ namespace MedicalOffice.Application.Dtos.CashDTO.Validators;
 public class AddCashPosValidator : AbstractValidator<CashPosDTO>
 {
     private readonly ICashRepository _cashRepository;
-    private readonly IRouteResolver _officeResolver;
+    private readonly IContextResolver _officeResolver;
 
-    public AddCashPosValidator(ICashRepository cashRepository, IRouteResolver officeResolver)
+    public AddCashPosValidator(ICashRepository cashRepository, IContextResolver officeResolver)
     {
         _cashRepository = cashRepository;
         _officeResolver = officeResolver;

@@ -12,9 +12,9 @@ namespace MedicalOffice.Application.Dtos.PatientDTO.Validators;
 public class AddPatientValidator : AbstractValidator<AddPatientDTO>
 {
     private readonly IInsuranceRepository _insuranceRepository;
-    private readonly IRouteResolver _officeResolver;
+    private readonly IContextResolver _officeResolver;
     private readonly IMedicalStaffRepository _medicalStaffrepository;
-    public AddPatientValidator(IMedicalStaffRepository medicalstaffrepository, IInsuranceRepository insuranceRepository, IRouteResolver officeResolver)
+    public AddPatientValidator(IMedicalStaffRepository medicalstaffrepository, IInsuranceRepository insuranceRepository, IContextResolver officeResolver)
     {
         _insuranceRepository = insuranceRepository;
         _medicalStaffrepository = medicalstaffrepository;
