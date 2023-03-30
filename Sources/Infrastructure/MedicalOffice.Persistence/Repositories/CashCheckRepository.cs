@@ -1,6 +1,7 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.CashDTO;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
@@ -56,7 +57,8 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
                 Cost = recieved,
                 CashId = cash.Id,
                 BankId = bankid,
-                Branch = branch
+                Branch = branch,
+                CashType = Cashtype.Check
             };
             await _cashCheckRepository.Add(cashCheck);
 

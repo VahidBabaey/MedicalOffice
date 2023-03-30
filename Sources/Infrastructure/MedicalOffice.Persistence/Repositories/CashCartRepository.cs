@@ -1,5 +1,6 @@
 ﻿using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalOffice.Persistence.Repositories;
@@ -54,7 +55,8 @@ public class CashCartRepository : GenericRepository<CashCart, Guid>, ICashCartRe
                 CartNumber = cartnumber,
                 Cost = recieved,
                 CashId = cash.Id,
-                BankId = bankid
+                BankId = bankid,
+                CashType = Cashtype.Cart
             };
             var x = await _cashCartRepository.Add(cashCart);
 
