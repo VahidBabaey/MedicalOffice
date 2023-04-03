@@ -20,7 +20,7 @@ public class ReceptionDetailListDTO : BaseDto<Guid>
     /// <summary>
     /// لیست تیم پزشکی
     /// </summary>
-    public List<string> MedicalStaffs { get; set; }
+    public List<object> MedicalStaffs { get; set; }
 
     /// <summary>
     /// هزینه دریافتی

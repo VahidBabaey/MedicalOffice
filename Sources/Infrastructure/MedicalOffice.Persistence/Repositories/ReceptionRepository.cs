@@ -562,7 +562,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     {
         List<ReceptionDetailListDTO> receptionDetailListDTO = new();
         var _list = await _dbContext.ReceptionDetails.Where(x => x.ServiceCount > 0 && x.IsDeleted == false).Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId && p.Reception.Id == receptionId).ToListAsync();
-        List<string> ls = new List<string>();
+        List<object> ls = new List<object>();
 
         foreach (var item in _list)
         {
@@ -572,7 +572,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             foreach (var item2 in medicalStaffIds)
             {
                 medicalStaffNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == item2.MedicalStaffId).FirstOrDefault().FullName.ToString();
-                ls.Add(item2.MedicalStaffId + " , " + medicalStaffNames);
+                ls.Add(new { id = item2.MedicalStaffId, name = medicalStaffNames }); medicalStaffNames = "";
                 medicalStaffNames = "";
             }
             ReceptionDetailListDTO receptiondetaillistDTO = new()
