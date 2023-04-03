@@ -89,7 +89,7 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    [Authorize]
+    //[Authorize]
     [HttpPost("calculatediscount")]
     public async Task<ActionResult<float>> CalculateServiceTariff([FromQuery] string serviceId, [FromQuery] int ServiceCount, [FromQuery] string insuranceId, [FromQuery] string? additionalinsuranceId, [FromQuery] int? discount, [FromQuery] long tariff)
     {
