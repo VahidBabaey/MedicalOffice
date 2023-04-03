@@ -128,6 +128,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
             throw;
         }
     }
+
     public async Task<List<PatientListDTO>> GetAllPateint(Guid officeId)
     {
         try
@@ -142,6 +143,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
 
             foreach (var item in list)
             {
+                var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == item.Id && r.CreatedDate.Day == DateTime.Now.Day);
 
                 PatientListDTO patientListDto = new()
                 {
@@ -166,7 +168,8 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                     MaritalStatus = item.MaritalStatus,
                     EducationStatus = item.EducationStatus,
                     Occupation = item.Occupation,
-                    IntroducerType = item.IntroducerType
+                    IntroducerType = item.IntroducerType,
+                    ReceptionId = receptionpatient != null ? receptionpatient.Id : null,
                 };
                 patientList.Add(patientListDto);
             }
@@ -178,6 +181,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
             throw;
         }
     }
+
     public async Task<bool> RemovePatientContact(Guid patientId)
     {
         var patientContact = await _contactRepository.GetByIDNoTrackingAsync(patientId);
@@ -186,6 +190,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         await _contactRepository.Delete(patientId);
         return true;
     }
+
     public async Task<bool> RemovePatientAddress(Guid patientId)
     {
         var patientAddress = await _addressRepository.GetByIDNoTrackingAsync(patientId);
@@ -194,6 +199,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         await _addressRepository.Delete(patientId);
         return true;
     }
+
     public async Task<bool> RemovePatientTag(Guid patientId)
     {
         var patientTag = await _tagRepository.GetByIDNoTrackingAsync(patientId);
@@ -202,25 +208,30 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         await _tagRepository.Delete(patientId);
         return true;
     }
+
     public async Task<bool> CheckExistIntroducerId(Guid officeId, Guid introducerId)
     {
         bool isExist = await _dbContext.Introducers.AnyAsync(p => p.OfficeId == officeId && p.Id == introducerId);
         return isExist;
     }
+
     public async Task<bool> CheckExistInsuranceId(Guid officeId, Guid insuranceId)
     {
         bool isExist = await _dbContext.Insurances.AnyAsync(p => p.OfficeId == officeId && p.Id == insuranceId);
         return isExist;
     }
+
     public async Task<bool> CheckExistPatientId(Guid officeId, Guid patientId)
     {
         bool isExist = await _dbContext.Patients.AnyAsync(p => p.Id == patientId && p.OfficeId == officeId);
         return isExist;
     }
+
     public async Task<Patient> GetByPatientId(Guid offoceId, Guid patientId)
     {
         return await _dbContext.Patients.Where(p => p.OfficeId == offoceId && p.Id == patientId && p.IsDeleted == false).FirstOrDefaultAsync();
     }
+
     public async Task<int> GenerateFileNumber()
     {
         if (_dbContext.Patients.Any() == false)
