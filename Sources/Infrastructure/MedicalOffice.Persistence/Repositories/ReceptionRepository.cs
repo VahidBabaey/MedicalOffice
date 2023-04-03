@@ -756,11 +756,13 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         bool isExist = await _dbContext.ReceptionDetails.AnyAsync(p => p.Id == receptiondetailId && p.OfficeId == officeId);
         return isExist;
     }
-    public async Task UpdatereceptionDescription(Guid receptionid, string description)
+    public async Task UpdatereceptionDescription(Guid receptionid, string? description)
     {
         var reception = await _dbContext.Receptions.Where(p => p.Id == receptionid).FirstOrDefaultAsync();
-        reception.Description = description;
-
-        await _receptionReception.Update(reception);
+        if (reception != null)
+        {
+            reception.Description = description;
+            await _receptionReception.Update(reception);
+        }
     }
 }

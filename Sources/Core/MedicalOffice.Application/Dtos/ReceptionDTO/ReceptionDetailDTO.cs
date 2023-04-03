@@ -41,7 +41,7 @@ public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO
     /// <summary>
     /// آیدی عضویت
     /// </summary>
-    public Guid? MembershipId { get; set; }
+    public Guid? MembershipId { get; set; } = null;
 
     /// <summary>
     /// درصد تخفیف
