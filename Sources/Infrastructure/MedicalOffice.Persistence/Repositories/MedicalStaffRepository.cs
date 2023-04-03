@@ -3,7 +3,6 @@ using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-#nullable disable
 
 namespace MedicalOffice.Persistence.Repositories;
 
@@ -31,7 +30,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
     public async Task<List<MedicalStaffListDTO>> GetAllMedicalStaffs(Guid officeId)
     {
         var medicalStaffListDTOs = new List<MedicalStaffListDTO>();
-        var _list = await _dbContext.MedicalStaffs.Include(x=>x.Specialization).Include(x=>x.Role).Where(p => p.OfficeId == officeId).ToListAsync();
+        var _list = await _dbContext.MedicalStaffs.Include(x => x.Specialization).Include(x => x.Role).Where(p => p.OfficeId == officeId).ToListAsync();
 
         foreach (var item in _list)
         {
@@ -130,5 +129,21 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
         var medicalStaff = await _dbContext.MedicalStaffs.Include(x => x.User).Where(x => x.Id == id && x.OfficeId == officeId).FirstOrDefaultAsync();
 
         return medicalStaff;
+    }
+
+    public async Task<MedicalStaff> GetStaffMedicalSystemInfo(Guid officeId)
+    {
+        var staff = await _dbContext.MedicalStaffs.FirstAsync(m => m.OfficeId == officeId && m.MedicalNumber != null && m.IHIOPassword != null && m.IHIOUserName != null && m.RoleId == DoctorRole.Id);
+
+        if (staff == null)
+            staff = await _dbContext.MedicalStaffs.FirstAsync(m => m.OfficeId == officeId && m.MedicalNumber != null && m.IHIOPassword != null && m.IHIOUserName != null && m.RoleId == ExpertRole.Id);
+
+        if (staff == null)
+            staff = await _dbContext.MedicalStaffs.FirstAsync(m => m.OfficeId == officeId && m.MedicalNumber != null && m.RoleId == DoctorRole.Id);
+
+        if (staff == null)
+            staff = await _dbContext.MedicalStaffs.FirstAsync(m => m.OfficeId == officeId && m.MedicalNumber != null && m.RoleId == ExpertRole.Id);
+
+        return staff;
     }
 }

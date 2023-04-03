@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalOffice.Application;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Dtos.ReceptionDTO;
@@ -79,6 +80,15 @@ public class PatientController : Controller
     public async Task<ActionResult<List<ReceptionDetailListForReceptionDTO>>> GetReceptionDetailsListForReception([FromQuery] string patientId, [FromQuery] string receptionId)
     {
         var response = await _mediator.Send(new GetAllPatientReceptionDetailsforReceptionQuery() { PatientId = Guid.Parse(patientId), ReceptionId = Guid.Parse(receptionId) });
+
+        return Ok(response);
+    }
+
+    [Authorize]
+    [HttpGet("insurance-inquire")]
+    public async Task<ActionResult<PatientInsuranceInquireDTO>> GetPatientInsuranceInquire([FromQuery] string patientNationalId, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetPatientInsuranceInquireQuery() { NationalId = patientNationalId, OfficeId = Guid.Parse(officeId) });
 
         return Ok(response);
     }

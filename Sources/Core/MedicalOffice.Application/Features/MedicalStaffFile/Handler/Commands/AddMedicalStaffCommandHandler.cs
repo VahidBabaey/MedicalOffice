@@ -164,6 +164,12 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             var medicalStaff = _mapper.Map<MedicalStaff>(request.DTO);
             medicalStaff.UserId = user.Id;
             medicalStaff.OfficeId = request.OfficeId;
+
+            if (medicalStaff.MedicalNumber != null && medicalStaff.MedicalNumber.Length < 10)
+            {
+                var numberOfExtraZero = 10 - medicalStaff.MedicalNumber.Length;
+                medicalStaff.MedicalNumber = medicalStaff.MedicalNumber.PadLeft(numberOfExtraZero, '0');
+            }
             medicalStaff = await _medicalStaffrepository.Add(medicalStaff);
 
             //Add role to user office roles
