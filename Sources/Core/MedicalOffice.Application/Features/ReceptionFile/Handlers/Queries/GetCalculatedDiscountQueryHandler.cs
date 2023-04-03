@@ -34,7 +34,6 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
 
         public async Task<BaseResponse> Handle(GetCalculatedDiscountQuery request, CancellationToken cancellationToken)
         {
-
             try
             {
                 var detailsofallreceptions = await _receptionrepository.CalculateDiscount(request.OfficeId, request.ServiceId, request.MembershipId);

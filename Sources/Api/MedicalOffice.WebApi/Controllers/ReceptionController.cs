@@ -83,7 +83,7 @@ public class ReceptionController : Controller
 
     [Authorize]
     [HttpPost("reception-detail")]
-    public async Task<ActionResult<ReceptionDetailResponseDTO>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId, [FromQuery] string description)
+    public async Task<ActionResult<ReceptionDetailResponseDTO>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId, [FromQuery] string? description = null)
     {
         var response = await _mediator.Send(new AddReceptionDetailCommand() { DTO = dto, OfficeId = Guid.Parse(officeId), Description = description });
 
@@ -94,7 +94,7 @@ public class ReceptionController : Controller
     [HttpPost("calculate-discount")]
     public async Task<ActionResult<float>> CalculateServiceTariff([FromBody] CalculateDiscountDTO dto)
     {
-        var response = await _mediator.Send(new CalculateServiceTariffCommand() { DTO = dto});
+        var response = await _mediator.Send(new CalculateServiceTariffCommand() { DTO = dto });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

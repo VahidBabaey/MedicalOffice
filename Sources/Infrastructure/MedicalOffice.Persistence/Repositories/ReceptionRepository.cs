@@ -43,7 +43,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     public async Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId)
     {
         var memberShip = await _dbContext.Memberships
-            .Where(x => x.Id == membershipId && x.Id == officeId)
+            .Where(x => x.Id == membershipId && x.OfficeId == officeId && !x.IsDeleted)
             .FirstOrDefaultAsync();
 
         var membershipService = await _dbContext.MemberShipServices
@@ -53,9 +53,9 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 c.MembershipId == membershipId &&
                 c.ServiceId == serviceId &&
                 c.OfficeId == officeId &&
-                c.IsDeleted == false &&
-                c.MemberShip.IsDeleted == false &&
-                c.Service.IsDeleted == false)
+                !c.IsDeleted &&
+                !c.MemberShip.IsDeleted &&
+                !c.Service.IsDeleted)
             .FirstOrDefaultAsync();
 
         if (membershipService == null && memberShip != null)
@@ -796,11 +796,13 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         bool isExist = await _dbContext.ReceptionDetails.AnyAsync(p => p.Id == receptiondetailId && p.OfficeId == officeId);
         return isExist;
     }
-    public async Task UpdatereceptionDescription(Guid receptionid, string description)
+    public async Task UpdatereceptionDescription(Guid receptionid, string? description)
     {
         var reception = await _dbContext.Receptions.Where(p => p.Id == receptionid).FirstOrDefaultAsync();
-        reception.Description = description;
-
-        await _receptionReception.Update(reception);
+        if (reception != null)
+        {
+            reception.Description = description;
+            await _receptionReception.Update(reception);
+        }
     }
 }

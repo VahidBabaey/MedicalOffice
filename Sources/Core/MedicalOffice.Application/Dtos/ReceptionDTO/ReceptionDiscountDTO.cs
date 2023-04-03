@@ -11,9 +11,9 @@ public class ReceptionDiscountDTO : IMembershipIdDTO
     /// آیدی نوع عضویت
     /// </summary>
     public Guid MembershipId { get; set; }
+
     /// <summary>
     /// مبلغ تخفیف
     /// </summary>
     public int Discount { get; set; }
-
 }

@@ -39,7 +39,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
     int GetServiceCountsOfPatient(Guid receptionId);
     Task<List<ReceptionDetailListForReceptionDTO>> GetReceptionDetailListForReception(Guid officeId, Guid patientId, Guid receptionId);
     Task<bool> CheckExistReceptionDetailId(Guid officeId, Guid receptiondetailId);
-    Task UpdatereceptionDescription(Guid receptionid, string description);
+    Task UpdatereceptionDescription(Guid receptionid, string? description);
     Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId);
     Task<ReceptionDetailSharesDTO> CalculateServiceTariff(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, int? discount, long Tariff);
     Task<ReceptionDetail> AddReceptionService(Guid officeId, Guid? receptionId, ReceptionType receptionType, Guid patientid, Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, Guid? membershipId, Guid[] MedicalStaffs, long recieved, long organshare, long patientshare, long addshare, long tariff);
