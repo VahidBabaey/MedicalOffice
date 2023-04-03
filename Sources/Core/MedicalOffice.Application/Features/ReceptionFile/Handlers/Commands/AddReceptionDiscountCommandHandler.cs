@@ -37,7 +37,6 @@ public class AddReceptionDiscountCommandHandler : IRequestHandler<AddReceptionDi
 
     public async Task<BaseResponse> Handle(AddReceptionDiscountCommand request, CancellationToken cancellationToken)
     {
-
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
