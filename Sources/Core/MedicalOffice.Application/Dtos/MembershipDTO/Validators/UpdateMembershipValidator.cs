@@ -18,7 +18,8 @@ public class UpdateMembershipValidator : AbstractValidator<UpdateMembershipDTO>
         RuleFor(x => x.Discount)
             .NotEmpty()
             .WithMessage("ورود درصد تخفیف ضروری است")
+            .GreaterThanOrEqualTo(1)
             .LessThanOrEqualTo(100)
-            .WithMessage("تعداد کاراکترهای کد تخفیف باید برابر یا کمتر از 100 باشد");
+            .WithMessage("مقدار کد تخفیف باید برابر یا کمتر از 100 باشد");
     }
 }

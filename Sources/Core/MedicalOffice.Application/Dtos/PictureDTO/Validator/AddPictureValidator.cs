@@ -13,8 +13,8 @@ namespace MedicalOffice.Application.Dtos.PictureDTO.Validator
     public class AddPictureValidator : AbstractValidator<PictureUploadDTO>
     {
         private readonly IPatientRepository _patientRepository;
-        private readonly IQueryStringResolver _officeResolver;
-        public AddPictureValidator(IPatientRepository patientRepository, IQueryStringResolver officeResolver)
+        private readonly IContextResolver _officeResolver;
+        public AddPictureValidator(IPatientRepository patientRepository, IContextResolver officeResolver)
         {
             _patientRepository = patientRepository;
             _officeResolver = officeResolver;

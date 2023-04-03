@@ -34,7 +34,7 @@ public static class ServiceRegistration
         services.AddFetchData(configuration);
 
         services.AddTransient<IUserResolverService, UserResolverService>();
-        services.AddTransient<IQueryStringResolver, QueryStringResolverService>();
+        services.AddTransient<IContextResolver, ContextResolverService>();
         
         services.AddHttpContextAccessor();
 

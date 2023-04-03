@@ -17,7 +17,7 @@ public class UpdateMembershipDTO : BaseDto<Guid>
     /// <summary>
     /// تخفیف
     /// </summary>
-    public float Discount { get; set; }
+    public int Discount { get; set; }
 
 
 }

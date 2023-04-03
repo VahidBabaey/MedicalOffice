@@ -41,7 +41,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
         [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
-        public async Task<ActionResult<Guid>> create([FromBody] AddOfficeDto dto)
+        public async Task<ActionResult<Guid>> create([FromBody] OfficeDTO dto)
         {
             var response = await _mediator.Send(new AddOfficeCommand { DTO = dto });
 
@@ -50,7 +50,7 @@ namespace MedicalOffice.WebApi.WebApi.Controllers
 
         //[Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPatch]
-        public async Task<ActionResult<Guid>> Update([FromBody] UpdateOfficeDTO dto , [FromQuery] string officeId)
+        public async Task<ActionResult<Guid>> Update([FromBody] OfficeDTO dto , [FromQuery] string officeId)
         {
             var response = await _mediator.Send(new EditOfficeCommand { DTO = dto, OfficeId=Guid.Parse(officeId)});
 

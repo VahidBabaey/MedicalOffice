@@ -26,10 +26,10 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     string servicesNames = "";
     string DoctorsNames = "";
     string ExpertsNames = "";
-    float organshare;
-    float patientshare;
-    float additionalinsuranceshare;
-    Guid receptionID;
+    //float organshare;
+    //float patientshare;
+    //float additionalinsuranceshare;
+    //Guid receptionID;
     public ReceptionRepository(IGenericRepository<Reception, Guid> receptionReception, IGenericRepository<ReceptionDetailService, Guid> receptionDetailServiceRepository, IGenericRepository<ReceptionMedicalStaff, Guid> receptionDetailMedicalStaffRepository, IGenericRepository<ReceptionDetail, Guid> receptionDetailRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
@@ -38,22 +38,43 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         _receptionDetailServiceRepository = receptionDetailServiceRepository;
         _receptionReception = receptionReception;
     }
-     // این تابع درصد تخفیف سرویس انتخاب شده بر اساس نوع عضویت را بر میگرداند
+
+    // این تابع درصد تخفیف سرویس انتخاب شده بر اساس نوع عضویت را بر میگرداند
     public async Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId)
     {
-        var membershipServices = await _dbContext.MemberShipServices.Include(c => c.Service).Include(c => c.MemberShip).Where(c => c.MembershipId == membershipId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false && c.ServiceId == serviceId).FirstOrDefaultAsync();
-        if (membershipServices != null && Convert.ToInt32(membershipServices.Discount) != 0)
-        {
-            return Convert.ToInt32(membershipServices.Discount);
-        }
-        if (membershipServices != null && Convert.ToInt32(membershipServices.Discount) == 0)
-        {
-            return Convert.ToInt32(membershipServices.MemberShip.Discount);
-        }
+        var memberShip = await _dbContext.Memberships
+            .Where(x => x.Id == membershipId && x.Id == officeId)
+            .FirstOrDefaultAsync();
+
+        var membershipService = await _dbContext.MemberShipServices
+            .Include(c => c.Service)
+            .Include(c => c.MemberShip)
+            .Where(c =>
+                c.MembershipId == membershipId &&
+                c.ServiceId == serviceId &&
+                c.OfficeId == officeId &&
+                c.IsDeleted == false &&
+                c.MemberShip.IsDeleted == false &&
+                c.Service.IsDeleted == false)
+            .FirstOrDefaultAsync();
+
+        if (membershipService == null && memberShip != null)
+            return Convert.ToInt32(memberShip.Discount);
+
+        if (membershipService != null)
+            return Convert.ToInt32(membershipService.Discount);
+
+        //if (membershipServices != null && Convert.ToInt32(membershipServices.Discount) != 0)
+
+        //    return Convert.ToInt32(membershipServices.Discount);
+
+        //if (membershipServices != null && Convert.ToInt32(membershipServices.Discount) == 0)
+
+        //    return Convert.ToInt32(membershipServices.MemberShip.Discount);
+
         else
-        {
             return 0;
-        }
+
     }
     public async Task<long> GetReceptionServiceCost(Guid serviceId, int serviceCount, Guid? insuranceId)
     {
@@ -77,7 +98,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         long insAddPercent = 0; // درصد بیمه تکمیلی
         long InsAddTariff = 0; // تعرفه بیمه تکمیلی
         long AddShare = 0; // سهم بیمه تکمیلی
-        
+
         //  تعرفه سرویس 
         var serviceTariff = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId &&
             p.InsuranceId == insuranceId).FirstOrDefaultAsync();
@@ -162,6 +183,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     // تابع ثبت نهایی
     public async Task<ReceptionDetail> AddReceptionService(
         Guid officeId,
+        Guid? receptionId,
         ReceptionType receptionType,
         Guid patientid,
         Guid serviceId,
@@ -177,16 +199,21 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         long tariff)
     {
         var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
-        var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day);
-        // اگر بیمار در همون روز پذیرش نشده
-        if (receptionpatient == null)
+
+        var receptionPatient = new Reception();
+        if (receptionId == null)
         {
-            var recid = await CreateNewReception(officeId, patientid, receptionType);
-            receptionID = _dbContext.Receptions.Where(r => r.Id == recid).FirstOrDefault().Id;
-        }
-        else if (receptionpatient != null)
-        {
-            receptionID = _dbContext.Receptions.Where(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day).FirstOrDefault().Id;
+            receptionPatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day);
+            // اگر بیمار در همون روز پذیرش نشده
+            if (receptionPatient == null)
+            {
+                var recId = await CreateNewReception(officeId, patientid, receptionType);
+                receptionId = _dbContext.Receptions.Where(r => r.Id == recId).FirstOrDefault().Id;
+            }
+            else if (receptionPatient != null)
+            {
+                receptionId = _dbContext.Receptions.Where(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day).FirstOrDefault().Id;
+            }
         }
 
         ReceptionDetail detail = new()
@@ -201,7 +228,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             IsDeleted = false,
             IsDebt = true,
             OfficeId = officeId,
-            ReceptionId = receptionID,
+            ReceptionId = (Guid)receptionId,
             ServiceCount = serviceCount,
             OrganShare = organshare,
             PatientShare = patientshare,
@@ -496,7 +523,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         return nextNo;
     }
-    public async Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId)
+    public async Task<DetailsOfAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId)
     {
         var reception = await _dbContext.Receptions.Where(p => p.Id == receptionId).FirstOrDefaultAsync();
         reception.TotalDebt = 0;
@@ -508,7 +535,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         var username = await _dbContext.Users.Where(p => p.Id == reception.CreatedById).FirstOrDefaultAsync();
         var facNo = await _dbContext.Receptions.Where(p => p.PatientId == patientId).FirstOrDefaultAsync();
         var _list = await _dbContext.ReceptionDetails.Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId && p.Reception.Id == receptionId).ToListAsync();
-        DetailsofAllReceptionsDTO detailsofAllReceptions = new DetailsofAllReceptionsDTO();
+        DetailsOfAllReceptionsDTO detailsofAllReceptions = new DetailsOfAllReceptionsDTO();
         foreach (var item in _list)
         {
             detailsofAllReceptions.ReceptionId = item.ReceptionId;

@@ -82,9 +82,8 @@ public static class ServicesRegistration
         #endregion Identity
 
         #region Office
-        services.AddScoped<IValidator<AddOfficeDto>, AddOfficeDtoValidator>();
+        services.AddScoped<IValidator<OfficeDTO>, OfficeDTOValidator>();
         services.AddScoped<IValidator<UserOfficeDTO>, UserOfficeValidator>();
-        services.AddScoped<IValidator<UpdateOfficeDTO>, UpdateOfficeValidator>();
         #endregion Office
 
         #region ServiceDuration
@@ -168,7 +167,7 @@ public static class ServicesRegistration
         #endregion
 
         #region Patient
-        services.AddScoped<IValidator<PatientDTO>, AddPatientValidator>();
+        services.AddScoped<IValidator<AddPatientDTO>, AddPatientValidator>();
         services.AddScoped<IValidator<UpdatePatientDTO>, UpdatePatientValidator>();
         services.AddScoped<IValidator<PatientReferralFormDTO>, AddPatientReferralFormValidator>();
         services.AddScoped<IValidator<PatientIllnessFormDTO>, AddPatientIllnessFormValidator>();

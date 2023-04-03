@@ -30,7 +30,7 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
 
     Task<long> GetReceptionTotal(Guid id);
     Task<IEnumerable<MembershipNamesDTO>> GetAllMembershipNames();
-    Task<DetailsofAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId);
+    Task<DetailsOfAllReceptionsDTO> GetDetailsofAllReceptions(Guid patientId, Guid receptionId);
     Task<List<ReceptionDetailListDTO>> GetReceptionDetailList(Guid receptionId, Guid patientId);
     Task<Reception> CreateNewReceptionDebt(long Debt, Guid officeId, Guid receptionId);
     Task<ReceptionDetail> CreateNewReceptionDetailDebt(long Debt, Guid officeId, Guid receptionId);
@@ -42,6 +42,6 @@ public interface IReceptionRepository : IGenericRepository<Reception, Guid>
     Task UpdatereceptionDescription(Guid receptionid, string description);
     Task<int> CalculateDiscount(Guid officeId, Guid serviceId, Guid membershipId);
     Task<ReceptionDetailSharesDTO> CalculateServiceTariff(Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, int? discount, long Tariff);
-    Task<ReceptionDetail> AddReceptionService(Guid officeId, ReceptionType receptionType, Guid patientid, Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, Guid? membershipId, Guid[] MedicalStaffs, long recieved, long organshare, long patientshare, long addshare, long tariff);
+    Task<ReceptionDetail> AddReceptionService(Guid officeId, Guid? receptionId, ReceptionType receptionType, Guid patientid, Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, Guid? membershipId, Guid[] MedicalStaffs, long recieved, long organshare, long patientshare, long addshare, long tariff);
     Task<Guid> UpdateReceptionService(Guid receptionDetailId, Guid officeId, Guid receptionId, Guid serviceId, int serviceCount, Guid? insuranceId, Guid? additionalInsuranceId, Guid[] MedicalStaffs, long Recieved, long organshare, long patientshare, long addshare, long tariff);
 }

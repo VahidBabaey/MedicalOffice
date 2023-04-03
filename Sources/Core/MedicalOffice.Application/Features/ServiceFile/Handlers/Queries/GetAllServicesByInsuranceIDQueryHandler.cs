@@ -45,31 +45,15 @@ public class GetAllServicesByInsuranceIDQueryHandler : IRequestHandler<GetAllSer
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
+        var services = await _servicerepository.GetByInsuranceId(request.OfficeId, request.InsuranceId);
+        var result = _mapper.Map<List<ServicesByInsuranceIdDTO>>(services);
 
-        try
+        await _logger.Log(new Log
         {
-            var services = await _servicerepository.GetByInsuranceId(request.OfficeId, request.InsuranceId);
-            var result = _mapper.Map<List<ServicesByInsuranceIdDTO>>(services);
-
-            await _logger.Log(new Log
-            {
-                Type = LogType.Success,
-                Header = $"{_requestTitle} succeded",
-                AdditionalData = new { total = services.Count(), result = result }
-            });
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = services.Count(), result = result });
-        }
-
-        catch (Exception error)
-        {
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = $"{_requestTitle} failed",
-                AdditionalData = error.Message
-            });
-            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
-        }
+            Type = LogType.Success,
+            Header = $"{_requestTitle} succeded",
+            AdditionalData = new { total = services.Count(), result = result }
+        });
+        return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = services.Count(), result = result });
     }
-
 }

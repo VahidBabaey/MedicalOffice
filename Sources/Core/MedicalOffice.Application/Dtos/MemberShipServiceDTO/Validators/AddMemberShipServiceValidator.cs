@@ -15,14 +15,15 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators
     {
         private readonly IMembershipRepository _memberRepository;
         private readonly IServiceRepository _serviceRepository;
-        private readonly IQueryStringResolver _officeResolver;
-        public AddMemberShipServiceValidator(IServiceRepository serviceRepository, IMembershipRepository memberRepository, IQueryStringResolver officeResolver)
+        private readonly IContextResolver _officeResolver;
+        public AddMemberShipServiceValidator(IServiceRepository serviceRepository, IMembershipRepository memberRepository, IContextResolver officeResolver)
         {
             _serviceRepository = serviceRepository;
             _memberRepository = memberRepository;
             _officeResolver = officeResolver;
 
-            RuleFor(x => x.Discount).LessThanOrEqualTo(100);
+            RuleFor(x => x.Discount).GreaterThanOrEqualTo(1).LessThanOrEqualTo(100)
+                .WithMessage("مقدار کد تخفیف باید برابر یا کمتر از 100 باشد");
             Include(new MembershipIdValidator(_memberRepository, _officeResolver));
             Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
         }

@@ -20,7 +20,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
 {
     public class AddOfficeCommandHandler : IRequestHandler<AddOfficeCommand, BaseResponse>
     {
-        private readonly IValidator<AddOfficeDto> _validator;
+        private readonly IValidator<OfficeDTO> _validator;
         private readonly IUserResolverService _userResolverService;
         private readonly IUserOfficeRoleRepository _userOfficeRoleRepository;
         private readonly IOfficeRepository _officeRepository;
@@ -29,7 +29,7 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
         private readonly string _requestTitle;
 
         public AddOfficeCommandHandler(
-            IValidator<AddOfficeDto> validator,
+            IValidator<OfficeDTO> validator,
             IUserResolverService userResolverService,
             IUserOfficeRoleRepository userOfficeRoleRepository,
             IOfficeRepository officeRepository,

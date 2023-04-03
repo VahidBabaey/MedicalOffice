@@ -15,13 +15,15 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO
         /// آیدی عضویت
         /// </summary>
         public Guid MembershipId { get; set; }
+
         /// <summary>
         /// آیدی سرویس
         /// </summary>
         public Guid ServiceId { get; set; }
+
         /// <summary>
         /// تخفیف
         /// </summary>
-        public float Discount { get; set; }
+        public int Discount { get; set; }
     }
 }

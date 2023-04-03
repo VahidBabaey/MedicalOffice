@@ -8,8 +8,8 @@ namespace MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
 public class AddReceptionDiscountValidator : AbstractValidator<ReceptionDiscountDTO>
 {
     private readonly IMembershipRepository _memberRepository;
-    private readonly IQueryStringResolver _officeResolver;
-    public AddReceptionDiscountValidator(IMembershipRepository memberRepository, IQueryStringResolver officeResolver)
+    private readonly IContextResolver _officeResolver;
+    public AddReceptionDiscountValidator(IMembershipRepository memberRepository, IContextResolver officeResolver)
     {
         _memberRepository = memberRepository;
         _officeResolver = officeResolver;

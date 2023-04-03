@@ -4,7 +4,7 @@ using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO;
 
-public class DetailsofAllReceptionsDTO
+public class DetailsOfAllReceptionsDTO
 {
 
     /// <summary>

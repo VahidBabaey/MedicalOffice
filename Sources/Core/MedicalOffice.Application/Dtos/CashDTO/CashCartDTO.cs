@@ -10,14 +10,17 @@ public class CashCartDTO
     /// پرداختی
     /// </summary>
     public long Cost { get; set; }
+
     /// <summary>
     /// شماره کارت
     /// </summary>
     public string CartNumber { get; set; }
+
     /// <summary>
     /// آیدی بانک
     /// </summary>
     public Guid BankId { get; set; }
+
     /// <summary>
     /// آیدی پذیرش
     /// </summary>

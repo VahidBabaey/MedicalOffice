@@ -35,15 +35,15 @@ public class GetAllMembershipsNamesQueryHandler : IRequestHandler<GetAllMembersh
     {
         try
         {
-            var memberShip = _membershiprepository.GetAllMembershipsNames(request.OfficeId);
+            var result = await _membershiprepository.GetAllMembershipsNames(request.OfficeId);
 
             await _logger.Log(new Log
             {
                 Type = LogType.Success,
                 Header = $"{_requestTitle} succeded",
-                AdditionalData = new {  result = memberShip }
+                AdditionalData = result
             });
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { result = memberShip });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", result);
         }
 
         catch (Exception error)
@@ -57,5 +57,4 @@ public class GetAllMembershipsNamesQueryHandler : IRequestHandler<GetAllMembersh
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
     }
-
 }

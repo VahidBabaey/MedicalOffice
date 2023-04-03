@@ -48,7 +48,7 @@ public class AddCashCartCommandHandler : IRequestHandler<AddCashCartCommand, Bas
         {
             try
             {
-                var cashcart = _cashcartrepository.AddCashCartForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.CartNumber, request.DTO.Cost, request.DTO.BankId);
+                var cashcart = await _cashcartrepository.AddCashCartForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.CartNumber, request.DTO.Cost, request.DTO.BankId);
 
                 await _logger.Log(new Log
                 {

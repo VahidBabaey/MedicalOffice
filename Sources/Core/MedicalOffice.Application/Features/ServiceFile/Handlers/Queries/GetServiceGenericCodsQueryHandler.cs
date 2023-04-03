@@ -14,13 +14,13 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries
     public class GetServiceGenericCodsQueryHandler : IRequestHandler<GetServiceGenericCodsQuery, BaseResponse>
     {
         private readonly ApiConsumerSettings _apiConsumersetting;
-        private readonly IQueryStringResolver _QueryStringResolver;
+        private readonly IContextResolver _QueryStringResolver;
         private readonly IApiConsumer _apiConsumer;
         private readonly string _requestTitle;
 
         public GetServiceGenericCodsQueryHandler(
             IApiConsumer apiConsumer, 
-            IQueryStringResolver officeResolver,
+            IContextResolver officeResolver,
             IOptions<ApiConsumerSettings> apiConsumersetting)
         {
             _apiConsumersetting = apiConsumersetting.Value;

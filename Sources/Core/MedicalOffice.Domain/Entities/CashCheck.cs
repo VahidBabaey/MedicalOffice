@@ -8,7 +8,6 @@ namespace MedicalOffice.Domain.Entities;
 /// </summary>
 public class CashCheck : BaseDomainEntity<Guid>
 {
-
     /// <summary>
     /// مطب
     /// </summary>

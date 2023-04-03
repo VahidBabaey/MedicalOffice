@@ -27,9 +27,9 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
     {
         MemberShipService memberShipService = new MemberShipService()
         {
-        ServiceId = serviceId,
-        MembershipId = memberShipId,
-        Discount = tariff
+            ServiceId = serviceId,
+            MembershipId = memberShipId,
+            Discount = tariff
         };
 
         if (memberShipService == null)
@@ -90,20 +90,20 @@ public class MembershipRepository : GenericRepository<Membership, Guid>, IMember
 
         return memberships;
     }
-    public async Task<List<MembershipsNamesDTO>> GetAllMembershipsNames(Guid officeId)
+    public Task<List<MembershipsNamesDTO>> GetAllMembershipsNames(Guid officeId)
     {
-        List<MembershipsNamesDTO> membershipsNames = new List<MembershipsNamesDTO>();
-        var memberships = await _dbContext.Memberships.Where(p => p.OfficeId == officeId && p.IsActive == true && p.IsDeleted == false).ToListAsync();
+        var membershipNames = new List<MembershipsNamesDTO>();
+        var memberships = _dbContext.Memberships.Where(p => p.OfficeId == officeId && p.IsActive == true && p.IsDeleted == false).ToList();
+
         foreach (var item in memberships)
         {
-            MembershipsNamesDTO membershipsNamesDTO = new()
+            membershipNames.Add(new MembershipsNamesDTO
             {
                 Id = item.Id,
                 Name = item.Name
-            };
-            membershipsNames.Add(membershipsNamesDTO);
+            });
         }
-        return membershipsNames;
+        return Task.FromResult(membershipNames);
     }
     public async Task<bool> CheckExistMembershipName(Guid officeId, string membershipName)
     {

@@ -36,12 +36,11 @@ public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, B
 
     public async Task<BaseResponse> Handle(AddReceptionCommand request, CancellationToken cancellationToken)
     {
-
         var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = "OfficeID isn't exist";
+            var error = "OfficeId isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
@@ -64,30 +63,28 @@ public class AddReceptionCommandHandler : IRequestHandler<AddReceptionCommand, B
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
-        else
-        {
-            try
-            {
-               var reception = await _receptionrepository.CreateNewReception(request.OfficeId, request.DTO.PatientId, request.DTO.ReceptionType);
 
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Success,
-                    Header = $"{_requestTitle} succeded",
-                    AdditionalData = reception
-                });
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", reception);
-            }
-            catch (Exception error)
+        try
+        {
+            var reception = await _receptionrepository.CreateNewReception(request.OfficeId, request.DTO.PatientId, request.DTO.ReceptionType);
+
+            await _logger.Log(new Log
             {
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error.Message
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
-            }
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = reception
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", reception);
+        }
+        catch (Exception error)
+        {
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
     }
 }

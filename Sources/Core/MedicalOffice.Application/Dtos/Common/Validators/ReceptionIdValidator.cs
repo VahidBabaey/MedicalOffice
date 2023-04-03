@@ -14,9 +14,9 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
     public class ReceptionIdValidator : AbstractValidator<IReceptionIdDTO>
     {
         private readonly IReceptionRepository _receptionRepository;
-        private readonly IQueryStringResolver _officeResolver;
+        private readonly IContextResolver _officeResolver;
 
-        public ReceptionIdValidator(IReceptionRepository receptionRepository, IQueryStringResolver officeResolver)
+        public ReceptionIdValidator(IReceptionRepository receptionRepository, IContextResolver officeResolver)
         {
             _officeResolver = officeResolver;
             _receptionRepository = receptionRepository;

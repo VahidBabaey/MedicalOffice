@@ -24,22 +24,17 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         _addressRepository = addressRepository;
         _tagRepository = tagRepository;
         _mapper = mapper;
-
     }
-    public async Task<PatientContact> InsertContactValueofPatientAsync(Guid patientid, string contactnumber)
+    public async Task<PatientContact> InsertContactValueOfPatientAsync(Guid patientId, string contactnumber, ContactType type)
     {
         PatientContact patientContact = new PatientContact();
 
         if (patientContact == null)
             throw new Exception();
 
-        patientContact.PatientId = patientid;
+        patientContact.PatientId = patientId;
         patientContact.ContactValue = contactnumber;
-
-        if (patientContact.ContactValue.StartsWith("09"))
-            patientContact.ContactType = (ContactType)1;
-        else
-            patientContact.ContactType = (ContactType)2;
+        patientContact.ContactType = type;
 
         await _contactRepository.Add(patientContact);
 
@@ -77,26 +72,25 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
     {
         try
         {
-
             List<PatientListDTO> patientList = new();
 
-            var list = await _dbContext.Patients
+            var list = _dbContext.Patients
+                .Include(p => p.PatientContacts)
+                .Include(p => p.PatientAddresses)
+                .Include(p => p.PatientTags)
                 .Where(
                         p =>
-                        p.IsDeleted == false &&
-                        p.FirstName.Contains(firstName) &&
-                        p.LastName.Contains(lastName) &&
-                        p.NationalId.StartsWith(nationalCode) &&
-                        p.FileNumber == fileNumber
-                      )
-                .Include(p => p.PatientContacts)
-                .Where(x => phoneNumber != "" ? x.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber) : true)
-                .Include(p => p.PatientAddresses).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
-                .Include(p => p.PatientTags).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
-                .ToListAsync();
+                        p.OfficeId == officeId && p.IsDeleted == false && (
+                        (firstName != string.Empty && p.FirstName.Contains(firstName)) ||
+                        (lastName != string.Empty && p.LastName.Contains(lastName)) ||
+                        (nationalCode != string.Empty && p.NationalId.StartsWith(nationalCode)) ||
+                        (fileNumber != 0 && p.FileNumber == fileNumber))||
+                        (phoneNumber != string.Empty && p.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber))
+                      );
 
-            foreach (var item in list)
+            foreach (var item in list.ToList())
             {
+                var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == item.Id && r.CreatedDate.Day == DateTime.Now.Day);
 
                 PatientListDTO patientListDto = new()
                 {
@@ -121,12 +115,13 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                     MaritalStatus = item.MaritalStatus,
                     EducationStatus = item.EducationStatus,
                     Occupation = item.Occupation,
-                    IntroducerType = item.IntroducerType
+                    IntroducerType = item.IntroducerType,
+                    ReceptionId = receptionpatient != null ? receptionpatient.Id : null,
                 };
                 patientList.Add(patientListDto);
             }
 
-            return patientList.ToList();
+            return patientList;
         }
         catch (Exception)
         {
@@ -237,5 +232,55 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
             var lastNo = await _dbContext.Patients.Select(p => p.FileNumber).MaxAsync();
             return Convert.ToInt32((lastNo + 1));
         }
+    }
+
+    public async Task<bool> CheckExistByNationalId(string? nationalId, Guid officeId, Guid? id)
+    {
+        var isFileNumberExist = false;
+        if (nationalId != null)
+        {
+            if (id != null)
+            {
+                isFileNumberExist = await _dbContext.Patients.AnyAsync(x =>
+                x.NationalId == nationalId &&
+                x.Id != id &&
+                x.OfficeId == officeId &&
+                x.IsDeleted == false);
+
+            }
+            else
+            {
+                isFileNumberExist = await _dbContext.Patients.AnyAsync(x =>
+                x.NationalId == nationalId &&
+                x.OfficeId == officeId &&
+                x.IsDeleted == false);
+            }
+        }
+        return isFileNumberExist;
+    }
+
+    public async Task<bool> IsFileNumberExist(int? fileNumber, Guid officeId, Guid? id = null)
+    {
+        var isFileNumberExist = false;
+        if (fileNumber != null)
+        {
+            if (id != null)
+            {
+                isFileNumberExist = await _dbContext.Patients.AnyAsync(x =>
+                x.FileNumber == fileNumber &&
+                x.Id != id &&
+                x.OfficeId == officeId &&
+                x.IsDeleted == false);
+
+            }
+            else
+            {
+                isFileNumberExist = await _dbContext.Patients.AnyAsync(x =>
+                x.FileNumber == fileNumber &&
+                x.OfficeId == officeId &&
+                x.IsDeleted == false);
+            }
+        }
+        return isFileNumberExist;
     }
 }

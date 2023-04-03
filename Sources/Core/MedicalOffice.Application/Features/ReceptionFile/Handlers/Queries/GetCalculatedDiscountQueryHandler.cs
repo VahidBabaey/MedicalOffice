@@ -51,6 +51,7 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
             catch (Exception error)
             {
                 await _logger.Log(new Log
+
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
