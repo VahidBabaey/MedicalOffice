@@ -125,7 +125,14 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+    [Authorize]
+    [HttpGet("reception-detail-of-patient")]
+    public async Task<ActionResult<List<ReceptionDetailofPatientDTO>>> GetreceptionDetailofPatient([FromQuery] Guid receptiondetailId)
+    {
+        var response = await _mediator.Send(new GetReceptionDetailofPatientQuery() { ReceptionDetailId = receptiondetailId });
 
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
     [Authorize]
     [HttpGet("patient-receptions")]
     public async Task<ActionResult<List<ReceptionDetailListForReceptionDTO>>> GetPatientreceptions([FromQuery] Guid officeId, [FromQuery] Guid patientId, [FromQuery] Guid receptionId, [FromQuery] ListDto dto)

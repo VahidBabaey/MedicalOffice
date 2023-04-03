@@ -28,7 +28,6 @@ namespace MedicalOffice.Application.Dtos.Common.Validators
                 .MustAsync(async (serviceId, token) =>
                     {
                         return await _serviceRepository.CheckExistServiceId(officeId, serviceId);
-
                     })
                 //.WithMessage("{PropertyName} isn't exist");
                 .WithMessage("شناسه خدمت یافت نشد");

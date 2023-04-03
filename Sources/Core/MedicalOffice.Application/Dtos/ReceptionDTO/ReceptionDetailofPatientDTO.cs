@@ -4,7 +4,7 @@ using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO;
 
-public class ReceptionDetailListDTO : BaseDto<Guid>
+public class ReceptionDetailofPatientDTO : BaseDto<Guid>
 {
 
     /// <summary>
@@ -16,6 +16,14 @@ public class ReceptionDetailListDTO : BaseDto<Guid>
     /// تعداد
     /// </summary>
     public int ServiceCount { get; set; }
+    /// <summary>
+    /// آی دی بیمه
+    /// </summary>
+    public Guid? InsuranceId { get; set; }
+    /// <summary>
+    /// آی دی بیمه تکمیلی
+    /// </summary>
+    public Guid? AdditionalInsuranceId { get; set; }
 
     /// <summary>
     /// لیست تیم پزشکی
