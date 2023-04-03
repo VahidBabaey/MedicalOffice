@@ -74,21 +74,46 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         {
             List<PatientListDTO> patientList = new();
 
-            var list = _dbContext.Patients
+            var query = _dbContext.Patients
                 .Include(p => p.PatientContacts)
                 .Include(p => p.PatientAddresses)
                 .Include(p => p.PatientTags)
-                .Where(
-                        p =>
-                        p.OfficeId == officeId && p.IsDeleted == false && (
+                .Where(p => p.OfficeId == officeId && !p.IsDeleted);
+
+            if (
+                firstName != string.Empty ||
+                lastName != string.Empty ||
+                nationalCode != string.Empty ||
+                phoneNumber != string.Empty ||
+                fileNumber != 0)
+            {
+                query = query
+                    .Include(p => p.PatientAddresses)
+                    .Include(p => p.PatientTags)
+                    .Include(p =>
+                        p.PatientContacts.Where(x => phoneNumber != string.Empty && p.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber)))
+                    .Where(p =>
                         (firstName != string.Empty && p.FirstName.Contains(firstName)) ||
                         (lastName != string.Empty && p.LastName.Contains(lastName)) ||
                         (nationalCode != string.Empty && p.NationalId.StartsWith(nationalCode)) ||
-                        (fileNumber != 0 && p.FileNumber == fileNumber))||
-                        (phoneNumber != string.Empty && p.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber))
-                      );
+                        (fileNumber != 0 && p.FileNumber == fileNumber));
+            }
 
-            foreach (var item in list.ToList())
+            //var list = _dbContext.Patients
+            //    .Include(p => p.PatientContacts)
+            //    .Include(p => p.PatientAddresses)
+            //    .Include(p => p.PatientTags)
+            //    .Where(
+            //            p =>
+            //            p.OfficeId == officeId && p.IsDeleted == false && (
+            //            (firstName != string.Empty && p.FirstName.Contains(firstName)) ||
+            //            (lastName != string.Empty && p.LastName.Contains(lastName)) ||
+            //            (nationalCode != string.Empty && p.NationalId.StartsWith(nationalCode)) ||
+            //            (fileNumber != 0 && p.FileNumber == fileNumber)) ||
+            //            (phoneNumber != string.Empty && p.PatientContacts.Select(y => y.ContactValue).Contains(phoneNumber))
+            //          );
+
+            foreach (var item in query.ToList())
             {
                 var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == item.Id && r.CreatedDate.Day == DateTime.Now.Day);
 
