@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using System.Net;
 //#nullable disable
 
-namespace MedicalOffice.Application.Features.PatientFile.Requests.Commands
+namespace MedicalOffice.Application.Features.PatientFile.Handlers.Queries
 {
     public class GetPatientInsuranceInquireQueryHandler : IRequestHandler<GetPatientInsuranceInquireQuery, BaseResponse>
     {
