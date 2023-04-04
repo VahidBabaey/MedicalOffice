@@ -43,7 +43,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           GenericCode= "3535434364",
                           CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
-                          IsConsumingMaterials= true},
+                          IsConsumingMaterials= true,
+                          ServiceTime = 50},
 
 
                      new Service{
@@ -54,7 +55,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           GenericCode= "345464646",
                           CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
-                          IsConsumingMaterials= true},
+                          IsConsumingMaterials= true,
+                          ServiceTime = 50},
 
 
                       new Service{
@@ -65,7 +67,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           GenericCode= "46564456",
                           CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
-                          IsConsumingMaterials= true},
+                          IsConsumingMaterials= true,
+                          ServiceTime = 10},
 
                       
                        new Service{
@@ -76,7 +79,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           GenericCode= "545646464",
                           CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
-                          IsConsumingMaterials= true},
+                          IsConsumingMaterials= true, 
+                          ServiceTime = 40},
 
 
                        new Service{
@@ -87,7 +91,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           GenericCode= "554564466464",
                           CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
-                          IsConsumingMaterials= true},
+                          IsConsumingMaterials= true, 
+                          ServiceTime = 30},
 
 
                        new Service{
@@ -98,7 +103,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                           GenericCode= "465415651",
                           CalculationMethod= CalculationMethod.Tariff,
                           IsPractical= true,
-                          IsConsumingMaterials= true},
+                          IsConsumingMaterials= true, 
+                          ServiceTime = 20},
                 });
         }
     }

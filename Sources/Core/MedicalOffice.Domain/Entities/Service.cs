@@ -69,6 +69,11 @@ public class Service : BaseDomainEntity<Guid>
     public bool IsConsumingMaterials { get; set; } = false;
 
     /// <summary>
+    /// زمان خدمت
+    /// </summary>
+    public int ServiceTime { get; set; }
+
+    /// <summary>
     /// سهم و درصد کاربران
     /// </summary>
     public ICollection<MedicalStaffServiceSharePercent>? MedicalStaffServiceSharePercents { get; set; }

@@ -7,5 +7,10 @@
         // تعرفه سرویس
         public float TariffValue { get; set; }
         public bool TariffInReceptionTime { get; set; }
+
+        /// <summary>
+        /// زمان خدمت
+        /// </summary>
+        public int? ServiceTime { get; set; } = 0;
     }
 }

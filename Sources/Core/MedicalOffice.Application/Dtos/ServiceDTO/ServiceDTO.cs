@@ -19,7 +19,7 @@ public class ServiceDTO : ISectionIdDTO
     /// <summary>
     /// کد ژنریک
     /// </summary>
-    public string? GenericCode { get; set; }=string.Empty;
+    public string? GenericCode { get; set; } = string.Empty;
 
     /// <summary>
     /// نام ارزش نسبی
@@ -45,4 +45,9 @@ public class ServiceDTO : ISectionIdDTO
     /// هزینه مواد مصرفی
     /// </summary>
     public bool? IsConsumingMaterials { get; set; } = false;
+
+    /// <summary>
+    /// زمان خدمت
+    /// </summary>
+    public int? ServiceTime { get; set; } = 0;
 }
