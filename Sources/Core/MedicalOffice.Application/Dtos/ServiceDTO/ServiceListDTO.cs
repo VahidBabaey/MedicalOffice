@@ -44,4 +44,9 @@ public class ServiceListDTO : BaseDto<Guid>
     /// تعیین تعرفه در زمان پذیرش
     /// </summary>
     public bool? TariffInReceptionTime { get; set; } = false;
+
+    /// <summary>
+    /// زمان خدمت
+    /// </summary>
+    public int? ServiceTime { get; set; } = 0;
 }

@@ -46,4 +46,9 @@ public class UpdateServiceDTO : BaseDto<Guid>, ISectionIdDTO
     /// هزینه مواد مصرفی
     /// </summary>
     public bool? IsConsumingMaterials { get; set; } = false;
+
+    /// <summary>
+    /// زمان خدمت
+    /// </summary>
+    public int? ServiceTime { get; set; } = 0;
 }
