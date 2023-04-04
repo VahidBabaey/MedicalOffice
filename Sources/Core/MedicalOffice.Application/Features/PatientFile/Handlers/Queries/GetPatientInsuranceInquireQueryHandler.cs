@@ -75,6 +75,10 @@ namespace MedicalOffice.Application.Features.PatientFile.Handlers.Queries
             if (response.Content != null)
             {
                 var result = JsonConvert.DeserializeObject<PatientInsuranceInquireDTO>(response.Content);
+                if (result.Message.Contains("ت"))
+                {
+
+                }
                 return ResponseBuilder.Success(response.StatusCode, $"{_requestTitle} succeeded", result);
             }
 
