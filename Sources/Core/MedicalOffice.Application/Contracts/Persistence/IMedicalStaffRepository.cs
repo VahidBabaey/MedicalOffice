@@ -24,5 +24,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> CheckMedicalStaffReferrerExist(Guid? MedicalStaffId, Guid officeId);
 
         Task<MedicalStaff> GetExistingStaffById(Guid id, Guid officeId);
+
+        Task<MedicalStaff> GetStaffMedicalSystemInfo(Guid officeId);
     }
 }

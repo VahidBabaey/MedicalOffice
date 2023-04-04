@@ -9,8 +9,8 @@ namespace MedicalOffice.Application.Models.ApiConsumerModels
 
         public string ServiceGenericCodsPath { get; set; }
 
-        public string AllServicesPath { get; set; }
-
         public string ServiceTariffsPath { get; set; }
+
+        public string InquirePath { get; set; }
     }
 }
