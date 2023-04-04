@@ -19,7 +19,7 @@ namespace MedicalOffice.Application.Dtos.Common.CommonValidators
                 .WithMessage("ورود شماره تلفن ضروری است")
                 .Must(x => IsValidPhoneNumber(x))
                 //.WithMessage(ValidationMessage.NotValid.For("PhoneNumber"));
-                .WithMessage("شماره تلفن یافت نشد");
+                .WithMessage("شماره تلفن معتبر نیست.");
         }
         private static bool IsValidPhoneNumber(string phoneNumber)
         {

@@ -1,4 +1,5 @@
-﻿using MedicalOffice.Domain.Entities;
+﻿using MedicalOffice.Application.Constants;
+using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;
 using MedicalOffice.Persistence.Configurations.Common;
 using Microsoft.EntityFrameworkCore;
@@ -33,15 +34,17 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     {
                           Id = Guid.Parse("703224e8-efc5-4998-b602-08dae7043559"),
                           OfficeId= Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0"),
-                          FirstName= "رضا",
-                          LastName= "احمدی",
-                          MedicalNumber= "1235678",
+                          FirstName= "حسین",
+                          LastName= "پورحسین",
+                          MedicalNumber= "0000086751",
                           PhoneNumber= "+989122684568",
                           NationalId= "0112857469",
                           Title= Title.MrDoctor,
                           SpecializationId= Guid.Parse("3BA9DDBE-0D1E-47CC-807F-3EA8D9A04EF3"),
                           UserId= Guid.Parse("d53c3b49-47ed-4647-aef5-01397ea68cea"),
-                          RoleId = Guid.Parse("779c69ef-6857-4e19-b24e-1c4c4b2635d7")
+                          RoleId = DoctorRole.Id,
+                          IHIOUserName = "0639405290",
+                          IHIOPassword = "123456"
                     }
                 });
         }

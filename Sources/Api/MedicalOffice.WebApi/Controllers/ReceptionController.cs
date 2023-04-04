@@ -83,7 +83,7 @@ public class ReceptionController : Controller
 
     [Authorize]
     [HttpPost("reception-detail")]
-    public async Task<ActionResult<ReceptionDetailResponseDTO>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId, [FromQuery] string description)
+    public async Task<ActionResult<ReceptionDetailResponseDTO>> CreateReceptionDetail([FromBody] ReceptionDetailDTO dto, [FromQuery] string officeId, [FromQuery] string? description = null)
     {
         var response = await _mediator.Send(new AddReceptionDetailCommand() { DTO = dto, OfficeId = Guid.Parse(officeId), Description = description });
 
@@ -94,7 +94,7 @@ public class ReceptionController : Controller
     [HttpPost("calculate-discount")]
     public async Task<ActionResult<float>> CalculateServiceTariff([FromBody] CalculateDiscountDTO dto)
     {
-        var response = await _mediator.Send(new CalculateServiceTariffCommand() { DTO = dto});
+        var response = await _mediator.Send(new CalculateServiceTariffCommand() { DTO = dto });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
@@ -125,7 +125,14 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+    [Authorize]
+    [HttpGet("reception-detail-of-patient")]
+    public async Task<ActionResult<List<ReceptionDetailofPatientDTO>>> GetreceptionDetailofPatient([FromQuery] Guid receptiondetailId)
+    {
+        var response = await _mediator.Send(new GetReceptionDetailofPatientQuery() { ReceptionDetailId = receptiondetailId });
 
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
     [Authorize]
     [HttpGet("patient-receptions")]
     public async Task<ActionResult<List<ReceptionDetailListForReceptionDTO>>> GetPatientreceptions([FromQuery] Guid officeId, [FromQuery] Guid patientId, [FromQuery] Guid receptionId, [FromQuery] ListDto dto)

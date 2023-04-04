@@ -13,6 +13,6 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Requests.Commands
     {
         public ReceptionDetailDTO DTO { get; set; } = new ReceptionDetailDTO();
         public Guid OfficeId { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }

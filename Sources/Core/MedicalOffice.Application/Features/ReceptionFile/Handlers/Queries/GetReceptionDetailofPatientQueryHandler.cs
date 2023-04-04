@@ -2,7 +2,6 @@
 using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.MembershipDTO;
 using MedicalOffice.Application.Dtos.ReceptionDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
@@ -19,38 +18,39 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
 {
-    public class GetCalculatedDiscountQueryHandler : IRequestHandler<GetCalculatedDiscountQuery, BaseResponse>
+    public class GetReceptionDetailofPatientQueryHandler : IRequestHandler<GetReceptionDetailofPatientQuery, BaseResponse>
     {
         private readonly IReceptionRepository _receptionrepository;
+        private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetCalculatedDiscountQueryHandler(IReceptionRepository receptionrepository, ILogger logger)
+        public GetReceptionDetailofPatientQueryHandler(IReceptionRepository receptionrepository, IMapper mapper, ILogger logger)
         {
             _receptionrepository = receptionrepository;
+            _mapper = mapper;
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
 
-        public async Task<BaseResponse> Handle(GetCalculatedDiscountQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetReceptionDetailofPatientQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                var detailsofallreceptions = await _receptionrepository.CalculateDiscount(request.OfficeId, request.ServiceId, request.MembershipId);
+                var receptionDetailList = await _receptionrepository.GetReceptionDetailofPatient(request.ReceptionDetailId);
 
                 await _logger.Log(new Log
                 {
                     Type = LogType.Success,
                     Header = $"{_requestTitle} succeded",
-                    AdditionalData = detailsofallreceptions
+                    AdditionalData = new { total = 1, result = receptionDetailList }
                 });
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new {result = detailsofallreceptions });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = 1, result = receptionDetailList });
             }
 
             catch (Exception error)
             {
                 await _logger.Log(new Log
-
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
@@ -59,6 +59,5 @@ namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
                 return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
             }
         }
-
     }
 }
