@@ -18,14 +18,14 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.ReceptionFile.Handlers.Queries
 {
-    public class GetReceptionDetailofPatientQueryHandler : IRequestHandler<GetReceptionDetailofPatientQuery, BaseResponse>
+    public class GetReceptionDetailOfPatientQueryHandler : IRequestHandler<GetReceptionDetailofPatientQuery, BaseResponse>
     {
         private readonly IReceptionRepository _receptionrepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetReceptionDetailofPatientQueryHandler(IReceptionRepository receptionrepository, IMapper mapper, ILogger logger)
+        public GetReceptionDetailOfPatientQueryHandler(IReceptionRepository receptionrepository, IMapper mapper, ILogger logger)
         {
             _receptionrepository = receptionrepository;
             _mapper = mapper;

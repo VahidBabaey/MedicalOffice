@@ -54,12 +54,12 @@ public class Tariff : BaseDomainEntity<Guid>
     /// <summary>
     /// تعرفه داخلی
     /// </summary>
-    public float InternalTariffValue { get; set; }
+    public float? InternalTariffValue { get; set; }
 
     /// <summary>
     /// ما به التفاوت
     /// </summary>
-    public long Difference { get; set; }
+    public long? Difference { get; set; }
 
     /// <summary>
     /// تخفیف

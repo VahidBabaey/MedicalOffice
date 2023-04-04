@@ -105,7 +105,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         if (serviceTariff != null)
         {
-            TariffDiff = serviceTariff.Difference;
+            TariffDiff = serviceTariff.Difference != null ? (long)serviceTariff.Difference : 0;
             // اگر درصد دارد
             if (serviceTariff.InsurancePercent != null && serviceTariff.InsurancePercent.Value > 0)
             {
@@ -612,7 +612,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         {
             Id = _list.Id,
             InsuranceId = _list.InsuranceId,
-            AdditionalInsuranceId= _list.AdditionalInsuranceId,
+            AdditionalInsuranceId = _list.AdditionalInsuranceId,
             ServiceName = serviceName,
             Cost = _list.Cost,
             ServiceCount = _list.ServiceCount,

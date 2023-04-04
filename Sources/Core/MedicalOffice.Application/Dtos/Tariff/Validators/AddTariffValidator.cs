@@ -38,9 +38,9 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
 
             Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
 
-            RuleFor(x => x.InternalTariffValue)
-                .NotEmpty()
-                .WithMessage("ورود تعرفه داخلی ضروری است");
+            //RuleFor(x => x.InternalTariffValue)
+            //    .NotEmpty()
+            //    .WithMessage("ورود تعرفه داخلی ضروری است");
 
             RuleFor(x => x.TariffValue)
                 .NotEmpty()
@@ -48,12 +48,16 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
 
             RuleFor(x => x.Discount)
                 .GreaterThanOrEqualTo(0)
+                    .When(x => x.Discount != null)
                 .LessThanOrEqualTo(100)
+                    .When(x => x.Discount != null)
                 .WithMessage("مبلغ تخفیف باید بین 0 تا 100 کاراکتر داشته باشد");
 
             RuleFor(x => x.InsurancePercent)
                 .GreaterThanOrEqualTo(0)
+                    .When(x => x.Discount != null)
                 .LessThanOrEqualTo(100)
+                    .When(x => x.Discount != null)
                 .WithMessage("درصد بیمه باید بین 0 تا 100 کاراکتر داشته باشد");
 
             RuleFor(x => x)

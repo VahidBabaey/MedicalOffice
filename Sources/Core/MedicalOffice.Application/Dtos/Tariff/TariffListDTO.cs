@@ -38,20 +38,20 @@ public class TariffListDTO : BaseDto<Guid>
     /// <summary>
     /// تعرفه داخلی
     /// </summary>
-    public float InternalTariffValue { get; set; }
+    public float? InternalTariffValue { get; set; }
 
     /// <summary>
     /// ما به التفاوت
     /// </summary>
-    public float Difference { get; set; }
+    public float? Difference { get; set; }
 
     /// <summary>
     /// تخفیف
     /// </summary>
-    public int Discount { get; set; }
+    public int? Discount { get; set; }
 
     /// <summary>
     /// درصد بیمه
     /// </summary>
-    public int InsurancePercent { get; set; }
+    public int? InsurancePercent { get; set; }
 }

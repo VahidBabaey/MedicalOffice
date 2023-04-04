@@ -48,7 +48,7 @@ public class ServiceRepository : GenericRepository<Service, Guid>, IServiceRepos
             {
                 Id = item.ServiceId,
                 ServiceName = item.Service.Name,
-                TariffValue = item.InternalTariffValue,
+                TariffValue = item.InternalTariffValue != null ? (float)item.InternalTariffValue : item.TariffValue,
                 TariffInReceptionTime = false
             };
 

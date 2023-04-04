@@ -30,7 +30,7 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// <summary>
     /// تعرفه داخلی
     /// </summary>
-    public float InternalTariffValue { get; set; }
+    public float? InternalTariffValue { get; set; }
 
     /// <summary>
     /// نوع سرویس
@@ -45,10 +45,10 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// <summary>
     /// تخفیف
     /// </summary>
-    public int Discount { get; set; }
+    public int? Discount { get; set; }
 
     /// <summary>
     /// درصد بیمه
     /// </summary>
-    public int InsurancePercent { get; set; }
+    public int? InsurancePercent { get; set; }
 }
