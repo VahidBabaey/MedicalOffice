@@ -167,8 +167,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
 
             if (medicalStaff.MedicalNumber != null && medicalStaff.MedicalNumber.Length < 10)
             {
-                var numberOfExtraZero = 10 - medicalStaff.MedicalNumber.Length;
-                medicalStaff.MedicalNumber = medicalStaff.MedicalNumber.PadLeft(numberOfExtraZero, '0');
+                medicalStaff.MedicalNumber = medicalStaff.MedicalNumber.PadLeft(10, '0');
             }
             medicalStaff = await _medicalStaffrepository.Add(medicalStaff);
 
