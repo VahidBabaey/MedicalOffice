@@ -14,24 +14,18 @@ namespace MedicalOffice.Infrastructure.FetchData
     {
         private readonly ApiConsumerSettings _apiConsumersetting;
 
-        public ApiConsumer(
-            IOptions<ApiConsumerSettings> apiConsumersetting)
+        public ApiConsumer(IOptions<ApiConsumerSettings> apiConsumersetting)
         {
             _apiConsumersetting = apiConsumersetting.Value;
         }
 
         public async Task<RestResponse> GetResponse(string path, List<ExternalApiInput> input)
         {
-            //var queryString = string.Empty;
-
-            var url = string.Concat(_apiConsumersetting.BaseDomain, path
-                //,queryString
-                );
+            var url = string.Concat(_apiConsumersetting.BaseDomain, path);
 
             var client = new RestClient(url);
             foreach (var item in input)
             {
-                //queryString = string.Concat(queryString, $"?{item.Key}={item.Value}&");
                 client.AddDefaultQueryParameter(item.Key, item.Value);
             }
 
