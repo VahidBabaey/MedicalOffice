@@ -11,16 +11,26 @@ public class ReceptionDetailListDTO : BaseDto<Guid>
     /// نام خدمت
     /// </summary>
     public string ServiceName { get; set; }
-
+    /// <summary>
+    /// آی دی سرویس
+    /// </summary>
+    public Guid? ServiceId { get; set; }
     /// <summary>
     /// تعداد
     /// </summary>
     public int ServiceCount { get; set; }
-
+    /// <summary>
+    /// آی دی بیمه
+    /// </summary>
+    public Guid? InsuranceId { get; set; }
+    /// <summary>
+    /// آی دی بیمه تکمیلی
+    /// </summary>
+    public Guid? AdditionalInsuranceId { get; set; }
     /// <summary>
     /// لیست تیم پزشکی
     /// </summary>
-    public List<string> MedicalStaffs { get; set; }
+    public List<object> MedicalStaffs { get; set; }
 
     /// <summary>
     /// هزینه دریافتی
