@@ -579,6 +579,9 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             {
                 Id = item.Id,
                 ServiceName = serviceName,
+                ServiceId = serviceId,
+                InsuranceId = item.InsuranceId,
+                AdditionalInsuranceId = item.AdditionalInsuranceId,
                 Cost = item.Cost,
                 ServiceCount = item.ServiceCount,
                 MedicalStaffs = ls,
@@ -598,7 +601,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     }
     public async Task<ReceptionDetailofPatientDTO> GetReceptionDetailofPatient(Guid receptiondetailId)
     {
-        List<ReceptionDetailListDTO> receptionDetailListDTO = new();
         var _list = await _dbContext.ReceptionDetails.Where(x => x.ServiceCount > 0 && x.IsDeleted == false && x.Id == receptiondetailId).FirstOrDefaultAsync();
         List<object> ls = new List<object>();
 
