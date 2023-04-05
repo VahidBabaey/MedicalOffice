@@ -18,5 +18,11 @@ namespace MedicalOffice.Application.Responses
         {
             return new() { StatusCode = statusCode, Success = false, StatusDescription = message, Errors = errors.ToList() };
         }
+
+        public static string CreateRequestTitle<T>(string nameSlice)
+        {
+            var requestTitle = nameof(T).Replace(nameSlice,string.Empty);
+            return requestTitle;
+        }
     }
 }

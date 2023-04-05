@@ -72,7 +72,7 @@ public class PatientController : Controller
     {
         var response = await _mediator.Send(new GetAllPatientReceptionsQuery() { PatientId = Guid.Parse(patientId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -81,7 +81,7 @@ public class PatientController : Controller
     {
         var response = await _mediator.Send(new GetAllPatientReceptionDetailsforReceptionQuery() { PatientId = Guid.Parse(patientId), ReceptionId = Guid.Parse(receptionId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [Authorize]
@@ -90,6 +90,15 @@ public class PatientController : Controller
     {
         var response = await _mediator.Send(new GetPatientInsuranceInquireQuery() { NationalId = patientNationalId, OfficeId = Guid.Parse(officeId) });
 
-        return Ok(response);
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+
+    [Authorize]
+    [HttpGet("file-number")]
+    public async Task<ActionResult<int>> GetPatientFileNumber([FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetPatientFileNumberQuery() { OfficeId = Guid.Parse(officeId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 }
