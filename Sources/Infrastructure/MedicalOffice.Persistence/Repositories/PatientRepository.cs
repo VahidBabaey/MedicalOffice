@@ -257,15 +257,13 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         return await _dbContext.Patients.Where(p => p.OfficeId == offoceId && p.Id == patientId && p.IsDeleted == false).FirstOrDefaultAsync();
     }
 
-    public async Task<int> GenerateFileNumber()
+    public async Task<int> GenerateFileNumber(Guid officeId)
     {
-        if (_dbContext.Patients.Any() == false)
-        {
+        if (_dbContext.Patients.Where(x => x.OfficeId == officeId).Any() == false)
             return 1;
-        }
         else
         {
-            var lastNo = await _dbContext.Patients.Select(p => p.FileNumber).MaxAsync();
+            var lastNo = await _dbContext.Patients.Where(x => x.OfficeId == officeId).Select(p => p.FileNumber).MaxAsync();
             return Convert.ToInt32((lastNo + 1));
         }
     }

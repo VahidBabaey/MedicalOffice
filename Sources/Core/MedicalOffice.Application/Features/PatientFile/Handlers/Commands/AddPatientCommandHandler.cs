@@ -75,8 +75,6 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
-
-
         var patient = _mapper.Map<Patient>(request.DTO);
 
         if (request.DTO.FileNumber != null)
@@ -96,8 +94,9 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
 
             patient.FileNumber = (int)request.DTO.FileNumber;
         }
+        else
+            patient.FileNumber = await _patientrepository.GenerateFileNumber(request.OfficeId);
 
-        patient.FileNumber = await _patientrepository.GenerateFileNumber();
         patient.OfficeId = request.OfficeId;
         patient = await _patientrepository.Add(patient);
 

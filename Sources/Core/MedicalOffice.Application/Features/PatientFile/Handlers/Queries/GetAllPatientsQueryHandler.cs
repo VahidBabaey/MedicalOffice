@@ -30,12 +30,11 @@ public class GetAllPatientsQueryHandler : IRequestHandler<GetAllPatientsQuery, B
 
     public async Task<BaseResponse> Handle(GetAllPatientsQuery request, CancellationToken cancellationToken)
     {
-
         var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
 
         if (!validationOfficeId)
         {
-            var error = "OfficeID isn't exist";
+            var error = "OfficeId isn't exist";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
