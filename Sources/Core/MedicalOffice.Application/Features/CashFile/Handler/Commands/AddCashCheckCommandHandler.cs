@@ -27,6 +27,7 @@ public class AddCashCheckCommandHandler : IRequestHandler<AddCashCheckCommand, B
 
     public async Task<BaseResponse> Handle(AddCashCheckCommand request, CancellationToken cancellationToken)
     {
+
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
@@ -40,27 +41,41 @@ public class AddCashCheckCommandHandler : IRequestHandler<AddCashCheckCommand, B
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
-
-        var cashcheck = await _cashcheckrepository.AddCashCheckForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost, request.DTO.BankId, request.DTO.Branch, request.DTO.AccountNumber);
-
-        if (cashcheck.Id != null)
+        if (request.DTO.Cost > request.DTO.TotalDebt)
         {
-            await _logger.Log(new Log
-            {
-                Type = LogType.Success,
-                Header = $"{_requestTitle} succeded",
-                AdditionalData = cashcheck.Id
-            });
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", cashcheck.Id);
-        }
-
-        else
+            var error = "مبلغ پرداختی بیشتر از بدهی میباشد";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
                 Header = $"{_requestTitle} failed",
-                AdditionalData = cashcheck.exception.Message
+                AdditionalData = error
             });
-        return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", cashcheck.exception.Message);
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
+        else
+        {
+            try
+            {
+                var cashcheck = await _cashcheckrepository.AddCashCheckForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost, request.DTO.BankId, request.DTO.Branch, request.DTO.AccountNumber);
+
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Success,
+                    Header = $"{_requestTitle} succeded",
+                    AdditionalData = cashcheck
+                });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", cashcheck);
+            }
+            catch (Exception error)
+            {
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error.Message
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
+            }
+        }
     }
 }

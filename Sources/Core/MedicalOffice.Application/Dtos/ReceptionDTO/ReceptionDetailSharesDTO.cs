@@ -26,4 +26,8 @@ public class ReceptionDetailSharesDTO
     /// سهم بیمه تکمیلی
     /// </summary>
     public long AdditionalInsuranceShare { get; set; }
+    /// <summary>
+    /// تخفیف
+    /// </summary>
+    public long Discount { get; set; }
 }

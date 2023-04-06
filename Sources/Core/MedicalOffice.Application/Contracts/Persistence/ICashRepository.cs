@@ -9,6 +9,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<bool> CheckExistCashId(Guid officeId, Guid cashId);
         Task<bool> CheckExistReceptionId(Guid officeId, Guid receptionId);
         Task<List<CashListDTO>> GetPatientCashes(Guid officeId, Guid receptionId);
+        Task<long> GetTotalDebtofReception(Guid officeId, Guid receptionId, Guid patientId);
         Task<Guid> ReturnCash(Guid officeId, Guid cashId);
     }
 }

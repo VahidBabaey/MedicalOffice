@@ -188,4 +188,9 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
 
         return cash.Id;
     }
+    public async Task<long> GetTotalDebtofReception(Guid officeId, Guid receptionId, Guid patientId)
+    {
+        var totaldebt = _dbContext.Receptions.Where(p => p.PatientId == patientId && p.Id == receptionId && p.OfficeId == officeId).FirstOrDefault().TotalDebt;
+        return totaldebt;
+    }
 }

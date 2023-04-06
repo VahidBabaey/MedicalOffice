@@ -69,10 +69,10 @@ public class CashController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [HttpGet("Difference")]
-    public async Task<ActionResult<Guid>> GetCashDifferencWithRecieved([FromQuery] Guid receptionId)
+    [HttpGet("total-debt")]
+    public async Task<ActionResult<Guid>> GettotalDebtofreception([FromQuery] Guid officeId, [FromQuery] Guid receptionId,[FromQuery] Guid patientId)
     {
-        var response = await _mediator.Send(new GetCashDefferenceWithRecievedQuery() { ReceptionId = receptionId });
+        var response = await _mediator.Send(new GetTotalDebtofReceptionQuery() { OfficeId = officeId, ReceptionId = receptionId, PatientId = patientId });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

@@ -64,7 +64,7 @@ namespace MedicalOffice.Persistence.Repositories
         }
         public async Task<bool> CheckExistShiftName(Guid officeId, string shiftName)
         {
-            bool isExist = await _dbContext.Shifts.AnyAsync(p => p.OfficeId == officeId && p.Name == shiftName);
+            bool isExist = await _dbContext.Shifts.AnyAsync(p => p.OfficeId == officeId && p.Name == shiftName && p.IsDeleted == false);
             return isExist;
         }
     }

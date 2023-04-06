@@ -44,6 +44,17 @@ public class AddCashCartCommandHandler : IRequestHandler<AddCashCartCommand, Bas
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
+        if (request.DTO.Cost > request.DTO.TotalDebt)
+        {
+            var error = "مبلغ پرداختی بیشتر از بدهی میباشد";
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
         else
         {
             try
