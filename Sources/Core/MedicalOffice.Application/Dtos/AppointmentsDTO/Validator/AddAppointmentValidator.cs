@@ -3,9 +3,9 @@ using FluentValidation.Results;
 using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
-using MedicalOffice.Application.Dtos.Common.Validators;
+
+using MedicalOffice.Application.Dtos.Common.IValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO;
 using MedicalOffice.Domain.Enums;
 using Microsoft.AspNetCore.Http;
@@ -38,10 +38,10 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
             var validAppointmentTypeForNullTime = new AppointmentType[] { AppointmentType.waiting };
             var invalidAppointmentTypes = new AppointmentType[] { AppointmentType.FinalApproval, AppointmentType.Canceled };
 
-            Include(new PhoneNumberValidator());
-            Include(new NationalIdValidator());
+            Include(new IPhoneNumberValidator());
+            Include(new INationalIdValidator());
             //Include(new ServiceIdValidator(_serviceRepository, _QueryStringResolver));
-            Include(new MedicalStaffValidator(_medicalStaffRepository,_officeResolver));
+            Include(new IMedicalStaffValidator(_medicalStaffRepository,_officeResolver));
 
             RuleFor(x => x.AppointmentType)
                 .NotEmpty()

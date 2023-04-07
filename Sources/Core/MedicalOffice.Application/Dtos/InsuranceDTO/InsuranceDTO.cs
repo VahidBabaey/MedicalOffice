@@ -13,12 +13,12 @@ public class InsuranceDTO
     /// <summary>
     /// کد بیمه
     /// </summary>
-    public float InsuranceCode { get; set; }
+    public ulong? InsuranceCode { get; set; }
 
     /// <summary>
     /// درصد بیمه
     /// </summary>
-    public float InsurancePercent { get; set; }
+    public int InsurancePercent { get; set; } = default;
 
     /// <summary>
     ///  بیمه تکمیلی هست یا نه

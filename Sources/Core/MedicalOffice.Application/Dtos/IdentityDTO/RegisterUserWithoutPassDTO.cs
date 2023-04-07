@@ -1,4 +1,4 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.Common.IDtos;
 
 namespace MedicalOffice.Application.Dtos.IdentityDTO
 {

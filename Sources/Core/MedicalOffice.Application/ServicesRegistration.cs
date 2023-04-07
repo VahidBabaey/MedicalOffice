@@ -60,6 +60,11 @@ using MedicalOffice.Application.Dtos.ServiceRoomDTO;
 using MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator;
 using MedicalOffice.Domain;
 
+using MedicalOffice.Application.Dtos.Common.IValidators;
+using MedicalOffice.Application.Dtos.Common.IDtos;
+using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Common.Validators;
+
 namespace MedicalOffice.Application;
 
 public static class ServicesRegistration
@@ -130,10 +135,12 @@ public static class ServicesRegistration
         #region Service
         services.AddScoped<IValidator<ServiceDTO>, AddServiceValidator>();
         services.AddScoped<IValidator<UpdateServiceDTO>, UpdateServiceValidator>();
+        services.AddScoped<IValidator<ServiceIdDTO>, ServiceIdValidator>();
         #endregion
 
         #region Tariff
         services.AddScoped<IValidator<TariffDTO>, AddTariffValidator>();
+        services.AddScoped<IValidator<TariffListIdDTO>, TariffListIdValidator>();
         #endregion
 
         #region Insurance

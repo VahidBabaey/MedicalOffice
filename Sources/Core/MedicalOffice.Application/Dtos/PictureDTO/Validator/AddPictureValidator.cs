@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace MedicalOffice.Application.Dtos.PictureDTO.Validator
         {
             _patientRepository = patientRepository;
             _officeResolver = officeResolver;
-            Include(new PatientIdValidator(_patientRepository, _officeResolver));
+            Include(new IPatientIdValidator(_patientRepository, _officeResolver));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 
 namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
 {
@@ -21,7 +21,7 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
             _serviceRepository = serviceRepository;
             _serviceRoomRepository = serviceRoomRepository;
 
-            Include(new ServiceIdsValidator(_officeResolver, _serviceRepository));
+            Include(new IServiceIdsValidator(_officeResolver, _serviceRepository));
             Include(new RoomNameValidator(_serviceRoomRepository, _officeResolver));
         }
     }

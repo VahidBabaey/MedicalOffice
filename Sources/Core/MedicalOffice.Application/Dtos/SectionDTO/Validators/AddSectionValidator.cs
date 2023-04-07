@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System.Text.RegularExpressions;
 
 namespace MedicalOffice.Application.Dtos.SectionDTO.Validators;

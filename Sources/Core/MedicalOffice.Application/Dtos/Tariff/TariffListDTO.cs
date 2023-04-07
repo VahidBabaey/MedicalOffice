@@ -28,7 +28,7 @@ public class TariffListDTO : BaseDto<Guid>
     /// <summary>
     /// کد بیمه
     /// </summary>
-    public float? TariffInsuranceCode { get; set; }
+    public ulong? TariffInsuranceCode { get; set; }
 
     /// <summary>
     /// مبلغ تعرفه
@@ -38,12 +38,12 @@ public class TariffListDTO : BaseDto<Guid>
     /// <summary>
     /// تعرفه داخلی
     /// </summary>
-    public float? InternalTariffValue { get; set; } = 0;
+    public float InternalTariffValue { get; set; }
 
     /// <summary>
     /// ما به التفاوت
     /// </summary>
-    public float? Difference { get; set; } = 0;
+    public float Difference { get; set; }
 
     /// <summary>
     /// تخفیف

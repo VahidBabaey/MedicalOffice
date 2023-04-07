@@ -1,5 +1,4 @@
-﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.Common.IDtos;
 using MedicalOffice.Domain;
 using MedicalOffice.Domain.Entities;
 using MedicalOffice.Domain.Enums;

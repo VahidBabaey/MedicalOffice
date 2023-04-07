@@ -48,5 +48,5 @@ public class ServiceListDTO : BaseDto<Guid>
     /// <summary>
     /// زمان خدمت
     /// </summary>
-    public int? ServiceTime { get; set; } = 0;
+    public uint? ServiceTime { get; set; } = 0;
 }

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace MedicalOffice.Application.Dtos.PatientReferralFormDTO.Validator
             RuleFor(x => x.ReferralReason).NotEmpty().Length(1, 200);
             RuleFor(x => x.DateSolar).NotEmpty().Length(1, 100);
             RuleFor(x => x.DateAD).NotEmpty();
-            Include(new PatientIdValidator(_patientRepository, _officeResolver));
+            Include(new IPatientIdValidator(_patientRepository, _officeResolver));
         }
     }
 }

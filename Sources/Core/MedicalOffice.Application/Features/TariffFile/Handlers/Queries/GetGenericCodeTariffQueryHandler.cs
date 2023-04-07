@@ -33,23 +33,20 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
         private readonly ApiConsumerSettings _apiConsumersetting;
         private readonly IContextResolver _QueryStringResolver;
         private readonly IApiConsumer _apiConsumer;
-        private readonly string _requestTitle;
         private readonly IInsuranceRepository _insuranceRepository;
-        private readonly IMapper _mapper;
+        private readonly string _requestTitle;
 
         public GetGenericCodeTariffQueryHandler(
+            IOptions<ApiConsumerSettings> apiConsumersetting,
             IApiConsumer apiConsumer,
             IContextResolver officeResolver,
-            IOptions<ApiConsumerSettings> apiConsumersetting,
-            IInsuranceRepository insuranceRepository,
-            IMapper mapper)
+            IInsuranceRepository insuranceRepository)
         {
-            _mapper = mapper;
             _insuranceRepository = insuranceRepository;
             _apiConsumersetting = apiConsumersetting.Value;
             _apiConsumer = apiConsumer;
-            _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
             _QueryStringResolver = officeResolver;
+            _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
         public async Task<BaseResponse> Handle(GetGenericCodeTariffQuery request, CancellationToken cancellationToken)
         {

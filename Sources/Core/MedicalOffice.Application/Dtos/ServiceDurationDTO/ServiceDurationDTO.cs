@@ -1,4 +1,4 @@
-﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+﻿using MedicalOffice.Application.Dtos.Common.IDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

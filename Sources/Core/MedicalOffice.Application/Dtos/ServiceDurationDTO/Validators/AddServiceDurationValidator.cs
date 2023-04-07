@@ -2,7 +2,7 @@
 using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +27,8 @@ namespace MedicalOffice.Application.Dtos.ServiceDurationDTO.Validators
             _officeResolver = officeResolver;
             _serviceRepository = serviceRepository;
 
-            Include(new MedicalStaffValidator(_medicalStaffRepository, _officeResolver));
-            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+            Include(new IMedicalStaffValidator(_medicalStaffRepository, _officeResolver));
+            Include(new IServiceIdValidator(_serviceRepository, _officeResolver));
 
             RuleFor(x => x.MedicalStaffId)
                 .NotEmpty()

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Common.IDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

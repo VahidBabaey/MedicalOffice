@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
+using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
@@ -12,13 +14,15 @@ namespace MedicalOffice.Application.Features.SectionFile.Handlers.Commands;
 
 public class DeleteServiceTariffListCommandHandler : IRequestHandler<DeleteTariffListCommand, BaseResponse>
 {
+    private readonly IValidator<TariffListIdDTO> _validator;
     private readonly IOfficeRepository _officeRepository;
     private readonly IServiceTariffRepository _tariffrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
 
-    public DeleteServiceTariffListCommandHandler(IOfficeRepository officeRepository, IServiceTariffRepository tariffrepository, ILogger logger)
+    public DeleteServiceTariffListCommandHandler(IValidator<TariffListIdDTO> validator,IOfficeRepository officeRepository, IServiceTariffRepository tariffrepository, ILogger logger)
     {
+        _validator = validator;
         _officeRepository = officeRepository;
         _tariffrepository = tariffrepository;
         _logger = logger;
@@ -27,21 +31,17 @@ public class DeleteServiceTariffListCommandHandler : IRequestHandler<DeleteTarif
 
     public async Task<BaseResponse> Handle(DeleteTariffListCommand request, CancellationToken cancellationToken)
     {
-        foreach (var item in request.DTO.TariffId)
+        var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+        if (!validationResult.IsValid)
         {
-            var validationSectionId = await _tariffrepository.CheckExistTariffId(request.OfficeId, item);
-
-            if (!validationSectionId)
+            var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+            await _logger.Log(new Log
             {
-                var error = "شناسه تعرفه یافت نشد.";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
         foreach (var item in request.DTO.TariffId)

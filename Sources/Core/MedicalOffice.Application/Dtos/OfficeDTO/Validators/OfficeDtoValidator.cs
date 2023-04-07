@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 
 namespace MedicalOffice.Application.Dtos.OfficeDTO.Validators;
 
@@ -12,7 +12,7 @@ public class OfficeDTOValidator : AbstractValidator<OfficeDTO>
     {
         _officeRepository = officeRepository;
 
-        Include(new TelePhoneNumberValidator());
+        Include(new ITelePhoneNumberValidator());
         Include(new TelePhoneNumberExistValidator(_officeRepository));
 
         RuleFor(o => o.Name)

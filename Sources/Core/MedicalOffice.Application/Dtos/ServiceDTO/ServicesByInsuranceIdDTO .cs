@@ -3,14 +3,22 @@
     public class ServicesByInsuranceIdDTO
     {
         public Guid Id { get; set; }
+        
         public string ServiceName { get; set; }
-        // تعرفه سرویس
+
+        /// <summary>
+        /// تعرفه بر اساس کد جنریک
+        /// </summary>
         public float TariffValue { get; set; }
+        
+        /// <summary>
+        /// تعیید تعرفه در زمان پذیرش
+        /// </summary>
         public bool TariffInReceptionTime { get; set; }
 
         /// <summary>
         /// زمان خدمت
         /// </summary>
-        public int? ServiceTime { get; set; } = 0;
+        public uint? ServiceTime { get; set; } = 0;
     }
 }

@@ -46,7 +46,7 @@ public class Service : BaseDomainEntity<Guid>
     /// <summary>
     /// نام ارزش نسبی
     /// </summary>
-    public string? ICD10Name { get; set; }
+    public string? ICD10Name { get; set; } = string.Empty;
 
     /// <summary>
     /// نحوه محاسبه قیمت
@@ -71,7 +71,7 @@ public class Service : BaseDomainEntity<Guid>
     /// <summary>
     /// زمان خدمت
     /// </summary>
-    public int ServiceTime { get; set; }
+    public uint ServiceTime { get; set; }
 
     /// <summary>
     /// سهم و درصد کاربران

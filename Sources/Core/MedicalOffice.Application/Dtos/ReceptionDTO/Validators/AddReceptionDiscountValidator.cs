@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
 
@@ -14,6 +14,6 @@ public class AddReceptionDiscountValidator : AbstractValidator<ReceptionDiscount
         _memberRepository = memberRepository;
         _officeResolver = officeResolver;
 
-        Include(new MembershipIdValidator(_memberRepository, _officeResolver));
+        Include(new IMembershipIdValidator(_memberRepository, _officeResolver));
     }
 }

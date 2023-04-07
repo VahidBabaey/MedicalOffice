@@ -1,5 +1,5 @@
-﻿using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
+﻿using MedicalOffice.Application.Dtos.Common.IDtos;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 
 namespace MedicalOffice.Application.Dtos.IdentityDTO
 {

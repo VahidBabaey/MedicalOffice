@@ -34,7 +34,7 @@ public class Tariff : BaseDomainEntity<Guid>
     /// <summary>
     /// تعرفه قابل تعیین توسط کاربر است یا خیر
     /// </summary>
-    public Insurance? Insurance { get; set; }
+    public Insurance Insurance { get; set; }
 
     /// <summary>
     /// آیدی بیمه
@@ -44,7 +44,7 @@ public class Tariff : BaseDomainEntity<Guid>
     /// <summary>
     /// کد بیمه ای برای نمایش در دیسکت
     /// </summary>
-    public long? TariffInsuranceCode { get; set; }
+    public ulong? TariffInsuranceCode { get; set; }
 
     /// <summary>
     /// مبلغ تعرفه
@@ -54,12 +54,12 @@ public class Tariff : BaseDomainEntity<Guid>
     /// <summary>
     /// تعرفه داخلی
     /// </summary>
-    public float? InternalTariffValue { get; set; }
+    public float InternalTariffValue { get; set; }
 
     /// <summary>
     /// ما به التفاوت
     /// </summary>
-    public long? Difference { get; set; }
+    public float Difference { get; set; }
 
     /// <summary>
     /// تخفیف

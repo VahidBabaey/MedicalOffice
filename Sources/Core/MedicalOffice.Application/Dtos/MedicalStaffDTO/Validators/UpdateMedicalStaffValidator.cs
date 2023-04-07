@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Constants;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +22,8 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffDTO.Validators
                 .Must(x => isSecretoryValid(x.RoleId, x.SpecializationId))
                 .WithMessage("نقش منشی باید فاقد پارامتر تخصص باشد.");
 
-            Include(new NationalIdValidator());
-            Include(new PhoneNumberValidator());
+            Include(new INationalIdValidator());
+            Include(new IPhoneNumberValidator());
         }
 
         private bool isRoleValid(Guid roleId, bool isTechnicalAssistant, bool isSpecialist)

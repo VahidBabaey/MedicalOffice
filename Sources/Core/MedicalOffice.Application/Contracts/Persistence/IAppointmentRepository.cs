@@ -1,5 +1,5 @@
 ﻿using MedicalOffice.Application.Dtos;
-using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+
 using MedicalOffice.Domain.Entities;
 
 namespace MedicalOffice.Application.Contracts.Persistence

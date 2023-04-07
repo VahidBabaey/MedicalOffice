@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Application.Dtos.Commons;
+using MedicalOffice.Application.Dtos.Common.IValidators;
+using NLog.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,26 +11,17 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.Common.Validators
 {
-    public class ServiceIdValidator : AbstractValidator<IServiceIdDTO>
+    public class ServiceIdValidator : AbstractValidator<ServiceIdDTO>
     {
         private readonly IServiceRepository _serviceRepository;
         private readonly IContextResolver _officeResolver;
-        public ServiceIdValidator(IServiceRepository serviceRepository, IContextResolver officeResolver)
+
+        public ServiceIdValidator(IContextResolver officeResolver, IServiceRepository serviceRepository)
         {
             _officeResolver = officeResolver;
             _serviceRepository = serviceRepository;
 
-            var officeId = _officeResolver.GetOfficeId().Result;
-
-            RuleFor(x => x.ServiceId)
-                .NotEmpty()
-                .WithMessage("ورود شناسه خدمت ضروری است")
-                .MustAsync(async (serviceId, token) =>
-                    {
-                        return await _serviceRepository.CheckExistServiceId(officeId, serviceId);
-                    })
-                //.WithMessage("{PropertyName} isn't exist");
-                .WithMessage("شناسه خدمت یافت نشد");
+            Include(new IServiceIdValidator(_serviceRepository, _officeResolver));
         }
     }
 }

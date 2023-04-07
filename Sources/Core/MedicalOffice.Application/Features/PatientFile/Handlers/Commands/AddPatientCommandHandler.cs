@@ -49,19 +49,6 @@ public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, BaseR
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
-        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-        if (!validationOfficeId)
-        {
-            var error = "OfficeID isn't exist";
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = $"{_requestTitle} failed",
-                AdditionalData = error
-            });
-            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-        }
-
         var isPatientExistInOffice = await _patientrepository.CheckExistByNationalId(request.DTO.NationalId, request.OfficeId);
         if (isPatientExistInOffice)
         {

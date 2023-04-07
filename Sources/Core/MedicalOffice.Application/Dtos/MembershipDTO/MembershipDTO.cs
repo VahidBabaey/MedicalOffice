@@ -1,4 +1,4 @@
-﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
+﻿
 using MedicalOffice.Application.Dtos.Common;
 
 namespace MedicalOffice.Application.Dtos.MembershipDTO;
