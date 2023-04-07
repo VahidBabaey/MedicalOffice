@@ -44,7 +44,7 @@ public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO
     /// <summary>
     /// درصد تخفیف
     /// </summary>
-    public long? Discount { get; set; }
+    public long Discount { get; set; }
 
     /// <summary>
     /// آیدی تیم پزشکی

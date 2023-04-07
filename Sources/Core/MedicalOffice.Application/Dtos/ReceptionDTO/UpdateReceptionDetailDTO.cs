@@ -29,7 +29,7 @@ public class UpdateReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO, IRecepti
     /// <summary>
     /// مبلغ تخفیف
     /// </summary>
-    public long? Discount { get; set; }
+    public long Discount { get; set; }
     /// <summary>
     /// آیدی تیم پزشکی
     /// </summary>

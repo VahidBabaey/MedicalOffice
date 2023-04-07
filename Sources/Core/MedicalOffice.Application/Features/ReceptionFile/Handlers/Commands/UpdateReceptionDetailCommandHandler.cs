@@ -68,7 +68,7 @@ public class UpdateReceptionDetailCommandHandler : IRequestHandler<UpdateRecepti
         {
             try
             {
-                var reception = await _receptionrepository.UpdateReceptionService(request.ReceptiodDetailId, request.OfficeId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.MedicalStaffs, request.DTO.Recieved, request.DTO.OrganShare, request.DTO.PatientShare, request.DTO.AdditionalInsuranceShare, request.DTO.Tariff);
+                var reception = await _receptionrepository.UpdateReceptionService(request.ReceptiodDetailId, request.OfficeId, request.DTO.ReceptionId, request.DTO.ServiceId, request.DTO.ServiceCount, request.DTO.InsuranceId, request.DTO.AdditionalInsuranceId, request.DTO.MedicalStaffs, request.DTO.Recieved, request.DTO.OrganShare, request.DTO.PatientShare, request.DTO.AdditionalInsuranceShare, request.DTO.Tariff, request.DTO.Discount);
 
                 await _logger.Log(new Log
                 {

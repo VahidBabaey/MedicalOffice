@@ -25,5 +25,9 @@ public class CashCartDTO
     /// آیدی پذیرش
     /// </summary>
     public Guid ReceptionId { get; set; }
+    /// <summary>
+    /// بدهی
+    /// </summary>
+    public long TotalDebt { get; set; }
 
 }

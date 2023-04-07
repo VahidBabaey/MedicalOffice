@@ -30,12 +30,24 @@ public class AddCashPosCommandHandler : IRequestHandler<AddCashPosCommand, BaseR
 
     public async Task<BaseResponse> Handle(AddCashPosCommand request, CancellationToken cancellationToken)
     {
+        BaseResponse response = new();
 
         var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
 
         if (!validationResult.IsValid)
         {
             var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        }
+        if (request.DTO.Cost > request.DTO.TotalDebt)
+        {
+            var error = "مبلغ پرداختی بیشتر از بدهی میباشد";
             await _logger.Log(new Log
             {
                 Type = LogType.Error,
