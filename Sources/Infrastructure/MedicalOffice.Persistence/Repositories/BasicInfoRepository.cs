@@ -18,5 +18,4 @@ public class BasicInfoRepository : GenericRepository<BasicInfo, Guid>, IBasicInf
         bool isExist = await _dbContext.BasicInfos.AnyAsync(p => p.Id == basicInfoId);
         return isExist;
     }
-
 }
