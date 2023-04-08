@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,7 @@ namespace MedicalOffice.Application.Dtos.PatientIllnessFormDTO.Validator
             RuleFor(x => x.DateAD).NotEmpty();
             RuleFor(x => x.Duration).NotEmpty().Length(1, 100);
             RuleFor(x => x.RestPlace).NotEmpty().Length(1, 100);
-            Include(new PatientIdValidator(_patientRepository, _officeResolver));
+            Include(new IPatientIdValidator(_patientRepository, _officeResolver));
         }
     }
 }

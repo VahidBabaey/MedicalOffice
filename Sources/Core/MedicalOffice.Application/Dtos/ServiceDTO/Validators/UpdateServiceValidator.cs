@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
-using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 
 namespace MedicalOffice.Application.Dtos.ServiceDTO.Validators;
 
@@ -19,7 +19,7 @@ public class UpdateServiceValidator : AbstractValidator<UpdateServiceDTO>
         
         var officeId = _officeResolver.GetOfficeId().Result;
         
-        Include(new SectionIdValidator(_sectionRepository, _officeResolver));
+        Include(new ISectionIdValidator(_sectionRepository, _officeResolver));
 
         RuleFor(x => x.Name)
             .NotEmpty()

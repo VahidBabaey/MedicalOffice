@@ -9,23 +9,24 @@ namespace MedicalOffice.Domain.Entities
 {
     public class BasicInfo : BaseDomainEntity<Guid>
     {
-
-        /// <summary>
-        /// مطب
-        /// </summary>
-        public Office? Office { get; set; }
-        /// <summary>
-        /// آیدی مطب
-        /// </summary>
-        public Guid OfficeId { get; set; }
         /// <summary>
         /// نام
         /// </summary>
-        public string InfoName { get; set; } = string.Empty;
+        public string InfoName { get; set; }
+
+        /// <summary>
+        /// ترتیب
+        /// </summary>
+        public sbyte Order { get; set; }
+
+        /// <summary>
+        /// ترتیب
+        /// </summary>
+        public bool isActive { get; set; }
+
         /// <summary>
         /// لیست جزِئیات
         /// </summary>
         public ICollection<BasicInfoDetail>? BasicInfoDetails { get; set; } = new List<BasicInfoDetail>();
-
     }
 }

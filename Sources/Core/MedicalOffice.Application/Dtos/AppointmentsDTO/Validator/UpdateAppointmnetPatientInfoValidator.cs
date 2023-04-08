@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
-using MedicalOffice.Application.Dtos.Common.Validators;
+
+using MedicalOffice.Application.Dtos.Common.IValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +23,8 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
             _officeResolver = officeResolver;
 
             Include(new AppointmentIdValidator(_appointmentRepository, _officeResolver));
-            Include(new PhoneNumberValidator());
-            Include(new NationalIdValidator());
+            Include(new IPhoneNumberValidator());
+            Include(new INationalIdValidator());
             _appointmentRepository = appointmentRepository;
             _officeResolver = officeResolver;
         }

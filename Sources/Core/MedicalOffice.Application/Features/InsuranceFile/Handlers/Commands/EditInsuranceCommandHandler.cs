@@ -27,7 +27,6 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
-
         public EditInsuranceCommandHandler(IOfficeRepository officeRepository, IValidator<UpdateInsuranceDTO> validator, IInsuranceRepository insurancerepository, IMapper mapper, ILogger logger)
         {
             _officeRepository = officeRepository;
@@ -40,21 +39,6 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(EditInsuranceCommand request, CancellationToken cancellationToken)
         {
-
-            var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-            if (!validationOfficeId)
-            {
-                var error = "OfficeID isn't exist";
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Error,
-                    Header = $"{_requestTitle} failed",
-                    AdditionalData = error
-                });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            }
-
             var validationInsuranceId = await _insurancerepository.CheckExistInsuranceId(request.OfficeId, request.DTO.Id);
 
             if (!validationInsuranceId)

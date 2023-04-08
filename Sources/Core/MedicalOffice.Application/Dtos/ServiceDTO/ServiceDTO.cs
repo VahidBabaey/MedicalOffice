@@ -1,5 +1,4 @@
-﻿using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Commons;
+﻿using MedicalOffice.Application.Dtos.Common.IDtos;
 using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.ServiceDTO;
@@ -24,7 +23,7 @@ public class ServiceDTO : ISectionIdDTO
     /// <summary>
     /// نام ارزش نسبی
     /// </summary>
-    public string? ICD10Name { get; set; }
+    public string? ICD10Name { get; set; } = string.Empty;
 
     /// <summary>
     /// نحوه محاسبه قیمت
@@ -49,5 +48,5 @@ public class ServiceDTO : ISectionIdDTO
     /// <summary>
     /// زمان خدمت
     /// </summary>
-    public int? ServiceTime { get; set; } = 0;
+    public uint? ServiceTime { get; set; } = 0;
 }

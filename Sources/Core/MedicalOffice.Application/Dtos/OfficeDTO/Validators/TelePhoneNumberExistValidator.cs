@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Common.IDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace MedicalOffice.Application.Dtos.OfficeDTO.Validators
             RuleFor(x => x.TelePhoneNumber)
                 .MustAsync(async (phone, token) =>
                 {
-                    if (phone != null || phone!=string.Empty)
+                    if (phone.Trim() != string.Empty)
                     {
                         var isTelePhoneNumberExist = await _officeRepository.isTelePhoneNumberExist(phone);
                         return !isTelePhoneNumberExist;

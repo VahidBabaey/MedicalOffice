@@ -26,7 +26,7 @@ public class Insurance : BaseDomainEntity<Guid>
     /// <summary>
     /// کد بیمه
     /// </summary>
-    public long InsuranceCode { get; set; }
+    public ulong? InsuranceCode { get; set; }
 
     /// <summary>
     /// درصد بیمه

@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
-using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
 
@@ -19,6 +19,6 @@ public class AddReceptionValidator : AbstractValidator<ReceptionsDTO>
         _patientRepository = patientRepository;
         _officeResolver = officeResolver;
 
-        Include(new PatientIdValidator(_patientRepository, _officeResolver));
+        Include(new IPatientIdValidator(_patientRepository, _officeResolver));
     }
 }

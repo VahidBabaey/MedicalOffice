@@ -12,12 +12,9 @@ public class AddInsuranceValidator : AbstractValidator<InsuranceDTO>
             .WithMessage("ورود نام بیمه ضروری است")
             .Length(1, 100)
             .WithMessage("نام بیمه باید بین 1 تا 100 کاراکتر داشته باشد");
-        RuleFor(x => x.InsuranceCode)
-            .NotEmpty()
-            .WithMessage("ورود کد بیمه ضروری است");
         RuleFor(x => x.InsurancePercent)
-            .ExclusiveBetween(1, 100)
-            .WithMessage("لطفا عددی در بازه 1 تا 100 انتخاب کنید.");
+            .GreaterThanOrEqualTo(0)
+            .LessThanOrEqualTo(100)
+            .WithMessage("درصد سازمان عددی در بازه 0 تا 100 است.");
     }
-
 }

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators;
 using NLog.Config;
 using System;
@@ -28,7 +28,7 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
 
             var officeId = _officeResolver.GetOfficeId().Result;
 
-            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+            Include(new IServiceIdValidator(_serviceRepository, _officeResolver));
 
             RuleFor(x => x.ServiceId)
                 .MustAsync(async (serviceId, token) =>
@@ -38,9 +38,22 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
 
             Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
 
-            //RuleFor(x => x.InternalTariffValue)
-            //    .NotEmpty()
-            //    .WithMessage("ورود تعرفه داخلی ضروری است");
+            RuleFor(x => x.InternalTariffValue)
+                .NotEmpty()
+                .WithMessage("ورود تعرفه داخلی ضروری است");
+
+            RuleFor(x => x.Difference)
+                .NotEmpty();
+
+            RuleFor(x => x)
+                .Must((x) =>
+                {
+                    var diff = x.TariffValue - x.InternalTariffValue;
+                    if (x.Difference == diff)
+                        return true;
+                    else return false;
+                })
+                .WithMessage(" ما به اتفاوت باید با تفاوت تعرفه و تعرفه داخلی برابر باشد. ");
 
             RuleFor(x => x.TariffValue)
                 .NotEmpty()

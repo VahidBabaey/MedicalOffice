@@ -23,7 +23,7 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
         bool isExist = await _dbContext.Services.AnyAsync(p => p.OfficeId == officeId && p.Id == serviceId);
         return isExist;
     }
-    public async Task<List<TariffListDTO>> GetTariffsofService(Guid officeId, Guid serviceId)
+    public async Task<List<TariffListDTO>> GetTariffsOfService(Guid officeId, Guid serviceId)
     {
         List<TariffListDTO> tariffListDTOs = new();
         var tariffs = await _dbContext.Tariffs.Include(x => x.Insurance).Where(p => p.ServiceId == serviceId && p.OfficeId == officeId && p.IsDeleted == false).ToListAsync();
@@ -32,7 +32,6 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
             TariffListDTO tariffListDTO = new();
             tariffListDTO.Id = item.Id;
             tariffListDTO.ServiceId = item.ServiceId;
-            tariffListDTO.InsuranceId = item.InsuranceId ?? default;
             tariffListDTO.InsuranceId = item.InsuranceId;
             tariffListDTO.TariffInsuranceCode = item.TariffInsuranceCode;
             tariffListDTO.TariffValue = item.TariffValue;

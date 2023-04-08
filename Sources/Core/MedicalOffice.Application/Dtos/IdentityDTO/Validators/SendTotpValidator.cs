@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace MedicalOffice.Application.Dtos.IdentityDTO.Validators
     {
         public SendTotpValidator()
         {
-            Include(new PhoneNumberValidator());
+            Include(new IPhoneNumberValidator());
         }
     }
 }

@@ -10,6 +10,8 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public override void ConfigureEntity(EntityTypeBuilder<Picture> builder)
         {
             builder
+                .HasQueryFilter(m => m.IsDeleted == false);
+            builder
                 .HasOne(e => e.Patient)
                 .WithMany(e => e.Pictures)
                 .HasForeignKey(e => e.PatientId)

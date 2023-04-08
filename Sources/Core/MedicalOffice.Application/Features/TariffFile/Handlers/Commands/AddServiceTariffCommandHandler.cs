@@ -35,18 +35,18 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Commands
 
         public async Task<BaseResponse> Handle(AddServiceTariffCommand request, CancellationToken cancellationToken)
         {
-            //var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
-            //if (!validationResult.IsValid)
-            //{
-            //    var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
-            //    await _logger.Log(new Log
-            //    {
-            //        Type = LogType.Error,
-            //        Header = $"{_requestTitle} failed",
-            //        AdditionalData = error
-            //    });
-            //    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-            //}
+            var validationResult = await _validator.ValidateAsync(request.DTO, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
 
             var tariff = _mapper.Map<Tariff>(request.DTO);
             tariff.OfficeId = request.OfficeId;

@@ -2,7 +2,7 @@
 
 namespace MedicalOffice.Application.Dtos.Tariff;
 
-public class TariffListIDDTO 
+public class TariffListIdDTO 
 {
     /// <summary>
     /// آی دی تعرفه

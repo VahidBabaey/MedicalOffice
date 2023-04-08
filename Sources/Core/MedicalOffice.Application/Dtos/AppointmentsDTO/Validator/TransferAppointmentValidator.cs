@@ -2,8 +2,8 @@
 using MedicalOffice.Application.Constants;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -32,8 +32,8 @@ namespace MedicalOffice.Application.Dtos.AppointmentsDTO.Validator
             _serviceRepository = serviceRepository;
 
             Include(new AppointmentIdValidator(_appointmentRepository, _officeResolver));
-            Include(new MedicalStaffValidator(_medicalStaffRepository, _officeResolver));
-            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+            Include(new IMedicalStaffValidator(_medicalStaffRepository, _officeResolver));
+            Include(new IServiceIdValidator(_serviceRepository, _officeResolver));
 
             RuleFor(x => x.StartTime)
             .NotEmpty()

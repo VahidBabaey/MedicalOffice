@@ -94,7 +94,7 @@ public class MedicalStaffRepository : GenericRepository<MedicalStaff, Guid>, IMe
 
     public async Task<bool> CheckExistByOfficeIdAndPhoneNumber(Guid officeId, string phoneNumber)
     {
-        bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.PhoneNumber == phoneNumber);
+        bool isExist = await _dbContext.MedicalStaffs.AnyAsync(p => p.OfficeId == officeId && p.PhoneNumber == phoneNumber && p.RoleId != AdminRole.Id);
         return isExist;
     }
 

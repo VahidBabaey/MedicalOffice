@@ -1,4 +1,4 @@
-﻿using MedicalOffice.Application.Dtos.Common;
+﻿using MedicalOffice.Application.Dtos.Common.IDtos;
 using MedicalOffice.Domain.Enums;
 using System;
 using System.Collections.Generic;

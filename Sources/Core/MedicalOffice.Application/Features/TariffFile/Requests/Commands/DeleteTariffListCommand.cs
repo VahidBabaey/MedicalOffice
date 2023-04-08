@@ -8,6 +8,6 @@ namespace MedicalOffice.Application.Features.SectionFile.Requests.Commands;
 
 public class DeleteTariffListCommand : IRequest<BaseResponse>
 {
-    public TariffListIDDTO DTO { get; set; } = new TariffListIDDTO();
+    public TariffListIdDTO DTO { get; set; }
     public Guid OfficeId { get; set; }
 }

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 
 namespace MedicalOffice.Application.Dtos.ReceptionDTO.Validators;
 
@@ -20,7 +20,7 @@ public class UpdateReceptionDetailValidator : AbstractValidator<UpdateReceptionD
 
         RuleFor(x => x.ServiceCount).NotEmpty();
         Include(new InsuranceIdValidator(_insuranceRepository, _QueryStringResolver));
-        Include(new ServiceIdValidator(_serviceRepository, _QueryStringResolver));
-        Include(new ReceptionIdValidator(_receptionRepository, _QueryStringResolver));
+        Include(new IServiceIdValidator(_serviceRepository, _QueryStringResolver));
+        Include(new IReceptionIdValidator(_receptionRepository, _QueryStringResolver));
     }
 }

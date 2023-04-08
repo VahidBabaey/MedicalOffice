@@ -1,6 +1,4 @@
-﻿using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Commons;
+﻿using MedicalOffice.Application.Dtos.Common.IDtos;
 using MedicalOffice.Domain.Enums;
 
 namespace MedicalOffice.Application.Dtos.Tariff;
@@ -20,7 +18,7 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// <summary>
     /// کد بیمه
     /// </summary>
-    public float? TariffInsuranceCode { get; set; }
+    public ulong? TariffInsuranceCode { get; set; }
 
     /// <summary>
     /// مبلغ تعرفه
@@ -30,7 +28,7 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// <summary>
     /// تعرفه داخلی
     /// </summary>
-    public float? InternalTariffValue { get; set; }
+    public float InternalTariffValue { get; set; }
 
     /// <summary>
     /// نوع سرویس
@@ -40,10 +38,10 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// <summary>
     /// ما به التفاوت
     /// </summary>
-    public float? Difference { get; set; }
+    public float Difference { get; set; }
 
     /// <summary>
     /// درصد بیمه
     /// </summary>
-    public int? InsurancePercent { get; set; }
+    public int? InsurancePercent { get; set; } = default;
 }

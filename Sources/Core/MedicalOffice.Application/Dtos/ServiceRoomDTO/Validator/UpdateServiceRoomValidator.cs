@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,7 @@ namespace MedicalOffice.Application.Dtos.ServiceRoomDTO.Validator
 
             var officeId = _officeResolver.GetOfficeId().Result;
 
-            Include(new ServiceIdsValidator(_officeResolver, _serviceRepository));
+            Include(new IServiceIdsValidator(_officeResolver, _serviceRepository));
 
             RuleFor(x => x.Name)
                 .NotEmpty()

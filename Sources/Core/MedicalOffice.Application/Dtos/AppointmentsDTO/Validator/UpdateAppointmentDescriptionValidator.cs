@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.AppointmentsDTO.Commons;
-using MedicalOffice.Application.Dtos.Common.Validators;
+
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;

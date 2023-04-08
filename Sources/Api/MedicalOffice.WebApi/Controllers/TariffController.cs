@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MedicalOffice.Application;
 using MedicalOffice.Application.Dtos.Common;
+using MedicalOffice.Application.Dtos.Common.IDtos;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
 using MedicalOffice.Application.Dtos.SectionDTO;
 using MedicalOffice.Application.Dtos.ServiceDTO;
@@ -36,15 +37,15 @@ public class TariffController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<TariffListDTO>>> GetTariffsOfService([FromQuery] string officeId, [FromQuery] string serviceId, [FromQuery] ListDto dto)
+    public async Task<ActionResult<List<TariffListDTO>>> GetTariffsOfService([FromQuery] string officeId, [FromQuery] ServiceIdDTO serviceId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllTariffByServiceIDQuery() { Dto = dto, OfficeId = Guid.Parse(officeId), ServiceId = Guid.Parse(serviceId) });
+        var response = await _mediator.Send(new GetAllTariffByServiceIDQuery() { Dto = dto, OfficeId = Guid.Parse(officeId), ServiceId = serviceId });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
     [HttpDelete("list-tariff")]
-    public async Task<IActionResult> RemoveList([FromBody] TariffListIDDTO dto, [FromQuery] string officeId)
+    public async Task<IActionResult> RemoveList([FromBody] TariffListIdDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new DeleteTariffListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
 

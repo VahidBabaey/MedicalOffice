@@ -2,7 +2,7 @@
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
 using MedicalOffice.Application.Dtos.Common;
-using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace MedicalOffice.Application.Dtos.MedicalStaffScheduleDTO.Validators
             _medicalStaffRepository = medicalStaffRepository;
             _officeResolver = officeResolver;
 
-            Include(new MedicalStaffValidator(_medicalStaffRepository, _officeResolver));
+            Include(new IMedicalStaffValidator(_medicalStaffRepository, _officeResolver));
             RuleForEach(x => x.MedicalStaffSchedule)
                 .SetValidator(new MedicalStaffDayScheduleValidator());
         }

@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MedicalOffice.Application.Contracts.Infrastructure;
 using MedicalOffice.Application.Contracts.Persistence;
-using MedicalOffice.Application.Dtos.Common.CommonValidators;
-using MedicalOffice.Application.Dtos.Common.Validators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
+using MedicalOffice.Application.Dtos.Common.IValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +24,8 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO.Validators
 
             RuleFor(x => x.Discount).GreaterThanOrEqualTo(1).LessThanOrEqualTo(100)
                 .WithMessage("مقدار کد تخفیف باید برابر یا کمتر از 100 باشد");
-            Include(new MembershipIdValidator(_memberRepository, _officeResolver));
-            Include(new ServiceIdValidator(_serviceRepository, _officeResolver));
+            Include(new IMembershipIdValidator(_memberRepository, _officeResolver));
+            Include(new IServiceIdValidator(_serviceRepository, _officeResolver));
         }
     }
 }
