@@ -21,7 +21,7 @@ namespace MedicalOffice.Application.Dtos.Common.IValidators
         }
         private static bool IsValidTelePhoneNumber(string telePhoneNumber)
         {
-            if (telePhoneNumber != string.Empty)
+            if (telePhoneNumber != string.Empty || telePhoneNumber != null)
             {
                 Regex regex = new Regex(@"^0[0-9]{2,}[0-9]{7,}$");
 
