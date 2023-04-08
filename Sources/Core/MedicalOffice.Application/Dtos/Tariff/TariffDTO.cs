@@ -43,11 +43,6 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     public float? Difference { get; set; }
 
     /// <summary>
-    /// تخفیف
-    /// </summary>
-    public int? Discount { get; set; }
-
-    /// <summary>
     /// درصد بیمه
     /// </summary>
     public int? InsurancePercent { get; set; }

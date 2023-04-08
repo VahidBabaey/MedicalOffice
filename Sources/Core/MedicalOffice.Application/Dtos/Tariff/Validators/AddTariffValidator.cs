@@ -46,20 +46,6 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
                 .NotEmpty()
                 .WithMessage("ورود مبلغ تعرفه ضروری است");
 
-            RuleFor(x => x.Discount)
-                .GreaterThanOrEqualTo(0)
-                    .When(x => x.Discount != null)
-                .LessThanOrEqualTo(100)
-                    .When(x => x.Discount != null)
-                .WithMessage("مبلغ تخفیف باید بین 0 تا 100 کاراکتر داشته باشد");
-
-            RuleFor(x => x.InsurancePercent)
-                .GreaterThanOrEqualTo(0)
-                    .When(x => x.Discount != null)
-                .LessThanOrEqualTo(100)
-                    .When(x => x.Discount != null)
-                .WithMessage("درصد بیمه باید بین 0 تا 100 کاراکتر داشته باشد");
-
             RuleFor(x => x)
                 .MustAsync(async (x, token) =>
                 {

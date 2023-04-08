@@ -62,11 +62,6 @@ public class Tariff : BaseDomainEntity<Guid>
     public long? Difference { get; set; }
 
     /// <summary>
-    /// تخفیف
-    /// </summary>
-    public int? Discount { get; set; }
-
-    /// <summary>
     /// درصد بیمه
     /// </summary>
     public int? InsurancePercent { get; set; }

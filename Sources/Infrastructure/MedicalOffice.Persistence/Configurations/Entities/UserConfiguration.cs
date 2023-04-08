@@ -38,6 +38,16 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     },
                     new User()
                     {
+                        Id = Guid.Parse("5E31B2E7-4BEB-4E0B-BE39-F9B3300999FE"),
+                        PhoneNumber= "+989374807400",
+                        NationalId= "4610607964",
+                        UserName = "+989374807400",
+                        NormalizedUserName = "+989374807400",
+                        FirstName = "وحید",
+                        LastName =  "بابایی"
+                    },
+                    new User()
+                    {
                         Id = Guid.Parse("d53c3b49-47ed-4647-aef5-01397ea68cea"),
                         PhoneNumber= "+989122684568",
                         NationalId= "0112857469",

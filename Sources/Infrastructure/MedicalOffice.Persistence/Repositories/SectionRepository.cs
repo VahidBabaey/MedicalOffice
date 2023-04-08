@@ -23,7 +23,7 @@ public class SectionRepository : GenericRepository<Section, Guid>, ISectionRepos
     }
     public async Task<List<Section>> GetSectionBySearch(string name, Guid officeId)
     {
-        var sections = await _dbContext.Sections.Where(p => p.Name.Contains(name) && p.IsDeleted == false && p.OfficeId == officeId).ToListAsync();
+        var sections = name == null ? await _dbContext.Sections.Where(p => p.IsDeleted == false && p.OfficeId == officeId).ToListAsync() : await _dbContext.Sections.Where(p => p.Name.Contains(name) && p.IsDeleted == false && p.OfficeId == officeId).ToListAsync();
         return sections;
     }
     public async Task<List<SectionNamesListDTO>> GetSectionNames(Guid officeId)
