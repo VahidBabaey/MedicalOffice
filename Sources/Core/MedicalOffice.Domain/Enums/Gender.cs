@@ -12,9 +12,5 @@ public enum Gender
     /// <summary>
     /// مرد
     /// </summary>
-    Male = 2,
-    /// <summary>
-    /// نامشخص
-    /// </summary>
-    Other = 3
+    Male,
 }

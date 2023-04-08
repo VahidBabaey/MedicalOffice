@@ -13,8 +13,4 @@ public enum MaritalStatus
     /// متاهل
     /// </summary>
     Married,
-    /// <summary>
-    /// مطلقه
-    /// </summary>
-    Divorced,
 }
