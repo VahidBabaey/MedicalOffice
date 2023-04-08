@@ -13,7 +13,6 @@ public class OfficeDTOValidator : AbstractValidator<OfficeDTO>
         _officeRepository = officeRepository;
 
         Include(new ITelePhoneNumberValidator());
-        //Include(new TelePhoneNumberExistValidator(_officeRepository));
 
         RuleFor(o => o.Name)
             .NotEmpty()

@@ -50,7 +50,7 @@ namespace MedicalOffice.Application.Features.BasicInfoFile.Handlers.Queries
 
             try
             {
-                var basicInfos =  _basicinfoRepository.GetAll().Result.Where(p => p.OfficeId == request.OfficeId && p.IsDeleted == false);
+                var basicInfos =  _basicinfoRepository.GetAll().Result.Where(p => p.IsDeleted == false);
 
                 var result = _mapper.Map<List<BasicInfoListDTO>>(basicInfos);
 

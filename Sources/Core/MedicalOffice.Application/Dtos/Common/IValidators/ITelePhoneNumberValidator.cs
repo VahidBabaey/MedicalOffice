@@ -21,12 +21,15 @@ namespace MedicalOffice.Application.Dtos.Common.IValidators
         }
         private static bool IsValidTelePhoneNumber(string telePhoneNumber)
         {
-            if (telePhoneNumber != string.Empty || telePhoneNumber != null)
+            if (telePhoneNumber.Trim() != string.Empty)
             {
-                Regex regex = new Regex(@"^0[0-9]{2,}[0-9]{7,}$");
+                //Regex regex = new Regex(@"^0[0-9]{2,}[0-9]{7,}$");
+
+                var regex = new Regex("[*0-9-]");
 
                 return regex.IsMatch(telePhoneNumber);
             }
+
             return true;
         }
     }

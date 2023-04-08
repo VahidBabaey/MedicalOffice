@@ -14,14 +14,14 @@ namespace MedicalOffice.Persistence.Configurations.Entities
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder
-                .HasQueryFilter(m => m.IsDeleted == false);
+                .HasQueryFilter(m => !m.IsDeleted);
             builder
                 .HasData(new User[]
                 {
                     new User()
                     {
                         Id = Guid.Parse("EAEF7EDD-C18A-4CCE-A450-72EE26C18A8D"),
-                        NationalId = "0210210210",
+                        NationalId = "0493198628",
                         PhoneNumber = "+989126592427",
                         UserName = "+989126592427",
                         NormalizedUserName = "+989126592427",
@@ -42,7 +42,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     {
                         Id = Guid.Parse("d53c3b49-47ed-4647-aef5-01397ea68cea"),
                         PhoneNumber= "+989122684568",
-                        NationalId= "0112857469",
+                        NationalId= "0269591176",
                         UserName = "+989122684568",
                         NormalizedUserName = "+989122684568",
                         FirstName = "رضا",

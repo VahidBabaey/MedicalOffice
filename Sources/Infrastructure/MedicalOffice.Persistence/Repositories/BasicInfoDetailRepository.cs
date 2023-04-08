@@ -26,7 +26,7 @@ public class BasicInfoDetailRepository : GenericRepository<BasicInfoDetail, Guid
     }
     public async Task<bool> CheckExistBasicInfoId(Guid officeId, Guid basicInfoId)
     {
-        bool isExist = await _dbContext.BasicInfos.AnyAsync(p => p.OfficeId == officeId && p.Id == basicInfoId);
+        bool isExist = await _dbContext.BasicInfos.AnyAsync(p => p.Id == basicInfoId);
         return isExist;
     }
     public async Task<bool> CheckExistBasicInfoDetailId(Guid basicInfoDetailId)
