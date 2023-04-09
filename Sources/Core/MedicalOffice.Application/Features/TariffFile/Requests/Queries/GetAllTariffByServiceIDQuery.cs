@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.TariffFile.Requests.Queries
 {
-    public class GetAllTariffByServiceIDQuery : IRequest<BaseResponse>
+    public class GetAllTariffByServiceIdQuery : IRequest<BaseResponse>
     {
         public ListDto Dto { get; set; } = new ListDto();
         public Guid OfficeId { get; set; }
-        public ServiceIdDTO ServiceId { get; set; } 
+        public ServiceIdDTO ServiceIdDto { get; set; } 
     }
 }

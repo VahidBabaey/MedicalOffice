@@ -165,10 +165,6 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             medicalStaff.UserId = user.Id;
             medicalStaff.OfficeId = request.OfficeId;
 
-            if (medicalStaff.MedicalNumber != null && medicalStaff.MedicalNumber.Length < 10)
-            {
-                medicalStaff.MedicalNumber = medicalStaff.MedicalNumber.PadLeft(10, '0');
-            }
             medicalStaff = await _medicalStaffrepository.Add(medicalStaff);
 
             //Add role to user office roles

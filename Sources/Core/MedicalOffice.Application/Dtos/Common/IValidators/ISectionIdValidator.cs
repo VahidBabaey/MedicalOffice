@@ -21,8 +21,8 @@ namespace MedicalOffice.Application.Dtos.Common.IValidators
                 .NotEmpty()
                 .MustAsync(async (sectionId, token) =>
                 {
-                    var leaveTypeExists = await _sectionRepository.CheckExistSectionId(officeId, sectionId);
-                    if (leaveTypeExists == true)
+                    var sectionIdExists = await _sectionRepository.CheckExistSectionId(officeId, sectionId);
+                    if (sectionIdExists == true)
                     {
                         return true;
                     }

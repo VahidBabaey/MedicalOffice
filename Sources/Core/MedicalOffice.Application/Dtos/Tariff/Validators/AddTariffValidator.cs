@@ -48,7 +48,7 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
             RuleFor(x => x)
                 .Must((x) =>
                 {
-                    var diff = x.TariffValue - x.InternalTariffValue;
+                    var diff = Math.Abs(x.TariffValue - x.InternalTariffValue);
                     if (x.Difference == diff)
                         return true;
                     else return false;

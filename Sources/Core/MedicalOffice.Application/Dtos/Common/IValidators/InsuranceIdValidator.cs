@@ -33,7 +33,7 @@ namespace MedicalOffice.Application.Dtos.Common.IValidators
                     return await _insuranceRepository.CheckExistInsuranceId(officeId, insuranceId);
                     }
 
-                }).WithMessage("{PropertyName} isn't exist");
+                }).WithMessage("بیمه ای با این مشخصات موجود نیست.");
         }
     }
 }
