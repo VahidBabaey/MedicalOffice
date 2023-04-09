@@ -44,7 +44,7 @@ public class Tariff : BaseDomainEntity<Guid>
     /// <summary>
     /// کد بیمه ای برای نمایش در دیسکت
     /// </summary>
-    public ulong? TariffInsuranceCode { get; set; }
+    public long? TariffInsuranceCode { get; set; }
 
     /// <summary>
     /// مبلغ تعرفه

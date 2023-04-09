@@ -42,6 +42,13 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     },
                     new UserOfficeRole()
                     {
+                        Id = Guid.Parse("0F563B4E-8156-439A-A144-312DE08BECDE"),
+                        UserId = Guid.Parse("5E31B2E7-4BEB-4E0B-BE39-F9B3300999FE"),
+                        RoleId = Guid.Parse("70508b44-eae8-4d40-9318-651ae5b38f40"),
+                        OfficeId = Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0")
+                    },
+                    new UserOfficeRole()
+                    {
                         Id = Guid.Parse("5bb6cf2d-f4c6-4936-8e97-c8ba779954bd"),
                         UserId = Guid.Parse("EAEF7EDD-C18A-4CCE-A450-72EE26C18A8D"),
                         RoleId = Guid.Parse("70508b44-eae8-4d40-9318-651ae5b38f40"),

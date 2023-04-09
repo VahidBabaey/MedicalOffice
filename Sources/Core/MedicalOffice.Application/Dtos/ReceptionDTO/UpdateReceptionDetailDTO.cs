@@ -33,7 +33,7 @@ public class UpdateReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO, IRecepti
     /// <summary>
     /// آیدی تیم پزشکی
     /// </summary>
-    public Guid[] MedicalStaffs { get; set; }
+    public Guid[]? MedicalStaffs { get; set; }
     /// تعرفه سرویس
     /// </summary>
     public long Tariff { get; set; }
