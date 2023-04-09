@@ -18,9 +18,9 @@ public class CashPosDTO
     /// آیدی پذیرش
     /// </summary>
     public Guid ReceptionId { get; set; }
-    /// <summary>
-    /// میزان بدهی
-    /// </summary>
-    public long TotalDebt { get; set; }
+    ///// <summary>
+    ///// میزان بدهی
+    ///// </summary>
+    //public long TotalDebt { get; set; }
 
 }

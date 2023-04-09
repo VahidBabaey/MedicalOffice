@@ -19,9 +19,11 @@ public class AddCashPosCommandHandler : IRequestHandler<AddCashPosCommand, BaseR
     private readonly ICashPosRepository _cashposrepository;
     private readonly ILogger _logger;
     private readonly string _requestTitle;
+    private readonly IReceptionRepository _receptionRepository;
 
-    public AddCashPosCommandHandler(IValidator<CashPosDTO> validator, ICashPosRepository cashposrepository, ILogger logger)
+    public AddCashPosCommandHandler(IReceptionRepository receptionRepository, IValidator<CashPosDTO> validator, ICashPosRepository cashposrepository, ILogger logger)
     {
+        _receptionRepository = receptionRepository;
         _validator = validator;
         _cashposrepository = cashposrepository;
         _logger = logger;
@@ -45,42 +47,51 @@ public class AddCashPosCommandHandler : IRequestHandler<AddCashPosCommand, BaseR
             });
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
-        if (request.DTO.Cost > request.DTO.TotalDebt)
-        {
-            var error = "مبلغ پرداختی بیشتر از بدهی میباشد";
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = $"{_requestTitle} failed",
-                AdditionalData = error
-            });
-            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-        }
-        else
-        {
-            try
-            {
-                var cashpos = await _cashposrepository.AddCashPosForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost, request.DTO.BankId);
+        //if (request.DTO.Cost > request.DTO.TotalDebt)
+        //{
+        //    var error = "مبلغ پرداختی بیشتر از بدهی میباشد";
+        //    await _logger.Log(new Log
+        //    {
+        //        Type = LogType.Error,
+        //        Header = $"{_requestTitle} failed",
+        //        AdditionalData = error
+        //    });
+        //    return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+        //}
 
-                await _logger.Log(new Log
-                {
-                    Type = LogType.Success,
-                    Header = $"{_requestTitle} succeded",
-                    AdditionalData = cashpos
-                });
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", cashpos);
-            }
-            catch (Exception error)
+        try
+        {
+            var reception = await _receptionRepository.GetById(request.DTO.ReceptionId);
+            if (request.DTO.Cost > reception.TotalDebt)
             {
+                var error = "مبلغ پرداختی بیشتر از بدهی میباشد";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,
                     Header = $"{_requestTitle} failed",
-                    AdditionalData = error.Message
+                    AdditionalData = error
                 });
-                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
             }
+            var cashpos = await _cashposrepository.AddCashPosForAnyReceptionDetail(request.OfficeId, request.DTO.ReceptionId, request.DTO.Cost, request.DTO.BankId);
+
+            await _logger.Log(new Log
+            {
+                Type = LogType.Success,
+                Header = $"{_requestTitle} succeded",
+                AdditionalData = cashpos
+            });
+            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", cashpos);
+        }
+        catch (Exception error)
+        {
+            await _logger.Log(new Log
+            {
+                Type = LogType.Error,
+                Header = $"{_requestTitle} failed",
+                AdditionalData = error.Message
+            });
+            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error.Message);
         }
     }
 }
-
