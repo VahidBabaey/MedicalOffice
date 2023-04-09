@@ -12,5 +12,7 @@ namespace MedicalOffice.Application.Models.ApiConsumerModels
         public string ServiceTariffsPath { get; set; }
 
         public string InquirePath { get; set; }
+
+        public string ServiceGenericCodsSmartSearchPath { get; set; }
     }
 }

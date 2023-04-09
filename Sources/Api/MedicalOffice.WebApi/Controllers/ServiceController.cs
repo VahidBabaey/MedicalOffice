@@ -73,13 +73,14 @@ public class ServiceController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [HttpGet("get-generic-codes")]
-    public async Task<ActionResult<List<ServiceGenericCodeDTO>>> GetServiceGenericCodes([FromQuery] string name)
+    [HttpGet("generic-code")]
+    public async Task<ActionResult<List<ServiceGenericCodeDTO>>> GetServiceGenericCodes([FromQuery] string searchString)
     {
-        var response = await _mediator.Send(new GetServiceGenericCodsQuery() { Name = name });
+        var response = await _mediator.Send(new GetServiceGenericCodsQuery() { SearchString = searchString });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
     [HttpGet("services-insuranceid")]
     public async Task<ActionResult<List<ServicesByInsuranceIdDTO>>> GetServicesByInsuranceId([FromQuery] string officeId, [FromQuery] string insuranceId)
     {

@@ -6,6 +6,6 @@ namespace MedicalOffice.Application.Features.ServiceFile.Requests.Queries
 {
     public class GetServiceGenericCodsQuery : IRequest<BaseResponse>
     {
-        public string Name { get; set; }
+        public string SearchString { get; set; }
     }
 }
