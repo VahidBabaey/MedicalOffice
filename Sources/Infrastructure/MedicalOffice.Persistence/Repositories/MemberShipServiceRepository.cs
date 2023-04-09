@@ -62,7 +62,7 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
         {
             ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
             {
-                ServiceId = item.Service.Id,
+                ServiceId = item.ServiceId,
                 ServicesName = item.Service.Name,
                 Discount = item.Discount,
                 Id = item.Id
@@ -83,7 +83,7 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
         {
             ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
             {
-                ServiceId = item.Service.Id,
+                ServiceId = item.ServiceId,
                 ServicesName = item.Service.Name,
                 Discount = item.Discount,
                 Id = item.Id
