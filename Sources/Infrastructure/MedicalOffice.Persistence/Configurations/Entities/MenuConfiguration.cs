@@ -16,7 +16,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                 MenuCreator("b5e1e8df-35fb-4672-b7a2-12a30a4bd29e","BasicInfo","اطلاعات پایه",order:1),
                 MenuCreator("7884aff9-de2c-410b-bfe0-43f510d378e3","OfficeInfo","اطلاعات مطب","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e",order:20),
                 MenuCreator("2bcdcf7d-5830-431e-a343-ced19741d4a5","DefinitionOfMedicalStaffs","تعریف کادر درمان","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e",order:21),
-                MenuCreator("c86bd8b9-f0d9-44db-9f45-5616218638ad","'MedicalStaffsSchedule","برنامه حضور کادر درمان","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e", order:22),
+                MenuCreator("c86bd8b9-f0d9-44db-9f45-5616218638ad","MedicalStaffsSchedule","برنامه حضور کادر درمان","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e", order:22),
                 MenuCreator("cfe66d95-299a-441b-b6b7-32b1c3993aa5","DefinitionOfSection","تعریف بخش","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e",order:23),
                 MenuCreator("4d742e89-e8bc-44d1-ba16-f8326856264c","DefinitionOfServices","تعریف خدمات","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e",order:24),
                 MenuCreator("2cf199d3-9361-4e7e-9cad-79f38c33a631","DefinitionOfShifts","تعریف شیفت","b5e1e8df-35fb-4672-b7a2-12a30a4bd29e",order:25),
