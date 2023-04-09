@@ -99,7 +99,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.illnessName, opt => opt.MapFrom(src => src.InfoDetailName))
             .ReverseMap();
         CreateMap<BasicInfoDetail, UpdateBasicInfoDetailDTO>().ReverseMap();
-        CreateMap<BasicInfoDetail, BasicInfoDetailListDTO>().ReverseMap();
+        CreateMap<BasicInfoDetail, BasicInfoChild>().ReverseMap();
         CreateMap<PatientIllnessForm, PatientIllnessFormListDTO>().ReverseMap();
         CreateMap<PatientIllnessForm, PatientIllnessFormDTO>().ReverseMap();
         CreateMap<PatientReferralForm, PatientReferralFormDTO>().ReverseMap();

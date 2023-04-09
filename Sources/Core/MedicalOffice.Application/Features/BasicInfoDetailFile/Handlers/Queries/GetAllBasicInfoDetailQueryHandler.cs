@@ -64,22 +64,23 @@ namespace MedicalOffice.Application.Features.BasicInfoDetailFile.Handlers.Querie
 
             try
             {
-                var basicInfoDetails = await _basicinfodetailrepository.GetByBasicInfoId(request.BasicInfoId);
+                var totalBasicInfoDetails = _basicinfodetailrepository.GetByBasicInfoId(request.BasicInfoId).Result.OrderBy(x => x.CreatedDate);
 
-                if (request.Order != null && Enum.IsDefined(typeof(Order), request.Order))
+                var skippedBasicInfoDetails = totalBasicInfoDetails.Skip(request.DTO.Skip).Take(request.DTO.Take).Select(x => _mapper.Map<BasicInfoChild>(x)).ToList();
+
+                var result = new BasicInfoDetailListDTO
                 {
-                    basicInfoDetails = request.Order == Order.NewRecords ? basicInfoDetails : basicInfoDetails.OrderBy(x => x.CreatedDate).ToList();
-                }
-
-                var result = basicInfoDetails.Skip(request.DTO.Skip).Take(request.DTO.Take).Select(x => _mapper.Map<BasicInfoDetailListDTO>(x));
+                    BasicInfoId = request.BasicInfoId,
+                    Details = skippedBasicInfoDetails
+                };
 
                 await _logger.Log(new Log
                 {
                     Type = LogType.Success,
                     Header = $"{_requestTitle} succeded",
-                    AdditionalData = new { total = basicInfoDetails.Count(), result = result }
+                    AdditionalData = new { total = totalBasicInfoDetails.Count(), result = result }
                 });
-                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = basicInfoDetails.Count(), result = result });
+                return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeded", new { total = totalBasicInfoDetails.Count(), result = result });
             }
             catch (Exception error)
             {
