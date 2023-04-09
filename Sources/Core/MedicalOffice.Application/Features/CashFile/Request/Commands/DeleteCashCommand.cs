@@ -13,6 +13,6 @@ namespace MedicalOffice.Application.Features.CashFile.Request.Commands
     public class DeleteCashCommand : IRequest<BaseResponse>
     {
         public Guid CashTypeId { get; set; }
-        public Cashtype Cashtype { get; set; }
+        public CashType Cashtype { get; set; }
     }
 }

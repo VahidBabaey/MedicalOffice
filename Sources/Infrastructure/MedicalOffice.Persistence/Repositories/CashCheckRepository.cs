@@ -58,7 +58,7 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
                 CashId = cash.Id,
                 BankId = bankid,
                 Branch = branch,
-                CashType = Cashtype.Check
+                CashType = CashType.Check
             };
             await _cashCheckRepository.Add(cashCheck);
 
