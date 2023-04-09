@@ -58,22 +58,11 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
 
         var membershipServices = await _dbContext.MemberShipServices.Include(c => c.Service).Where(c => c.MembershipId == memberShipId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false).ToListAsync();
 
-        //foreach (var item in services)
-        //{
-        //    ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
-        //    {
-        //        ServicesName = item.Name,
-        //        Discount = item.MemberShipServices.Select(p => new { p.Discount, p.MembershipId }).Where(p => p.MembershipId == memberShipId).FirstOrDefault().Discount,
-        //        Id = item.Id
-        //    };
-
-        //    servicesOfMemeberShipListDTOs.Add(servicesOfMemeberShipDTO);
-        //}
-
         foreach (var item in membershipServices)
         {
             ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
             {
+                ServiceId = item.Service.Id,
                 ServicesName = item.Service.Name,
                 Discount = item.Discount,
                 Id = item.Id
@@ -94,7 +83,7 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
         {
             ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
             {
-                ServiceId = item.ServiceId,
+                ServiceId = item.Service.Id,
                 ServicesName = item.Service.Name,
                 Discount = item.Discount,
                 Id = item.Id
