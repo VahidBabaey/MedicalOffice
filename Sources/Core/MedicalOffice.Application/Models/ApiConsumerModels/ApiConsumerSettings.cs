@@ -13,6 +13,6 @@ namespace MedicalOffice.Application.Models.ApiConsumerModels
 
         public string InquirePath { get; set; }
 
-        public string ServiceGenericCodsSmartSearchPath { get; set; }
+        public string GenericCodsSmartSearchPath { get; set; }
     }
 }
