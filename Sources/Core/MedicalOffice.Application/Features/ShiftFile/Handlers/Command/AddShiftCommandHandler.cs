@@ -57,7 +57,7 @@ namespace MedicalOffice.Application.Features.ShiftFile.Handlers.Command
 
             if (validationShiftConflict)
             {
-                var error = "There are conflicts between shifts";
+                var error = "شیفت وارد شده با شیفت‌های ثبت شده تداخل دارد";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

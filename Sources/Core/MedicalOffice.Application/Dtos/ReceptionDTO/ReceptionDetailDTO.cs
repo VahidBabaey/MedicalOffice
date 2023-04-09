@@ -49,7 +49,7 @@ public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO
     /// <summary>
     /// آیدی تیم پزشکی
     /// </summary>
-    public Guid[] MedicalStaffs { get; set; }
+    public Guid[]? MedicalStaffs { get; set; }
 
     /// تعرفه سرویس
     /// </summary>
