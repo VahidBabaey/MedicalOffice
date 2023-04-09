@@ -21,8 +21,9 @@ public class AddCashCartCommandHandler : IRequestHandler<AddCashCartCommand, Bas
     private readonly string _requestTitle;
     private readonly IReceptionRepository _receptionRepository;
 
-    public AddCashCartCommandHandler(IValidator<CashCartDTO> validator, ICashCartRepository cashcartrepository, ILogger logger)
+    public AddCashCartCommandHandler(IReceptionRepository receptionRepository,IValidator<CashCartDTO> validator, ICashCartRepository cashcartrepository, ILogger logger)
     {
+        _receptionRepository = receptionRepository;
         _validator = validator;
         _cashcartrepository = cashcartrepository;
         _logger = logger;

@@ -26,9 +26,9 @@ public class CashCartDTO
     /// </summary>
     public Guid ReceptionId { get; set; }
 
-    /// <summary>
-    /// بدهی
-    /// </summary>
-    public long TotalDebt { get; set; }
+    ///// <summary>
+    ///// بدهی
+    ///// </summary>
+    //public long? TotalDebt { get; set; }
 
 }
