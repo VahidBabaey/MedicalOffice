@@ -38,7 +38,7 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// <summary>
     /// ما به التفاوت
     /// </summary>
-    public float Difference { get; set; }
+    public float? Difference { get; set; } = 0;
 
     /// <summary>
     /// درصد بیمه
