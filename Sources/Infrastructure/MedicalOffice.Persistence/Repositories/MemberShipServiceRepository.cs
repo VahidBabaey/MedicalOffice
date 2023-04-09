@@ -58,22 +58,11 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
 
         var membershipServices = await _dbContext.MemberShipServices.Include(c => c.Service).Where(c => c.MembershipId == memberShipId && c.OfficeId == officeId && c.Service.IsDeleted == false && c.IsDeleted == false).ToListAsync();
 
-        //foreach (var item in services)
-        //{
-        //    ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
-        //    {
-        //        ServicesName = item.Name,
-        //        Discount = item.MemberShipServices.Select(p => new { p.Discount, p.MembershipId }).Where(p => p.MembershipId == memberShipId).FirstOrDefault().Discount,
-        //        Id = item.Id
-        //    };
-
-        //    servicesOfMemeberShipListDTOs.Add(servicesOfMemeberShipDTO);
-        //}
-
         foreach (var item in membershipServices)
         {
             ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
             {
+                ServiceId = item.ServiceId,
                 ServicesName = item.Service.Name,
                 Discount = item.Discount,
                 Id = item.Id
@@ -88,12 +77,13 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
         List<ServicesOfMemeberShipListDTO> servicesOfMemeberShipListDTOs = new List<ServicesOfMemeberShipListDTO>();
 
         var membershipServices = await _dbContext.MemberShipServices.Include(x => x.Service)
-            .Where(c => c.MembershipId == memberShipId && c.OfficeId == officeId && c.Service.Name.Contains(name) && c.Service.IsDeleted == false && c.IsDeleted == false).ToListAsync();
+            .Where(c => c.MembershipId == memberShipId && c.OfficeId == officeId && c.Service.Name.Contains(name) && !c.Service.IsDeleted && !c.IsDeleted).ToListAsync();
 
         foreach (var item in membershipServices)
         {
             ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
             {
+                ServiceId = item.ServiceId,
                 ServicesName = item.Service.Name,
                 Discount = item.Discount,
                 Id = item.Id
@@ -101,19 +91,6 @@ public class MemberShipServiceRepository : GenericRepository<MemberShipService, 
 
             servicesOfMemeberShipListDTOs.Add(servicesOfMemeberShipDTO);
         }
-        //var services = await _dbContext.Services.Where(p => p.OfficeId == officeId && p.Name.Contains(name) && p.IsDeleted == false).Include(p => p.MemberShipServices).Where(x => (x.MemberShipServices.Where(y => y.MembershipId == memberShipId).Any())).ToListAsync();
-
-        //foreach (var item in services)
-        //{
-        //    ServicesOfMemeberShipListDTO servicesOfMemeberShipDTO = new ServicesOfMemeberShipListDTO()
-        //    {
-        //        ServicesName = item.Name,
-        //        Discount = item.MemberShipServices.Select(p => new { p.Discount, p.MembershipId }).Where(p => p.MembershipId == memberShipId).FirstOrDefault().Discount,
-        //        Id = item.Id
-        //    };
-
-        //    servicesOfMemeberShipListDTOs.Add(servicesOfMemeberShipDTO);
-        //}
         return servicesOfMemeberShipListDTOs;
     }
     public async Task<bool> CheckExistMemberShipServiceId(Guid officeId, Guid Id)

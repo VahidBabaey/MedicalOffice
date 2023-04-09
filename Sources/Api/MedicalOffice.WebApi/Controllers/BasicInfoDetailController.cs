@@ -35,9 +35,9 @@ public class BasicInfoDetailController : Controller
     [Authorize]
     [Permission(BasicInfoPermissions.GetAllDetails)]
     [HttpGet]
-    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string basicinfoId, [FromQuery] string officerId , [FromQuery] Order? order)
+    public async Task<ActionResult<List<BasicInfoDetailListDTO>>> GetAll([FromQuery] ListDto dto, [FromQuery] string basicinfoId, [FromQuery] string officeId , [FromQuery] Order? order)
     {
-        var response = await _mediator.Send(new GetAllBasicInfoDetailQuery() { DTO = dto, BasicInfoId = Guid.Parse(basicinfoId), OfficeId = Guid.Parse(officerId), Order = order });
+        var response = await _mediator.Send(new GetAllBasicInfoDetailQuery() { DTO = dto, BasicInfoId = Guid.Parse(basicinfoId), OfficeId = Guid.Parse(officeId), Order = order });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

@@ -15,6 +15,10 @@ namespace MedicalOffice.Application.Dtos.MemberShipServiceDTO
         public string ServicesName { get; set; } = string.Empty;
 
         /// <summary>
+        /// آیدی خدمت
+        /// </summary>
+        public Guid ServiceId { get; set; }
+        /// <summary>
         /// تخفیف
         /// </summary>
         public string Discount { get; set; } = string.Empty;

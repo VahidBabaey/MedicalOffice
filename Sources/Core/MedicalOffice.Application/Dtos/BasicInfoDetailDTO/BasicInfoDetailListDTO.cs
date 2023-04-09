@@ -7,15 +7,25 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Dtos.BasicInfoDetailDTO
 {
-    public class BasicInfoDetailListDTO : BaseDto<Guid>
+    public class BasicInfoDetailListDTO
+    {
+        /// <summary>
+        /// آیدی اطلاعات پایه
+        /// </summary>
+        public Guid BasicInfoId { get; set; }
+
+        /// <summary>
+        /// لیست جزییات اطلاعات پایه موضوعی
+        /// </summary>
+        public List<BasicInfoChild> Details { get; set; }
+
+    }
+    public class BasicInfoChild : BaseDto<Guid>
     {
         /// <summary>
         /// نام جزئیات
         /// </summary>
         public string InfoDetailName { get; set; } = string.Empty;
-        /// <summary>
-        /// آیدی اطلاعات پایه
-        /// </summary>
-        public Guid BasicInfoId { get; set; }
+
     }
 }
