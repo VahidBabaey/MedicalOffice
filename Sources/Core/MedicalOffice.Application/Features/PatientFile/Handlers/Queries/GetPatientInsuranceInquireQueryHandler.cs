@@ -8,7 +8,7 @@ using MedicalOffice.Application.Responses;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net;
-//#nullable disable
+#nullable disable
 
 namespace MedicalOffice.Application.Features.PatientFile.Handlers.Queries
 {
@@ -37,31 +37,30 @@ namespace MedicalOffice.Application.Features.PatientFile.Handlers.Queries
                 return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", "برای دریافت  بیمه بیمار حداقل یک کاربر مطب با نظام پزشکی معتبر نیاز است.");
             }
 
-            var patientInquire = new PatientInquire();
             var input = new List<ExternalApiInput>();
 
             if (staffMedicalSystemInfo.IHIOUserName != null && staffMedicalSystemInfo.IHIOPassword != null)
             {
                 input.Add(new ExternalApiInput
                 {
-                    Key = nameof(patientInquire.SalamatUsername),
+                    Key = nameof(PatientInquire.SalamatUsername),
                     Value = staffMedicalSystemInfo.IHIOUserName
                 });
                 input.Add(new ExternalApiInput
                 {
-                    Key = nameof(patientInquire.SalamatPassword),
+                    Key = nameof(PatientInquire.SalamatPassword),
                     Value = staffMedicalSystemInfo.IHIOPassword
                 });
             }
 
             input.Add(new ExternalApiInput
             {
-                Key = nameof(patientInquire.DoctorMedicalId),
+                Key = nameof(PatientInquire.DoctorMedicalId),
                 Value = staffMedicalSystemInfo.MedicalNumber
             });
             input.Add(new ExternalApiInput
             {
-                Key = nameof(patientInquire.NationalCode),
+                Key = nameof(PatientInquire.NationalCode),
                 Value = request.NationalId
             });
 
@@ -74,11 +73,7 @@ namespace MedicalOffice.Application.Features.PatientFile.Handlers.Queries
 
             if (response.Content != null)
             {
-                var result = JsonConvert.DeserializeObject<PatientInsuranceInquireDTO>(response.Content);
-                if (result.Message.Contains("تامین اجتماعی"))
-                    result.InsuranceName = "تامین اجتماعی";
-                else
-                    result.InsuranceName = "سلامت";
+                var result = JsonConvert.DeserializeObject<PatientInquireDTO>(response.Content);
 
                 return ResponseBuilder.Success(response.StatusCode, $"{_requestTitle} succeeded", result);
             }

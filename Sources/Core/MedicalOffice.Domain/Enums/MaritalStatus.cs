@@ -13,4 +13,5 @@ public enum MaritalStatus
     /// متاهل
     /// </summary>
     Married,
+    Unknown
 }

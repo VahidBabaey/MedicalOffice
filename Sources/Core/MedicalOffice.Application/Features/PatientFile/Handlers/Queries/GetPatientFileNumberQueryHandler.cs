@@ -22,7 +22,7 @@ namespace MedicalOffice.Application.Features.PatientFile.Handlers.Queries
         public async Task<BaseResponse> Handle(GetPatientFileNumberQuery request, CancellationToken cancellationToken)
         {
             var FileNumber = await _patientrepository.GenerateFileNumber(request.OfficeId);
-            var _requestTitle = ResponseBuilder.CreateRequestTitle<GetPatientFileNumberQueryHandler>("QueryHandler");
+            var _requestTitle = ResponseBuilder.HandlerMessage<GetPatientFileNumberQueryHandler>("succeeded");
 
             await _logger.Log(new Log
             {
@@ -30,7 +30,7 @@ namespace MedicalOffice.Application.Features.PatientFile.Handlers.Queries
                 Header = $"{_requestTitle} succeeded",
                 AdditionalData = FileNumber
             });
-            return ResponseBuilder.Success(HttpStatusCode.OK, $"{_requestTitle} succeeded", FileNumber);
+            return ResponseBuilder.Success(HttpStatusCode.OK, _requestTitle, FileNumber);
         }
     }
 }

@@ -86,9 +86,9 @@ public class PatientController : Controller
 
     [Authorize]
     [HttpGet("insurance-inquire")]
-    public async Task<ActionResult<PatientInsuranceInquireDTO>> GetPatientInsuranceInquire([FromQuery] string patientNationalId, [FromQuery] string officeId)
+    public async Task<ActionResult<PatientInsuranceInquireDTO>> GetPatientInsuranceInquire([FromQuery] string nationalId, [FromQuery] string officeId)
     {
-        var response = await _mediator.Send(new GetPatientInsuranceInquireQuery() { NationalId = patientNationalId, OfficeId = Guid.Parse(officeId) });
+        var response = await _mediator.Send(new GetPatientInsuranceInquireQuery() { NationalId = nationalId, OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
