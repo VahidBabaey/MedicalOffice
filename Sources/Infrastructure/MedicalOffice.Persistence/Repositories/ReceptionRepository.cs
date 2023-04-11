@@ -592,7 +592,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 ServiceId = serviceId != null ? serviceId : default,
                 InsuranceId = item.InsuranceId,
                 AdditionalInsuranceId = item.AdditionalInsuranceId,
-                Cost = item.Cost,
+                Tariff = item.Tariff,
                 ServiceCount = item.ServiceCount,
                 MedicalStaffs = new List<object>(),
                 Recieved = item.Received,
@@ -615,12 +615,8 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 receptionDetailListDTO.Add(receptiondetaillistDTO);
             }
             return receptionDetailListDTO;
-        }
-        catch (Exception)
-        {
+        
 
-            throw;
-        }
     }
     public async Task<ReceptionDetailofPatientDTO> GetReceptionDetailofPatient(Guid receptiondetailId)
     {
