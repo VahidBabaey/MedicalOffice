@@ -25,7 +25,7 @@ public class CashListDTO :BaseDto<Guid>
     /// <summary>
     /// نوع پرداخت
     /// </summary>
-    public Cashtype? Cashtype { get; set; }
+    public CashType? CashType { get; set; }
 
 
 }

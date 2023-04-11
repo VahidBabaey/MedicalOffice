@@ -43,7 +43,7 @@ namespace MedicalOffice.Application.Features.ServiceFile.Handlers.Queries
             }
             var result = new List<ServiceGenericCodeDTO>();
 
-            var response = await _apiConsumer.GetResponse(_apiConsumersetting.ServiceGenericCodsPath, input);
+            var response = await _apiConsumer.GetResponse(_apiConsumersetting.GenericCodsSmartSearchPath, input);
 
             if (!response.IsSuccessStatusCode)
             {

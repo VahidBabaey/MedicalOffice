@@ -62,7 +62,7 @@ public class CashController : Controller
     }
 
     [HttpDelete("cash")]
-    public async Task<IActionResult> RemoveCash(Guid cashtypeid, [FromQuery] Cashtype cashtype)
+    public async Task<IActionResult> RemoveCash(Guid cashtypeid, [FromQuery] CashType cashtype)
     {
         var response = await _mediator.Send(new DeleteCashCommand() { CashTypeId = cashtypeid, Cashtype = cashtype });
 

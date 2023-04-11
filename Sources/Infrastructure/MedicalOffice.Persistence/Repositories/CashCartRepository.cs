@@ -56,7 +56,7 @@ public class CashCartRepository : GenericRepository<CashCart, Guid>, ICashCartRe
                 Cost = recieved,
                 CashId = cash.Id,
                 BankId = bankid,
-                CashType = Cashtype.Cart
+                CashType = CashType.Cart
             };
             var x = await _cashCartRepository.Add(cashCart);
 

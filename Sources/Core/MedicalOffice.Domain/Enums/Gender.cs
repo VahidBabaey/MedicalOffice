@@ -13,4 +13,5 @@ public enum Gender
     /// مرد
     /// </summary>
     Male,
+    Unknown
 }

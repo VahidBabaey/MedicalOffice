@@ -38,7 +38,6 @@ public class GetPatientCashesQueryHandler : IRequestHandler<GetPatientCashesQuer
 
     public async Task<BaseResponse> Handle(GetPatientCashesQuery request, CancellationToken cancellationToken)
     {
-
         try
         {
             var validationReceptionId = await _receptionrepository.CheckExistReceptionId(request.OfficeId, request.ReceptionId);

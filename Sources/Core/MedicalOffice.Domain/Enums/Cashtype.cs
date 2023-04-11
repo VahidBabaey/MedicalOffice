@@ -3,7 +3,7 @@
 /// <summary>
 /// نحوه پرداخت
 /// </summary>
-public enum Cashtype
+public enum CashType
 {
     /// <summary>
     /// پوز

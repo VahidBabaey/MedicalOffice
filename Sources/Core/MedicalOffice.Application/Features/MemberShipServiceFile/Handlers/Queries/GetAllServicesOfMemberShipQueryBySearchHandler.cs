@@ -41,20 +41,6 @@ public class GetAllServicesOfMemberShipQueryBySearchHandler : IRequestHandler<Ge
     public async Task<BaseResponse> Handle(GetAllServicesOfMemberShipQueryBySearch request, CancellationToken cancellationToken)
     {
 
-        var validationOfficeId = await _officeRepository.IsOfficeExist(request.OfficeId);
-
-        if (!validationOfficeId)
-        {
-            var error = "OfficeID isn't exist";
-            await _logger.Log(new Log
-            {
-                Type = LogType.Error,
-                Header = $"{_requestTitle} failed",
-                AdditionalData = error
-            });
-            return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
-        }
-
         var validationMembershipId = await _membershiprepository.CheckExistMembershipId(request.OfficeId, request.MemberShipId);
 
         if (!validationMembershipId)

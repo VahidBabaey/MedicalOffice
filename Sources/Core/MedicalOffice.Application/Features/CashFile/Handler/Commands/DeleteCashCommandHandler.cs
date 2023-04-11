@@ -38,19 +38,19 @@ public class DeleteCashCommandHandler : IRequestHandler<DeleteCashCommand, BaseR
     public async Task<BaseResponse> Handle(DeleteCashCommand request, CancellationToken cancellationToken)
     {
 
-        if (request.Cashtype == (Domain.Enums.Cashtype?)1)
+        if (request.Cashtype == (Domain.Enums.CashType?)1)
         {
             iscashPosIdExist = await _cashposrepository.CheckCashPosId(request.CashTypeId);
         }
-        if (request.Cashtype == (Domain.Enums.Cashtype?)2)
+        if (request.Cashtype == (Domain.Enums.CashType?)2)
         {
             iscashCartIdExist = await _cashcartrepository.CheckCashCartId(request.CashTypeId);
         }
-        if (request.Cashtype == (Domain.Enums.Cashtype?)3)
+        if (request.Cashtype == (Domain.Enums.CashType?)3)
         {
             iscashCheckIdExist = await _cashcheckrepository.CheckCashCheckId(request.CashTypeId);
         }
-        if (request.Cashtype == (Domain.Enums.Cashtype?)4)
+        if (request.Cashtype == (Domain.Enums.CashType?)4)
         {
             iscashMoneyIdExist = await _cashmoneyrepository.CheckCashMoneyId(request.CashTypeId);
         }
@@ -67,19 +67,19 @@ public class DeleteCashCommandHandler : IRequestHandler<DeleteCashCommand, BaseR
         }
         try
         {
-            if (request.Cashtype == (Domain.Enums.Cashtype?)1)
+            if (request.Cashtype == (Domain.Enums.CashType?)1)
             {
                 await _cashposrepository.DeleteCashPosForAnyReceptionDetail(request.CashTypeId);
             }
-            else if (request.Cashtype == (Domain.Enums.Cashtype?)2)
+            else if (request.Cashtype == (Domain.Enums.CashType?)2)
             {
                 await _cashcartrepository.DeleteCashCartForAnyReceptionDetail(request.CashTypeId);
             }
-            else if (request.Cashtype == (Domain.Enums.Cashtype?)3)
+            else if (request.Cashtype == (Domain.Enums.CashType?)3)
             {
                 await _cashcheckrepository.DeleteCashCheckForAnyReceptionDetail(request.CashTypeId);
             }
-            else if (request.Cashtype == (Domain.Enums.Cashtype?)4)
+            else if (request.Cashtype == (Domain.Enums.CashType?)4)
             {
                 await _cashmoneyrepository.DeleteCashMoneyForAnyReceptionDetail(request.CashTypeId);
             }

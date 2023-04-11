@@ -55,55 +55,55 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         var _listCart = await _dbContext.CashCarts.Where(p => p.ReceptionId == receptionId && p.OfficeId == officeId).ToListAsync();
         var _listMoney = await _dbContext.CashMoneies.Where(p => p.ReceptionId == receptionId && p.OfficeId == officeId).ToListAsync();
 
-        foreach (var itempos in _listPos)
+        foreach (var itemPos in _listPos)
         {
             CashListDTO cashListDTO = new()
             {
-                Id = itempos.Id,
-                CashId = itempos.CashId,
-                Cost = itempos.Cost,
-                CreatedDate = itempos.CreatedDate,
-                ReceptionId = itempos.ReceptionId,
-                Cashtype = itempos.CashType,
+                Id = itemPos.Id,
+                CashId = itemPos.CashId,
+                Cost = itemPos.Cost,
+                CreatedDate = itemPos.CreatedDate,
+                ReceptionId = itemPos.ReceptionId,
+                CashType = itemPos.CashType,
             };
             list.Add(cashListDTO);
         }
-        foreach (var itemcheck in _listCheck)
+        foreach (var itemCheck in _listCheck)
         {
             CashListDTO cashListDTO = new()
             {
-                Id = itemcheck.Id,
-                CashId = itemcheck.CashId,
-                Cost = itemcheck.Cost,
-                CreatedDate = itemcheck.CreatedDate,
-                ReceptionId = itemcheck.ReceptionId,
-                Cashtype = itemcheck.CashType,
+                Id = itemCheck.Id,
+                CashId = itemCheck.CashId,
+                Cost = itemCheck.Cost,
+                CreatedDate = itemCheck.CreatedDate,
+                ReceptionId = itemCheck.ReceptionId,
+                CashType = itemCheck.CashType,
             };
             list.Add(cashListDTO);
         }
-        foreach (var itemcart in _listCart)
+        foreach (var itemCart in _listCart)
         {
             CashListDTO cashListDTO = new()
             {
-                Id = itemcart.Id,
-                CashId = itemcart.CashId,
-                Cost = itemcart.Cost,
-                CreatedDate = itemcart.CreatedDate,
-                ReceptionId = itemcart.ReceptionId,
-                Cashtype = itemcart.CashType,
+                Id = itemCart.Id,
+                CashId = itemCart.CashId,
+                Cost = itemCart.Cost,
+                CreatedDate = itemCart.CreatedDate,
+                ReceptionId = itemCart.ReceptionId,
+                CashType = itemCart.CashType,
             };
             list.Add(cashListDTO);
         }
-        foreach (var itemmoney in _listMoney)
+        foreach (var itemMoney in _listMoney)
         {
             CashListDTO cashListDTO = new()
             {
-                Id = itemmoney.Id,
-                CashId = itemmoney.CashId,
-                Cost = itemmoney.Cost,
-                CreatedDate = itemmoney.CreatedDate,
-                ReceptionId = itemmoney.ReceptionId,
-                Cashtype = itemmoney.CashType,
+                Id = itemMoney.Id,
+                CashId = itemMoney.CashId,
+                Cost = itemMoney.Cost,
+                CreatedDate = itemMoney.CreatedDate,
+                ReceptionId = itemMoney.ReceptionId,
+                CashType = itemMoney.CashType,
             };
             list.Add(cashListDTO);
         }

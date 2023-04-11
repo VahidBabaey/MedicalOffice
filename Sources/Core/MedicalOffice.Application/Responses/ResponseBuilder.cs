@@ -19,10 +19,16 @@ namespace MedicalOffice.Application.Responses
             return new() { StatusCode = statusCode, Success = false, StatusDescription = message, Errors = errors.ToList() };
         }
 
-        public static string CreateRequestTitle<T>(string nameSlice)
+        public static string HandlerMessage<T>(string resType)
         {
-            var requestTitle = nameof(T).Replace(nameSlice,string.Empty);
-            return requestTitle;
+            if (nameof(T).Contains("Query"))
+                return string.Concat(nameof(T).Replace("QueryHandler", string.Empty), resType);
+
+            if (nameof(T).Contains("Command"))
+                return string.Concat(nameof(T).Replace("CommandHandler", string.Empty), resType);
+
+            else
+                return string.Empty;
         }
     }
 }

@@ -19,14 +19,14 @@ using System.Threading.Tasks;
 
 namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 {
-    public class GetAllTariffByServiceIDQueryHandler : IRequestHandler<GetAllTariffByServiceIDQuery, BaseResponse>
+    public class GetAllTariffByServiceIdQueryHandler : IRequestHandler<GetAllTariffByServiceIdQuery, BaseResponse>
     {
         private readonly IValidator<ServiceIdDTO> _validator;
         private readonly IServiceTariffRepository _tariffrepository;
         private readonly ILogger _logger;
         private readonly string _requestTitle;
 
-        public GetAllTariffByServiceIDQueryHandler(
+        public GetAllTariffByServiceIdQueryHandler(
             IValidator<ServiceIdDTO> validator,
             IServiceTariffRepository tariffrepository, 
             ILogger logger)
@@ -36,9 +36,9 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
             _logger = logger;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
-        public async Task<BaseResponse> Handle(GetAllTariffByServiceIDQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetAllTariffByServiceIdQuery request, CancellationToken cancellationToken)
         {
-            var validationResult = await _validator.ValidateAsync(request.ServiceId, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request.ServiceIdDto, cancellationToken);
             if (!validationResult.IsValid)
             {
                 var error = validationResult.Errors.Select(error => error.ErrorMessage).ToArray();
@@ -53,7 +53,7 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 
             try
             {
-                var tariffsOfService = await _tariffrepository.GetTariffsOfService(request.OfficeId, request.ServiceId.ServiceId);
+                var tariffsOfService = await _tariffrepository.GetTariffsOfService(request.OfficeId, request.ServiceIdDto.ServiceId);
                 var tariffsofServicePagination = tariffsOfService.Skip(request.Dto.Skip).Take(request.Dto.Take);
 
                 await _logger.Log(new Log
