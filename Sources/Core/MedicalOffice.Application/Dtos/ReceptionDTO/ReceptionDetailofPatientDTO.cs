@@ -53,7 +53,7 @@ public class ReceptionDetailofPatientDTO : BaseDto<Guid>
     /// <summary>
     /// تعرفه
     /// </summary>
-    public long Cost { get; set; }
+    public long Tariff { get; set; }
 
     /// <summary>
     /// سهم سازمان

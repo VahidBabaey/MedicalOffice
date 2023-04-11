@@ -16,13 +16,9 @@ public class ReceptionDetailListForReceptionDTO : BaseDto<Guid>
     /// </summary>
     public int ServiceCount { get; set; }
     /// <summary>
-    /// لیست تیم پزشکی
+    /// تعرفه
     /// </summary>
-    public string MedicalStaffs { get; set; }
-    /// <summary>
-    /// هزینه دریافتی
-    /// </summary>
-    public long Cost { get; set; }
+    public long Tariff { get; set; }
     /// <summary>
     /// تخفیف
     /// </summary>
@@ -42,10 +38,10 @@ public class ReceptionDetailListForReceptionDTO : BaseDto<Guid>
     /// <summary>
     /// لیست  پزشکان
     /// </summary>
-    public string DoctorsNames { get; set; }
+    public List<object> DoctorsNames { get; set; }
     /// <summary>
     /// لیست کارشناسان
     /// </summary>
-    public string ExpertsNames { get; set; }
+    public List<object> ExpertsNames { get; set; }
 
 }

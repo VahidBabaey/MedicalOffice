@@ -48,9 +48,9 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// </summary>
     public ICollection<ReceptionDebt> ReceptionDebts { get; set; } = new List<ReceptionDebt>();
     /// <summary>
-    /// هزینه دریافتی
+    /// تعرفه سرویس
     /// </summary>
-    public long Cost { get; set; }
+    public long Tariff { get; set; }
     /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>

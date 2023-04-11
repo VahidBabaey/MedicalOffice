@@ -38,6 +38,10 @@ public class ReceptionDetailListDTO : BaseDto<Guid>
     public long Recieved { get; set; }
 
     /// <summary>
+    /// تعرفه سرویس
+    /// </summary>
+    public long Tariff { get; set; }
+    /// <summary>
     /// تخفیف
     /// </summary>
     public long Discount { get; set; }
@@ -51,11 +55,6 @@ public class ReceptionDetailListDTO : BaseDto<Guid>
     /// بدهی
     /// </summary>
     public long Debt { get; set; }
-
-    /// <summary>
-    /// تعرفه
-    /// </summary>
-    public long Cost { get; set; }
 
     /// <summary>
     /// سهم سازمان

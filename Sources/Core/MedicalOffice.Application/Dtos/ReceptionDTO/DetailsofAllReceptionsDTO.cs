@@ -12,9 +12,9 @@ public class DetailsOfAllReceptionsDTO
     /// </summary>
     public Guid? ReceptionId { get; set; }
     /// <summary>
-    /// هزینه دریافتی
+    /// تعرفه
     /// </summary>
-    public long Cost { get; set; }
+    public long Tariff { get; set; }
     /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>

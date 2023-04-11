@@ -71,7 +71,7 @@ public class Service : BaseDomainEntity<Guid>
     /// <summary>
     /// زمان خدمت
     /// </summary>
-    public uint ServiceTime { get; set; }
+    public int ServiceTime { get; set; }
 
     /// <summary>
     /// سهم و درصد کاربران
