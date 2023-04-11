@@ -18,7 +18,7 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// <summary>
     /// کد بیمه
     /// </summary>
-    public ulong? TariffInsuranceCode { get; set; }
+    public long? TariffInsuranceCode { get; set; }
 
     /// <summary>
     /// مبلغ تعرفه
