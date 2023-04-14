@@ -14,10 +14,12 @@ public class AddPatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INati
     /// نام
     /// </summary>
     public string FirstName { get; set; } = string.Empty;
+
     /// <summary>
     /// نام خانوادگی
     /// </summary>
     public string LastName { get; set; } = string.Empty;
+
     /// <summary>
     /// آیدی کادر درمان
     /// </summary>
@@ -86,4 +88,9 @@ public class AddPatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INati
     /// سن
     /// </summary>
     public int? Age { get; set; }
+
+    /// <summary>
+    /// توضیحات
+    /// </summary>
+    public string? Description { get; set; } = string.Empty;
 }

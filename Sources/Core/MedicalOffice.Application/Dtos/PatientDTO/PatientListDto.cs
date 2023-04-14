@@ -114,4 +114,11 @@ public class PatientListDTO : BaseDto<Guid>
     /// شناسه پذیرش روز
     /// </summary>
     public Guid? ReceptionId{ get; set; }
+
+    /// <summary>
+    /// توضیحات
+    /// </summary>
+    public string? Description { get; set; } = string.Empty;
+
+    public Guid? ReferrerMedicalStaffId { get; set; }
 }
