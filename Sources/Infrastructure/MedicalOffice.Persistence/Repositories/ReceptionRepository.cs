@@ -708,11 +708,11 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             var receptionDetailList = await _dbContext.ReceptionDetails.Where(p => p.ReceptionId == receptionItem.Id).ToListAsync();
             foreach (var receptionDetails in receptionDetailList)
             {
-                var serviceIds = await _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == receptionDetails.Id).FirstOrDefaultAsync();
-                servicesNames += _dbContext.Services.Select(p => new { p.Name, p.Id }).Where(p => p.Id == serviceIds.ServiceId).FirstOrDefault().Name.ToString() + "، ";
-                var medicalStaffIds = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == receptionDetails.Id).ToListAsync();
-                foreach (var medicalStaffitem in medicalStaffIds)
-                {
+                var receptionDetailService = await _dbContext.ReceptionDetailServices.Include(x=>x.Service).Where(p => p.ReceptionDetailId == receptionDetails.Id).Select(x=>x.Service).FirstOrDefaultAsync();
+                servicesNames += receptionDetailService?.Name;
+                //var medicalStaffIds = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == receptionDetails.Id).ToListAsync();
+                //foreach (var medicalStaffitem in medicalStaffIds)
+                //{
                     //var medicalStaff = await _dbContext.MedicalStaffRoles.Where(p => p.MedicalStaffId == medicalStaffitem.MedicalStaffId).FirstOrDefaultAsync();
                     //var roleId = await _dbContext.Roles.Where(p => p.Id == medicalStaff.RoleId).FirstOrDefaultAsync();
 
@@ -724,8 +724,8 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                     //{
                     //    DoctorsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString() + "، ";
                     //}
-                }
-                medicalStaffIds = null;
+                //}
+                //medicalStaffIds = null;
             }
             ReceptionListDTO receptionListDTO = new()
             {

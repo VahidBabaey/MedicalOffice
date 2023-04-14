@@ -42,7 +42,7 @@ public class GetAllPatientreceptionsQueryHandler : IRequestHandler<GetAllPatient
         {
             var receptionsList = await _repository.GetReceptionList(request.PatientId);
 
-            var result = _mapper.Map<List<ReceptionListDTO>>(receptionsList);
+            var result = _mapper.Map<List<ReceptionListDTO>>(receptionsList).Skip(request.listDTO.Skip).Take(request.listDTO.Take);
 
             log.Header = $"{_requestTitle} succeded";
             log.Type = LogType.Success;
