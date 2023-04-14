@@ -13,6 +13,7 @@ using NLog.LayoutRenderers;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
+using MedicalOffice.Application.Constants;
 
 namespace MedicalOffice.Persistence.Repositories;
 
@@ -678,14 +679,14 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
                 var listmedicalstaff = await _dbContext.UserOfficeRoles.Include(p => p.Role).Where(p => p.OfficeId == officeId && p.UserId == medicalStaffId.UserId).FirstOrDefaultAsync();
 
-                if (listmedicalstaff.Role.PersianName == "کارشناس")
+                if (listmedicalstaff.Role.Id == ExpertRole.Id)
                 {
                     ExpertsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString();
                     receptiondetaillistForReceptionDTO.ExpertsNames.Add(new { id = medicalStaffitem.MedicalStaffId, name = ExpertsNames });
                     ExpertsNames = "";
 
                 }
-                if (listmedicalstaff.Role.PersianName == "پزشک")
+                if (listmedicalstaff.Role.Id == DoctorRole.Id)
                 {
                     DoctorsNames += _dbContext.MedicalStaffs.Select(p => new { FullName = p.FirstName + " " + p.LastName, p.Id }).Where(p => p.Id == medicalStaffitem.MedicalStaffId).FirstOrDefault().FullName.ToString();
                     receptiondetaillistForReceptionDTO.DoctorsNames.Add(new { id = medicalStaffitem.MedicalStaffId, name = DoctorsNames });
