@@ -88,9 +88,4 @@ public class AddPatientDTO : IPhoneNumberListDTO, ITelePhoneNumberListDTO, INati
     /// سن
     /// </summary>
     public int? Age { get; set; }
-
-    /// <summary>
-    /// توضیحات
-    /// </summary>
-    public string? Description { get; set; } = string.Empty;
 }

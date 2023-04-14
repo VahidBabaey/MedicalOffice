@@ -106,9 +106,4 @@ public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNu
     /// سن
     /// </summary>
     public int? Age { get; set; }
-
-    /// <summary>
-    /// توضیحات
-    /// </summary>
-    public string? Description { get; set; } = string.Empty;
 }

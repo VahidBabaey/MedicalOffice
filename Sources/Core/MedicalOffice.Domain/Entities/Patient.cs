@@ -64,11 +64,6 @@ public class Patient : BaseDomainEntity<Guid>
     public string? FatherName { get; set; } = string.Empty;
 
     /// <summary>
-    /// توضیحات
-    /// </summary>
-    public string? Description { get; set; } = string.Empty;
-
-    /// <summary>
     /// نحوه آشنایی
     /// </summary>
     public AcquaintedWay? AcquaintedWay { get; set; }
