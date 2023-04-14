@@ -209,47 +209,48 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         long tariff,
         long discount)
     {
-        var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
-
-        var receptionPatient = new Reception();
-        if (receptionId == null)
-        {
-            receptionPatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day);
-            // اگر بیمار در همون روز پذیرش نشده
-            if (receptionPatient == null)
-            {
-                var recId = await CreateNewReception(officeId, patientid, receptionType);
-                receptionId = _dbContext.Receptions.Where(r => r.Id == recId).FirstOrDefault().Id;
-            }
-            else if (receptionPatient != null)
-            {
-                receptionId = _dbContext.Receptions.Where(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day).FirstOrDefault().Id;
-            }
-        }
-
-        ReceptionDetail detail = new()
-        {
-            AdditionalInsuranceId = additionalInsuranceId,
-            Tariff = tariff,
-            Received = 0,
-            Deposit = 0,
-            Debt = recieved,
-            Discount = discount,
-            InsuranceId = insuranceId,
-            IsDeleted = false,
-            IsDebt = true,
-            OfficeId = officeId,
-            ReceptionId = (Guid)receptionId,
-            ServiceCount = serviceCount,
-            OrganShare = organshare,
-            PatientShare = patientshare,
-            AdditionalInsuranceShare = addshare
-        };
-
-        var addedDetail = await _receptionDetailRepository.Add(detail);
-
         try
         {
+            var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
+
+            var receptionPatient = new Reception();
+            if (receptionId == null)
+            {
+                receptionPatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day);
+                // اگر بیمار در همون روز پذیرش نشده
+                if (receptionPatient == null)
+                {
+                    var recId = await CreateNewReception(officeId, patientid, receptionType);
+                    receptionId = _dbContext.Receptions.Where(r => r.Id == recId).FirstOrDefault().Id;
+                }
+                else if (receptionPatient != null)
+                {
+                    receptionId = _dbContext.Receptions.Where(r => r.PatientId == patientid && r.CreatedDate.Day == DateTime.Now.Day).FirstOrDefault().Id;
+                }
+            }
+
+            ReceptionDetail detail = new()
+            {
+                AdditionalInsuranceId = additionalInsuranceId,
+                Tariff = tariff,
+                Received = 0,
+                Deposit = 0,
+                Debt = recieved,
+                Discount = discount,
+                InsuranceId = insuranceId,
+                IsDeleted = false,
+                IsDebt = true,
+                OfficeId = officeId,
+                ReceptionId = (Guid)receptionId,
+                ServiceCount = serviceCount,
+                OrganShare = organshare,
+                PatientShare = patientshare,
+                AdditionalInsuranceShare = addshare,
+            };
+
+            var addedDetail = await _receptionDetailRepository.Add(detail);
+
+
             foreach (var MedicalStaffId in MedicalStaffs)
             {
                 var receptionMedicalStaff = new ReceptionMedicalStaff()
@@ -260,14 +261,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 };
                 await _receptionDetailMedicalStaffRepository.Add(receptionMedicalStaff);
             }
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
 
-        try
-        {
             var receptionDetailService = new ReceptionDetailService()
             {
                 IsDeleted = false,
@@ -278,10 +272,12 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
             return addedDetail;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
+
             throw;
         }
+
     }
     public async Task<Guid> UpdateReceptionService(
         Guid receptionDetailId,

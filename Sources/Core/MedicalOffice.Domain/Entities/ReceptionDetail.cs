@@ -10,7 +10,7 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// <summary>
     /// پذیرش
     /// </summary>
-    public Reception? Reception { get; set; }
+    public Reception Reception { get; set; }
     /// <summary>
     /// آیدی پذیرش
     /// </summary>
