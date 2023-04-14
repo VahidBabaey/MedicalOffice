@@ -25,7 +25,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     private readonly IGenericRepository<Reception, Guid> _receptionReception;
     private readonly ApplicationDbContext _dbContext;
     string medicalStaffNames = "";
-    string servicesNames = "";
+    string servicesNames = string.Empty;
     string DoctorsNames = "";
     string ExpertsNames = "";
     //float organshare;
@@ -108,9 +108,9 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         if (serviceTariff != null)
         {
-            TariffDiff = (serviceTariff.Difference != null ? (long)serviceTariff.Difference : 0) * serviceCount;
+            TariffDiff = (serviceTariff?.Difference != null ? (long)serviceTariff.Difference : 0) * serviceCount;
             // اگر درصد دارد
-            if (serviceTariff.InsurancePercent != null && serviceTariff.InsurancePercent.Value > 0)
+            if (serviceTariff?.InsurancePercent != null && serviceTariff?.InsurancePercent.Value > 0)
             {
                 insPercent = serviceTariff.InsurancePercent.Value;
             }
@@ -187,8 +187,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         };
         return receptionDetailSharesDTO;
-
-
     }
 
     // تابع ثبت نهایی
@@ -776,7 +774,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         }).ToListAsync();
 
         return membershipNames;
-
     }
     public async Task<long> GetReceptionTotal(Guid id)
     {

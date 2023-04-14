@@ -92,7 +92,7 @@ public class ReceptionController : Controller
 
     [Authorize]
     [HttpPost("calculate-discount")]
-    public async Task<ActionResult<float>> CalculateServiceTariff([FromBody] CalculateDiscountDTO dto)
+    public async Task<ActionResult<ReceptionDetailSharesDTO>> CalculateServiceTariff([FromBody] CalculateDiscountDTO dto)
     {
         var response = await _mediator.Send(new CalculateServiceTariffCommand() { DTO = dto });
 
