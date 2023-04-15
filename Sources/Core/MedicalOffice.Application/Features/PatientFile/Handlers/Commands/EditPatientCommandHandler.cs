@@ -80,7 +80,6 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
-        var existingPatient = await _patientrepository.GetById(request.DTO.Id);
         var patient = _mapper.Map<Patient>(request.DTO);
 
         patient.OfficeId = request.OfficeId;
