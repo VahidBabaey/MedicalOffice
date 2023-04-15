@@ -142,6 +142,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                     Occupation = item.Occupation,
                     IntroducerType = item.IntroducerType,
                     ReceptionId = receptionpatient != null ? receptionpatient.Id : null,
+                    ReferrerMedicalStaffId = item.ReferrerMedicalStaffId
                 };
                 patientList.Add(patientListDto);
             }

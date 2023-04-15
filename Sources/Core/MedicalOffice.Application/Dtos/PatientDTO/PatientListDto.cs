@@ -114,4 +114,6 @@ public class PatientListDTO : BaseDto<Guid>
     /// شناسه پذیرش روز
     /// </summary>
     public Guid? ReceptionId{ get; set; }
+
+    public Guid? ReferrerMedicalStaffId { get; set; }
 }

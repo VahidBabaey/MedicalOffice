@@ -72,7 +72,7 @@ namespace MedicalOffice.Persistence.Configurations.Entities
                     {
                         Id = Guid.Parse("931a1e68-2e9a-4df9-adbe-405fb70fbef9"),
                         UserId = Guid.Parse("d53c3b49-47ed-4647-aef5-01397ea68cea"),
-                        RoleId = Guid.Parse("95632500-3619-48e0-a774-2494b819b594"),
+                        RoleId = Guid.Parse("8c07113f-ec06-4db0-90c7-e1d292525c7c"),
                         OfficeId = Guid.Parse("40dcd9d7-4765-4aa4-ae98-287108b608b0")
                     }
                 });

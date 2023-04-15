@@ -68,9 +68,9 @@ public class PatientController : Controller
 
     [Authorize]
     [HttpGet("receptions")]
-    public async Task<ActionResult<List<ReceptionListDTO>>> GetReceptionsList([FromQuery] string patientId)
+    public async Task<ActionResult<List<ReceptionListDTO>>> GetReceptionsList([FromQuery] string patientId, [FromQuery] ListDto dto)
     {
-        var response = await _mediator.Send(new GetAllPatientReceptionsQuery() { PatientId = Guid.Parse(patientId) });
+        var response = await _mediator.Send(new GetAllPatientReceptionsQuery() { PatientId = Guid.Parse(patientId), listDTO = dto });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

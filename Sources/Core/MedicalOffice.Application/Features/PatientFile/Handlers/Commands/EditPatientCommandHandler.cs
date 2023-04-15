@@ -66,7 +66,7 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
-        var isPatientExist = await _patientrepository.CheckExistByNationalId(request.DTO.NationalId, request.OfficeId,request.DTO.Id);
+        var isPatientExist = await _patientrepository.CheckExistByNationalId(request.DTO.NationalId, request.OfficeId, request.DTO.Id);
         if (isPatientExist)
         {
             var error = "بیمار دیگری قبلا با این کدملی در ابن مطب ثبت شده است.";
@@ -81,6 +81,7 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
         }
 
         var patient = _mapper.Map<Patient>(request.DTO);
+
         patient.OfficeId = request.OfficeId;
 
         await _patientrepository.Update(patient);

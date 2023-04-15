@@ -13,6 +13,7 @@ namespace MedicalOffice.Application.Features.PatientFile.Requests.Queries
 {
     public class GetAllPatientReceptionsQuery : IRequest<BaseResponse> 
     {
+        public ListDto listDTO { get; set; }
         public ReceptionListDTO DTO { get; set; } = new ReceptionListDTO();
         public Guid PatientId { get; set; }
     }
