@@ -52,6 +52,14 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// </summary>
     public long Tariff { get; set; }
     /// <summary>
+    /// قابل پرداخت
+    /// </summary>
+    public long Payable { get; set; }
+    /// <summary>
+    /// جمع کل
+    /// </summary>
+    public long Total { get; set; }
+    /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>
     public long Deposit { get; set; }

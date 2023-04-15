@@ -50,11 +50,19 @@ public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO
     /// آیدی تیم پزشکی
     /// </summary>
     public Guid[]? MedicalStaffs { get; set; }
-
+    /// <summary>
     /// تعرفه سرویس
     /// </summary>
     public long Tariff { get; set; }
-
+    /// <summary>
+    /// قابل پرداخت
+    /// </summary>
+    public long Payable { get; set; }
+    /// <summary>
+    /// جمع کل
+    /// </summary>
+    public long Total { get; set; }
+    /// <summary>
     /// دریافتی
     /// </summary>
     public long Recieved { get; set; }

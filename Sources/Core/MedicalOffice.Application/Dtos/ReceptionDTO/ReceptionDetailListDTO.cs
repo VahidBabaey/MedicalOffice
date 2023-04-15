@@ -42,6 +42,14 @@ public class ReceptionDetailListDTO : BaseDto<Guid>
     /// </summary>
     public long Tariff { get; set; }
     /// <summary>
+    /// قابل پرداخت
+    /// </summary>
+    public long Payable { get; set; }
+    /// <summary>
+    /// جمع کل
+    /// </summary>
+    public long Total { get; set; }
+    /// <summary>
     /// تخفیف
     /// </summary>
     public long Discount { get; set; }
