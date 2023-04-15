@@ -66,7 +66,7 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
-        var isPatientExist = await _patientrepository.CheckExistByNationalId(request.DTO.NationalId, request.OfficeId,request.DTO.Id);
+        var isPatientExist = await _patientrepository.CheckExistByNationalId(request.DTO.NationalId, request.OfficeId, request.DTO.Id);
         if (isPatientExist)
         {
             var error = "بیمار دیگری قبلا با این کدملی در ابن مطب ثبت شده است.";
@@ -80,9 +80,10 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
             return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
         }
 
+        var existingPatient = await _patientrepository.GetById(request.DTO.Id);
         var patient = _mapper.Map<Patient>(request.DTO);
 
-        if (request.DTO.FileNumber != null)
+        if (request.DTO.FileNumber != existingPatient.FileNumber && request.DTO.FileNumber != null)
         {
             var isFileNumberExist = await _patientrepository.IsFileNumberExist(request.DTO.FileNumber, request.OfficeId);
             if (isFileNumberExist)
@@ -99,8 +100,6 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
 
             patient.FileNumber = (int)request.DTO.FileNumber;
         }
-        else
-            patient.FileNumber = await _patientrepository.GenerateFileNumber(request.OfficeId);
 
         patient.OfficeId = request.OfficeId;
 
