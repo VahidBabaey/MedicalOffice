@@ -106,4 +106,5 @@ public class UpdatePatientDTO : BaseDto<Guid>, IPhoneNumberListDTO, ITelePhoneNu
     /// سن
     /// </summary>
     public int? Age { get; set; }
+    public int? FileNumber { get; set; } = default;
 }

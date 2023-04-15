@@ -81,6 +81,27 @@ public class EditPatientCommandHandler : IRequestHandler<EditPatientCommand, Bas
         }
 
         var patient = _mapper.Map<Patient>(request.DTO);
+
+        if (request.DTO.FileNumber != null)
+        {
+            var isFileNumberExist = await _patientrepository.IsFileNumberExist(request.DTO.FileNumber, request.OfficeId);
+            if (isFileNumberExist)
+            {
+                var error = "این شماره پرونده قبلا ثبت شده است شماره دیگری انتخاب کنید یا مقدار آن را خالی قرار دهید تا سیستم به صورت اتوماتیک آن را تولید کند.";
+                await _logger.Log(new Log
+                {
+                    Type = LogType.Error,
+                    Header = $"{_requestTitle} failed",
+                    AdditionalData = error
+                });
+                return ResponseBuilder.Faild(HttpStatusCode.BadRequest, $"{_requestTitle} failed", error);
+            }
+
+            patient.FileNumber = (int)request.DTO.FileNumber;
+        }
+        else
+            patient.FileNumber = await _patientrepository.GenerateFileNumber(request.OfficeId);
+
         patient.OfficeId = request.OfficeId;
 
         await _patientrepository.Update(patient);
