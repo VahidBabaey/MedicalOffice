@@ -79,9 +79,9 @@ public class Service : BaseDomainEntity<Guid>
     public ICollection<MedicalStaffServiceSharePercent>? MedicalStaffServiceSharePercents { get; set; }
 
     /// <summary>
-    /// جزئیات پذیرش و سرویس
+    /// جزئیات پذیرش - سرویس
     /// </summary>
-    public ICollection<ReceptionDetailService>? ReceptionDetailServices { get; set; }
+    public ICollection<ReceptionDetail>? ReceptionDetails_Service { get; set; }
 
     /// <summary>
     /// خدمات وقت دهی ها

@@ -62,10 +62,6 @@ public class ReceptionDetailDTO : IInsuranceIdDTO, IServiceIdDTO
     /// جمع کل
     /// </summary>
     public long Total { get; set; }
-    /// <summary>
-    /// دریافتی
-    /// </summary>
-    public long Recieved { get; set; }
 
     /// <summary>
     /// سهم سازمان

@@ -21,7 +21,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 {
     private readonly IGenericRepository<ReceptionDetail, Guid> _receptionDetailRepository;
     private readonly IGenericRepository<ReceptionMedicalStaff, Guid> _receptionDetailMedicalStaffRepository;
-    private readonly IGenericRepository<ReceptionDetailService, Guid> _receptionDetailServiceRepository;
     private readonly IGenericRepository<Reception, Guid> _receptionReception;
     private readonly ApplicationDbContext _dbContext;
     string medicalStaffNames = "";
@@ -32,12 +31,11 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     //float patientshare;
     //float additionalinsuranceshare;
     //Guid receptionID;
-    public ReceptionRepository(IGenericRepository<Reception, Guid> receptionReception, IGenericRepository<ReceptionDetailService, Guid> receptionDetailServiceRepository, IGenericRepository<ReceptionMedicalStaff, Guid> receptionDetailMedicalStaffRepository, IGenericRepository<ReceptionDetail, Guid> receptionDetailRepository, ApplicationDbContext dbContext) : base(dbContext)
+    public ReceptionRepository(IGenericRepository<Reception, Guid> receptionReception, IGenericRepository<ReceptionMedicalStaff, Guid> receptionDetailMedicalStaffRepository, IGenericRepository<ReceptionDetail, Guid> receptionDetailRepository, ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
         _receptionDetailRepository = receptionDetailRepository;
         _receptionDetailMedicalStaffRepository = receptionDetailMedicalStaffRepository;
-        _receptionDetailServiceRepository = receptionDetailServiceRepository;
         _receptionReception = receptionReception;
     }
     // این تابع درصد تخفیف سرویس انتخاب شده بر اساس نوع عضویت را بر میگرداند
@@ -94,7 +92,8 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     {
         long organshare = 0; // سهم سازمان
         long patientshare = 0; // سهم بیمار
-        long recieved = 0; // دریافتی
+        long payable = 0; // قابل پرداخت
+        long total = 0; // جمع کل
         long insPercent = 0; // درصد بیمه
         long TariffDiff = 0; // مابه تفاوت
         long insAddPercent = 0; // درصد بیمه تکمیلی
@@ -130,7 +129,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         organshare = ((Tariff * serviceCount) * insPercent / 100);
         patientshare = (Tariff * serviceCount) - organshare;
 
-        recieved = patientshare + TariffDiff;
+        total = patientshare + TariffDiff;
 
         //اگر بیمه تکمیلی دارد
         if (additionalInsuranceId.HasValue)
@@ -156,29 +155,30 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             }
             AddShare = ((InsAddTariff * serviceCount) * insAddPercent / 100) > organshare ? ((InsAddTariff * serviceCount) * insAddPercent / 100) - organshare : 0;
 
-            recieved = patientshare + TariffDiff - AddShare <= 0 ? 0 : patientshare + TariffDiff - AddShare;
+            total = patientshare + TariffDiff - AddShare <= 0 ? 0 : patientshare + TariffDiff - AddShare;
 
-            discount = ((long)(discountPercent > 0 ? ((recieved * discountPercent) / 100) : 0));
+            discount = ((long)(discountPercent > 0 ? ((total * discountPercent) / 100) : 0));
 
-            recieved = recieved - discount;
+            payable = total - discount;
 
-            if (recieved <= 0)
+            if (total <= 0)
             {
                 discountPercent = 0;
-                recieved = 0;
+                payable = 0;
             }
 
         }
         else
         {
-            discount = ((long)(discountPercent > 0 ? ((recieved * discountPercent) / 100) : 0));
+            discount = ((long)(discountPercent > 0 ? ((total * discountPercent) / 100) : 0));
 
-            recieved = recieved - discount;
+            payable = total - discount;
         }
         // به صورت یک دی تی او به سمت فرانت میرود
         ReceptionDetailSharesDTO receptionDetailSharesDTO = new()
         {
-            Recieved = recieved,
+            Payable = payable,
+            Total = total,
             Tariff = Tariff * serviceCount,
             OrganShare = organshare,
             PatientShare = patientshare,
@@ -201,7 +201,8 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         Guid? additionalInsuranceId,
         Guid? membershipId,
         Guid[]? MedicalStaffs,
-        long recieved,
+        long payable,
+        long total,
         long organshare,
         long patientshare,
         long addshare,
@@ -232,11 +233,14 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             {
                 AdditionalInsuranceId = additionalInsuranceId,
                 Tariff = tariff,
-                Received = 0,
                 Deposit = 0,
-                Debt = recieved,
+                Debt = payable,
+                Payable = payable,
+                Total = total,
+                Received = 0,
                 Discount = discount,
                 InsuranceId = insuranceId,
+                ServiceId = serviceId,
                 IsDeleted = false,
                 IsDebt = true,
                 OfficeId = officeId,
@@ -261,14 +265,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 await _receptionDetailMedicalStaffRepository.Add(receptionMedicalStaff);
             }
 
-            var receptionDetailService = new ReceptionDetailService()
-            {
-                IsDeleted = false,
-                ReceptionDetailId = addedDetail.Id,
-                ServiceId = serviceId,
-            };
-            await _receptionDetailServiceRepository.Add(receptionDetailService);
-
             return addedDetail;
         }
         catch (Exception)
@@ -287,7 +283,8 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         Guid? insuranceId,
         Guid? additionalInsuranceId,
         Guid[]? MedicalStaffs,
-        long Recieved,
+        long payable,
+        long total,
         long organshare,
         long patientshare,
         long addshare,
@@ -297,9 +294,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     {
         try
         {
-            var receptionDetailService = await _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == receptionDetailId).FirstOrDefaultAsync();
-            if (receptionDetailService != null)
-                await _receptionDetailServiceRepository.Delete(receptionDetailService);
 
             var receptionDetailMedicalStaff = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == receptionDetailId).ToListAsync();
             foreach (var item in receptionDetailMedicalStaff)
@@ -314,42 +308,42 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             var receptionID = _dbContext.Receptions.Where(r => r.Id == receptionId).FirstOrDefault().Id;
             var service = await _dbContext.Tariffs.Where(p => p.ServiceId == serviceId && p.InsuranceId == insuranceId).FirstOrDefaultAsync();
 
-            long old_recieved = 0;
+            long old_received = 0;
             long debt = 0;
             //long discount = 0;
             long deposit = 0;
             if (receptionDetailList.Received == 0)
             {
-                old_recieved = 0;
-                debt = Recieved;
+                old_received = 0;
+                debt = payable;
                 //discount = discount;
                 deposit = 0;
             }
-            if (receptionDetailList.Received > 0 && receptionDetailList.Received > Recieved && receptionDetailList.Debt > Recieved)
+            if (receptionDetailList.Received > 0 && receptionDetailList.Received > payable && receptionDetailList.Debt > payable)
             {
-                old_recieved = receptionDetailList.Received;
-                debt = receptionDetailList.Debt < 0 ? Recieved - receptionDetailList.Received + receptionDetailList.Debt : Recieved - receptionDetailList.Received;
+                old_received = receptionDetailList.Received;
+                debt = receptionDetailList.Debt < 0 ? payable - receptionDetailList.Received + receptionDetailList.Debt : payable - receptionDetailList.Received;
                 //discount = discount;
                 deposit = 0;
             }
-            if (receptionDetailList.Received > 0 && receptionDetailList.Received > Recieved && receptionDetailList.Debt < Recieved)
+            if (receptionDetailList.Received > 0 && receptionDetailList.Received > payable && receptionDetailList.Debt < payable)
             {
-                old_recieved = receptionDetailList.Received;
-                debt = receptionDetailList.Debt < 0 ? Recieved - receptionDetailList.Received + receptionDetailList.Debt : Recieved - receptionDetailList.Received;
+                old_received = receptionDetailList.Received;
+                debt = receptionDetailList.Debt < 0 ? payable - receptionDetailList.Received + receptionDetailList.Debt : payable - receptionDetailList.Received;
                 //discount = discount;
                 deposit = 0;
             }
-            if (receptionDetailList.Received > 0 && receptionDetailList.Received <= Recieved && receptionDetailList.Debt < Recieved)
+            if (receptionDetailList.Received > 0 && receptionDetailList.Received <= payable && receptionDetailList.Debt < payable)
             {
-                old_recieved = receptionDetailList.Received;
-                debt = receptionDetailList.Debt < 0 ? Recieved - old_recieved + Math.Abs(receptionDetailList.Debt) : Recieved - old_recieved;
+                old_received = receptionDetailList.Received;
+                debt = receptionDetailList.Debt < 0 ? payable - old_received + Math.Abs(receptionDetailList.Debt) : payable - old_received;
                 //discount = discount;
                 deposit = 0;
             }
-            if (receptionDetailList.Received > 0 && receptionDetailList.Received <= Recieved && receptionDetailList.Debt > Recieved)
+            if (receptionDetailList.Received > 0 && receptionDetailList.Received <= payable && receptionDetailList.Debt > payable)
             {
-                old_recieved = receptionDetailList.Received;
-                debt = receptionDetailList.Debt < 0 ? Recieved - old_recieved + Math.Abs(receptionDetailList.Debt) : Recieved - old_recieved;
+                old_received = receptionDetailList.Received;
+                debt = receptionDetailList.Debt < 0 ? payable - old_received + Math.Abs(receptionDetailList.Debt) : payable - old_received;
                 //discount = discount;
                 deposit = 0;
             }
@@ -359,11 +353,14 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 Id = receptionDetailId,
                 AdditionalInsuranceId = additionalInsuranceId,
                 Tariff = tariff,
-                Received = old_recieved,
+                Payable = payable,
                 Deposit = deposit,
+                Total = total,
+                Received = old_received,
                 Debt = debt,
                 Discount = discount,
                 InsuranceId = insuranceId,
+                ServiceId = serviceId,
                 IsDeleted = false,
                 IsDebt = false,
                 OfficeId = officeId,
@@ -387,13 +384,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 await _receptionDetailMedicalStaffRepository.Add(receptionMedicalStaff);
             }
 
-            var receptionDetailServices = new ReceptionDetailService()
-            {
-                ReceptionDetailId = addedDetail.Id,
-                ServiceId = serviceId
-            };
-            await _receptionDetailServiceRepository.Add(receptionDetailServices);
-
             return addedDetail.Id;
         }
         catch (Exception ex)
@@ -404,9 +394,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     }
     public async Task DeleteReceptionService(Guid receptionDetailId, Guid officeId)
     {
-        var receptionDetailService = await _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == receptionDetailId).FirstOrDefaultAsync();
-        if (receptionDetailService != null)
-            await _receptionDetailServiceRepository.SoftDelete(receptionDetailService.Id);
 
         var receptionDetailMedicalStaff = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == receptionDetailId).ToListAsync();
         foreach (var item in receptionDetailMedicalStaff)
@@ -481,7 +468,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         {
             AdditionalInsuranceId = default,
             Tariff = default,
-            Received = Debt,
+            Payable = Debt,
             Deposit = default,
             Debt = default,
             InsuranceId = default,
@@ -549,7 +536,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             detailsofAllReceptions.Tariff += item.Tariff;
             detailsofAllReceptions.Debt += item.Debt;
             detailsofAllReceptions.Deposit += item.Deposit;
-            detailsofAllReceptions.Recieved += item.Received;
+            detailsofAllReceptions.Recieved += item.Payable;
         }
         detailsofAllReceptions.FactorNo = facNo.FactorNo;
         detailsofAllReceptions.Description = reception.Description == null ? "" : reception.Description;
@@ -576,7 +563,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
 
         foreach (var item in _list)
         {
-            var serviceId = _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == item.Id).FirstOrDefault()?.ServiceId;
+            var serviceId = _dbContext.ReceptionDetails.Where(p => p.Id == item.Id).FirstOrDefault()?.ServiceId;
             var serviceName = _dbContext.Services.Where(p => p.Id == serviceId).FirstOrDefault()?.Name;
             var medicalStaffIds = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == item.Id).ToListAsync();
 
@@ -590,7 +577,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 Tariff = item.Tariff,
                 ServiceCount = item.ServiceCount,
                 MedicalStaffs = new List<object>(),
-                Recieved = item.Received,
+                Recieved = item.Payable,
                 Discount = item.Discount,
                 Deposit = item.Deposit,
                 Debt = item.Debt,
@@ -617,7 +604,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
     {
         var _list = await _dbContext.ReceptionDetails.Where(x => x.ServiceCount > 0 && x.IsDeleted == false && x.Id == receptiondetailId).FirstOrDefaultAsync();
 
-        var serviceId = _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == _list.Id).FirstOrDefault().ServiceId;
+        var serviceId = _dbContext.ReceptionDetails.Where(p => p.Id == _list.Id).FirstOrDefault().ServiceId;
         var serviceName = _dbContext.Services.Where(p => p.Id == serviceId).FirstOrDefault().Name;
         var medicalStaffIds = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == _list.Id).ToListAsync();
 
@@ -630,7 +617,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             Tariff = _list.Tariff,
             ServiceCount = _list.ServiceCount,
             MedicalStaffs = new List<object>(),
-            Recieved = _list.Received,
+            Recieved = _list.Payable,
             Discount = _list.Discount,
             Deposit = _list.Deposit,
             Debt = _list.Debt,
@@ -654,7 +641,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         var _list = await _dbContext.ReceptionDetails.Where(x => x.ServiceCount > 0).Include(p => p.Reception).Where(p => p.Reception.PatientId == patientId && p.Reception.Id == receptionId).ToListAsync();
         foreach (var item in _list)
         {
-            var serviceId = _dbContext.ReceptionDetailServices.Where(p => p.ReceptionDetailId == item.Id).FirstOrDefault()?.ServiceId;
+            var serviceId = _dbContext.ReceptionDetails.Where(p => p.Id == item.Id).FirstOrDefault()?.ServiceId;
             var serviceName = _dbContext.Services.Where(p => p.Id == serviceId).FirstOrDefault()?.Name;
             var medicalStaffIds = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == item.Id).ToListAsync();
 
@@ -667,7 +654,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 //Discount = discount.Discount,
                 Deposit = item.Deposit,
                 Debt = item.Debt,
-                Total = item.Received,
+                Total = item.Payable,
                 DoctorsNames = new List<object>(),
                 ExpertsNames = new List<object>(),
             };
@@ -706,7 +693,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             var receptionDetailList = await _dbContext.ReceptionDetails.Where(p => p.ReceptionId == receptionItem.Id).ToListAsync();
             foreach (var receptionDetails in receptionDetailList)
             {
-                var receptionDetailService = await _dbContext.ReceptionDetailServices.Include(x => x.Service).Where(p => p.ReceptionDetailId == receptionDetails.Id).Select(x => x.Service).FirstOrDefaultAsync();
+                var receptionDetailService = await _dbContext.ReceptionDetails.Include(x => x.Service).Where(p => p.Id == receptionDetails.Id).Select(x => x.Service).FirstOrDefaultAsync();
                 servicesNames += receptionDetailService?.Name + ",";
                 //var medicalStaffIds = await _dbContext.ReceptionMedicalStaffs.Where(p => p.ReceptionDetailId == receptionDetails.Id).ToListAsync();
                 //foreach (var medicalStaffitem in medicalStaffIds)
@@ -796,7 +783,7 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
             .LoadAsync();
 
         reception.TotalReceptionCost = reception.ReceptionDetails.Sum(rd => rd.Tariff);
-        reception.TotalReceived = reception.ReceptionDetails.Sum(rd => rd.Received);
+        reception.TotalReceived = reception.ReceptionDetails.Sum(rd => rd.Payable);
         reception.TotalDeposit = reception.ReceptionDetails.Sum(rd => rd.Deposit);
         reception.TotalDebt = reception.ReceptionDetails.Sum(rd => rd.Debt);
 

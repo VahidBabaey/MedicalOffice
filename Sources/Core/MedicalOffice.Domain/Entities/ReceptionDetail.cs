@@ -40,6 +40,14 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// </summary>
     public Guid? AdditionalInsuranceId { get; set; }
     /// <summary>
+    /// سرویس
+    /// </summary>
+    public Service? Service { get; set; }
+    /// <summary>
+    /// آیدی سرویس
+    /// </summary>
+    public Guid? ServiceId { get; set; }
+    /// <summary>
     /// کاربران / پزشکان
     /// </summary>
     public ICollection<ReceptionMedicalStaff> ReceptionMedicalStaffs { get; set; } = new List<ReceptionMedicalStaff>();
@@ -60,6 +68,10 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// </summary>
     public long Total { get; set; }
     /// <summary>
+    /// دریافتی
+    /// </summary>
+    public long Received { get; set; }
+    /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>
     public long Deposit { get; set; }
@@ -68,17 +80,9 @@ public class ReceptionDetail : BaseDomainEntity<Guid>
     /// </summary>
     public long Debt { get; set; }
     /// <summary>
-    /// جمع کل
-    /// </summary>
-    public long Received { get; set; }
-    /// <summary>
     /// تخفیف
     /// </summary>
     public long Discount { get; set; }
-    /// <summary>
-    /// جزئیات پذیرش - سرویس ها
-    /// </summary>
-    public ICollection<ReceptionDetailService> ReceptionDetailServices { get; set; } = new List<ReceptionDetailService>();
     /// <summary>
     /// پرداخت بدهی
     /// </summary>

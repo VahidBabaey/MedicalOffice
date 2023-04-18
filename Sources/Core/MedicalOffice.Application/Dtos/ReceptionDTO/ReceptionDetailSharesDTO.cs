@@ -11,9 +11,14 @@ public class ReceptionDetailSharesDTO
     /// تعرفه سرویس
     /// </summary>
     public long Tariff { get; set; }
-    /// دریافتی
+    /// <summary>
+    /// قابل پرداخت
     /// </summary>
-    public long Recieved { get; set; }
+    public long Payable { get; set; }
+    /// <summary>
+    /// جمع کل
+    /// </summary>
+    public long Total { get; set; }
     /// <summary>
     /// سهم سازمان
     /// </summary>

@@ -117,7 +117,7 @@ public class ReceptionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet("details-list")]
     public async Task<ActionResult<List<ReceptionDetailListDTO>>> GetDetailsList([FromQuery] Guid patientId, [FromQuery] Guid receptionId, [FromQuery] ListDto dto)
     {
@@ -133,7 +133,7 @@ public class ReceptionController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-    //[Authorize]
+    [Authorize]
     [HttpGet("patient-receptions")]
     public async Task<ActionResult<List<ReceptionDetailListForReceptionDTO>>> GetPatientreceptions([FromQuery] Guid officeId, [FromQuery] Guid patientId, [FromQuery] Guid receptionId, [FromQuery] ListDto dto)
     {
@@ -142,7 +142,7 @@ public class ReceptionController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPatch("update-reception-detail")]
     public async Task<ActionResult<Guid>> UpdateReceptionDetail([FromBody] UpdateReceptionDetailDTO dto, [FromQuery] string receptiodDetailId, [FromQuery] string officeId)
     {
