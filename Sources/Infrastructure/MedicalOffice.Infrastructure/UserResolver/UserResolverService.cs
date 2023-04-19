@@ -16,14 +16,14 @@ public class UserResolverService : IUserResolverService
         _context = context;
     }
 
-    public async Task<string> GetUserId()
+    public Task<string> GetUserId()
     {
         if (_context.HttpContext != null)
         {
-            return _context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Task.FromResult(_context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
 
-        return string.Empty;
+        return Task.FromResult(string.Empty);
     }
 
     public Task<List<OfficeRole>> GetOfficeRoles()

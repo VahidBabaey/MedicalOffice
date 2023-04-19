@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MedicalOffice.Application;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.PatientDTO;
 using MedicalOffice.Application.Dtos.ReceptionDTO;
@@ -98,6 +97,15 @@ public class PatientController : Controller
     public async Task<ActionResult<int>> GetPatientFileNumber([FromQuery] string officeId)
     {
         var response = await _mediator.Send(new GetPatientFileNumberQuery() { OfficeId = Guid.Parse(officeId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+
+    [Authorize]
+    [HttpGet("id")]
+    public async Task<ActionResult<int>> GetById([FromQuery] string officeId, [FromQuery] PatientIdDTO patientIdDto)
+    {
+        var response = await _mediator.Send(new GetPatietByIdQuery() { OfficeId = Guid.Parse(officeId), DTO = patientIdDto });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

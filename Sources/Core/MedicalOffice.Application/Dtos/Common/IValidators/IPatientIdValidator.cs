@@ -27,12 +27,7 @@ namespace MedicalOffice.Application.Dtos.Common.IValidators
                 .NotEmpty()
                 .MustAsync(async (patientId, token) =>
                 {
-                    var leaveTypeExists = await _patientRepository.CheckExistPatientId(officeId, patientId);
-                    if (leaveTypeExists == true)
-                    {
-                        return true;
-                    }
-                    return false;
+                    return await _patientRepository.CheckExistPatientId(officeId, patientId);
                 })
                 .WithMessage("{PropertyName} isn't exist");
         }

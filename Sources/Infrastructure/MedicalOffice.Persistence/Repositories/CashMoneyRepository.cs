@@ -90,7 +90,7 @@ public class CashMoneyRepository : GenericRepository<CashMoney, Guid>, ICashMone
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
     public async Task DeleteCashMoneyForAnyReceptionDetail(Guid moneyId)

@@ -2,6 +2,10 @@
 
 public class LoggerSettings
 {
+    public LoggerSettings()
+    {
+
+    }
     public LoggerSettings(LogOutputType outputType, string filePath)
     {
         OutputType = outputType;

@@ -180,6 +180,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<PatientIllnessFormDTO>, AddPatientIllnessFormValidator>();
         services.AddScoped<IValidator<AddPatientCommitmentsFormDTO>, AddPatientCommitmentsFormValidator>();
         services.AddScoped<IValidator<PictureUploadDTO>, AddPictureValidator>();
+        services.AddScoped<IValidator<PatientIdDTO>, PatientIdValidator>();
         #endregion
 
         #region CashCart
@@ -210,6 +211,7 @@ public static class ServicesRegistration
         services.AddScoped<IValidator<UpdateServiceRoomDTO>, UpdateServiceRoomValidator>();
         services.AddScoped<IValidator<ServiceRoomIdsDTO>, ServiceRoomIdsValidator>();
         #endregion
+
         return services;
     }
     public static IServiceCollection AddApplication(this IServiceCollection services)

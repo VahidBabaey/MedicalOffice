@@ -155,6 +155,39 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
         }
     }
 
+    public async Task<PatientListDTO?> GetPatientById(Guid id, Guid officeId)
+    {
+        try
+        {
+            var patient = await _dbContext.Patients
+                .Include(p => p.Insurance)
+                .Include(p => p.PatientContacts).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
+                .Include(p => p.PatientAddresses).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
+                .Include(p => p.PatientTags).Where(p => p.OfficeId == officeId && p.IsDeleted == false)
+                .SingleOrDefaultAsync(x => x.Id == id && x.OfficeId == officeId);
+
+            if (patient != null)
+            {
+                var receptionpatient = await _dbContext.Receptions.SingleOrDefaultAsync(r => r.PatientId == patient.Id && r.CreatedDate.Day == DateTime.Now.Day);
+
+                var res = _mapper.Map<PatientListDTO>(patient);
+                res.PhoneNumber = patient.PatientContacts.Where(p => Convert.ToInt16(p.ContactType) == 1).Select(p => p.ContactValue).ToArray();
+                res.TelePhoneNumber = patient.PatientContacts.Where(p => Convert.ToInt16(p.ContactType) == 2).Select(p => p.ContactValue).ToArray();
+                res.Address = patient.PatientAddresses.Select(p => p.AddressValue).ToArray();
+                res.Tag = patient.PatientTags.Select(p => p.Tag).ToArray();
+                res.ReceptionId = receptionpatient != null ? receptionpatient.Id : null;
+
+                return res;
+            }
+
+            return null;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public async Task<List<PatientListDTO>> GetAllPateint(Guid officeId)
     {
         try
@@ -176,24 +209,24 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                     Id = item.Id,
                     FirstName = item.FirstName,
                     LastName = item.LastName,
-                    NationalId = item.NationalId,
-                    FatherName = item.FatherName,
+                    NationalId = item.NationalId ?? string.Empty,
+                    FatherName = item.FatherName ?? string.Empty,
                     InsuranceId = item.InsuranceId ?? default,
                     InsuranceName = item.Insurance?.Name ?? "",
-                    BirthDate = item.BirthDate,
+                    BirthDate = item.BirthDate ?? string.Empty,
                     PhoneNumber = item.PatientContacts.Where(p => Convert.ToInt16(p.ContactType) == 1).Select(p => p.ContactValue).ToArray(),
                     FileNumber = item.FileNumber,
                     TelePhoneNumber = item.PatientContacts.Where(p => Convert.ToInt16(p.ContactType) == 2).Select(p => p.ContactValue).ToArray(),
                     Address = item.PatientAddresses.Select(p => p.AddressValue).ToArray(),
                     Tag = item.PatientTags.Select(p => p.Tag).ToArray(),
-                    //IntroducerId = item.IntroducerId,
-                    FileDescription = item.FileDescription,
+                    ReferrerMedicalStaffId = item.ReferrerMedicalStaffId,
+                    FileDescription = item.FileDescription ?? string.Empty,
                     Gender = item.Gender,
                     AcquaintedWay = item.AcquaintedWay,
                     Age = item.Age ?? default,
                     MaritalStatus = item.MaritalStatus,
                     EducationStatus = item.EducationStatus,
-                    Occupation = item.Occupation,
+                    Occupation = item.Occupation ?? string.Empty,
                     IntroducerType = item.IntroducerType,
                     ReceptionId = receptionpatient != null ? receptionpatient.Id : null,
                 };
@@ -277,7 +310,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
             if (id != null)
             {
                 isFileNumberExist = await _dbContext.Patients.AnyAsync(x =>
-                x.NationalId == nationalId &&
+                x.NationalId == nationalId && x.NationalId != string.Empty &&
                 x.Id != id &&
                 x.OfficeId == officeId &&
                 x.IsDeleted == false);
@@ -286,7 +319,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
             else
             {
                 isFileNumberExist = await _dbContext.Patients.AnyAsync(x =>
-                x.NationalId == nationalId &&
+                x.NationalId == nationalId && x.NationalId != string.Empty &&
                 x.OfficeId == officeId &&
                 x.IsDeleted == false);
             }

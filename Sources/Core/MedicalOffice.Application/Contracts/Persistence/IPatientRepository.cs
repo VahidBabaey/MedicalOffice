@@ -6,6 +6,7 @@ namespace MedicalOffice.Application.Contracts.Persistence
 {
     public interface IPatientRepository : IGenericRepository<Patient, Guid>
     {
+        Task<PatientListDTO?> GetPatientById(Guid id, Guid officeId);
         Task<bool> CheckExistByNationalId(string? nationalId, Guid officeId, Guid? id = null);
         Task<bool> CheckExistInsuranceId(Guid officeId, Guid insuranceId);
         Task<bool> CheckExistIntroducerId(Guid officeId, Guid introducerId);
