@@ -22,7 +22,6 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
 
             var officeId = _officeResolver.GetOfficeId().Result;
 
-
             RuleFor(x => x.TariffId)
 
                 .MustAsync(async (ids, token) =>

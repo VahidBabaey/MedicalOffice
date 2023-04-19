@@ -103,9 +103,9 @@ namespace MedicalOffice.Persistence.Repositories
             return isExist;
         }
 
-        public Task<TariffType> GetTariffTypeByInsuranceId(Guid insuranceId, Guid officeId)
+        public Task<Insurance> GetTariffTypeByInsuranceId(Guid insuranceId, Guid officeId)
         {
-            var insurance = _dbContext.Insurances.Single(x => x.Id == insuranceId && x.OfficeId == officeId).TariffType;
+            var insurance = _dbContext.Insurances.Single(x => x.Id == insuranceId && x.OfficeId == officeId);
 
             return Task.FromResult(insurance);
         }

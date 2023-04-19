@@ -103,7 +103,7 @@ public class PatientController : Controller
 
     [Authorize]
     [HttpGet("id")]
-    public async Task<ActionResult<int>> GetById([FromQuery] string officeId, [FromQuery] PatientIdDTO patientIdDto)
+    public async Task<ActionResult<PatientListDTO>> GetById([FromQuery] string officeId, [FromQuery] PatientIdDTO patientIdDto)
     {
         var response = await _mediator.Send(new GetPatietByIdQuery() { OfficeId = Guid.Parse(officeId), DTO = patientIdDto });
 

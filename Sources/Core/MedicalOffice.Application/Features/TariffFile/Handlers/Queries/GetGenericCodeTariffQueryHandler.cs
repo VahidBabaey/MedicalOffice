@@ -48,22 +48,15 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
             _QueryStringResolver = officeResolver;
             _requestTitle = GetType().Name.Replace("QueryHandler", string.Empty);
         }
+
         public async Task<BaseResponse> Handle(GetGenericCodeTariffQuery request, CancellationToken cancellationToken)
         {
-            var queryStrings = await _QueryStringResolver.GetAllQueryStrings();
-
             var input = new List<ExternalApiInput>();
-            foreach (var item in queryStrings)
+            input.Add(new ExternalApiInput
             {
-                if (item.Key.ToLower() == nameof(request.GenericCode).ToLower())
-                {
-                    input.Add(new ExternalApiInput
-                    {
-                        Key = item.Key,
-                        Value = item.Value
-                    });
-                }
-            }
+                Key = nameof(request.DTO.GenericCode).ToLower(),
+                Value = request.DTO.GenericCode
+            });
 
             var response = await _apiConsumer.GetResponse(_apiConsumersetting.ServiceTariffsPath, input);
 
@@ -72,15 +65,30 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
                 return ResponseBuilder.Faild(HttpStatusCode.BadGateway, $"{_requestTitle} failed", response.ErrorMessage);
             }
 
-            var tariffType = await _insuranceRepository.GetTariffTypeByInsuranceId(request.InsuranceId, request.OfficeId);
+            var tariff = await _insuranceRepository.GetTariffTypeByInsuranceId(request.DTO.InsuranceId, request.OfficeId);
+            var tariffType = tariff.TariffType;
 
-            var result = JsonConvert.DeserializeObject<ServiceTariffDTO>(response.Content);
+            var result = JsonConvert.DeserializeObject<ServiceTariffModel>(response.Content);
 
             foreach (var item in result.GetType().GetProperties())
             {
                 if (Enum.GetName(tariffType) == item.Name)
                 {
-                    return ResponseBuilder.Success(response.StatusCode, $"{_requestTitle} succeeded", item.GetValue(result));
+                    var res = new CalculateTariffsResDTO()
+                    {
+                        InsuranceTariff = (float)item.GetValue(result),
+
+                        Difference = !request.DTO.CalculateDifference ? 0 :
+                        request.DTO.Difference == null ?
+                        result.Private - (float)item.GetValue(result) :
+                        (float)request.DTO.Difference
+                    };
+
+                    res.Total = request.DTO.InsurancePersent == null ?
+                        (float)item.GetValue(result) * (100 - tariff.InsurancePercent) / 100 + res.Difference :
+                        (float)((float)item.GetValue(result) * (100 - request.DTO.InsurancePersent) / 100) + res.Difference;
+
+                    return ResponseBuilder.Success(response.StatusCode, $"{_requestTitle} succeeded", res);
                 }
             }
 

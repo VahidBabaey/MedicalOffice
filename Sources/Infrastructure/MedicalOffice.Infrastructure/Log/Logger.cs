@@ -10,8 +10,8 @@ public class Logger : ILogger
 
     public Logger(IOptions<LoggerSettings> settings)
     {
-       
-       // _settings = settings.Value;
+
+        _settings = settings.Value;
     }
 
     public async Task Log(Application.Models.Logger.Log log)
