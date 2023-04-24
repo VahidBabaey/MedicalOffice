@@ -38,21 +38,6 @@ namespace MedicalOffice.Application.Dtos.Tariff.Validators
 
             Include(new InsuranceIdValidator(_insuranceRepository, _officeResolver));
 
-            RuleFor(x => x.InternalTariffValue)
-                .NotEmpty()
-                .WithMessage("ورود تعرفه داخلی ضروری است");
-
-            RuleFor(x => x)
-                .Must((x) =>
-                {
-                    var diff = Math.Abs(x.TariffValue - x.InternalTariffValue);
-                    if (x.Difference == diff)
-                        return true;
-                    else return false;
-                })
-                .When(x => x.Difference != null)
-                .WithMessage(" ما به اتفاوت باید با تفاوت تعرفه و تعرفه داخلی برابر باشد. ");
-
             RuleFor(x => x.TariffValue)
                 .NotEmpty()
                 .WithMessage("ورود مبلغ تعرفه ضروری است");

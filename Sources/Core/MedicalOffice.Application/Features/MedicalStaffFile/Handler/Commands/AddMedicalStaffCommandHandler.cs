@@ -124,7 +124,7 @@ namespace MedicalOffice.Application.Features.MedicalStaffFile.Handler.Commands
             }
             else if (bothExist)
             {
-                if (userByPhoneNumber.Id == userByNationalId.Id)
+                if (userByPhoneNumber?.Id == userByNationalId?.Id)
                 {
                     user = userByPhoneNumber;
                 }

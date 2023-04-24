@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedicalOffice.Application.Models.ApiConsumerModels
+namespace MedicalOffice.Application.Dtos.PatientDTO
 {
     public class PatientInquireDTO
     {

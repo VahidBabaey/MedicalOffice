@@ -12,6 +12,6 @@ namespace MedicalOffice.Application.Contracts.Persistence
         Task<List<InsuranceNamesDTO>> GetAllAdditionalInsuranceNames(Guid officeId);
         Task<List<Insurance>> GetInsuranceBySearch(string name, Guid officeId);
         Task<List<InsuranceNamesDTO>> GetInsuranceNames(Guid officeId);
-        Task<TariffType> GetTariffTypeByInsuranceId(Guid insuranceId, Guid officeId);
+        Task<Insurance> GetTariffTypeByInsuranceId(Guid insuranceId, Guid officeId);
     }
 }

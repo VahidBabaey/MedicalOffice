@@ -93,7 +93,7 @@ public class CashCartRepository : GenericRepository<CashCart, Guid>, ICashCartRe
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
     public async Task DeleteCashCartForAnyReceptionDetail(Guid checkId)

@@ -42,7 +42,7 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 

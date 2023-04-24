@@ -101,7 +101,6 @@ public class GenericRepository<T1, T2> : IGenericRepository<T1, T2> where T1 : c
             if (fetchResult.Any())
                 result.AddRange(fetchResult);
         }
-
         return result;
     }
 

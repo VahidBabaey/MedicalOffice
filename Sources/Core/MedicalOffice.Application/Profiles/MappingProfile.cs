@@ -38,6 +38,7 @@ using MedicalOffice.Application.Dtos.FormReferalDTO;
 using MedicalOffice.Application.Dtos.ServiceRoomDTO;
 using MedicalOffice.Domain;
 using MedicalOffice.Application.Dtos.BankDTO;
+using MedicalOffice.Application.Models.ApiConsumerModels;
 
 namespace MedicalOffice.Application.Profiles;
 public class MappingProfile : Profile
@@ -58,7 +59,7 @@ public class MappingProfile : Profile
         CreateMap<Service, ServiceDTO>().ReverseMap();
         CreateMap<Service, UpdateServiceDTO>().ReverseMap();
         CreateMap<Service, ServiceListDTO>().ReverseMap();
-        CreateMap<Tariff, ServiceTariffDTO>().ReverseMap();
+        CreateMap<Tariff, ServiceTariffModel>().ReverseMap();
         CreateMap<Insurance, InsuranceDTO>().ReverseMap();
         CreateMap<Insurance, UpdateInsuranceDTO>().ReverseMap();
         CreateMap<Insurance, InsuranceListDTO>().ReverseMap();

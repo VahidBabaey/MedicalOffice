@@ -1,6 +1,6 @@
-﻿namespace MedicalOffice.Application.Dtos.Tariff
+﻿namespace MedicalOffice.Application.Models.ApiConsumerModels
 {
-    public class ServiceTariffDTO
+    public class ServiceTariffModel
     {
         public float Private { get; set; }
         public float Govermental { get; set; }

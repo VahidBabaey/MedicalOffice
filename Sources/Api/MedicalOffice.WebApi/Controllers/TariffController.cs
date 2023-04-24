@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MedicalOffice.Application;
 using MedicalOffice.Application.Dtos.Common;
 using MedicalOffice.Application.Dtos.Common.IDtos;
 using MedicalOffice.Application.Dtos.InsuranceDTO;
@@ -36,6 +35,15 @@ public class TariffController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
+
+    [HttpPost("calculate-tariffs")]
+    public async Task<ActionResult<CalculateTariffsResDTO>> GetGenericCodeTariff([FromBody] CalculateTariffsReqDTO dto, [FromQuery] string officeId)
+    {
+        var response = await _mediator.Send(new GetGenericCodeTariffQuery() { DTO = dto, OfficeId = Guid.Parse(officeId) });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+
     [HttpGet]
     public async Task<ActionResult<List<TariffListDTO>>> GetTariffsOfService([FromQuery] string officeId, [FromQuery] ServiceIdDTO ServiceIdDto, [FromQuery] ListDto dto)
     {
@@ -48,14 +56,6 @@ public class TariffController : Controller
     public async Task<IActionResult> RemoveList([FromBody] TariffListIdDTO dto, [FromQuery] string officeId)
     {
         var response = await _mediator.Send(new DeleteTariffListCommand() { DTO = dto, OfficeId = Guid.Parse(officeId) });
-
-        return StatusCode(Convert.ToInt32(response.StatusCode), response);
-    }
-
-    [HttpGet("generic-code-tariff")]
-    public async Task<ActionResult<int>> GetGenericCodeTariff([FromQuery] string genericCode, [FromQuery] string insuranceId, [FromQuery] string officeId)
-    {
-        var response = await _mediator.Send(new GetGenericCodeTariffQuery() { GenericCode = genericCode , InsuranceId = Guid.Parse(insuranceId) , OfficeId = Guid.Parse(officeId) });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }

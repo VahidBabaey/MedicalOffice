@@ -137,7 +137,7 @@ public class CashCheckRepository : GenericRepository<CashCheck, Guid>, ICashChec
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 }
