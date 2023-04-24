@@ -57,7 +57,7 @@ namespace MedicalOffice.Application.Features.InsuranceFile.Handlers.Commands
 
             if (validationInsuranceName)
             {
-                var error = "Name Must be Unique";
+                var error = "نام بیمه نباید تکراری باشد.";
                 await _logger.Log(new Log
                 {
                     Type = LogType.Error,

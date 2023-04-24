@@ -533,10 +533,10 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         foreach (var item in _list)
         {
             detailsofAllReceptions.ReceptionId = item.ReceptionId;
-            detailsofAllReceptions.Tariff += item.Tariff;
+            detailsofAllReceptions.Payable += item.Payable;
             detailsofAllReceptions.Debt += item.Debt;
-            detailsofAllReceptions.Deposit += item.Deposit;
-            detailsofAllReceptions.Recieved += item.Payable;
+            detailsofAllReceptions.Recieved += item.Received;
+            detailsofAllReceptions.Total += item.Total;
         }
         detailsofAllReceptions.FactorNo = facNo.FactorNo;
         detailsofAllReceptions.Description = reception.Description == null ? "" : reception.Description;
@@ -544,7 +544,6 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
         detailsofAllReceptions.Username = username == null ? "" : username.FirstName + " " + username.LastName;
 
         reception.TotalDebt = detailsofAllReceptions.Debt;
-        reception.TotalDeposit = detailsofAllReceptions.Deposit;
         reception.TotalReceived += detailsofAllReceptions.Recieved;
 
         await _receptionReception.Update(reception);
@@ -575,6 +574,8 @@ public class ReceptionRepository : GenericRepository<Reception, Guid>, IReceptio
                 InsuranceId = item.InsuranceId,
                 AdditionalInsuranceId = item.AdditionalInsuranceId,
                 Tariff = item.Tariff,
+                Payable = item.Payable,
+                Total = item.Total,
                 ServiceCount = item.ServiceCount,
                 MedicalStaffs = new List<object>(),
                 Recieved = item.Payable,

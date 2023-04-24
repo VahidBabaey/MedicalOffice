@@ -12,13 +12,17 @@ public class DetailsOfAllReceptionsDTO
     /// </summary>
     public Guid? ReceptionId { get; set; }
     /// <summary>
-    /// تعرفه
+    /// قابل پرداخت
     /// </summary>
-    public long Tariff { get; set; }
+    public long Payable { get; set; }
+    /// <summary>
+    /// جمع کل
+    /// </summary>
+    public long Total { get; set; }
     /// <summary>
     /// مبلغ امانی / بیعانه
     /// </summary>
-    public long Deposit { get; set; }
+    //public long Deposit { get; set; }
     /// <summary>
     /// بدهی
     /// </summary>
