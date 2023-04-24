@@ -62,7 +62,7 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
 
             if (!response.IsSuccessStatusCode)
             {
-                return ResponseBuilder.Faild(HttpStatusCode.BadGateway, $"{_requestTitle} failed", response.ErrorMessage);
+                return ResponseBuilder.Faild(HttpStatusCode.BadGateway, $"{_requestTitle} failed", response.ErrorException.Message);
             }
 
             var tariff = await _insuranceRepository.GetTariffTypeByInsuranceId(request.DTO.InsuranceId, request.OfficeId);
