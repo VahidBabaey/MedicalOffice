@@ -85,22 +85,22 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                         error);
                 }
 
-                var isOfficeExist = await _officeRepository.GetByTelePhoneNumber(item.TelePhoneNumber);
+                //var isOfficeExist = await _officeRepository.GetByTelePhoneNumber(item.TelePhoneNumber);
 
-                if (isOfficeExist)
-                {
-                    var error = "An office with this phone number exist";
-                    await _logger.Log(new Log
-                    {
-                        Type = LogType.Error,
-                        Header = $"{_requestTitle} failed",
-                        AdditionalData = error
-                    });
+                //if (isOfficeExist)
+                //{
+                //    var error = "An office with this phone number exist";
+                //    await _logger.Log(new Log
+                //    {
+                //        Type = LogType.Error,
+                //        Header = $"{_requestTitle} failed",
+                //        AdditionalData = error
+                //    });
 
-                    return ResponseBuilder.Faild(HttpStatusCode.BadRequest,
-                        $"{_requestTitle} failed",
-                        error);
-                }
+                //    return ResponseBuilder.Faild(HttpStatusCode.BadRequest,
+                //        $"{_requestTitle} failed",
+                //        error);
+                //}
 
                 var newOffice = await _officeRepository.Add(_mapper.Map<Office>(item));
 
@@ -120,11 +120,9 @@ namespace MedicalOffice.Application.Features.OfficeFeature.Handlers.Commands
                         $"{item.UserRole} isn't exit");
                 }
 
-                var userRole = _userManager.GetUsersInRoleAsync(roleName).Result.SingleOrDefault(x=>x.Id==item.UserId);
+                var userRole = _userManager.GetUsersInRoleAsync(roleName).Result.SingleOrDefault(x => x.Id == item.UserId);
                 if (userRole == null)
-                {
                     await _userManager.AddToRoleAsync(existingUser, roleName);
-                }
 
                 var userOfficeRoles = await _userOfficeRoleRepository.Add(new UserOfficeRole
                 {
