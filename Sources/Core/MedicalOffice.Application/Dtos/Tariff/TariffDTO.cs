@@ -44,4 +44,9 @@ public class TariffDTO : IServiceIdDTO, IInsuranceIdDTO
     /// درصد بیمه
     /// </summary>
     public int? InsurancePercent { get; set; } = default;
+
+    /// <summary>
+    /// جمع کل
+    /// </summary>
+    public float Total { get; set; }
 }
