@@ -176,6 +176,7 @@ public class PatientRepository : GenericRepository<Patient, Guid>, IPatientRepos
                 res.Address = patient.PatientAddresses.Select(p => p.AddressValue).ToArray();
                 res.Tag = patient.PatientTags.Select(p => p.Tag).ToArray();
                 res.ReceptionId = receptionpatient != null ? receptionpatient.Id : null;
+                res.Name = patient.FirstName + " "+ patient.LastName;   
 
                 return res;
             }

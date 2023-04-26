@@ -16,6 +16,11 @@ public class PatientListDTO : BaseDto<Guid>
     public string FirstName { get; set; } = string.Empty;
 
     /// <summary>
+    /// نام کامل
+    /// </summary>
+    public string? Name { get; set; } = string.Empty;
+
+    /// <summary>
     /// نام خانوادگی
     /// </summary>
     public string LastName { get; set; } = string.Empty;
