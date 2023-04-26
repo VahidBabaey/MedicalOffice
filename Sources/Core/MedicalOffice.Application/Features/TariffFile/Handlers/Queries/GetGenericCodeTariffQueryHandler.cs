@@ -79,7 +79,7 @@ namespace MedicalOffice.Application.Features.TariffFile.Handlers.Queries
                         InsuranceTariff = (float)item.GetValue(result),
 
                         Difference = !request.DTO.CalculateDifference ? 0 :
-                        request.DTO.Difference == null ?
+                        request.DTO.Difference == null || request.DTO.Difference == 0 ?
                         result.Private - (float)item.GetValue(result) :
                         (float)request.DTO.Difference
                     };
