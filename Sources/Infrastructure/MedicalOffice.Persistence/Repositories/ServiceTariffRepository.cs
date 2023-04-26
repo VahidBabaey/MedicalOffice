@@ -39,6 +39,7 @@ public class ServiceTariffRepository : GenericRepository<Tariff, Guid>, IService
             tariffListDTO.Difference = item.Difference;
             tariffListDTO.InsurancePercent = item.InsurancePercent ?? default;
             tariffListDTO.InsuranceName = item.Insurance.Name;
+            tariffListDTO.Total = item.Total;
 
             tariffListDTOs.Add(tariffListDTO);
         }

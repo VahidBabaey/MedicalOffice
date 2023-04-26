@@ -54,4 +54,9 @@ public class TariffListDTO : BaseDto<Guid>
     /// درصد بیمه
     /// </summary>
     public int? InsurancePercent { get; set; } = 0;
+
+    /// <summary>
+    /// جمع کل
+    /// </summary>
+    public float Total { get; set; }
 }

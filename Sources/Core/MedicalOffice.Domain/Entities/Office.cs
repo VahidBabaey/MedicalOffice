@@ -29,6 +29,21 @@ public class Office : BaseDomainEntity<Guid>
     public TariffType TariffType { get; set; } = TariffType.Private;
 
     /// <summary>
+    /// آدرس اینستاگرام
+    /// </summary>
+    public string? InstagramAddress { get; set; }
+
+    /// <summary>
+    /// آدرس تلگرام
+    /// </summary>
+    public string? TelegramAddress { get; set; }
+
+    /// <summary>
+    /// آدرس واتس اپ
+    /// </summary>
+    public string? WhatsAppAddress { get; set; }
+
+    /// <summary>
     /// نوع تخفیف ها
     /// </summary>
     public ICollection<DiscountType> DiscountTypes { get; set; }

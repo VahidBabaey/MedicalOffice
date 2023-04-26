@@ -65,4 +65,9 @@ public class Tariff : BaseDomainEntity<Guid>
     /// درصد بیمه
     /// </summary>
     public int? InsurancePercent { get; set; }
+
+    /// <summary>
+    /// جمع کل
+    /// </summary>
+    public float Total { get; set; }
 }
