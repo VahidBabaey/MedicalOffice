@@ -48,6 +48,6 @@ public class CashCart : BaseDomainEntity<Guid>
     /// <summary>
     /// نوع پرداخت
     /// </summary>
-    public CashType? CashType { get; set; }
+    public CashType CashType { get; set; }
 
 }
