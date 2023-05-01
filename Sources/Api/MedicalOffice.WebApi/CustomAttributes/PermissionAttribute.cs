@@ -16,6 +16,7 @@ namespace MedicalOffice.WebApi.Attributes
         {
             Arguments = new object[] { Permissions };
         }
+
     }
     public class PermissionFilter : IAuthorizationFilter
     {
