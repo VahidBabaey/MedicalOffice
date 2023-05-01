@@ -5,6 +5,7 @@
 
 trigger:
 - develop
+- main
 
 steps:
 # - task: PowerShell@2
