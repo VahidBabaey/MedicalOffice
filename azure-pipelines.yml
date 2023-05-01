@@ -19,18 +19,18 @@ steps:
   inputs:
     script: '"C:\Program Files\dotnet\dotnet.exe" publish --output "C:\Sites\MedicalOfficeOnline.Api.Develop\"'
 
-# - task: DotNetCoreCLI@2
-#   displayName: Generate SQL migration scripts
-#   inputs:
-#     command: custom
-#     workingDirectory: '"**/Sources/Infrastructure/MedicalOffice.Persistence"'
-#     custom: 'ef '
-#     arguments: migrations script -o C:/Users/P.Hashemi.Admin/migrations/scripts.sql --context ApplicationDbContext -v -i
+ - task: DotNetCoreCLI@2
+   displayName: Generate SQL migration scripts
+   inputs:
+     command: custom
+     workingDirectory: '"**/Sources/Infrastructure/MedicalOffice.Persistence"'
+     custom: 'ef '
+     arguments: migrations script -o C:/Users/P.Hashemi.Admin/Documents/migrations/scripts.sql --context ApplicationDbContext -v -i
     
 
-- task: CmdLine@2
-  inputs:
-    script: 'dotnet ef migrations script --output "C:\Users\P.Hashemi.Admin\Documents\migrations\scripts.sql" --context $ApplicationDbContext  --idempotent'  
+#- task: CmdLine@2
+#  inputs:
+#    script: 'dotnet ef migrations script --output "C:\Users\P.Hashemi.Admin\Documents\migrations\scripts.sql" --context $ApplicationDbContext  --idempotent'  
 
 # - task: PowerShell@2
 #   inputs:
