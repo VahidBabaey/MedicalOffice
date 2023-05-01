@@ -5,6 +5,9 @@ using MedicalOffice.Application.Dtos.CashDTO;
 using MedicalOffice.Application.Features.CashFile.Request.Queries;
 using MedicalOffice.Application.Models.Logger;
 using MedicalOffice.Application.Responses;
+using MedicalOffice.Domain.Entities;
+using MedicalOffice.Domain.Enums;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,30 +29,49 @@ namespace MedicalOffice.Application.Features.CashFile.Handler.Queries
             _cashRepository = cashRepository;
             _requestTitle = GetType().Name.Replace("QueryHAndler", string.Empty);
         }
+
         public async Task<BaseResponse> Handle(GetReceptionCashTotalsQuery request, CancellationToken cancellationToken)
         {
             var cashes = await _cashRepository.GetTotalRecievedByReceptionId(request.OfficeId, request.ReceptionId);
 
             var cashTotalReceived = new CashTotalReceivedDto();
-            foreach (var item in cashes.CashCarts)
+            foreach (var item in cashes)
             {
-                cashTotalReceived.CashCart.CashType = item.CashType;
-                cashTotalReceived.CashCart.Cost = +item.Cost;
-            }
-            foreach (var item in cashes.CashChecks)
-            {
-                cashTotalReceived.CashCheck.CashType = item.CashType;
-                cashTotalReceived.CashCheck.Cost = +item.Cost;
-            }
-            foreach (var item in cashes.CashPoses)
-            {
-                cashTotalReceived.CashPose.CashType = item.CashType;
-                cashTotalReceived.CashPose.Cost = +item.Cost;
-            }
-            foreach (var item in cashes.CashMoneies)
-            {
-                cashTotalReceived.CashMoney.CashType = item.CashType;
-                cashTotalReceived.CashMoney.Cost = +item.Cost;
+                if (item.CashCarts.Any())
+                {
+                    cashTotalReceived.CashCart.CashType = CashType.Cart;
+                    foreach (var index in item.CashCarts)
+                    {
+                        cashTotalReceived.CashCart.Cost += index.Cost;
+                    }
+                }
+
+                if (item.CashChecks.Any())
+                {
+                    cashTotalReceived.CashCheck.CashType = CashType.Check;
+                    foreach (var index in item.CashChecks)
+                    {
+                        cashTotalReceived.CashCheck.Cost += index.Cost;
+                    }
+                }
+
+                if (item.CashPoses.Any())
+                {
+                    cashTotalReceived.CashPose.CashType = CashType.Pos;
+                    foreach (var index in item.CashPoses)
+                    {
+                        cashTotalReceived.CashPose.Cost += index.Cost;
+                    }
+                }
+
+                if (item.CashMoneies.Any())
+                {
+                    cashTotalReceived.CashMoney.CashType = CashType.Money;
+                    foreach (var index in item.CashMoneies)
+                    {
+                        cashTotalReceived.CashMoney.Cost += index.Cost;
+                    }
+                }
             }
 
             await _logger.Log(new Log

@@ -194,14 +194,14 @@ public class CashRepository : GenericRepository<Cash, Guid>, ICashRepository
         return totaldebt;
     }
 
-    public async Task<Cash> GetTotalRecievedByReceptionId(Guid officeId, Guid receptionId)
+    public async Task<List<Cash>> GetTotalRecievedByReceptionId(Guid officeId, Guid receptionId)
     {
         var cash = await _dbContext.Cashes
             .Include(x => x.CashCarts.Where(x => !x.IsDeleted))
             .Include(x => x.CashPoses.Where(x => !x.IsDeleted))
             .Include(x => x.CashChecks.Where(x => !x.IsDeleted))
             .Include(x => x.CashMoneies.Where(x => !x.IsDeleted))
-            .SingleAsync(x => x.OfficeId == officeId && x.ReceptionId == receptionId && !x.IsDeleted);
+            .Where(x => x.OfficeId == officeId && x.ReceptionId == receptionId && !x.IsDeleted).ToListAsync();
         return cash;
     }
 }

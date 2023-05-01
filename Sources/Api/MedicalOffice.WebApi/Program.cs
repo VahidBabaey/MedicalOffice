@@ -8,8 +8,12 @@ using MedicalOffice.Application.Dtos.Identity.Validators;
 using MedicalOffice.Application.Dtos.Identity;
 using MediatR;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Configuration;
+using Serilog.Context;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.WebHost.UseIIS();
 
 builder.Services.AddControllers()
