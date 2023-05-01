@@ -24,7 +24,7 @@ steps:
    inputs:
      command: custom
      workingDirectory: '"**/Sources/Infrastructure/MedicalOffice.Persistence"'
-     custom: 'ef '
+     custom: 'ef'
      arguments: migrations script -o C:/Users/P.Hashemi.Admin/Documents/migrations/scripts.sql --context ApplicationDbContext -v -i
     
 
