@@ -24,5 +24,4 @@ public enum CashType
     /// نقد
     /// </summary>
     Money = 4,
-
 }

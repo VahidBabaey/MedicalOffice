@@ -4,10 +4,10 @@ namespace MedicalOffice.Application.Dtos.CashDTO
 {
     public class CashTotalReceivedDto
     {
-        public TotalReceived CashCheck { get; set; } = new TotalReceived();
-        public TotalReceived CashPose { get; set; } = new TotalReceived();
-        public TotalReceived CashCart { get; set; } = new TotalReceived();
-        public TotalReceived CashMoney { get; set; } = new TotalReceived();
+        public TotalReceived Check { get; set; } = new TotalReceived() { CashType=CashType.Check};
+        public TotalReceived Pos { get; set; } = new TotalReceived() { CashType = CashType.Pos };
+        public TotalReceived Cart { get; set; } = new TotalReceived() { CashType = CashType.Cart };
+        public TotalReceived Money { get; set; } = new TotalReceived() { CashType = CashType.Money };
     }
 
     public class TotalReceived

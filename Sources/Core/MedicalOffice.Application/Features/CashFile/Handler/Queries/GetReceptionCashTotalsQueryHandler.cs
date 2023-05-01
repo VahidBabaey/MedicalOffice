@@ -37,40 +37,24 @@ namespace MedicalOffice.Application.Features.CashFile.Handler.Queries
             var cashTotalReceived = new CashTotalReceivedDto();
             foreach (var item in cashes)
             {
-                if (item.CashCarts.Any())
+                foreach (var index in item.CashCarts)
                 {
-                    cashTotalReceived.CashCart.CashType = CashType.Cart;
-                    foreach (var index in item.CashCarts)
-                    {
-                        cashTotalReceived.CashCart.Cost += index.Cost;
-                    }
+                    cashTotalReceived.Cart.Cost += index.Cost;
                 }
 
-                if (item.CashChecks.Any())
+                foreach (var index in item.CashChecks)
                 {
-                    cashTotalReceived.CashCheck.CashType = CashType.Check;
-                    foreach (var index in item.CashChecks)
-                    {
-                        cashTotalReceived.CashCheck.Cost += index.Cost;
-                    }
+                    cashTotalReceived.Check.Cost += index.Cost;
                 }
 
-                if (item.CashPoses.Any())
+                foreach (var index in item.CashPoses)
                 {
-                    cashTotalReceived.CashPose.CashType = CashType.Pos;
-                    foreach (var index in item.CashPoses)
-                    {
-                        cashTotalReceived.CashPose.Cost += index.Cost;
-                    }
+                    cashTotalReceived.Pos.Cost += index.Cost;
                 }
 
-                if (item.CashMoneies.Any())
+                foreach (var index in item.CashMoneies)
                 {
-                    cashTotalReceived.CashMoney.CashType = CashType.Money;
-                    foreach (var index in item.CashMoneies)
-                    {
-                        cashTotalReceived.CashMoney.Cost += index.Cost;
-                    }
+                    cashTotalReceived.Money.Cost += index.Cost;
                 }
             }
 

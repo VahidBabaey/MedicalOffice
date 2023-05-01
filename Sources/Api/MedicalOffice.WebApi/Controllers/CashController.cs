@@ -77,7 +77,7 @@ public class CashController : Controller
     }
 
     [HttpGet("total-received")]
-    public async Task<ActionResult<Guid>> GetTotalReceived([FromQuery] Guid officeId, [FromQuery] Guid receptionId)
+    public async Task<ActionResult<CashTotalReceivedDto>> GetTotalReceived([FromQuery] Guid officeId, [FromQuery] Guid receptionId)
     {
         var response = await _mediator.Send(new GetReceptionCashTotalsQuery() { OfficeId = officeId, ReceptionId = receptionId });
 
