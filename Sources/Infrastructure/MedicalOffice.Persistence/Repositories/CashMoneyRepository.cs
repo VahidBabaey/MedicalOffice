@@ -53,7 +53,7 @@ public class CashMoneyRepository : GenericRepository<CashMoney, Guid>, ICashMone
                 ReceptionId = receptionId,
                 Cost = recieved,
                 CashId = cash.Id,
-                CashType = (Domain.Enums.CashType?)4
+                CashType = Domain.Enums.CashType.Money
             };
             await _cashmoneyrepository.Add(cashMoney);
 

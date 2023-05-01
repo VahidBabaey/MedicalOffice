@@ -53,6 +53,7 @@ using MedicalOffice.Application.Dtos.Tariff;
 using MedicalOffice.Application.Dtos.Tariff.Validators;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO;
 using MedicalOffice.Application.Dtos.MedicalStaffDTO.Validators;
+using Serilog.Context;
 
 namespace MedicalOffice.Persistence;
 

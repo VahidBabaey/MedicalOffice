@@ -44,7 +44,6 @@ public class CashController : Controller
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
 
-    [Authorize]
     [HttpPost("Cart")]
     public async Task<ActionResult<Guid>> CreateCart([FromBody] CashCartDTO dto, [FromQuery] string officeId)
     {
@@ -70,12 +69,21 @@ public class CashController : Controller
     }
 
     [HttpGet("total-debt")]
-    public async Task<ActionResult<Guid>> GettotalDebtofreception([FromQuery] Guid officeId, [FromQuery] Guid receptionId,[FromQuery] Guid patientId)
+    public async Task<ActionResult<Guid>> GettotalDebtofreception([FromQuery] Guid officeId, [FromQuery] Guid receptionId, [FromQuery] Guid patientId)
     {
         var response = await _mediator.Send(new GetTotalDebtofReceptionQuery() { OfficeId = officeId, ReceptionId = receptionId, PatientId = patientId });
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
+    [HttpGet("total-received")]
+    public async Task<ActionResult<Guid>> GetTotalReceived([FromQuery] Guid officeId, [FromQuery] Guid receptionId)
+    {
+        var response = await _mediator.Send(new GetReceptionCashTotalsQuery() { OfficeId = officeId, ReceptionId = receptionId });
+
+        return StatusCode(Convert.ToInt32(response.StatusCode), response);
+    }
+
     [HttpPost("returncash")]
     public async Task<ActionResult<Guid>> ReturnCash([FromQuery] string officeId, [FromQuery] string cashId)
     {
@@ -83,6 +91,7 @@ public class CashController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
+
     [HttpPost("CashDebt")]
     public async Task<ActionResult<Guid>> CreateCashDebt([FromBody] CashesDTO dto, [FromQuery] string officeId)
     {
@@ -90,5 +99,4 @@ public class CashController : Controller
 
         return StatusCode(Convert.ToInt32(response.StatusCode), response);
     }
-
 }
